@@ -1,0 +1,20 @@
+.build/
+dist/
+.DS_Store
+.swiftpm/
+*.blend1
+work/
+
+# Never commit signing material or local configuration
+*.p8
+*.p12
+*.pem
+*.key
+*.cer
+*.mobileprovision
+.env
+.env.*
+config.php
+.claude/
+CLAUDE.md
+AGENTS.md

@@ -1,0 +1,27 @@
+{
+  "fill": "system-light",
+  "groups": [
+    {
+      "name": "Artifloam emblem",
+      "layers": [
+        {
+          "name": "Document and terracotta sprout",
+          "image-name": "artifloam-emblem.png"
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.08
+      },
+      "translucency": {
+        "enabled": false,
+        "value": 0
+      }
+    }
+  ],
+  "supported-platforms": {
+    "squares": [
+      "macOS"
+    ]
+  }
+}
