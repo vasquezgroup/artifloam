@@ -632,7 +632,7 @@ private struct IPhoneRemovalSheet: View {
     private var phone: String { report.deviceName ?? String(localized: "this iPhone") }
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text(plan.clearing ? "Clear the data of \(plan.apps.count) apps on \(phone)?" : "Delete \(plan.apps.count) apps from \(phone)?").stewardFont(.title2, weight: .semibold).fixedSize(horizontal: false, vertical: true)
+            Text(plan.clearing ? "Clear the data of ^[\(plan.apps.count) app](inflect: true) on \(phone)?" : "Delete ^[\(plan.apps.count) app](inflect: true) from \(phone)?").stewardFont(.title2, weight: .semibold).fixedSize(horizontal: false, vertical: true)
             Text("Frees about \(formattedBytes(plan.freedBytes))").font(.system(size: 22, weight: .semibold, design: .rounded)).monospacedDigit()
             ScrollView {
                 VStack(spacing: 6) {
@@ -684,7 +684,7 @@ private struct IPhoneRemovalResultCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if !result.removed.isEmpty {
-                Label(result.freedBytes.map { "Removed \(result.removed.count) apps. Your iPhone now uses \(formattedBytes($0)) less." } ?? "Removed \(result.removed.count) apps.", systemImage: "checkmark.circle.fill").stewardFont(.body, weight: .semibold)
+                Label(result.freedBytes.map { "Removed ^[\(result.removed.count) app](inflect: true). Your iPhone now uses \(formattedBytes($0)) less." } ?? "Removed ^[\(result.removed.count) app](inflect: true).", systemImage: "checkmark.circle.fill").stewardFont(.body, weight: .semibold)
             }
             if result.clearing {
                 ForEach(result.removed) { app in

@@ -86609,12 +86609,12 @@
         }
       }
     },
-    "Clear the data of %lld apps on %@?" : {
+    "Clear the data of ^[%lld app](inflect: true) on %@?" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Clear the data of %1$lld apps on %2$@?"
+            "value" : "Clear the data of ^[%1$lld app](inflect: true) on %2$@?"
           }
         }
       }
@@ -93880,16 +93880,6 @@
         }
       }
     },
-    "Delete %lld apps from %@?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Delete %1$lld apps from %2$@?"
-          }
-        }
-      }
-    },
     "Delete %lld items · %@" : {
       "localizations" : {
         "ar" : {
@@ -95174,6 +95164,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "删除 %lld 项…"
+          }
+        }
+      }
+    },
+    "Delete ^[%lld app](inflect: true) from %@?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Delete ^[%1$lld app](inflect: true) from %2$@?"
           }
         }
       }
@@ -198262,15 +198262,15 @@
     "Remove the backup from this Mac" : {
 
     },
-    "Removed %lld apps." : {
+    "Removed ^[%lld app](inflect: true)." : {
 
     },
-    "Removed %lld apps. Your iPhone now uses %@ less." : {
+    "Removed ^[%lld app](inflect: true). Your iPhone now uses %@ less." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Removed %1$lld apps. Your iPhone now uses %2$@ less."
+            "value" : "Removed ^[%1$lld app](inflect: true). Your iPhone now uses %2$@ less."
           }
         }
       }

@@ -6,7 +6,7 @@ Native SwiftUI app, iOS 17+. No third-party dependencies. It shares the Mac app'
 
 ## Run it
 
-Open `iOS/Artifloam.xcodeproj` in Xcode, choose the `Artifloam` scheme and run. To run on a real iPhone, set your team under Signing for both the `Artifloam` and `ArtifloamWidget` targets.
+Open `iOS/Artifloam.xcodeproj` in Xcode, choose the `Artifloam` scheme and run. To run on a real iPhone, set your team under Signing for both the `Artifloam` and `ArtifloamWidget` targets, or pass `DEVELOPMENT_TEAM=<team> -allowProvisioningUpdates` to `xcodebuild`, then `xcrun devicectl device install app`.
 
 ```bash
 cd iOS && xcodebuild test -project Artifloam.xcodeproj -scheme Artifloam -destination 'platform=iOS Simulator,name=iPhone 17'
@@ -65,7 +65,11 @@ Private research, competitor notes and the feature list are in the private docum
 The Mac app's iPhone section is in `Sources/MacSteward/IPhoneView.swift`, `Sources/MacStewardCore/IPhoneDevices.swift` and `Sources/MacStewardCore/WhatsAppBackup.swift`, tested by `Tests/MacStewardCoreTests/IPhoneTests.swift`.
 
 - Nothing connects to an iPhone until the person picks it and presses Read. Never pick one automatically: a Mac can have other people's phones paired.
-- It only reads. It never pairs, installs, removes or restores anything.
+- Reading never changes the phone. Deleting an app is the one action that does: it needs a tick, a review sheet that says what goes, and an extra acknowledgement for chat or login-code apps, old backups, or clearing an app that isn't on the App Store. The result comes from reading the phone again.
+- iOS can't clear an app's data on its own. "Clear data" deletes the app, and the person installs it again.
+- `AMDeviceSecureUninstallApplication` has never run on a real phone yet.
+- Backups are optional, and only `--backup` may ever be passed to Apple's tool, which can also restore and erase.
+- `lastChanged` and app use only mean something with a backup. Without one, the UI must not call data size "use": Gmail, X and UBS Banking all hold little data.
 - WhatsApp queries read names, IDs, sizes and file paths, never message text. A test enforces this. A temporary database copy, which does hold messages, exists only during a read if a `-wal` file is present.
 - Encrypted backups aren't supported yet. It says so rather than asking for a password.
 - Artifloam can't delete inside WhatsApp, and must not edit or restore backups. Never advise deleting WhatsApp itself as a cleanup: it can lose chats.
