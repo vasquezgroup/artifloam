@@ -30,6 +30,14 @@ public struct IPhoneAppsReport: Equatable, Sendable {
     public let deviceID: String
     public let deviceName: String?
     public let apps: [IPhoneAppRow]
+    /// Everything stored on the iPhone, as it reports. A backup is smaller than this, so it's a safe estimate.
+    public var usedBytes: UInt64? = nil
+    public var encryptsBackups = false
+    public var lastCloudBackup: Date? = nil
+    public var lastMacBackup: Date? = nil
+    /// The newest backup anywhere. Deleting apps is safer with a recent one.
+    public var newestBackup: Date? { [lastCloudBackup, lastMacBackup].compactMap { $0 }.max() }
+    public func backupIsOld(now: Date = Date()) -> Bool { newestBackup.map { now.timeIntervalSince($0) > IPhoneBackup.oldAfter } ?? true }
     public var sizesMissing: Bool { !apps.isEmpty && !apps.contains(where: \.measured) }
     public var totalBytes: UInt64 { apps.reduce(0) { $0 + $1.totalBytes } }
 }
@@ -43,6 +51,12 @@ extension String {
 }
 
 public enum IPhoneApps {
+    /// iPhones report these as a date or as seconds since 2001, depending on the value.
+    static func backupDate(_ value: Any?) -> Date? {
+        if let date = value as? Date { return date }
+        if let seconds = value as? NSNumber, seconds.doubleValue > 0 { return Date(timeIntervalSinceReferenceDate: seconds.doubleValue) }
+        return nil
+    }
     /// The dictionary AMDeviceLookupApplications returns (bundle ID to attributes), biggest app first.
     public static func rows(from lookup: [String: Any]) -> [IPhoneAppRow] {
         lookup.compactMap { key, value -> IPhoneAppRow? in
@@ -168,6 +182,10 @@ public final class IPhoneDeviceWatcher: @unchecked Sendable {
         var found: Unmanaged<CFDictionary>?
         let code = framework.lookup(device, options as CFDictionary, &found)
         guard code == 0, let apps = found?.takeRetainedValue() as? [String: Any] else { throw IPhoneReadError.failed(code) }
-        return IPhoneAppsReport(deviceID: id, deviceName: name?.displaySafe, apps: IPhoneApps.rows(from: apps))
+        func value(_ domain: String, _ key: String) -> CFTypeRef? { framework.copyValue(device, domain as CFString, key as CFString)?.takeRetainedValue() }
+        let capacity = value("com.apple.disk_usage", "TotalDataCapacity") as? NSNumber, available = value("com.apple.disk_usage", "TotalDataAvailable") as? NSNumber
+        let used = capacity.flatMap { capacity in available.map { UInt64(max(0, capacity.int64Value - $0.int64Value)) } }
+        return IPhoneAppsReport(deviceID: id, deviceName: name?.displaySafe, apps: IPhoneApps.rows(from: apps), usedBytes: used, encryptsBackups: value("com.apple.mobile.backup", "WillEncrypt") as? Bool ?? false,
+                                lastCloudBackup: IPhoneApps.backupDate(value("com.apple.mobile.backup", "LastCloudBackupDate")), lastMacBackup: IPhoneApps.backupDate(value("com.apple.mobile.backup", "LastiTunesBackupDate")))
     }
 }

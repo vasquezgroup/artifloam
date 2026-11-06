@@ -20,10 +20,16 @@ final class IPhoneState: ObservableObject {
     /// Bundle ID to the newest data change, from a backup. Empty until one is read.
     @Published private(set) var lastChanged = [String: Date]()
     @Published var group: IPhoneAppGroup?
+    @Published private(set) var makingBackup = false
+    @Published private(set) var backupFailed = false
+    /// Made by this app for a phone that had no backup here, so it's the person's choice to remove it right after reading.
+    @Published private(set) var removableBackup: IPhoneBackup?
     var insights: IPhoneInsights? { report.map { IPhoneInsights(apps: $0.apps, lastChanged: lastChanged) } }
     private let watcher = IPhoneDeviceWatcher()
     /// A read can't be cancelled once it is talking to the iPhone, so a stopped one must finish before the next starts.
     @Published private var readInFlight = false
+    private final class ProcessHolder: @unchecked Sendable { var process: Process? }
+    private let backupHolder = ProcessHolder()
     private var generation = 0
 
     var onStage: Bool { reading || (report == nil && !backupsOnly) }
@@ -35,6 +41,8 @@ final class IPhoneState: ObservableObject {
         let own = all.filter { $0.belongs(toDevice: report.deviceID) }
         return own.isEmpty ? all : own
     }
+    /// False until backups have been listed and this iPhone's isn't among them, or nothing is known yet.
+    var hasOwnBackupKnown: Bool { report.map { report in (backups ?? []).contains { $0.belongs(toDevice: report.deviceID) } } ?? false }
     var hasOwnBackup: Bool { report.map { report in (backups ?? []).contains { $0.belongs(toDevice: report.deviceID) } } ?? true }
     var stageLine: String {
         if frameworkMissing { return String(localized: "This Mac is missing the Apple software that talks to iPhones. Connecting an iPhone in Finder once usually installs it.") }
@@ -110,6 +118,38 @@ final class IPhoneState: ObservableObject {
             }
         }
     }
+    /// Backing up is optional, and only starts once the person has agreed. The tool needs the protected backups folder, so that's checked first.
+    func makeBackup() {
+        guard let report, !makingBackup else { return }
+        backupProblem = nil; backupFailed = false
+        let id = report.deviceID
+        Task {
+            let existing: [IPhoneBackup]
+            do { existing = try await Task.detached { try WhatsAppBackup.backups() }.value }
+            catch { backupProblem = error as? WhatsAppBackupError ?? .noAccess; return }
+            let hadOne = existing.contains { $0.belongs(toDevice: id) }
+            makingBackup = true
+            let holder = backupHolder
+            let finished = await Task.detached(priority: .utility) { IPhoneBackupMaker.run(deviceID: id) { holder.process = $0 } }.value
+            holder.process = nil
+            makingBackup = false
+            guard finished else { backupFailed = true; return }
+            let found = (try? await Task.detached { try WhatsAppBackup.backups() }.value) ?? []
+            backups = found
+            guard let own = found.first(where: { $0.belongs(toDevice: id) }) else { backupFailed = true; return }
+            removableBackup = hadOne ? nil : own
+            readWhatsApp(own)
+        }
+    }
+    func stopBackup() { backupHolder.process?.terminate() }
+    func removeBackup() {
+        guard let backup = removableBackup else { return }
+        do {
+            try WhatsAppBackup.remove(backup)
+            removableBackup = nil
+            backups = backups?.filter { $0.id != backup.id }
+        } catch { backupProblem = .unreadable }
+    }
     func closeWhatsApp() { whatsApp = nil; backupProblem = nil }
     /// Forgets everything read and the pick, so nothing connects again until the person chooses.
     func reset() {
@@ -135,7 +175,7 @@ struct IPhoneDevicePicker: View {
                         .contentShape(Capsule())
                 }.buttonStyle(.plain).accessibilityAddTraits(active ? .isSelected : [])
             }
-            Button { m.withFullDisk { state.openBackups() } } label: { Text("Use a backup on this Mac").stewardFont(.callout) }
+            Button { state.openBackups() } label: { Text("Use a backup on this Mac").stewardFont(.callout) }
                 .buttonStyle(.plain).foregroundStyle(.white.opacity(0.7)).padding(.leading, state.devices.isEmpty ? 0 : 6)
         }
     }
@@ -146,6 +186,8 @@ struct IPhoneView: View {
     @ObservedObject var state: IPhoneState
     @EnvironmentObject private var m: StewardModel
     private let columnWidth: CGFloat = 104
+    @State private var confirmingBackup = false
+    @State private var confirmingRemoval = false
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             HStack(alignment: .firstTextBaseline) {
@@ -160,6 +202,7 @@ struct IPhoneView: View {
                 Button("Start over") { state.reset() }.buttonStyle(CleanupGlassButtonStyle(secondary: true))
             }
             if let report = state.report, let insights = state.insights {
+                IPhoneBackupStatus(report: report)
                 IPhoneSpaceBar(apps: report.apps, total: report.totalBytes)
                 IPhoneGroupTiles(insights: insights, hasBackup: !state.lastChanged.isEmpty, selected: $state.group)
                 apps(report, insights)
@@ -217,17 +260,43 @@ struct IPhoneView: View {
             else if let result = state.whatsApp { chats(result.backup, result.report) }
             else {
                 if let problem = state.backupProblem { backupMessage(problem) }
-                if let backups = state.backups { backupList(backups) }
-                else if state.backupProblem == nil { Button("Find a backup") { m.withFullDisk { state.findBackups() } }.buttonStyle(CleanupGlassButtonStyle()) }
+                if state.makingBackup {
+                    StewardProgressBar(title: String(localized: "Backing up your iPhone. Keep it unlocked and connected.")).frame(maxWidth: 420)
+                    Button("Stop") { state.stopBackup() }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
+                } else {
+                    if let backups = state.backups { backupList(backups) }
+                    else if state.backupProblem == nil { Button("Find a backup") { state.findBackups() }.buttonStyle(CleanupGlassButtonStyle()) }
+                    if let report = state.report, !state.hasOwnBackupKnown, state.backupProblem != .noAccess { backupOffer(report) }
+                }
             }
+        }
+    }
+    /// Optional: everything above works without it. It's only offered when the Mac has room.
+    @ViewBuilder private func backupOffer(_ report: IPhoneAppsReport) -> some View {
+        let free = DiskSpace.read().free, used = report.usedBytes ?? report.totalBytes
+        VStack(alignment: .leading, spacing: 8) {
+            if state.backupFailed { Text("The backup didn't finish. Unlock your iPhone, keep it connected and try again.").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true) }
+            if report.encryptsBackups {
+                encryptedNote
+            } else if IPhoneBackupMaker.hasRoom(free: free, phoneUses: used) {
+                Text("You don't need a backup for anything above. It adds WhatsApp by person or group, and which apps have been quiet.").stewardFont(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                Button("Back up to this Mac") { confirmingBackup = true }.buttonStyle(CleanupGlassButtonStyle())
+            } else {
+                Text("This Mac doesn't have room for a backup. It needs up to \(formattedBytes(used + 5_000_000_000)) and has \(formattedBytes(free)) free. You can see chats by size in WhatsApp: Settings, Storage and data, Manage storage.").stewardFont(.body).fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .confirmationDialog("Back up this iPhone to this Mac?", isPresented: $confirmingBackup, titleVisibility: .visible) {
+            Button("Back Up") { state.makeBackup() }
+        } message: {
+            Text("This can take a long time and use up to \(formattedBytes(used)). It's an unencrypted copy of your iPhone, so you can remove it once it's been read.")
         }
     }
     @ViewBuilder private func backupMessage(_ problem: WhatsAppBackupError) -> some View {
         switch problem {
         case .noAccess:
-            Text("Artifloam needs Full Disk Access to read backups.").stewardFont(.body).fixedSize(horizontal: false, vertical: true)
+            Text("To make or read a backup, Artifloam needs your permission to use the Mac's protected backup folder. Turn on Artifloam under Full Disk Access, then reopen it if macOS asks.").stewardFont(.body).fixedSize(horizontal: false, vertical: true)
             HStack(spacing: 8) {
-                Button("Open Settings") { NSWorkspace.shared.open(FullDiskAccess.settingsURL) }.buttonStyle(CleanupGlassButtonStyle(compact: true))
+                Button("Give permission") { NSWorkspace.shared.open(FullDiskAccess.settingsURL) }.buttonStyle(CleanupGlassButtonStyle(compact: true))
                 Button("Try again") { state.findBackups() }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
             }
         case .encrypted: encryptedNote
@@ -248,7 +317,7 @@ struct IPhoneView: View {
                 HStack(spacing: 12) {
                     VStack(alignment: .leading, spacing: 3) {
                         Text(backup.deviceName).stewardFont(.body, weight: .semibold).lineLimit(1)
-                        if let date = backup.date { Text(date.formatted(date: .abbreviated, time: .shortened)).stewardFont(.caption).foregroundStyle(.secondary) }
+                        if let date = backup.date { Text(date.formatted(date: .abbreviated, time: .shortened)).stewardFont(.caption).foregroundStyle(backup.isOld() ? .orange : .secondary) }
                         if backup.encrypted { encryptedNote }
                     }
                     Spacer(minLength: 8)
@@ -260,10 +329,17 @@ struct IPhoneView: View {
     @ViewBuilder private func chats(_ backup: IPhoneBackup, _ report: WhatsAppReport) -> some View {
         HStack(alignment: .firstTextBaseline) {
             Text("\(formattedBytes(report.totalBytes)) of media in \(report.chats.count) chats").stewardFont(.body, weight: .semibold)
-            if let date = backup.date { Text("From the backup of \(date.formatted(date: .abbreviated, time: .omitted))").stewardFont(.caption).foregroundStyle(.secondary) }
+            if let date = backup.date { Text("From the backup of \(date.formatted(date: .abbreviated, time: .omitted))").stewardFont(.caption).foregroundStyle(backup.isOld() ? .orange : .secondary) }
             Spacer()
             Button("Other backups") { state.closeWhatsApp() }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
         }
+        if let removable = state.removableBackup {
+            Button("Remove the backup from this Mac") { confirmingRemoval = true }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
+                .confirmationDialog("Delete this backup for good?", isPresented: $confirmingRemoval, titleVisibility: .visible) {
+                    Button("Delete backup of \(removable.deviceName)", role: .destructive) { state.removeBackup() }
+                } message: { Text("This frees the space. The results stay here until you start over.") }
+        }
+        if backup.isOld() { Text("This backup is old, so these sizes may no longer be right.").stewardFont(.caption).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true) }
         Text("Removing media happens in WhatsApp: Settings, Storage and data, Manage storage. Clear chat removes the messages too. Artifloam can't delete from here.").stewardFont(.caption).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true)
         LazyVStack(spacing: 6) { ForEach(report.chats) { chatRow($0) } }
     }
@@ -387,5 +463,25 @@ private struct IPhoneGroupTiles: View {
             .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         }
         .buttonStyle(.plain).disabled(unavailable || apps.isEmpty).accessibilityAddTraits(active ? .isSelected : [])
+    }
+}
+
+/// When this iPhone was last backed up, and a warning before someone deletes apps without a recent backup.
+private struct IPhoneBackupStatus: View {
+    let report: IPhoneAppsReport
+    private func when(_ date: Date?) -> String { date?.formatted(.relative(presentation: .named)) ?? String(localized: "Never") }
+    var body: some View {
+        let old = report.backupIsOld()
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: old ? "exclamationmark.triangle.fill" : "checkmark.shield.fill").foregroundStyle(old ? .orange : .mint).accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(old ? "Back up before you delete anything" : "This iPhone has a recent backup").stewardFont(.body, weight: .semibold)
+                Text("iCloud: \(when(report.lastCloudBackup)) · This Mac: \(when(report.lastMacBackup))").stewardFont(.caption).foregroundStyle(.white.opacity(0.75))
+                if old { Text("Its newest backup is over a month old, or there isn't one. On the iPhone: Settings, your name, iCloud, iCloud Backup, Back Up Now.").stewardFont(.caption).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true) }
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(14).background(old ? Color.orange.opacity(0.14) : Color.black.opacity(0.14), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay { RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(old ? Color.orange.opacity(0.4) : .white.opacity(0.1), lineWidth: 0.8) }
     }
 }

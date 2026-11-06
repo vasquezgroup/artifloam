@@ -61716,9 +61716,6 @@
         }
       }
     },
-    "Artifloam needs Full Disk Access to read backups." : {
-
-    },
     "Artifloam needs to restart to change language." : {
       "localizations" : {
         "ar" : {
@@ -65720,6 +65717,18 @@
         }
       }
     },
+    "Back Up" : {
+
+    },
+    "Back up before you delete anything" : {
+
+    },
+    "Back up this iPhone to this Mac?" : {
+
+    },
+    "Back up to this Mac" : {
+
+    },
     "Background agents, in plain language" : {
       "localizations" : {
         "ar" : {
@@ -66459,6 +66468,9 @@
           }
         }
       }
+    },
+    "Backing up your iPhone. Keep it unlocked and connected." : {
+
     },
     "Backup" : {
       "comment" : "Section of the system check",
@@ -95111,6 +95123,9 @@
         }
       }
     },
+    "Delete backup of %@" : {
+
+    },
     "Delete merged worktrees" : {
       "localizations" : {
         "ar" : {
@@ -95258,6 +95273,9 @@
           }
         }
       }
+    },
+    "Delete this backup for good?" : {
+
     },
     "Delete · %@" : {
       "localizations" : {
@@ -123824,6 +123842,9 @@
         }
       }
     },
+    "Give permission" : {
+
+    },
     "Good" : {
       "localizations" : {
         "ar" : {
@@ -135371,6 +135392,9 @@
           }
         }
       }
+    },
+    "Its newest backup is over a month old, or there isn't one. On the iPhone: Settings, your name, iCloud, iCloud Backup, Back Up Now." : {
+
     },
     "Its program is gone, probably from an app you removed." : {
       "localizations" : {
@@ -157065,6 +157089,9 @@
           }
         }
       }
+    },
+    "Never" : {
+
     },
     "Never removes worktrees, source, databases or original assets" : {
       "localizations" : {
@@ -198123,6 +198150,9 @@
         }
       }
     },
+    "Remove the backup from this Mac" : {
+
+    },
     "Removed, but something of them stayed." : {
       "localizations" : {
         "ar" : {
@@ -229217,6 +229247,9 @@
         }
       }
     },
+    "The backup didn't finish. Unlock your iPhone, keep it connected and try again." : {
+
+    },
     "The copy in Applications failed its signature check, so it was removed." : {
       "localizations" : {
         "ar" : {
@@ -233120,6 +233153,16 @@
         }
       }
     },
+    "This Mac doesn't have room for a backup. It needs up to %@ and has %@ free. You can see chats by size in WhatsApp: Settings, Storage and data, Manage storage." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "This Mac doesn't have room for a backup. It needs up to %1$@ and has %2$@ free. You can see chats by size in WhatsApp: Settings, Storage and data, Manage storage."
+          }
+        }
+      }
+    },
     "This Mac doesn't report a battery." : {
       "localizations" : {
         "ar" : {
@@ -233280,6 +233323,9 @@
     "This backup has no WhatsApp data." : {
 
     },
+    "This backup is old, so these sizes may no longer be right." : {
+
+    },
     "This build doesn't check for updates. Update it from where you got its source." : {
       "localizations" : {
         "ar" : {
@@ -233427,6 +233473,9 @@
           }
         }
       }
+    },
+    "This can take a long time and use up to %@. It's an unencrypted copy of your iPhone, so you can remove it once it's been read." : {
+
     },
     "This copy isn't in Applications. Drag it to the Trash yourself afterwards." : {
       "localizations" : {
@@ -233871,6 +233920,12 @@
           }
         }
       }
+    },
+    "This frees the space. The results stay here until you start over." : {
+
+    },
+    "This iPhone has a recent backup" : {
+
     },
     "This iPhone listed its apps but didn't report their sizes." : {
 
@@ -235949,6 +236004,9 @@
           }
         }
       }
+    },
+    "To make or read a backup, Artifloam needs your permission to use the Mac's protected backup folder. Turn on Artifloam under Full Disk Access, then reopen it if macOS asks." : {
+
     },
     "Today" : {
       "localizations" : {
@@ -252018,6 +252076,9 @@
         }
       }
     },
+    "You don't need a backup for anything above. It adds WhatsApp by person or group, and which apps have been quiet." : {
+
+    },
     "You have version %@. Artifloam downloads the update, checks that it's genuine, and reopens." : {
       "localizations" : {
         "ar" : {
@@ -258883,6 +258944,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "健康度"
+          }
+        }
+      }
+    },
+    "iCloud: %@ · This Mac: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "iCloud: %1$@ · This Mac: %2$@"
           }
         }
       }

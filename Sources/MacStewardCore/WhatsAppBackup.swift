@@ -9,6 +9,8 @@ public struct IPhoneBackup: Identifiable, Hashable, Sendable {
     public let deviceIDs: [String]
     public let encrypted: Bool
     public var id: String { url.path }
+    public static let oldAfter: TimeInterval = 30 * 86_400
+    public func isOld(now: Date = Date()) -> Bool { date.map { now.timeIntervalSince($0) > Self.oldAfter } ?? true }
     /// A backup can write the identifier with or without its dash.
     public func belongs(toDevice deviceID: String) -> Bool {
         let wanted = Self.normalized(deviceID)
@@ -70,6 +72,12 @@ public enum WhatsAppBackup {
             let ids = [folder.lastPathComponent, info["Unique Identifier"] as? String, info["Target Identifier"] as? String].compactMap { $0 }
             return IPhoneBackup(url: folder, deviceName: (info["Device Name"] as? String ?? "iPhone").displaySafe, date: info["Last Backup Date"] as? Date, deviceIDs: ids, encrypted: encrypted)
         }.sorted { ($0.date ?? .distantPast) > ($1.date ?? .distantPast) }
+    }
+
+    /// Deletes a backup for good. Only folders directly inside the backups folder, so a wrong path can't remove anything else.
+    public static func remove(_ backup: IPhoneBackup, root: URL = defaultRoot) throws {
+        guard backup.url.deletingLastPathComponent().standardizedFileURL == root.standardizedFileURL else { throw WhatsAppBackupError.unreadable }
+        try FileManager.default.removeItem(at: backup.url)
     }
 
     /// The newest change to each app's data in this backup, by bundle ID. Empty if it can't be read: this only adds a hint.
@@ -202,5 +210,28 @@ private final class Database {
         var names = Set<String>()
         try? rows("PRAGMA table_info(\(table))") { row in if let name = row.text(1) { names.insert(name) } }
         return names
+    }
+}
+
+/// Makes a local backup with Apple's own tool, the same kind Finder makes. That tool can also restore and erase,
+/// so `arguments` is the only way this app calls it, and a test holds it to backing up.
+public enum IPhoneBackupMaker {
+    static let tool = "/Library/Apple/System/Library/PrivateFrameworks/MobileDevice.framework/Versions/A/AppleMobileDeviceHelper.app/Contents/Resources/AppleMobileBackup"
+    public static var isAvailable: Bool { FileManager.default.isExecutableFile(atPath: tool) }
+    /// Room for everything on the iPhone, and some left for the Mac to keep working.
+    public static func hasRoom(free: UInt64, phoneUses used: UInt64) -> Bool { free >= used + 5_000_000_000 }
+    static func arguments(deviceID: String) -> [String] { ["--backup", "--target", deviceID, "--no-pass-prompt"] }
+
+    /// Blocks until it finishes, so call it off the main thread. Returns true when the backup finished.
+    public static func run(deviceID: String, started: @Sendable (Process) -> Void = { _ in }) -> Bool {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: tool)
+        process.arguments = arguments(deviceID: deviceID)
+        process.standardOutput = FileHandle.nullDevice
+        process.standardError = FileHandle.nullDevice
+        guard (try? process.run()) != nil else { return false }
+        started(process)
+        process.waitUntilExit()
+        return process.terminationReason == .exit && process.terminationStatus == 0
     }
 }

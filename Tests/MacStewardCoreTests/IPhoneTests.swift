@@ -38,6 +38,26 @@ final class IPhoneAppsTests: XCTestCase {
         XCTAssertEqual(IPhoneInsights(apps: apps).apps(in: .quiet), [])
     }
 
+    func testBackupNeedsRoomForTheIPhonePlusAMargin() {
+        XCTAssertTrue(IPhoneBackupMaker.hasRoom(free: 70_000_000_000, phoneUses: 65_000_000_000))
+        XCTAssertFalse(IPhoneBackupMaker.hasRoom(free: 69_000_000_000, phoneUses: 65_000_000_000))
+    }
+
+    func testAnOldBackupIsNoticedUsingTheNewestOfBoth() {
+        let now = Date(timeIntervalSince1970: 1_800_000_000), recent = now.addingTimeInterval(-86_400), old = now.addingTimeInterval(-100 * 86_400)
+        XCTAssertFalse(IPhoneAppsReport(deviceID: "x", deviceName: nil, apps: [], lastCloudBackup: recent, lastMacBackup: old).backupIsOld(now: now))
+        XCTAssertTrue(IPhoneAppsReport(deviceID: "x", deviceName: nil, apps: [], lastCloudBackup: old).backupIsOld(now: now))
+        XCTAssertTrue(IPhoneAppsReport(deviceID: "x", deviceName: nil, apps: []).backupIsOld(now: now))
+        XCTAssertEqual(IPhoneApps.backupDate(NSNumber(value: 815_624_239)), Date(timeIntervalSinceReferenceDate: 815_624_239))
+        XCTAssertNil(IPhoneApps.backupDate(NSNumber(value: 0)))
+    }
+
+    func testTheBackupToolIsOnlyEverAskedToBackUp() {
+        let arguments = IPhoneBackupMaker.arguments(deviceID: "ABC")
+        XCTAssertEqual(arguments, ["--backup", "--target", "ABC", "--no-pass-prompt"])
+        for dangerous in ["--restore", "-r", "--erase", "-E", "--remove", "-R", "--change", "-C"] { XCTAssertFalse(arguments.contains(dangerous)) }
+    }
+
     func testAppsWithNoSizesAreMarked() {
         let rows = IPhoneApps.rows(from: ["a": ["CFBundleIdentifier": "a", "CFBundleDisplayName": "A"]])
         XCTAssertFalse(rows[0].measured)
@@ -138,6 +158,14 @@ final class WhatsAppBackupTests: XCTestCase {
         let data = try PropertyListSerialization.data(fromPropertyList: record, format: .binary, options: 0)
         XCTAssertEqual(WhatsAppBackup.modified(fromFileRecord: data), 1_700_000_000)
         XCTAssertNil(WhatsAppBackup.modified(fromFileRecord: Data("nope".utf8)))
+    }
+
+    func testRemovingABackupStaysInsideTheBackupsFolder() throws {
+        let backup = try makeBackup()
+        XCTAssertThrowsError(try WhatsAppBackup.remove(backup, root: root.appendingPathComponent("elsewhere")))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: backup.url.path))
+        try WhatsAppBackup.remove(backup, root: root)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: backup.url.path))
     }
 
     func testMessageTextCanNotReachTheResults() throws {
