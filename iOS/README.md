@@ -67,7 +67,10 @@ The Mac app's iPhone section is in `Sources/MacSteward/IPhoneView.swift`, `Sourc
 - Nothing connects to an iPhone until the person picks it and presses Read. Never pick one automatically: a Mac can have other people's phones paired.
 - Reading never changes the phone. Deleting an app is the one action that does: it needs a tick, a review sheet that says what goes, and an extra acknowledgement for chat or login-code apps, old backups, or clearing an app that isn't on the App Store. The result comes from reading the phone again.
 - iOS can't clear an app's data on its own. "Clear data" deletes the app, and the person installs it again.
-- `AMDeviceSecureUninstallApplication` has never run on a real phone yet.
+- `AMDeviceSecureUninstallApplication` works: it removed a real app from a real iPhone, confirmed by reading the phone again.
+- **Reported sizes can overstate.** Removing an app reported at 7.87 GB didn't lower the phone's total used space within about 20 minutes, and all apps' sizes add up to more than the phone says it uses. So the UI says "up to" and reports the measured change afterwards. Check whether the space appears later.
+- `PasswordProtected` from lockdown drives the unlock overlay. It read 1 and later 0 on a real phone, which fits the lock state, but hasn't been compared against a deliberate lock and unlock. The overlay itself hasn't been seen on screen. "It's unlocked" is the way out if this value is ever wrong.
+- The WhatsApp backup flow keeps stopping at Full Disk Access in testing, even with the banner gone. Reading a real backup is still unverified.
 - Backups are optional, and only `--backup` may ever be passed to Apple's tool, which can also restore and erase.
 - `lastChanged` and app use only mean something with a backup. Without one, the UI must not call data size "use": Gmail, X and UBS Banking all hold little data.
 - WhatsApp queries read names, IDs, sizes and file paths, never message text. A test enforces this. A temporary database copy, which does hold messages, exists only during a read if a `-wal` file is present.
