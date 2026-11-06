@@ -23,7 +23,7 @@ The translations are machine-made so far, so corrections from native speakers ar
 2. Add the translations to both catalog files.
 3. If its plural forms differ from English, add them to `requiredPlurals` in `Tests/MacStewardCoreTests/LocalizationTests.swift`.
 
-**To add or change text in the app:** use `Text("…")` or `String(localized: "…")`, then run `scripts/sync-strings.sh` to add the new text to the catalog.
+**To add or change text in the app:** use `Text("…")` or `String(localized: "…")`, then run `scripts/sync-strings.sh` to add the new text to the catalog. `scripts/check-strings.sh` tells you if any is missing, and a release won't build until none is.
 
 **Before you open the pull request:** `swift test` lists anything missing in any language and any placeholder that doesn't match. To see a language in the app, build it and open it in that language, because `swift run` shows English only:
 

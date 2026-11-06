@@ -12,6 +12,7 @@ done
 [[ -n "${ARTIFLOAM_NOTARY_PROFILE:-}" ]] || { print -u2 'Set ARTIFLOAM_NOTARY_PROFILE to a notarytool keychain profile.'; exit 1; }
 source_commit=$(git rev-parse HEAD)
 swift test
+./scripts/check-strings.sh
 ARTIFLOAM_OFFICIAL_BUILD=1 ./scripts/package-app.sh
 [[ -z "$(git status --porcelain)" && "$(git rev-parse HEAD)" == "$source_commit" ]] || { print -u2 'Source changed while building. Commit and prepare again.'; exit 1; }
 version=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' dist/Artifloam.app/Contents/Info.plist)
