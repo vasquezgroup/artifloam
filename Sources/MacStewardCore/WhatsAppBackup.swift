@@ -36,6 +36,7 @@ public struct WhatsAppChat: Identifiable, Equatable, Sendable {
     public let isGroup: Bool
     public let bytes: UInt64
     public let kinds: [WhatsAppMediaKind: UInt64]
+    func numbered(from offset: Int64) -> WhatsAppChat { WhatsAppChat(id: id + offset, name: name, isGroup: isGroup, bytes: bytes, kinds: kinds) }
 }
 
 public struct WhatsAppReport: Equatable, Sendable {
@@ -50,6 +51,8 @@ public enum WhatsAppBackupError: Error, Equatable, Sendable {
 public enum WhatsAppBackup {
     public static let defaultRoot = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support/MobileSync/Backup")
     static let domain = "AppDomainGroup-group.net.whatsapp.WhatsApp.shared"
+    /// Also matches WhatsApp Business, which has its own container and its own chats.
+    static let domainPattern = "AppDomainGroup-group.net.whatsapp.%"
     /// Everything this file ever asks WhatsApp's database. Message text is never selected; a test holds this list to that.
     static let chatsQuery = "SELECT Z_PK, ZPARTNERNAME, ZCONTACTJID FROM ZWACHATSESSION"
     static func mediaQuery(link: String) -> String {
@@ -76,7 +79,16 @@ public enum WhatsAppBackup {
             throw (try? FileManager.default.contentsOfDirectory(atPath: folder.path)) == nil ? WhatsAppBackupError.noAccess : .unreadable
         }
         guard manifest["IsEncrypted"] as? Bool != true else { throw WhatsAppBackupError.encrypted }
-        let files = try chatStorageFiles(in: folder)
+        let stores = try chatStorageFiles(in: folder).values.filter { $0[""] != nil }
+        guard !stores.isEmpty else { throw WhatsAppBackupError.noWhatsApp }
+        // Chat numbers restart in each database, so each app gets its own range to keep them unique.
+        let chats = try stores.enumerated().flatMap { index, files in
+            try readStore(files, temporaryDirectory: temporaryDirectory).chats.map { $0.numbered(from: Int64(index) * 1_000_000_000) }
+        }
+        return WhatsAppReport(chats: chats.sorted { $0.bytes > $1.bytes })
+    }
+
+    private static func readStore(_ files: [String: URL], temporaryDirectory: URL) throws -> WhatsAppReport {
         guard let store = files[""] else { throw WhatsAppBackupError.noWhatsApp }
         let wal = files["-wal"]
         if let wal, (try? wal.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0 > 0 {
@@ -97,16 +109,16 @@ public enum WhatsAppBackup {
         (try? Data(contentsOf: url)).flatMap { try? PropertyListSerialization.propertyList(from: $0, format: nil) as? [String: Any] }
     }
 
-    /// The database and its -wal and -shm, where the backup's Manifest.db says they are. Keyed by suffix; "" is the database.
-    private static func chatStorageFiles(in folder: URL) throws -> [String: URL] {
+    /// Each WhatsApp app's database and its -wal and -shm, where Manifest.db says they are. Keyed by domain, then suffix; "" is the database.
+    private static func chatStorageFiles(in folder: URL) throws -> [String: [String: URL]] {
         let manifest: Database
         do { manifest = try Database(folder.appendingPathComponent("Manifest.db"), immutable: true) } catch { throw WhatsAppBackupError.unreadable }
-        var files = [String: URL]()
+        var files = [String: [String: URL]]()
         do {
-            try manifest.rows("SELECT fileID, relativePath FROM Files WHERE domain = ? AND relativePath IN ('ChatStorage.sqlite', 'ChatStorage.sqlite-wal', 'ChatStorage.sqlite-shm')", bind: domain) { row in
-                guard let id = row.text(0), let path = row.text(1), id.count > 2, !id.contains("/") else { return }
+            try manifest.rows("SELECT fileID, relativePath, domain FROM Files WHERE domain LIKE ? AND relativePath IN ('ChatStorage.sqlite', 'ChatStorage.sqlite-wal', 'ChatStorage.sqlite-shm')", bind: domainPattern) { row in
+                guard let id = row.text(0), let path = row.text(1), let domain = row.text(2), id.count > 2, !id.contains("/") else { return }
                 let file = folder.appendingPathComponent(String(id.prefix(2))).appendingPathComponent(id)
-                if FileManager.default.fileExists(atPath: file.path) { files[String(path.dropFirst("ChatStorage.sqlite".count))] = file }
+                if FileManager.default.fileExists(atPath: file.path) { files[domain, default: [:]][String(path.dropFirst("ChatStorage.sqlite".count))] = file }
             }
         } catch { throw WhatsAppBackupError.unreadable }
         return files
@@ -130,7 +142,7 @@ public enum WhatsAppBackup {
                 guard let chatKinds = kinds[id] else { return }
                 let jid = row.text(2) ?? ""
                 let name = row.text(1).flatMap { $0.isEmpty ? nil : $0 } ?? String(jid.prefix { $0 != "@" })
-                chats.append(WhatsAppChat(id: id, name: name.displaySafe, isGroup: jid.hasSuffix("@g.us"), bytes: chatKinds.values.reduce(0, +), kinds: chatKinds))
+                chats.append(WhatsAppChat(id: id, name: name.cleanedName, isGroup: jid.hasSuffix("@g.us"), bytes: chatKinds.values.reduce(0, +), kinds: chatKinds))
             }
         } catch { throw WhatsAppBackupError.unsupportedVersion }
         return WhatsAppReport(chats: chats.sorted { ($0.bytes, $1.name) > ($1.bytes, $0.name) })

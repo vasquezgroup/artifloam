@@ -72,10 +72,10 @@ The Mac app's iPhone section is in `Sources/MacSteward/IPhoneView.swift`, `Sourc
 
 ### Mac: must check
 
-- [ ] The live app lookup over USB, and that `StaticDiskUsage` and `DynamicDiskUsage` are still returned. This has never run against a real iPhone.
-- [ ] The Trust flow and device name.
-- [ ] The WhatsApp schema on a real, current backup. Table names come from older sources, and special chats such as `status@broadcast` would show as a person.
-- [ ] The screen itself. It compiles, but nobody has seen it, because only one copy of Artifloam can run at a time. Quit the installed app first.
+- [x] The live app lookup, device name and sizes, through `IPhoneDeviceWatcher` on a real iPhone already paired with this Mac: 308 apps, all measured.
+- [ ] The Trust flow on an iPhone that isn't paired yet.
+- [ ] The WhatsApp schema on a real, current backup, for both WhatsApp and WhatsApp Business. Reading needs Full Disk Access. Table names come from older sources, the Business domain is matched by pattern and unconfirmed, and special chats such as `status@broadcast` would show as a person.
+- [ ] The screen itself. It compiles, but nobody has seen it, because only one copy of Artifloam can run at a time. Quit every other copy first, including any debug build.
 - [ ] A Developer ID signed build. Loading the framework works with an ad-hoc hardened runtime signature.
 - [ ] Decide whether the backup list should show every device's backups by name when the chosen phone has none.
 

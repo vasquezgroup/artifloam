@@ -32,6 +32,14 @@ public struct IPhoneAppsReport: Equatable, Sendable {
     public var totalBytes: UInt64 { apps.reduce(0) { $0 + $1.totalBytes } }
 }
 
+extension String {
+    /// For names people and apps chose. Removes invisible characters, which `displaySafe` would show as a "?" box. "WA Business" arrives with one in front.
+    /// The joiner stays, because emoji families and some scripts need it.
+    var cleanedName: String {
+        String(String.UnicodeScalarView(unicodeScalars.filter { ![.control, .format].contains($0.properties.generalCategory) || $0 == "\u{200D}" }))
+    }
+}
+
 public enum IPhoneApps {
     /// The dictionary AMDeviceLookupApplications returns (bundle ID to attributes), biggest app first.
     public static func rows(from lookup: [String: Any]) -> [IPhoneAppRow] {
@@ -40,7 +48,7 @@ public enum IPhoneApps {
             let bundleID = attributes["CFBundleIdentifier"] as? String ?? key
             let app = attributes["StaticDiskUsage"] as? NSNumber, data = attributes["DynamicDiskUsage"] as? NSNumber
             let name = (attributes["CFBundleDisplayName"] as? String).flatMap { $0.isEmpty ? nil : $0 } ?? bundleID
-            return IPhoneAppRow(name: name.displaySafe, bundleID: bundleID.displaySafe, appBytes: UInt64(max(0, app?.int64Value ?? 0)), dataBytes: UInt64(max(0, data?.int64Value ?? 0)), measured: app != nil || data != nil)
+            return IPhoneAppRow(name: name.cleanedName, bundleID: bundleID.displaySafe, appBytes: UInt64(max(0, app?.int64Value ?? 0)), dataBytes: UInt64(max(0, data?.int64Value ?? 0)), measured: app != nil || data != nil)
         }.sorted { ($0.totalBytes, $1.name.lowercased()) > ($1.totalBytes, $0.name.lowercased()) }
     }
 }

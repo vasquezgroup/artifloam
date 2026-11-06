@@ -19,6 +19,12 @@ final class IPhoneAppsTests: XCTestCase {
         XCTAssertEqual(rows[2].totalBytes, 0)
     }
 
+    func testNamesLoseInvisibleCharactersButKeepEmoji() {
+        let rows = IPhoneApps.rows(from: ["a": ["CFBundleDisplayName": "\u{200E}WA Business", "StaticDiskUsage": 1, "DynamicDiskUsage": 1]])
+        XCTAssertEqual(rows.first?.name, "WA Business")
+        XCTAssertEqual("👨‍👩‍👧 Family\u{202E}".cleanedName, "👨‍👩‍👧 Family")
+    }
+
     func testAppsWithNoSizesAreMarked() {
         let rows = IPhoneApps.rows(from: ["a": ["CFBundleIdentifier": "a", "CFBundleDisplayName": "A"]])
         XCTAssertFalse(rows[0].measured)
@@ -97,6 +103,20 @@ final class WhatsAppBackupTests: XCTestCase {
         // Media that was never downloaded (no local path) isn't on the phone, so it doesn't count.
         XCTAssertEqual(person.bytes, 100)
         XCTAssertEqual(person.kinds, [.photos: 100])
+    }
+
+    func testWhatsAppBusinessIsReadAlongsideWhatsApp() throws {
+        let backup = try makeBackup(chats: standardChats)
+        let business = backup.url.appendingPathComponent("cd/cdefgh")
+        try FileManager.default.createDirectory(at: business.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try FileManager.default.copyItem(at: backup.url.appendingPathComponent("ab/abcdef"), to: business)
+        withDatabase(backup.url.appendingPathComponent("Manifest.db")) { manifest in
+            execute(manifest, "INSERT INTO Files VALUES ('cdefgh', 'AppDomainGroup-group.net.whatsapp.WhatsAppSMB.shared', 'ChatStorage.sqlite', 1, NULL);")
+        }
+        let report = try WhatsAppBackup.read(backup)
+        XCTAssertEqual(report.chats.count, 6)
+        XCTAssertEqual(Set(report.chats.map(\.id)).count, 6)
+        XCTAssertEqual(report.totalBytes, 2542 * 2)
     }
 
     func testMessageTextCanNotReachTheResults() throws {
