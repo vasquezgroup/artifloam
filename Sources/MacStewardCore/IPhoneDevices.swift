@@ -15,6 +15,10 @@ public struct IPhoneAppRow: Identifiable, Equatable, Sendable {
     public let dataBytes: UInt64
     /// False when the iPhone reported no sizes for this app.
     public let measured: Bool
+    /// The App Store's category, in the language of the iPhone's store.
+    public var category: String? = nil
+    /// When this app was first downloaded, per the App Store.
+    public var firstDownloaded: Date? = nil
     public var id: String { bundleID }
     public var totalBytes: UInt64 { appBytes + dataBytes }
     /// Offloading removes the app and keeps its data, so what it frees is the app part only.
@@ -51,6 +55,13 @@ extension String {
 }
 
 public enum IPhoneApps {
+    /// Only these two are taken. The same record holds the Apple ID, which is never read or kept.
+    static func storeDetails(_ metadata: Any?) -> (category: String?, firstDownloaded: Date?) {
+        guard let data = metadata as? Data, let store = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any] else { return (nil, nil) }
+        let genre = (store["genre"] as? String)?.cleanedName
+        let date = ((store["com.apple.iTunesStore.downloadInfo"] as? [String: Any])?["purchaseDate"] as? String).flatMap { ISO8601DateFormatter().date(from: $0) }
+        return (genre?.isEmpty == false ? genre : nil, date)
+    }
     /// iPhones report these as a date or as seconds since 2001, depending on the value.
     static func backupDate(_ value: Any?) -> Date? {
         if let date = value as? Date { return date }
@@ -64,7 +75,8 @@ public enum IPhoneApps {
             let bundleID = attributes["CFBundleIdentifier"] as? String ?? key
             let app = attributes["StaticDiskUsage"] as? NSNumber, data = attributes["DynamicDiskUsage"] as? NSNumber
             let name = (attributes["CFBundleDisplayName"] as? String).flatMap { $0.isEmpty ? nil : $0 } ?? bundleID
-            return IPhoneAppRow(name: name.cleanedName, bundleID: bundleID.displaySafe, appBytes: UInt64(max(0, app?.int64Value ?? 0)), dataBytes: UInt64(max(0, data?.int64Value ?? 0)), measured: app != nil || data != nil)
+            let store = storeDetails(attributes["iTunesMetadata"])
+            return IPhoneAppRow(name: name.cleanedName, bundleID: bundleID.displaySafe, appBytes: UInt64(max(0, app?.int64Value ?? 0)), dataBytes: UInt64(max(0, data?.int64Value ?? 0)), measured: app != nil || data != nil, category: store.category, firstDownloaded: store.firstDownloaded)
         }.sorted { ($0.totalBytes, $1.name.lowercased()) > ($1.totalBytes, $0.name.lowercased()) }
     }
 }
@@ -178,7 +190,7 @@ public final class IPhoneDeviceWatcher: @unchecked Sendable {
         guard framework.isPaired(device) == 1, framework.validatePairing(device) == 0, framework.startSession(device) == 0 else { throw IPhoneReadError.needsTrust }
         defer { _ = framework.stopSession(device) }
         let name = framework.copyValue(device, nil, "DeviceName" as CFString)?.takeRetainedValue() as? String
-        let options = ["ApplicationType": "User", "ReturnAttributes": ["CFBundleIdentifier", "CFBundleDisplayName", "StaticDiskUsage", "DynamicDiskUsage"]] as [String: Any]
+        let options = ["ApplicationType": "User", "ReturnAttributes": ["CFBundleIdentifier", "CFBundleDisplayName", "StaticDiskUsage", "DynamicDiskUsage", "iTunesMetadata"]] as [String: Any]
         var found: Unmanaged<CFDictionary>?
         let code = framework.lookup(device, options as CFDictionary, &found)
         guard code == 0, let apps = found?.takeRetainedValue() as? [String: Any] else { throw IPhoneReadError.failed(code) }

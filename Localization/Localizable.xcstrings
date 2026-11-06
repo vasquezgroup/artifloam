@@ -49417,6 +49417,9 @@
         }
       }
     },
+    "Active in the last 6 months" : {
+
+    },
     "Active sessions protected" : {
       "localizations" : {
         "ar" : {
@@ -49564,6 +49567,9 @@
           }
         }
       }
+    },
+    "Active this month" : {
+
     },
     "Activity" : {
       "comment" : "Settings tab: receipts of past cleanups",
@@ -50899,9 +50905,6 @@
           }
         }
       }
-    },
-    "All apps" : {
-
     },
     "All apps & details" : {
       "localizations" : {
@@ -53123,9 +53126,6 @@
           }
         }
       }
-    },
-    "Almost no data of their own. Offloading frees nearly all of it." : {
-
     },
     "Already turned it on? macOS may need Artifloam to reopen first." : {
       "localizations" : {
@@ -67509,7 +67509,7 @@
         }
       }
     },
-    "Big, but barely used?" : {
+    "Big, with little data" : {
 
     },
     "Bigger Text" : {
@@ -75210,6 +75210,9 @@
           }
         }
       }
+    },
+    "Category" : {
+
     },
     "Change monitoring unavailable · Refresh performs a full scan" : {
       "localizations" : {
@@ -93685,6 +93688,9 @@
           }
         }
       }
+    },
+    "Data" : {
+
     },
     "Delete" : {
       "comment" : "Button: confirm deleting the selected items",
@@ -116277,6 +116283,9 @@
         }
       }
     },
+    "First downloaded %@" : {
+
+    },
     "First run starts in a moment." : {
       "localizations" : {
         "ar" : {
@@ -119736,6 +119745,9 @@
       }
     },
     "From the backup of %@" : {
+
+    },
+    "From when each app's data last changed, according to the backup. Background activity counts too." : {
 
     },
     "Full Disk Access" : {
@@ -127103,6 +127115,12 @@
         }
       }
     },
+    "Holds a lot of data" : {
+
+    },
+    "Holds little data" : {
+
+    },
     "Holds most of its original charge." : {
       "localizations" : {
         "ar" : {
@@ -127398,6 +127416,9 @@
           }
         }
       }
+    },
+    "Holds some data" : {
+
     },
     "Home" : {
       "localizations" : {
@@ -158875,6 +158896,9 @@
     "No backup of this iPhone is on this Mac. You can pick another one." : {
 
     },
+    "No category" : {
+
+    },
     "No cleanup in this session." : {
       "localizations" : {
         "ar" : {
@@ -168651,6 +168675,9 @@
         }
       }
     },
+    "Offloading frees nearly all of it. Some apps keep their data online, so check you don't use them." : {
+
+    },
     "Offloading frees only the app part." : {
 
     },
@@ -174533,6 +174560,9 @@
           }
         }
       }
+    },
+    "Open" : {
+
     },
     "Open Artifloam" : {
       "localizations" : {
@@ -188758,6 +188788,9 @@
           }
         }
       }
+    },
+    "Quiet for over 6 months" : {
+
     },
     "Quit" : {
       "comment" : "Button: quit the app that is slowing the Mac",
@@ -218575,6 +218608,9 @@
         }
       }
     },
+    "Show apps by" : {
+
+    },
     "Show apps last used: %@" : {
       "localizations" : {
         "ar" : {
@@ -219611,6 +219647,9 @@
           }
         }
       }
+    },
+    "Size" : {
+
     },
     "Size unknown" : {
       "localizations" : {
@@ -243575,6 +243614,9 @@
         }
       }
     },
+    "Use" : {
+
+    },
     "Use a backup on this Mac" : {
 
     },
@@ -258957,6 +258999,9 @@
           }
         }
       }
+    },
+    "iOS doesn't tell a computer when an app was last opened, so this groups apps by how much data they hold. It's only a clue: apps like email keep their data online. A backup shows when each app last changed anything." : {
+
     },
     "iPhone" : {
 

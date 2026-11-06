@@ -58,6 +58,34 @@ final class IPhoneAppsTests: XCTestCase {
         for dangerous in ["--restore", "-r", "--erase", "-E", "--remove", "-R", "--change", "-C"] { XCTAssertFalse(arguments.contains(dangerous)) }
     }
 
+    func testStoreRecordGivesCategoryAndDateAndNothingElse() throws {
+        let record: [String: Any] = ["genre": "Dienst\u{00AD}programme", "com.apple.iTunesStore.downloadInfo": ["purchaseDate": "2014-03-01T10:00:00Z", "accountInfo": ["AppleID": "secret@example.com"]]]
+        let data = try PropertyListSerialization.data(fromPropertyList: record, format: .binary, options: 0)
+        let row = try XCTUnwrap(IPhoneApps.rows(from: ["a": ["StaticDiskUsage": 1, "DynamicDiskUsage": 1, "iTunesMetadata": data]]).first)
+        XCTAssertEqual(row.category, "Dienstprogramme")
+        XCTAssertEqual(row.firstDownloaded, ISO8601DateFormatter().date(from: "2014-03-01T10:00:00Z"))
+        XCTAssertFalse(String(describing: row).contains("secret@example.com"))
+        XCTAssertNil(IPhoneApps.rows(from: ["a": ["StaticDiskUsage": 1, "iTunesMetadata": "not data"]]).first?.category)
+    }
+
+    func testUseIsEstimatedFromDataUntilABackupGivesDates() {
+        func app(_ id: String, _ a: UInt64, _ d: UInt64) -> IPhoneAppRow { IPhoneAppRow(name: id, bundleID: id, appBytes: a, dataBytes: d, measured: true) }
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        let heavy = app("heavy", 100, 900), bare = app("bare", 1000, 1), middle = app("middle", 1000, 500)
+        let estimate = IPhoneInsights(apps: [heavy, bare, middle], now: now)
+        XCTAssertEqual([estimate.use(of: heavy), estimate.use(of: bare), estimate.use(of: middle)], [.more, .less, .some])
+        let dated = IPhoneInsights(apps: [heavy, bare], lastChanged: ["heavy": now.addingTimeInterval(-400 * 86_400), "bare": now.addingTimeInterval(-86_400)], now: now)
+        XCTAssertEqual(dated.use(of: heavy), .less)
+        XCTAssertEqual(dated.use(of: bare), .more)
+    }
+
+    func testCategoriesAreBiggestFirstWithUnknownLast() {
+        var a = IPhoneAppRow(name: "a", bundleID: "a", appBytes: 10, dataBytes: 0, measured: true); a.category = "Games"
+        var b = IPhoneAppRow(name: "b", bundleID: "b", appBytes: 50, dataBytes: 0, measured: true); b.category = "Music"
+        let c = IPhoneAppRow(name: "c", bundleID: "c", appBytes: 90, dataBytes: 0, measured: true)
+        XCTAssertEqual(IPhoneInsights(apps: [a, b, c]).categories.map(\.id), ["Music", "Games", ""])
+    }
+
     func testAppsWithNoSizesAreMarked() {
         let rows = IPhoneApps.rows(from: ["a": ["CFBundleIdentifier": "a", "CFBundleDisplayName": "A"]])
         XCTAssertFalse(rows[0].measured)

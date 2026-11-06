@@ -188,6 +188,11 @@ struct IPhoneView: View {
     private let columnWidth: CGFloat = 104
     @State private var confirmingBackup = false
     @State private var confirmingRemoval = false
+    private enum ListMode { case size, category, use }
+    @State private var mode = ListMode.category
+    @State private var showingAll = false
+    @State private var expanded = Set<String>()
+    private static let topCount = 15
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             HStack(alignment: .firstTextBaseline) {
@@ -211,22 +216,87 @@ struct IPhoneView: View {
         }
     }
     @ViewBuilder private func apps(_ report: IPhoneAppsReport, _ insights: IPhoneInsights) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 10) {
             if report.sizesMissing {
                 Text("This iPhone listed its apps but didn't report their sizes.").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
             }
             if report.apps.isEmpty { Text("This iPhone reported no apps.").stewardFont(.body).foregroundStyle(.secondary) }
-            else {
+            else if let group = state.group {
                 HStack(spacing: 8) {
-                    Text(state.group.map(IPhoneGroupTiles.title) ?? String(localized: "All apps")).stewardFont(.title3, weight: .semibold)
-                    if state.group != nil { Button("Show all") { state.group = nil }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)) }
+                    Text(IPhoneGroupTiles.title(group)).stewardFont(.title3, weight: .semibold)
+                    Button("Show all") { state.group = nil }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
                     Spacer()
-                    Text("App").frame(width: columnWidth, alignment: .trailing)
-                    Text("Documents & Data").frame(width: columnWidth + 20, alignment: .trailing)
-                    Text("Total").frame(width: columnWidth, alignment: .trailing)
-                }.stewardFont(.caption, weight: .semibold).foregroundStyle(.secondary).padding(.horizontal, 14)
+                }
+                columnTitles
+                rows(insights.apps(in: group))
+            } else {
+                HStack {
+                    Text("\(report.apps.count) apps").stewardFont(.title3, weight: .semibold)
+                    Spacer()
+                    Picker("Show apps by", selection: $mode) {
+                        Text("Size").tag(ListMode.size)
+                        Text("Category").tag(ListMode.category)
+                        Text(state.lastChanged.isEmpty ? "Data" : "Use").tag(ListMode.use)
+                    }.pickerStyle(.segmented).labelsHidden().frame(width: 270)
+                }
+                switch mode {
+                case .size:
+                    columnTitles
+                    rows(showingAll ? report.apps : Array(report.apps.prefix(Self.topCount)))
+                    if !showingAll && report.apps.count > Self.topCount {
+                        Button("Show all \(report.apps.count) apps") { showingAll = true }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
+                    }
+                case .category:
+                    ForEach(insights.categories) { section($0.id, title: $0.id.isEmpty ? String(localized: "No category") : $0.id, $0.apps) }
+                case .use:
+                    Text(state.lastChanged.isEmpty ? "iOS doesn't tell a computer when an app was last opened, so this groups apps by how much data they hold. It's only a clue: apps like email keep their data online. A backup shows when each app last changed anything." : "From when each app's data last changed, according to the backup. Background activity counts too.")
+                        .stewardFont(.caption).foregroundStyle(.white.opacity(0.7)).fixedSize(horizontal: false, vertical: true)
+                    ForEach(IPhoneAppUse.allCases.reversed()) { use in
+                        section("use-\(use.rawValue)", title: useTitle(use), insights.apps(use: use))
+                    }
+                }
             }
-            LazyVStack(spacing: 6) { ForEach(state.group.map(insights.apps(in:)) ?? report.apps) { appRow($0) } }
+        }
+    }
+    private var columnTitles: some View {
+        HStack(spacing: 8) {
+            Spacer()
+            Text("App").frame(width: columnWidth, alignment: .trailing)
+            Text("Documents & Data").frame(width: columnWidth + 20, alignment: .trailing)
+            Text("Total").frame(width: columnWidth, alignment: .trailing)
+        }.stewardFont(.caption, weight: .semibold).foregroundStyle(.secondary).padding(.horizontal, 14)
+    }
+    private func rows(_ apps: [IPhoneAppRow]) -> some View { LazyVStack(spacing: 6) { ForEach(apps) { appRow($0) } } }
+    private func useTitle(_ use: IPhoneAppUse) -> String {
+        let dated = !state.lastChanged.isEmpty
+        switch use {
+        case .more: return dated ? String(localized: "Active this month") : String(localized: "Holds a lot of data")
+        case .some: return dated ? String(localized: "Active in the last 6 months") : String(localized: "Holds some data")
+        case .less: return dated ? String(localized: "Quiet for over 6 months") : String(localized: "Holds little data")
+        }
+    }
+    /// A collapsed group: its name and total, with its apps only when opened, so 300 apps stay readable.
+    @ViewBuilder private func section(_ id: String, title: String, _ apps: [IPhoneAppRow]) -> some View {
+        if !apps.isEmpty {
+            let open = expanded.contains(id), total = apps.reduce(UInt64(0)) { $0 + $1.totalBytes }
+            VStack(spacing: 8) {
+                Button {
+                    if open { expanded.remove(id) } else { expanded.insert(id) }
+                } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "chevron.right").font(.system(size: 11, weight: .bold)).rotationEffect(.degrees(open ? 90 : 0)).accessibilityHidden(true)
+                        Text(title).stewardFont(.body, weight: .semibold).lineLimit(1)
+                        Text("\(apps.count) apps").stewardFont(.caption).foregroundStyle(.white.opacity(0.65))
+                        Spacer()
+                        Text(apps.prefix(3).map(\.name).joined(separator: ", ")).stewardFont(.caption).foregroundStyle(.white.opacity(0.55)).lineLimit(1).frame(maxWidth: 300, alignment: .trailing)
+                        Text(formattedBytes(total)).stewardFont(.callout, weight: .semibold).monospacedDigit().frame(minWidth: 76, alignment: .trailing)
+                    }
+                    .padding(.horizontal, 14).padding(.vertical, 12)
+                    .background(.white.opacity(open ? 0.12 : 0.06), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                }.buttonStyle(.plain).accessibilityValue(open ? String(localized: "Open") : String(localized: "Closed"))
+                if open { columnTitles; rows(apps) }
+            }
         }
     }
     private func appRow(_ app: IPhoneAppRow) -> some View {
@@ -234,6 +304,7 @@ struct IPhoneView: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(app.name).stewardFont(.body, weight: .semibold).lineLimit(1).help(app.bundleID)
                 if app.measured && app.totalBytes > 0 { Text(advice(app.advice)).stewardFont(.caption).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true) }
+                if let got = app.firstDownloaded, state.lastChanged[app.bundleID] == nil { Text("First downloaded \(got.formatted(.dateTime.month(.abbreviated).year()))").stewardFont(.caption).foregroundStyle(.secondary) }
                 if let changed = state.lastChanged[app.bundleID] { Text("Last data change: \(changed.formatted(date: .abbreviated, time: .omitted))").stewardFont(.caption).foregroundStyle(.secondary) }
             }
             Spacer(minLength: 8)
@@ -415,7 +486,7 @@ private struct IPhoneGroupTiles: View {
     static func title(_ group: IPhoneAppGroup) -> String {
         switch group {
         case .quiet: return String(localized: "No activity in 6 months")
-        case .barelyUsed: return String(localized: "Big, but barely used?")
+        case .barelyUsed: return String(localized: "Big, with little data")
         case .heavyData: return String(localized: "Full of data")
         case .offloadable: return String(localized: "Easy to offload")
         }
@@ -423,7 +494,7 @@ private struct IPhoneGroupTiles: View {
     private func tagline(_ group: IPhoneAppGroup) -> String {
         switch group {
         case .quiet: return hasBackup ? String(localized: "Nothing in them has changed for over 6 months. Good ones to delete.") : String(localized: "Needs a backup, which shows when each app last changed anything.")
-        case .barelyUsed: return String(localized: "Almost no data of their own. Offloading frees nearly all of it.")
+        case .barelyUsed: return String(localized: "Offloading frees nearly all of it. Some apps keep their data online, so check you don't use them.")
         case .heavyData: return String(localized: "Offloading won't help. Check inside the app, or delete it.")
         case .offloadable: return String(localized: "Mostly the app. Offloading keeps your data.")
         }

@@ -4,13 +4,25 @@ import Foundation
 public enum IPhoneAppGroup: String, CaseIterable, Identifiable, Sendable {
     /// No data changed in a long time, according to a backup.
     case quiet
-    /// A big app holding almost nothing of its own, so it has probably seen little use.
+    /// A big app holding almost nothing of its own. Not proof of little use: real tests showed Gmail and X here, which keep their data online.
     case barelyUsed
     /// Mostly data, so offloading wouldn't help.
     case heavyData
     /// Mostly the app itself, so offloading frees nearly all of it.
     case offloadable
     public var id: String { rawValue }
+}
+
+/// Real change dates from a backup win. Without them this only says how much data an app holds, and the view must not call that use.
+public enum IPhoneAppUse: Int, CaseIterable, Identifiable, Sendable {
+    case more, some, less
+    public var id: Int { rawValue }
+}
+
+public struct IPhoneAppSection: Identifiable, Equatable, Sendable {
+    public let id: String
+    public let apps: [IPhoneAppRow]
+    public var totalBytes: UInt64 { apps.reduce(0) { $0 + $1.totalBytes } }
 }
 
 public struct IPhoneInsights: Equatable, Sendable {
@@ -40,6 +52,23 @@ public struct IPhoneInsights: Equatable, Sendable {
         case .heavyData: return candidates.filter { $0.advice == .offloadKeepsData }
         case .offloadable: return candidates.filter { $0.advice == .offloadHelps }
         }
+    }
+
+    public func use(of app: IPhoneAppRow) -> IPhoneAppUse {
+        if let changed = lastChanged[app.bundleID] {
+            let age = now.timeIntervalSince(changed)
+            return age < 30 * 86_400 ? .more : age < Self.quietAfter ? .some : .less
+        }
+        if app.dataBytes >= app.appBytes || app.dataBytes >= 500_000_000 { return .more }
+        return app.dataBytes < app.appBytes / 10 ? .less : .some
+    }
+
+    public func apps(use: IPhoneAppUse) -> [IPhoneAppRow] { apps.filter { self.use(of: $0) == use } }
+
+    /// Biggest category first. Apps without one go last, under an empty id for the view to name.
+    public var categories: [IPhoneAppSection] {
+        Dictionary(grouping: apps) { $0.category ?? "" }.map { IPhoneAppSection(id: $0.key, apps: $0.value) }
+            .sorted { ($0.id.isEmpty ? 0 : 1, $0.totalBytes, $1.id) > ($1.id.isEmpty ? 0 : 1, $1.totalBytes, $0.id) }
     }
 
     public func bytes(in group: IPhoneAppGroup) -> UInt64 {
