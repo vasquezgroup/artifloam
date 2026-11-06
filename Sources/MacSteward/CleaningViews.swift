@@ -24,13 +24,18 @@ struct CleanConfirmSheet: View {
     }
     private var total: UInt64 { findings.reduce(0) { $0 + $1.bytes } + extras.reduce(0) { $0 + ($1.bytes ?? 0) } }
     private var categories: Int { groups.count + extras.count }
+    private var summaryLine: String {
+        if !extras.isEmpty { return String(localized: "\(categories) categories") }
+        let itemsText = String(localized: "\(findings.count) items"), categoriesText = String(localized: "\(groups.count) categories")
+        return String(localized: "\(itemsText) in \(categoriesText)")
+    }
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack(spacing: 12) {
                 Image(systemName: "sparkles").font(.system(size: 26)).foregroundStyle(theme.accent)
                 VStack(alignment: .leading, spacing: 3) {
                     Text(total > 0 ? "Clean \(formattedBytes(total))?" : "Clean what you selected?").stewardFont(.title2, weight: .semibold)
-                    Text(extras.isEmpty ? "\(findings.count) items in \(groups.count) \(groups.count == 1 ? "category" : "categories")" : "\(categories) \(categories == 1 ? "category" : "categories")").stewardFont(.body).foregroundStyle(.secondary)
+                    Text(summaryLine).stewardFont(.body).foregroundStyle(.secondary)
                 }
             }
             VStack(spacing: 0) {
@@ -54,7 +59,7 @@ struct CleanConfirmSheet: View {
                 }
             }.background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
             if !appsToQuit.isEmpty {
-                Label("\(appsToQuit.joined(separator: ", ")) will quit first. \(appsToQuit.count == 1 ? "It" : "They") may ask you to save. If an app doesn't quit, its cache is kept.", systemImage: "xmark.app")
+                Label(appsToQuit.count == 1 ? String(localized: "\(appsToQuit.joined(separator: ", ")) will quit first. It may ask you to save. If an app doesn't quit, its cache is kept.") : String(localized: "\(appsToQuit.joined(separator: ", ")) will quit first. They may ask you to save. If an app doesn't quit, its cache is kept."), systemImage: "xmark.app")
                     .stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
             }
             ForEach(extras.filter { $0.warning != nil }) { extra in
@@ -62,12 +67,12 @@ struct CleanConfirmSheet: View {
             }
             let flagged = findings.filter { !($0.warnings ?? []).isEmpty }
             if !flagged.isEmpty {
-                Label("\(flagged.count) selected \(flagged.count == 1 ? "item has" : "items have") a warning. Go back to Review to check \(flagged.count == 1 ? "it" : "them") if you're unsure.", systemImage: "exclamationmark.triangle")
+                Label("\(flagged.count) selected items have a warning. Go back to Review to check them if you're unsure.", systemImage: "exclamationmark.triangle")
                     .stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
             }
             let recent = findings.filter { $0.hold == .recent }
             if !recent.isEmpty {
-                Label("\(recent.count) recently used \(recent.count == 1 ? "cache" : "caches") · \(formattedBytes(recent.reduce(0) { $0 + $1.bytes })). Apps will likely rebuild them soon.", systemImage: "clock.arrow.circlepath")
+                Label("\(recent.count) recently used caches · \(formattedBytes(recent.reduce(0) { $0 + $1.bytes })). Apps will likely rebuild them soon.", systemImage: "clock.arrow.circlepath")
                     .stewardFont(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
             Label("Each item is checked again right before removal. Anything in use is skipped. Removed caches are rebuilt by their apps when needed.", systemImage: "checkmark.shield")
@@ -76,7 +81,7 @@ struct CleanConfirmSheet: View {
                 Button("Cancel") { dismiss() }.keyboardShortcut(.cancelAction)
                     .buttonStyle(CleanupGlassButtonStyle(secondary: true))
                 Spacer()
-                Button { dismiss(); confirm() } label: { Label(extras.isEmpty ? "Delete \(findings.count) items · \(formattedBytes(total))" : total > 0 ? "Delete · \(formattedBytes(total))" : "Delete", systemImage: "trash.fill").stewardFont(.body, weight: .semibold) }
+                Button { dismiss(); confirm() } label: { Label(extras.isEmpty ? String(localized: "Delete \(findings.count) items · \(formattedBytes(total))") : total > 0 ? String(localized: "Delete · \(formattedBytes(total))") : String(localized: "Delete", comment: "Button: confirm deleting the selected items"), systemImage: "trash.fill").stewardFont(.body, weight: .semibold) }
                     .keyboardShortcut(.defaultAction)
                     .buttonStyle(DestructiveCapsuleStyle())
             }
@@ -123,9 +128,9 @@ struct CleaningStage: View {
             Text(progress.current.isEmpty ? " " : progress.current).stewardFont(.body).foregroundStyle(.white.opacity(0.6)).lineLimit(1).truncationMode(.middle).frame(maxWidth: 520)
                 .contentTransition(.opacity)
             HStack(spacing: 28) {
-                metric(formattedBytes(progress.freedBytes), "freed")
-                metric("\(progress.completed) of \(progress.total)", "checked")
-                metric("\(progress.skipped)", "kept, in use")
+                metric(formattedBytes(progress.freedBytes), String(localized: "freed", comment: "Under a byte counter: space freed"))
+                metric(String(localized: "\(progress.completed) of \(progress.total)"), String(localized: "checked", comment: "Under a counter: items checked so far"))
+                metric(progress.skipped.formatted(), String(localized: "kept, in use", comment: "Under a counter: items skipped because an app is using them"))
             }.padding(.top, 6)
             Button(action: stop) { Label(stopping ? "Stopping…" : "Stop", systemImage: "stop.fill") }
                 .buttonStyle(CleanupGlassButtonStyle(secondary: true)).disabled(stopping).padding(.top, 8)
@@ -169,15 +174,15 @@ struct CleaningStage: View {
             if !removedByCategory.isEmpty {
                 VStack(alignment: .leading, spacing: 12) {
                     ForEach(removedByCategory.prefix(5), id: \.group) { row in
-                        GlossyPoint(icon: row.group.icon, text: row.group.title + " · " + formattedBytes(row.bytes), accent: theme.accent)
+                        GlossyPoint(icon: row.group.icon, text: String(localized: "\(row.group.title) · \(formattedBytes(row.bytes))"), accent: theme.accent)
                     }
                     if removedByCategory.count > 5 { Text("+\(removedByCategory.count - 5) more").stewardFont(.caption).foregroundStyle(.white.opacity(0.6)).padding(.leading, 46) }
                 }.padding(.top, 6)
             }
             HStack(spacing: 24) {
-                metric("\(progress.removed)", "removed")
-                metric("\(progress.skipped)", progress.skipped == 1 ? "kept" : "kept")
-                metric(formattedBytes(freeSpace), "free now")
+                metric(progress.removed.formatted(), String(localized: "removed", comment: "Under a counter: items removed"))
+                metric(progress.skipped.formatted(), String(localized: "kept", comment: "Under a counter: items left in place"))
+                metric(formattedBytes(freeSpace), String(localized: "free now", comment: "Under a byte counter: free disk space now"))
             }.padding(.top, 4)
             HStack(spacing: 12) {
                 Button("View receipt", action: receipt).buttonStyle(CleanupGlassButtonStyle(secondary: true))
@@ -196,6 +201,6 @@ struct CleaningStage: View {
 struct BackSquareButton: View {
     let action: () -> Void
     var body: some View {
-        Button(action: action) { Image(systemName: "chevron.left") }.buttonStyle(.bordered).help("Back")
+        Button(action: action) { Image(systemName: "chevron.left").flipsForRightToLeftLayoutDirection(true) }.buttonStyle(.bordered).help("Back")
     }
 }

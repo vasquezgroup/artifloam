@@ -10,14 +10,14 @@ public final class Cleaner {
     }
     // Test-only injection stays internal; the public API always captures real activity.
     func clean(_ report: ScanReport, selectedIDs: Set<String>, approvedIDs: Set<String> = [], activityOverride: ActivitySnapshot?, progress: @Sendable (CleanProgress) -> Void = { _ in }) throws -> CleanupReceipt {
-        guard report.version == 1, report.home == configuration.home.path, Date().timeIntervalSince(report.createdAt) >= 0, Date().timeIntervalSince(report.createdAt) < 3600 else { throw StewardError.blocked("Scan is expired or belongs to another home directory") }
+        guard report.version == 1, report.home == configuration.home.path, Date().timeIntervalSince(report.createdAt) >= 0, Date().timeIntervalSince(report.createdAt) < 3600 else { throw StewardError.blocked(String(localized: "Scan is expired or belongs to another home directory")) }
         let state = configuration.home.appendingPathComponent("Library/Application Support/MacSteward", isDirectory: true)
         try FileManager.default.createDirectory(at: state, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
         let lockURL = state.appendingPathComponent("cleanup.lock")
         let lock = open(lockURL.path, O_CREAT | O_RDWR | O_NOFOLLOW, 0o600)
-        guard lock >= 0 else { throw StewardError.blocked("Cannot open cleanup lock") }
+        guard lock >= 0 else { throw StewardError.blocked(String(localized: "Cannot open cleanup lock")) }
         defer { close(lock) }
-        guard flock(lock, LOCK_EX | LOCK_NB) == 0 else { throw StewardError.blocked("Another cleanup is running") }
+        guard flock(lock, LOCK_EX | LOCK_NB) == 0 else { throw StewardError.blocked(String(localized: "Another cleanup is running")) }
         defer { _ = flock(lock, LOCK_UN) }
         let before = DiskSpace.read(at: configuration.home.path); var items = [CleanupItem]()
         let policy = SafetyPolicy(configuration: configuration)
@@ -25,14 +25,14 @@ public final class Cleaner {
         let selected = report.findings.filter { selectedIDs.contains($0.id) }.sorted { $0.rule != XcodeStorageInventory.simulatorRule && $1.rule == XcodeStorageInventory.simulatorRule }
         // Parent/child overlap can double count and invalidate plans; reject it.
         for first in selected { for second in selected where first.id != second.id && second.rule != XcodeStorageInventory.simulatorRule {
-            if first.path.hasPrefix(second.path + "/") { throw StewardError.blocked("Overlapping cleanup targets; scan again") }
+            if first.path.hasPrefix(second.path + "/") { throw StewardError.blocked(String(localized: "Overlapping cleanup targets; scan again")) }
         } }
         var snapshot: (taken: Date, activity: ActivitySnapshot)?
         var freed: UInt64 = 0
         for (index, finding) in selected.enumerated() {
             // Stop between items: the one in progress always finishes, the rest are left untouched.
             if Task.isCancelled {
-                items += selected[index...].map { CleanupItem(path: $0.path, outcome: "skipped", detail: "Stopped before cleaning", bytes: 0) }
+                items += selected[index...].map { CleanupItem(path: $0.path, outcome: "skipped", detail: String(localized: "Stopped before cleaning"), bytes: 0) }
                 break
             }
             let removedSoFar = items.filter { $0.outcome == "removed" }.count
@@ -45,14 +45,14 @@ public final class Cleaner {
                 if snapshot == nil || Date().timeIntervalSince(snapshot!.taken) > 5 { snapshot = (Date(), activityOverride ?? ActivitySnapshot.capture()) }
                 let activity = snapshot!.activity
                 if finding.rule == XcodeStorageInventory.trashRule {
-                    guard approvedIDs.contains(finding.id) else { throw StewardError.blocked("Only folders you ticked are moved") }
+                    guard approvedIDs.contains(finding.id) else { throw StewardError.blocked(String(localized: "Only folders you ticked are moved")) }
                     try XcodeStorageInventory.trash(finding, configuration: configuration, activity: activity)
-                    items.append(CleanupItem(path: finding.path, outcome: "removed", detail: "Moved to Trash. " + finding.reason, bytes: finding.bytes)); continue
+                    items.append(CleanupItem(path: finding.path, outcome: "removed", detail: String(localized: "Moved to Trash. \(finding.reason)"), bytes: finding.bytes)); continue
                 }
                 if finding.rule == XcodeStorageInventory.simulatorRule {
-                    guard approvedIDs.contains(finding.id) else { throw StewardError.blocked("Only simulators you ticked are removed") }
+                    guard approvedIDs.contains(finding.id) else { throw StewardError.blocked(String(localized: "Only simulators you ticked are removed")) }
                     try XcodeStorageInventory.removeSimulator(finding, configuration: configuration, activity: activity)
-                    items.append(CleanupItem(path: finding.path, outcome: "removed", detail: finding.title + ". " + finding.reason, bytes: finding.bytes)); continue
+                    items.append(CleanupItem(path: finding.path, outcome: "removed", detail: String(localized: "\(finding.title). \(finding.reason)"), bytes: finding.bytes)); continue
                 }
                 let tree = try policy.validate(finding, activity: activity, approved: approvedIDs.contains(finding.id))
                 try SecureRemoval.remove(URL(fileURLWithPath: finding.path), tree: tree)

@@ -39,7 +39,7 @@ public enum BroadCaches {
             let name = info?["name"] as? String ?? device.lastPathComponent
             let runtime = (info?["runtime"] as? String)?.components(separatedBy: "SimRuntime.").last?.replacingOccurrences(of: "-", with: ".").replacingOccurrences(of: "iOS.", with: "iOS ") ?? ""
             let label = runtime.isEmpty ? name : "\(name) · \(runtime)"
-            return [("data/private/var/MobileAsset/AssetsV2", "downloaded assets"), ("data/Library/Caches", "app caches")].compactMap { relative, kind in
+            return [("data/private/var/MobileAsset/AssetsV2", String(localized: "downloaded assets")), ("data/Library/Caches", String(localized: "app caches"))].compactMap { relative, kind in
                 let url = device.appendingPathComponent(relative)
                 return FileManager.default.fileExists(atPath: url.path) ? (url, "\(label) · \(kind)") : nil
             }
@@ -98,6 +98,8 @@ public enum BroadCaches {
     /// A Terminal script for a known Cellar only; the path comes from a finding, so nothing else can end up in the script.
     public static func brewCleanupScript(cellar: String) -> String? {
         guard cellars.contains(cellar) else { return nil }
-        return "#!/bin/zsh\necho 'Artifloam asked Homebrew to remove old versions:'\n\((cellar as NSString).deletingLastPathComponent)/bin/brew cleanup --prune=30\n"
+        // A translation may hold an apostrophe, and this text sits inside single quotes.
+        let note = String(localized: "Artifloam asked Homebrew to remove old versions:").replacingOccurrences(of: "'", with: "'\\''")
+        return "#!/bin/zsh\necho '\(note)'\n\((cellar as NSString).deletingLastPathComponent)/bin/brew cleanup --prune=30\n"
     }
 }

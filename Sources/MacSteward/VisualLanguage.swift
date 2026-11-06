@@ -216,7 +216,7 @@ struct OrbAction: View {
             .scaleEffect(hovered && !reduceMotion ? 1.07 : 1)
             .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.75), value: hovered)
             .onHover { hovered = $0 }.disabled(disabled).opacity(disabled ? 0.45 : 1)
-            .accessibilityLabel(title).accessibilityValue(showingProgress ? progress.map { "\(Int($0 * 100)) percent complete" } ?? "Preparing scan" : "")
+            .accessibilityLabel(title).accessibilityValue(showingProgress ? progress.map { String(localized: "\(Int($0 * 100)) percent complete") } ?? String(localized: "Preparing scan") : "")
     }
 }
 private struct OrbPressStyle: ButtonStyle {
@@ -268,7 +268,8 @@ struct StewardWindowControls: NSViewRepresentable {
             let types: [NSWindow.ButtonType] = [.closeButton, .miniaturizeButton, .zoomButton]
             for (index, type) in types.enumerated() {
                 guard let button = NSWindow.standardWindowButton(type, for: [.titled, .closable, .miniaturizable, .resizable]) else { continue }
-                button.setFrameOrigin(NSPoint(x: CGFloat(index) * 20, y: 0))
+                // Right to left, macOS keeps close nearest the window's corner.
+                button.setFrameOrigin(NSPoint(x: CGFloat(appLayoutDirection == .rightToLeft ? 2 - index : index) * 20, y: 0))
                 button.target = self
                 button.action = index == 0 ? #selector(closeWindow(_:)) : index == 1 ? #selector(minimizeWindow(_:)) : #selector(zoomWindow(_:))
                 addSubview(button)
@@ -333,6 +334,10 @@ struct StewardNavigationArtwork: View {
         }.frame(width: size, height: size).accessibilityHidden(true)
     }
 }
+
+/// Which way the language macOS chose for this launch reads. Set on every hosting root, because this window's
+/// SwiftUI otherwise stays left to right. Keys follow the same choice, so text and layout always agree.
+let appLayoutDirection: LayoutDirection = Locale.Language(identifier: Bundle.main.preferredLocalizations.first ?? "en").characterDirection == .rightToLeft ? .rightToLeft : .leftToRight
 
 enum StewardResources {
     static let bundle: Bundle = {
@@ -434,7 +439,7 @@ struct BulkBar<Actions: View>: View {
     let title: String
     @Binding var isOn: Bool
     var enabled = true
-    var help = "Select or deselect everything listed"
+    var help = String(localized: "Select or deselect everything listed")
     let summary: String
     @ViewBuilder var actions: () -> Actions
     var body: some View {

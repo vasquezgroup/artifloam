@@ -35,7 +35,7 @@ final class MemoryMonitor: ObservableObject {
         guard !refreshing else { return }; refreshing = true; defer { refreshing = false }
         let apps = NSWorkspace.shared.runningApplications.filter { $0.activationPolicy == .regular && $0.processIdentifier != getpid() }.compactMap { app -> MemoryAppDescriptor? in
             guard let path = app.bundleURL?.path else { return nil }
-            return MemoryAppDescriptor(pid: app.processIdentifier, name: app.localizedName ?? "Application", bundlePath: path)
+            return MemoryAppDescriptor(pid: app.processIdentifier, name: app.localizedName ?? String(localized: "Application"), bundlePath: path)
         }
         do {
             reading = try await Task.detached(priority: .utility) { try MemoryReading.capture(apps: apps) }.value
@@ -75,7 +75,7 @@ final class MemoryMonitor: ObservableObject {
     @discardableResult func quit(_ row: MemoryAppUsage) -> Bool {
         guard canQuit(row), NSRunningApplication(processIdentifier: row.id)?.terminate() == true else { return false }
         quitting[row.id] = row.bytes; quitAskedAt[row.id] = quitAskedAt[row.id] ?? Date()
-        message = "Asked \(row.app.name) to quit. Save any changes if it asks."
+        message = String(localized: "Asked \(row.app.name) to quit. Save any changes if it asks.")
         Task { await refresh() }
         return true
     }
@@ -94,13 +94,13 @@ final class MemoryMonitor: ObservableObject {
     @discardableResult func forceQuit(_ row: MemoryAppUsage) -> Bool {
         guard canQuit(row), let app = NSRunningApplication(processIdentifier: row.id) else { return false }
         let alert = NSAlert()
-        alert.messageText = "Force quit \(row.app.name.displaySafe)?"
-        alert.informativeText = "\(row.app.name.displaySafe) didn't respond to Quit. Unsaved changes in it will be lost."
-        alert.addButton(withTitle: "Force Quit"); alert.addButton(withTitle: "Cancel")
+        alert.messageText = String(localized: "Force quit \(row.app.name.displaySafe)?")
+        alert.informativeText = String(localized: "\(row.app.name.displaySafe) didn't respond to Quit. Unsaved changes in it will be lost.")
+        alert.addButton(withTitle: String(localized: "Force Quit")); alert.addButton(withTitle: String(localized: "Cancel"))
         alert.buttons.first?.hasDestructiveAction = true
         guard alert.runModal() == .alertFirstButtonReturn, app.forceTerminate() else { return false }
         quitting[row.id] = row.bytes
-        message = "Force quit \(row.app.name)."
+        message = String(localized: "Force quit \(row.app.name).")
         Task { await refresh() }
         return true
     }
@@ -111,7 +111,7 @@ final class MemoryMonitor: ObservableObject {
             if NSRunningApplication(processIdentifier: row.id)?.terminate() == true { requested += 1; quitting[row.id] = row.bytes; quitAskedAt[row.id] = quitAskedAt[row.id] ?? Date() }
         }
         selected.removeAll()
-        message = "Requested normal quit for \(requested) \(requested == 1 ? "app" : "apps"). Save any changes when prompted. Memory updates as apps finish quitting."
+        message = String(localized: "Requested normal quit for \(requested) apps. Save any changes when prompted. Memory updates as apps finish quitting.")
         Task { await refresh() }
     }
 }
@@ -152,14 +152,14 @@ struct MemoryView: View {
                         Text("Swap is memory macOS has moved to disk. A large swap means the Mac ran short earlier; it shrinks slowly after apps quit. App footprints include measurable helpers and can share pages, so they are estimates, not a promise of RAM recovered. macOS reuses cached memory automatically.").stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                     }.padding(.top, 10)
                 } label: { Text("Memory details").stewardFont(.headline) }
-            } else { StewardProgressBar(title: "Reading macOS memory…").frame(maxWidth: 280) }
+            } else { StewardProgressBar(title: String(localized: "Reading macOS memory…")).frame(maxWidth: 280) }
             if let error = monitor.error { Text(error).stewardFont(.body).foregroundStyle(.orange) }
             HStack {
                 Button("Activity Monitor") { if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.ActivityMonitor") { NSWorkspace.shared.open(url) } }
                 if let openWindow { Spacer(); Button("Open Artifloam", action: openWindow) }
             }
         }
-        .confirmationDialog("Quit \(monitor.selected.count == 1 ? "this app" : "these apps") to release memory?", isPresented: $confirmingQuit, titleVisibility: .visible) {
+        .confirmationDialog(monitor.selected.count == 1 ? String(localized: "Quit this app to release memory?") : String(localized: "Quit these apps to release memory?"), isPresented: $confirmingQuit, titleVisibility: .visible) {
             Button("Quit \(quitNames)") { monitor.quitSelected() }
             Button("Cancel", role: .cancel) { }
         } message: { Text("Apps receive a normal Quit request and may ask you to save. Nothing is force-quit. Memory recovered varies and swap may not shrink immediately.") }
@@ -170,16 +170,16 @@ struct MemoryView: View {
     private var quitNames: String { names(monitor.reading?.apps.filter { monitor.selected.contains($0.id) } ?? []) }
     private func names(_ rows: [MemoryAppUsage]) -> String {
         let list = rows.map(\.app.name)
-        return list.count <= 1 ? list.first ?? "" : list.dropLast().joined(separator: ", ") + " & " + list.last!
+        return list.count <= 1 ? list.first ?? "" : ListFormatter.localizedString(byJoining: list)
     }
     /// The answer first: one verdict, one action.
     private func hero(_ reading: MemoryReading, _ verdict: MemoryVerdict, _ suggested: [MemoryAppUsage]) -> some View {
         let color: Color = verdict.state == .tight ? accent : verdict.state == .busy ? .yellow : .mint
         let swap = reading.swap.map(formattedMemory) ?? ""
         let (headline, detail): (String, String) = switch verdict.state {
-        case .fine: ("Your Mac has room to spare", "\(formattedMemory(reading.available)) free for new apps. Nothing to do.")
-        case .busy: ("Running fine, leaning on the disk", "\(swap) has spilled to disk earlier. Quitting idle apps helps it shrink over time.")
-        case .tight: ("Memory is tight", "Apps may slow down. Quit an app you are not using; save your work first.")
+        case .fine: (String(localized: "Your Mac has room to spare"), String(localized: "\(formattedMemory(reading.available)) free for new apps. Nothing to do."))
+        case .busy: (String(localized: "Running fine, leaning on the disk"), String(localized: "\(swap) has spilled to disk earlier. Quitting idle apps helps it shrink over time."))
+        case .tight: (String(localized: "Memory is tight"), String(localized: "Apps may slow down. Quit an app you are not using; save your work first."))
         }
         let freeing = suggested.reduce(0) { $0 + $1.bytes }
         return HStack(alignment: .center, spacing: 22) {
@@ -203,7 +203,7 @@ struct MemoryView: View {
                         monitor.selected = Set(suggested.map(\.id))
                         if suggested.contains(where: { row in !reading.apps.prefix(5).contains { $0.id == row.id } }) { showAllApps = true } // So every ticked app can be seen.
                     } label: {
-                        Label("Select \(suggested.count) idle \(suggested.count == 1 ? "app" : "apps") · ~\(formattedMemory(freeing))", systemImage: "memorychip").fixedSize(horizontal: false, vertical: true)
+                        Label("Select \(suggested.count) idle apps · ~\(formattedMemory(freeing))", systemImage: "memorychip").fixedSize(horizontal: false, vertical: true)
                     }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: verdict.state == .busy))
                     .help("Ticks the largest apps you have not used in the last ten minutes. Nothing quits until you confirm below.")
                 }
@@ -215,14 +215,14 @@ struct MemoryView: View {
     }
     /// What the user has done, and the one lasting fix left.
     @ViewBuilder private func progressRow(_ verdict: MemoryVerdict) -> some View {
-        let startup = loginItems.map { "\($0) \($0 == 1 ? "app opens" : "apps open") at login" }
+        let startup = loginItems.map { String(localized: "\($0) apps open at login · Review") }
         if monitor.freedThisMonth > 0 || startup != nil {
             HStack(spacing: 10) {
                 if monitor.freedThisMonth > 0 {
-                    chip("trophy", "\(formattedMemory(monitor.freedThisMonth)) released this month", .mint)
+                    chip("trophy", String(localized: "\(formattedMemory(monitor.freedThisMonth)) released this month"), .mint)
                 }
                 if let startup, let reviewStartup {
-                    Button(action: reviewStartup) { chip("power", startup + " · Review", (loginItems ?? 0) > 5 ? .yellow : .secondary) }.buttonStyle(.plain)
+                    Button(action: reviewStartup) { chip("power", startup, (loginItems ?? 0) > 5 ? .yellow : .secondary) }.buttonStyle(.plain)
                         .help("Fewer login items means more free memory every time your Mac starts.")
                 }
             }
@@ -239,8 +239,8 @@ struct MemoryView: View {
             Text("Apps using the most memory").stewardFont(.headline)
         }
         let quittable = rows.filter(monitor.canQuit).map(\.id)
-        BulkBar(title: "Select all", isOn: Binding(get: { !quittable.isEmpty && monitor.selected.isSuperset(of: quittable) }, set: { if $0 { monitor.selected.formUnion(quittable) } else { monitor.selected.subtract(quittable) } }), enabled: !quittable.isEmpty,
-                help: "Every app listed that can quit. Each one still asks to save your work.", summary: "\(monitor.selected.count) selected · \(formattedMemory(monitor.selectedBytes))") {
+        BulkBar(title: String(localized: "Select all", comment: "Checkbox: select every listed app"), isOn: Binding(get: { !quittable.isEmpty && monitor.selected.isSuperset(of: quittable) }, set: { if $0 { monitor.selected.formUnion(quittable) } else { monitor.selected.subtract(quittable) } }), enabled: !quittable.isEmpty,
+                help: String(localized: "Every app listed that can quit. Each one still asks to save your work."), summary: String(localized: "\(monitor.selected.count) selected · \(formattedMemory(monitor.selectedBytes))")) {
             Button("Quit \(monitor.selected.count)…") { confirmingQuit = true }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(monitor.selected.isEmpty)
         }
         VStack(spacing: 6) {
@@ -270,9 +270,9 @@ struct MemoryView: View {
         if let message = monitor.message { Text(message).stewardFont(.caption).foregroundStyle(.secondary) }
     }
     private func lastUsed(_ pid: Int32) -> String {
-        if pid == NSWorkspace.shared.frontmostApplication?.processIdentifier { return "In use now" }
-        guard let date = monitor.lastActive[pid] else { return "Not used since Artifloam opened" }
-        return date > Date().addingTimeInterval(-60) ? "Used just now" : "Used " + date.formatted(.relative(presentation: .named))
+        if pid == NSWorkspace.shared.frontmostApplication?.processIdentifier { return String(localized: "In use now") }
+        guard let date = monitor.lastActive[pid] else { return String(localized: "Not used since Artifloam opened") }
+        return date > Date().addingTimeInterval(-60) ? String(localized: "Used just now") : String(localized: "Used \(date.formatted(.relative(presentation: .named)))", comment: "Last time an app was in use, e.g. Used 5 minutes ago")
     }
     private func ring(_ reading: MemoryReading) -> some View {
         ZStack {
@@ -292,11 +292,11 @@ struct MemoryView: View {
             memoryMetric("Wired", formattedMemory(reading.wired))
             memoryMetric("Compressed", formattedMemory(reading.compressed))
             memoryMetric("Cached / reclaimable", formattedMemory(reading.cached))
-            memoryMetric("Swap on disk", reading.swap.map(formattedMemory) ?? "Unavailable")
-            memoryMetric("Memory pressure", reading.pressure.rawValue)
+            memoryMetric("Swap on disk", reading.swap.map(formattedMemory) ?? String(localized: "Unavailable"))
+            memoryMetric("Memory pressure", reading.pressure.displayTitle)
         }.frame(minWidth: 230)
     }
-    private func memoryMetric(_ label: String, _ value: String) -> some View {
+    private func memoryMetric(_ label: LocalizedStringKey, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 5) { Text(label).stewardFont(.caption).foregroundStyle(.secondary); Text(value).stewardFont(.body, weight: .semibold).monospacedDigit() }
     }
 }
@@ -335,12 +335,12 @@ struct CompactMemoryView: View {
                         stat("Wired", formattedMemory(reading.wired))
                         stat("Compressed", formattedMemory(reading.compressed))
                         stat("Cached", formattedMemory(reading.cached))
-                        stat("Swap", reading.swap.map(formattedMemory) ?? "Unavailable")
+                        stat("Swap", reading.swap.map(formattedMemory) ?? String(localized: "Unavailable"))
                     }
                 }
                 HStack(spacing: 7) {
                     Circle().fill(accent).frame(width: 6, height: 6)
-                    Text("Pressure: " + reading.pressure.rawValue).font(.system(size: 14, weight: .medium)).foregroundStyle(accent)
+                    Text("Pressure: \(reading.pressure.displayTitle)").font(.system(size: 14, weight: .medium)).foregroundStyle(accent)
                     Spacer()
                     Image(systemName: "info.circle").foregroundStyle(.white.opacity(0.65))
                         .help("macOS reuses cached RAM automatically. App footprints include measurable helpers and may share pages; they are not guaranteed recoverable bytes. Quitting apps uses normal save prompts.")
@@ -362,10 +362,10 @@ struct CompactMemoryView: View {
                     }
                 }
                 Button { confirmingQuit = true } label: {
-                    Label(monitor.selected.isEmpty ? "Free RAM · Select apps above" : "Free RAM · Review \(monitor.selected.count) \(monitor.selected.count == 1 ? "app" : "apps")", systemImage: "memorychip.fill")
+                    Label(monitor.selected.isEmpty ? "Free RAM · Select apps above" : "Free RAM · Review \(monitor.selected.count) apps", systemImage: "memorychip.fill")
                         .font(.system(size: 14, weight: .semibold)).frame(maxWidth: .infinity)
                 }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(monitor.selected.isEmpty)
-            } else { Spacer(); StewardProgressBar(title: "Reading memory…").frame(maxWidth: 240); Spacer() }
+            } else { Spacer(); StewardProgressBar(title: String(localized: "Reading memory…")).frame(maxWidth: 240); Spacer() }
             Spacer(minLength: 0)
             Divider().overlay(.white.opacity(0.06))
             HStack {
@@ -389,10 +389,22 @@ struct CompactMemoryView: View {
             while !Task.isCancelled { await monitor.refresh(); do { try await Task.sleep(for: .seconds(3)) } catch { break } }
         }
     }
-    private func stat(_ label: String, _ value: String) -> some View {
+    private func stat(_ label: LocalizedStringKey, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(label).font(.system(size: 11)).foregroundStyle(.white.opacity(0.65))
             Text(value).font(.system(size: 13, weight: .semibold)).monospacedDigit()
+        }
+    }
+}
+
+extension MemoryPressure {
+    /// What a person reads for a memory-pressure level; the raw value stays the stable English identifier.
+    var displayTitle: String {
+        switch self {
+        case .normal: return String(localized: "Normal", comment: "Memory pressure level")
+        case .warning: return String(localized: "Elevated", comment: "Memory pressure level")
+        case .critical: return String(localized: "High", comment: "Memory pressure level")
+        case .unknown: return String(localized: "Unavailable", comment: "Memory pressure level")
         }
     }
 }

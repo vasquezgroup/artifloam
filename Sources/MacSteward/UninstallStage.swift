@@ -148,10 +148,10 @@ struct UninstallStage: View {
             Text("Your own files stay exactly where they are. This removes only what Artifloam created, and the Trash keeps it until you empty the Trash.")
                 .font(.system(size: 15)).foregroundStyle(.white.opacity(0.78)).fixedSize(horizontal: false, vertical: true)
             VStack(spacing: 8) {
-                if flow.app != nil { line("Artifloam app", formattedBytes(flow.appBytes) + " · Trash", icon: "app.dashed") }
-                ForEach(rows, id: \.title) { line($0.title, formattedBytes($0.bytes) + " · Trash", icon: "folder") }
-                if flow.scheduled { line("Daily cleanup", "Turned off", icon: "calendar.badge.minus") }
-                line("Settings and permissions", "Cleared for good", icon: "slider.horizontal.3")
+                if flow.app != nil { line(String(localized: "Artifloam app"), String(localized: "\(formattedBytes(flow.appBytes)) · Trash"), icon: "app.dashed") }
+                ForEach(rows, id: \.title) { line($0.title, String(localized: "\(formattedBytes($0.bytes)) · Trash"), icon: "folder") }
+                if flow.scheduled { line(String(localized: "Daily cleanup"), String(localized: "Turned off"), icon: "calendar.badge.minus") }
+                line(String(localized: "Settings and permissions"), String(localized: "Cleared for good"), icon: "slider.horizontal.3")
             }
             if flow.app == nil { Label("This copy isn't in Applications. Drag it to the Trash yourself afterwards.", systemImage: "info.circle").stewardFont(.caption).foregroundStyle(.white.opacity(0.7)).fixedSize(horizontal: false, vertical: true) }
             HStack(spacing: 10) {

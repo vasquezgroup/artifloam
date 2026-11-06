@@ -18,9 +18,10 @@ enum ScanInfo {
     }
     static func line(for section: String) -> String {
         let names = tools(for: section)
-        if names.count > 3 { return "Runs \(names.count) tools · reading only" }
-        let list = names.count > 2 ? names.dropLast().joined(separator: ", ") + " and " + names.last! : names.joined(separator: " and ")
-        return "Runs \(list) · reading only"
+        if names.count > 3 { return String(localized: "Runs \(names.count) tools · reading only") }
+        // The formatter joins them the way the app's language does.
+        let list = names.map(sectionTitle).formatted(.list(type: .and))
+        return String(localized: "Runs \(list) · reading only")
     }
     /// Tools this scan leaves out, with the page whose Scan covers them.
     static func elsewhere(for section: String) -> [(page: String, tools: [String])] {
@@ -64,13 +65,13 @@ struct ScanInfoButton: View {
         let tools = ScanInfo.tools(for: section).compactMap { name in ToolsView.catalog.first { $0.id == name } }
         let elsewhere = ScanInfo.elsewhere(for: section)
         return VStack(alignment: .leading, spacing: 14) {
-            Text(section == "Overview" ? "Overview runs every main check" : "What \(section) scans").stewardFont(.headline, weight: .semibold)
+            Text(section == "Overview" ? "Overview runs every main check" : "What \(sectionTitle(section)) scans").stewardFont(.headline, weight: .semibold)
             part("This scan runs") {
                 ForEach(tools) { tool in
                     HStack(alignment: .top, spacing: 10) {
                         StewardNavigationArtwork(name: tool.id, fallback: tool.icon, size: 22)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(tool.id).stewardFont(.callout, weight: .semibold)
+                            Text(tool.title).stewardFont(.callout, weight: .semibold)
                             Text(tool.detail).stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                         }
                     }
@@ -79,7 +80,7 @@ struct ScanInfoButton: View {
             if !elsewhere.isEmpty {
                 part("Not in this scan") {
                     ForEach(elsewhere, id: \.page) { entry in
-                        (Text(entry.tools.joined(separator: ", ")) + Text(entry.tools == [entry.page] ? "  its own page" : "  on \(entry.page)").foregroundColor(accent)).stewardFont(.caption)
+                        (Text(entry.tools.map(sectionTitle).formatted(.list(type: .and, width: .narrow))) + Text("  ") + Text(entry.tools == [entry.page] ? "its own page" : "on \(sectionTitle(entry.page))", comment: "Scan info: where the tools listed before this are covered").foregroundColor(accent)).stewardFont(.caption)
                     }
                 }
             }
@@ -90,9 +91,9 @@ struct ScanInfoButton: View {
         .fixedSize(horizontal: false, vertical: true)
     }
 
-    private func part<Content: View>(_ title: String, @ViewBuilder _ content: () -> Content) -> some View {
+    private func part<Content: View>(_ title: LocalizedStringKey, @ViewBuilder _ content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title.uppercased()).stewardFont(.caption, weight: .bold).foregroundStyle(.secondary)
+            Text(title).textCase(.uppercase).stewardFont(.caption, weight: .bold).foregroundStyle(.secondary)
             VStack(alignment: .leading, spacing: 8) { content() }
         }
     }

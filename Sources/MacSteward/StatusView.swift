@@ -43,25 +43,25 @@ struct StatusView: View {
                 HStack(alignment: .top, spacing: 14) {
                     conditionCard(r).frame(maxWidth: .infinity)
                     freedCard.frame(maxWidth: .infinity)
-                    card("CPU", icon: "cpu", value: "\(Int(r.cpuPercent.rounded()))", unit: "%", footer: "\(r.cores) cores · load \(String(format: "%.1f", r.load))") { bars(state.cpuHistory, max: 100) }
+                    card("CPU", icon: "cpu", value: "\(Int(r.cpuPercent.rounded()))", unit: "%", footer: String(localized: "\(r.cores) cores · load \(r.load.formatted(.number.precision(.fractionLength(1))))")) { bars(state.cpuHistory, max: 100) }
                         .frame(maxWidth: .infinity)
                 }.frame(minHeight: 250)
                 LazyVGrid(columns: columns, spacing: 14) {
-                    card("Memory", icon: "memorychip", value: memory.reading.map { "\($0.used * 100 / max(1, $0.total))" } ?? "–", unit: "%", footer: memory.reading.map { formattedBytes($0.used) + " used · " + ($0.swap.map { formattedBytes($0) + " swap" } ?? "") } ?? "Reading…") {
-                        Text(memory.reading?.pressure.rawValue ?? "").stewardFont(.caption).foregroundStyle(memory.reading?.pressure == .normal ? .mint : .orange)
+                    card("Memory", icon: "memorychip", value: memory.reading.map { "\($0.used * 100 / max(1, $0.total))" } ?? "–", unit: "%", footer: memory.reading.map { m in m.swap.map { String(localized: "\(formattedBytes(m.used)) used · \(formattedBytes($0)) swap") } ?? String(localized: "\(formattedBytes(m.used)) used") } ?? String(localized: "Reading…")) {
+                        Text(memory.reading?.pressure.displayTitle ?? "").stewardFont(.caption).foregroundStyle(memory.reading?.pressure == .normal ? .mint : .orange)
                     }
-                    card("Network", icon: "network", value: formattedBytes(r.networkInPerSecond), unit: "/s in", footer: "Out \(formattedBytes(r.networkOutPerSecond))/s") { bars(state.networkHistory, max: state.networkHistory.max() ?? 1) }
+                    card("Network", icon: "network", value: formattedBytes(r.networkInPerSecond), unit: String(localized: "/s in", comment: "Unit shown after a data amount: per second, incoming"), footer: String(localized: "Out \(formattedBytes(r.networkOutPerSecond))/s")) { bars(state.networkHistory, max: state.networkHistory.max() ?? 1) }
                     if let battery = r.battery {
-                        card("Battery", icon: battery.charging ? "battery.100.bolt" : "battery.75", value: "\(battery.percent)", unit: "%", footer: (battery.onPower ? (battery.charging ? "Charging" : "On power, not charging") : "On battery") + (battery.cycles.map { " · \($0) cycles" } ?? "")) {
+                        card("Battery", icon: battery.charging ? "battery.100.bolt" : "battery.75", value: "\(battery.percent)", unit: "%", footer: batteryFooter(battery)) {
                             if let health = battery.health { Text("\(health)% health").stewardFont(.caption).foregroundStyle(health >= 80 ? .mint : .orange) }
                         }
                     }
-                    card("Thermal", icon: "thermometer.medium", value: r.thermal, unit: "", footer: "Uptime " + uptime(r.uptime)) {
+                    card("Thermal", icon: "thermometer.medium", value: thermalTitle(r.thermal), unit: "", footer: String(localized: "Uptime \(uptime(r.uptime))")) {
                         Text("Read / write \(formattedBytes(r.diskReadPerSecond))/s · \(formattedBytes(r.diskWritePerSecond))/s").stewardFont(.caption).foregroundStyle(.secondary)
                     }
                 }
                 processes(r)
-            } else { StewardProgressBar(title: "Reading system status…").frame(maxWidth: 320) }
+            } else { StewardProgressBar(title: String(localized: "Reading system status…")).frame(maxWidth: 320) }
         }
         .onAppear { state.start(); history = CleanupHistory.load() }
         .onDisappear { state.stop() }
@@ -74,7 +74,17 @@ struct StatusView: View {
         var buffer = [CChar](repeating: 0, count: max(1, size)); sysctlbyname("machdep.cpu.brand_string", &buffer, &size, nil, 0)
         return String(cString: buffer)
     }()
-    private func condition(_ score: Int) -> String { score >= 90 ? "Excellent" : score >= 75 ? "Good" : score >= 55 ? "Fair" : "Needs care" }
+    private func condition(_ score: Int) -> String { score >= 90 ? String(localized: "Excellent") : score >= 75 ? String(localized: "Good") : score >= 55 ? String(localized: "Fair") : String(localized: "Needs care") }
+    private func batteryFooter(_ battery: SystemStatusReading.Battery) -> String {
+        switch (battery.onPower, battery.charging, battery.cycles) {
+        case (true, true, let cycles?): return String(localized: "Charging · \(cycles) cycles")
+        case (true, true, nil): return String(localized: "Charging")
+        case (true, false, let cycles?): return String(localized: "On power, not charging · \(cycles) cycles")
+        case (true, false, nil): return String(localized: "On power, not charging")
+        case (false, _, let cycles?): return String(localized: "On battery · \(cycles) cycles")
+        case (false, _, nil): return String(localized: "On battery")
+        }
+    }
     /// The hero: condition word, chip, a glowing ring like the reference, and the startup disk bar.
     private func conditionCard(_ r: SystemStatusReading) -> some View {
         let score = health(r), used = r.diskTotal - r.diskFree
@@ -102,7 +112,7 @@ struct StatusView: View {
         return VStack(alignment: .leading, spacing: 8) {
             Text("Space freed with Artifloam").stewardFont(.body).foregroundStyle(.white.opacity(0.75))
             Text(formattedBytes(h.totalFreed)).font(.system(size: 30, weight: .semibold, design: .rounded)).monospacedDigit()
-            Label(formattedBytes(h.lastThirtyDays) + " in the last 30 days", systemImage: "arrowtriangle.up.fill").stewardFont(.caption).foregroundStyle(.mint)
+            Label("\(formattedBytes(h.lastThirtyDays)) in the last 30 days", systemImage: "arrowtriangle.up.fill").stewardFont(.caption).foregroundStyle(.mint)
             Spacer(minLength: 10)
             GeometryReader { geometry in
                 HStack(spacing: 2) {
@@ -115,7 +125,7 @@ struct StatusView: View {
             ForEach(kinds.prefix(3), id: \.name) { kind in
                 HStack {
                     Circle().fill(Self.kindColors[kind.name] ?? .gray).frame(width: 7, height: 7)
-                    Text(kind.name).stewardFont(.caption)
+                    Text(Self.kindTitle(kind.name)).stewardFont(.caption)
                     Spacer()
                     Text(formattedBytes(kind.bytes)).stewardFont(.caption, weight: .semibold).monospacedDigit()
                 }
@@ -123,9 +133,22 @@ struct StatusView: View {
             if kinds.isEmpty { Text("Run a cleanup to start counting.").stewardFont(.caption).foregroundStyle(.secondary) }
         }.padding(20).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading).modifier(StatusGlass())
     }
-    private func card<Accessory: View>(_ title: String, icon: String, value: String, unit: String, footer: String, @ViewBuilder accessory: () -> Accessory) -> some View {
+    /// The kind names are identifiers from `CleanupHistory` (they key the colours); this is what a person reads.
+    private static func kindTitle(_ name: String) -> String {
+        switch name {
+        case "Simulators": return String(localized: "Simulators", comment: "Kind of space freed")
+        case "App caches": return String(localized: "App caches", comment: "Kind of space freed")
+        case "Developer caches": return String(localized: "Developer caches", comment: "Kind of space freed")
+        case "Dependencies": return String(localized: "Dependencies", comment: "Kind of space freed")
+        case "Project caches": return String(localized: "Project caches", comment: "Kind of space freed")
+        case "Logs": return String(localized: "Logs", comment: "Kind of space freed")
+        case "Other": return String(localized: "Other", comment: "Kind of space freed")
+        default: return name
+        }
+    }
+    private func card<Accessory: View>(_ title: LocalizedStringKey, icon: String, value: String, unit: String, footer: String, @ViewBuilder accessory: () -> Accessory) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Label(title.uppercased(), systemImage: icon).stewardFont(.caption, weight: .semibold).foregroundStyle(.mint)
+            Label(title, systemImage: icon).textCase(.uppercase).stewardFont(.caption, weight: .semibold).foregroundStyle(.mint)
             HStack(alignment: .firstTextBaseline, spacing: 5) {
                 Text(value).stewardFont(.title, weight: .semibold).monospacedDigit()
                 Text(unit).stewardFont(.callout).foregroundStyle(.secondary)
@@ -153,13 +176,19 @@ struct StatusView: View {
     }
     private func healthNote(_ r: SystemStatusReading) -> String {
         let free = Double(r.diskFree) / Double(max(1, r.diskTotal))
-        if free < 0.15 { return "Low disk space · \(formattedBytes(r.diskFree)) free" }
-        if memory.reading?.pressure != .normal, let pressure = memory.reading?.pressure { return "Memory pressure \(pressure.rawValue.lowercased())" }
-        return "Everything looks fine"
+        if free < 0.15 { return String(localized: "Low disk space · \(formattedBytes(r.diskFree)) free") }
+        if let pressure = memory.reading?.pressure, pressure != .normal {
+            switch pressure {
+            case .warning: return String(localized: "Memory pressure elevated")
+            case .critical: return String(localized: "Memory pressure high")
+            default: return String(localized: "Memory pressure unavailable")
+            }
+        }
+        return String(localized: "Everything looks fine")
     }
     private func uptime(_ seconds: TimeInterval) -> String {
         let days = Int(seconds) / 86400, hours = Int(seconds) % 86400 / 3600
-        return days > 0 ? "\(days) d \(hours) h" : "\(hours) h \(Int(seconds) % 3600 / 60) min"
+        return days > 0 ? String(localized: "\(days) d \(hours) h") : String(localized: "\(hours) h \(Int(seconds) % 3600 / 60) min")
     }
     private func processes(_ r: SystemStatusReading) -> some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -175,7 +204,7 @@ struct StatusView: View {
                     Text(process.name).stewardFont(.body).lineLimit(1)
                     Spacer()
                     Text(formattedBytes(process.memory)).frame(width: 90, alignment: .trailing)
-                    Text(String(format: "%.1f", process.cpu)).frame(width: 70, alignment: .trailing).foregroundStyle(process.cpu > 50 ? .orange : .primary)
+                    Text(process.cpu.formatted(.number.precision(.fractionLength(1)))).frame(width: 70, alignment: .trailing).foregroundStyle(process.cpu > 50 ? .orange : .primary)
                     Text("\(process.pid)").frame(width: 70, alignment: .trailing).foregroundStyle(.secondary)
                 }.stewardFont(.callout).monospacedDigit().padding(.horizontal, 14).padding(.vertical, 6)
                 .background(.white.opacity(0.03), in: RoundedRectangle(cornerRadius: 8))

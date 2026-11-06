@@ -70,8 +70,8 @@ struct DuplicatesView: View {
         // While searching, bulk trash acts on the groups shown, never on hidden ones.
         let ticked = DuplicateGroup.trashable(m.duplicateChoice, in: groups)
         let allTicked = !groups.isEmpty && groups.allSatisfy(isTicked)
-        return BulkBar(title: query.isEmpty ? "All groups" : "\(groups.count) of \(m.duplicates.count) groups", isOn: Binding(get: { allTicked }, set: { on in groups.forEach { setTicked($0, on) } }),
-                       help: allTicked ? "Untick every shown group" : "Tick the extra copies in every shown group", summary: "\(ticked.count) selected") {
+        return BulkBar(title: query.isEmpty ? String(localized: "All groups") : String(localized: "\(groups.count) of \(m.duplicates.count) groups"), isOn: Binding(get: { allTicked }, set: { on in groups.forEach { setTicked($0, on) } }),
+                       help: allTicked ? String(localized: "Untick every shown group") : String(localized: "Tick the extra copies in every shown group"), summary: String(localized: "\(ticked.count) selected")) {
             HStack(spacing: 6) {
                 Image(systemName: "magnifyingglass").foregroundStyle(muted)
                 TextField("Search file names or folders", text: $query).textFieldStyle(.plain)
@@ -88,7 +88,7 @@ struct DuplicatesView: View {
         if on { m.duplicateChoice.formUnion(m.extraCopies([group])) }
     }
 
-    private func stat(_ title: String, _ value: String, tint: Color = .white) -> some View {
+    private func stat(_ title: LocalizedStringKey, _ value: String, tint: Color = .white) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title).stewardFont(.caption, weight: .semibold).foregroundStyle(muted)
             Text(value).font(.system(size: 22, weight: .semibold, design: .rounded)).monospacedDigit().foregroundStyle(tint)
@@ -104,14 +104,14 @@ struct DuplicatesView: View {
                     .toggleStyle(.stewardCheckboxOnly).help("Ticks every copy but the oldest")
                 Button { withAnimation(.easeOut(duration: 0.18)) { if open { expanded.remove(group.id) } else { expanded.insert(group.id) } } } label: {
                     HStack(spacing: 12) {
-                        Image(systemName: "chevron.right").font(.system(size: 11, weight: .semibold)).rotationEffect(.degrees(open ? 90 : 0)).foregroundStyle(muted)
+                        Image(systemName: "chevron.right").flipsForRightToLeftLayoutDirection(true).font(.system(size: 11, weight: .semibold)).rotationEffect(.degrees(open ? 90 : 0)).foregroundStyle(muted)
                         Image(nsImage: NSWorkspace.shared.icon(forFile: group.files[0])).resizable().frame(width: 28, height: 28)
                         VStack(alignment: .leading, spacing: 2) {
                             Text(names.count == 1 ? names.first! : "\(names.count) different names").stewardFont(.body, weight: .semibold).lineLimit(1).truncationMode(.middle)
                             Text("\(group.files.count) copies · \(formattedBytes(group.size)) each").stewardFont(.caption).foregroundStyle(muted)
                         }
                         Spacer(minLength: 8)
-                        Text(group.extraCount > 0 ? formattedBytes(group.potentialBytes) + " extra" : "Your choice").stewardFont(.callout, weight: .semibold).foregroundStyle(.mint).monospacedDigit()
+                        Text(group.extraCount > 0 ? String(localized: "\(formattedBytes(group.potentialBytes)) extra") : String(localized: "Your choice")).stewardFont(.callout, weight: .semibold).foregroundStyle(.mint).monospacedDigit()
                     }.contentShape(Rectangle())
                 }.buttonStyle(.plain)
                 Button("Keep 1, trash \(group.extraCount)") { trash(DuplicateGroup.trashable(m.extraCopies([group]), in: [group])) }

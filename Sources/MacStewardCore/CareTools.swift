@@ -44,9 +44,9 @@ public enum TrashBins {
             var info = stat()
             if lstat(folder.path, &info) != 0 {
                 if errno == ENOENT { continue }
-                throw StewardError.blocked("Cannot verify a Trash folder. Empty it yourself in Finder.")
+                throw StewardError.blocked(String(localized: "Cannot verify a Trash folder. Empty it yourself in Finder."))
             }
-            guard info.st_mode & S_IFMT == S_IFDIR else { throw StewardError.blocked("A Trash folder is redirected or is not a directory. Review it in Finder.") }
+            guard info.st_mode & S_IFMT == S_IFDIR else { throw StewardError.blocked(String(localized: "A Trash folder is redirected or is not a directory. Review it in Finder.")) }
         }
     }
     /// Bulk reads of files take Finder a fraction of a second; asking for all items at once can take a minute, so folders are listed by name.
@@ -96,11 +96,11 @@ public enum TrashBins {
     }
     /// Finder empties every volume's Trash and handles locked items the way the user expects. Permanent.
     public static func empty() throws {
-        guard let volumes = FileManager.default.mountedVolumeURLs(includingResourceValuesForKeys: nil) else { throw StewardError.blocked("Cannot verify mounted Trash folders. Empty the Trash yourself in Finder.") }
+        guard let volumes = FileManager.default.mountedVolumeURLs(includingResourceValuesForKeys: nil) else { throw StewardError.blocked(String(localized: "Cannot verify mounted Trash folders. Empty the Trash yourself in Finder.")) }
         try validateRoots(home: FileManager.default.homeDirectoryForCurrentUser,
                           volumes: volumes)
         let result = run("/usr/bin/osascript", ["-e", "tell application \"Finder\" to empty trash"], timeout: 600)
-        guard result.code == 0 else { throw StewardError.blocked("Finder could not empty the Trash: " + result.error.trimmingCharacters(in: .whitespacesAndNewlines) + ". Allow Artifloam to control Finder in System Settings → Privacy & Security → Automation.") }
+        guard result.code == 0 else { throw StewardError.blocked(String(localized: "Finder could not empty the Trash: \(result.error.trimmingCharacters(in: .whitespacesAndNewlines)). Allow Artifloam to control Finder in System Settings → Privacy & Security → Automation.")) }
     }
 }
 func allocatedSize(_ url: URL) -> UInt64 {
@@ -148,8 +148,8 @@ public enum AppLeftovers {
     }
     /// Library folders whose entries are named after an app's bundle identifier.
     static let locations: [(String, String)] = [
-        ("Library/Application Support", "Support files"), ("Library/Caches", "Cache"), ("Library/Preferences", "Preferences"),
-        ("Library/Saved Application State", "Saved window state"), ("Library/HTTPStorages", "Web storage"), ("Library/WebKit", "Web data"), ("Library/Logs", "Logs")
+        ("Library/Application Support", String(localized: "Support files")), ("Library/Caches", String(localized: "Cache", comment: "Kind of leftover file")), ("Library/Preferences", String(localized: "Preferences", comment: "Kind of leftover file")),
+        ("Library/Saved Application State", String(localized: "Saved window state")), ("Library/HTTPStorages", String(localized: "Web storage")), ("Library/WebKit", String(localized: "Web data")), ("Library/Logs", String(localized: "Logs", comment: "Kind of file: log files"))
     ]
     /// Libraries bundled into many apps name their files after themselves, not the app, so they never look orphaned.
     static let sharedLibraries = ["org.cups.", "org.sparkle-project.", "com.segment.", "com.firebase.", "com.google.firebase", "com.crashlytics", "io.sentry", "com.bugsnag.", "com.breakpad.", "com.telemetrydeck.", "com.microsoft.appcenter", "com.amplitude.", "com.mixpanel", "io.realm.", "com.squirrel.", "com.github.electron", "org.chromium."]
@@ -207,7 +207,7 @@ public enum LoginItems {
     /// Apps opened at login (System Settings › Login Items › Open at Login), read via System Events.
     public static func list() throws -> [String] {
         let result = run("/usr/bin/osascript", ["-e", "tell application \"System Events\" to set names to name of every login item\nset AppleScript's text item delimiters to linefeed\nreturn names as text"], timeout: 20)
-        guard result.code == 0 else { throw StewardError.blocked("System Events did not answer. Allow Artifloam to control System Events in System Settings → Privacy & Security → Automation.") }
+        guard result.code == 0 else { throw StewardError.blocked(String(localized: "System Events did not answer. Allow Artifloam to control System Events in System Settings → Privacy & Security → Automation.")) }
         let text = result.output.trimmingCharacters(in: .whitespacesAndNewlines)
         // One per line: a name may itself contain a comma.
         return text.isEmpty ? [] : text.components(separatedBy: "\n")
@@ -223,15 +223,15 @@ public enum LoginItems {
     /// Runs on a person's choice in the open panel. The path travels as an argument, never as script text.
     public static func add(_ app: URL) throws {
         let name = app.deletingPathExtension().lastPathComponent
-        guard isApp(app) else { throw StewardError.blocked("\(name.displaySafe) isn't an app, so it wasn't added.") }
+        guard isApp(app) else { throw StewardError.blocked(String(localized: "\(name.displaySafe) isn't an app, so it wasn't added.")) }
         guard try !list().contains(name) else { return }
         let result = run("/usr/bin/osascript", scriptArguments(addScript, argument: app.path), timeout: 20)
-        guard result.code == 0 else { throw StewardError.blocked("Could not add \(name.displaySafe): " + result.error.trimmingCharacters(in: .whitespacesAndNewlines)) }
+        guard result.code == 0 else { throw StewardError.blocked(String(localized: "Could not add \(name.displaySafe): \(result.error.trimmingCharacters(in: .whitespacesAndNewlines))")) }
     }
     public static func remove(_ name: String) throws {
         let script = "on run argv\ntell application \"System Events\" to delete login item (item 1 of argv)\nend run"
         let result = run("/usr/bin/osascript", scriptArguments(script, argument: name), timeout: 20)
-        guard result.code == 0 else { throw StewardError.blocked("Could not remove \(name): " + result.error.trimmingCharacters(in: .whitespacesAndNewlines)) }
+        guard result.code == 0 else { throw StewardError.blocked(String(localized: "Could not remove \(name): \(result.error.trimmingCharacters(in: .whitespacesAndNewlines))")) }
     }
 }
 public enum LaunchAgentControl {
@@ -246,9 +246,9 @@ public enum LaunchAgentControl {
     }
     /// Reversible: launchd stops loading it at login until enabled again. No file is changed.
     public static func setEnabled(_ enabled: Bool, item: BackgroundItem) throws {
-        guard item.scope == "Your account" else { throw StewardError.blocked("Only your own launch agents can be switched here. Use System Settings for items shared by all users.") }
+        guard item.scope == "Your account" else { throw StewardError.blocked(String(localized: "Only your own launch agents can be switched here. Use System Settings for items shared by all users.")) }
         let result = run("/bin/launchctl", [enabled ? "enable" : "disable", "\(domain)/\(item.label)"])
-        guard result.code == 0 else { throw StewardError.blocked("launchd refused: " + result.error.trimmingCharacters(in: .whitespacesAndNewlines)) }
+        guard result.code == 0 else { throw StewardError.blocked(String(localized: "launchd refused: \(result.error.trimmingCharacters(in: .whitespacesAndNewlines))")) }
         // Stop it now too; a disabled agent would otherwise keep running until logout.
         if !enabled { _ = run("/bin/launchctl", ["bootout", "\(domain)/\(item.label)"]) }
     }

@@ -37,12 +37,12 @@ struct TreeInventory {
         var nodes = [String: Node](); var bytes: UInt64 = 0; var newest = Date.distantPast; var lastAccessed = Date.distantPast
         func record(_ url: URL, _ relative: String) throws {
             var info = stat()
-            guard lstat(url.path, &info) == 0 else { throw StewardError.blocked("Cannot inspect \(url.lastPathComponent)") }
-            guard info.st_uid == getuid(), info.st_mode & S_IFMT != S_IFLNK || (dependencies && !relative.isEmpty) else { throw StewardError.blocked("Symlink or another user's file: \(url.lastPathComponent)") }
+            guard lstat(url.path, &info) == 0 else { throw StewardError.blocked(String(localized: "Cannot inspect \(url.lastPathComponent)")) }
+            guard info.st_uid == getuid(), info.st_mode & S_IFMT != S_IFLNK || (dependencies && !relative.isEmpty) else { throw StewardError.blocked(String(localized: "Symlink or another user's file: \(url.lastPathComponent)")) }
             let type = info.st_mode & S_IFMT
-            guard type == S_IFDIR || type == S_IFREG || (dependencies && type == S_IFLNK) else { throw StewardError.blocked("Special filesystem object") }
-            guard dependencies || !isForbidden(name: url.lastPathComponent) else { throw StewardError.blocked("Protected data inside candidate: \(url.lastPathComponent)") }
-            if let parent = nodes[""], parent.device != info.st_dev { throw StewardError.blocked("Candidate crosses a filesystem boundary") }
+            guard type == S_IFDIR || type == S_IFREG || (dependencies && type == S_IFLNK) else { throw StewardError.blocked(String(localized: "Special filesystem object")) }
+            guard dependencies || !isForbidden(name: url.lastPathComponent) else { throw StewardError.blocked(String(localized: "Protected data inside candidate: \(url.lastPathComponent)")) }
+            if let parent = nodes[""], parent.device != info.st_dev { throw StewardError.blocked(String(localized: "Candidate crosses a filesystem boundary")) }
             nodes[relative] = Node(relative: relative, device: info.st_dev, inode: info.st_ino, mode: info.st_mode, size: info.st_size, mtime: info.st_mtimespec, ctime: info.st_ctimespec)
             if type == S_IFREG {
                 bytes += UInt64(max(0, info.st_blocks)) * 512
@@ -53,13 +53,13 @@ struct TreeInventory {
         try record(root, "")
         if nodes[""]!.mode & S_IFMT == S_IFDIR {
             var enumerationError: Error?
-            guard let enumerator = FileManager.default.enumerator(at: root, includingPropertiesForKeys: nil, options: [], errorHandler: { _, error in enumerationError = error; return false }) else { throw StewardError.blocked("Cannot enumerate candidate") }
+            guard let enumerator = FileManager.default.enumerator(at: root, includingPropertiesForKeys: nil, options: [], errorHandler: { _, error in enumerationError = error; return false }) else { throw StewardError.blocked(String(localized: "Cannot enumerate candidate")) }
             while let url = enumerator.nextObject() as? URL {
                 try Task.checkCancellation()
                 let baseParts = root.resolvingSymlinksInPath().standardizedFileURL.pathComponents
                 // Resolve the parent only, so a symlink entry is located where it is, not at its target.
                 let fileParts = url.deletingLastPathComponent().resolvingSymlinksInPath().appendingPathComponent(url.lastPathComponent).standardizedFileURL.pathComponents
-                guard Array(fileParts.prefix(baseParts.count)) == baseParts else { throw StewardError.blocked("Enumeration escaped the cache root") }
+                guard Array(fileParts.prefix(baseParts.count)) == baseParts else { throw StewardError.blocked(String(localized: "Enumeration escaped the cache root")) }
                 let relative = fileParts.dropFirst(baseParts.count).joined(separator: "/")
                 try record(url, relative)
             }
@@ -77,9 +77,9 @@ public struct SafetyPolicy {
     func inside(_ path: URL, _ root: URL) -> Bool { path.path.hasPrefix(root.path + "/") }
     func validatePath(_ url: URL, rule: String) throws {
         let p = url.standardizedFileURL
-        guard p.path == url.path, p.resolvingSymlinksInPath().path == p.path else { throw StewardError.blocked("Non-canonical or symlinked path") }
+        guard p.path == url.path, p.resolvingSymlinksInPath().path == p.path else { throw StewardError.blocked(String(localized: "Non-canonical or symlinked path")) }
         let home = configuration.home.standardizedFileURL
-        guard !configuration.ignoredPaths.contains(where: { p.path == $0 || p.path.hasPrefix($0 + "/") }) else { throw StewardError.blocked("Path is on the ignore list") }
+        guard !configuration.ignoredPaths.contains(where: { p.path == $0 || p.path.hasPrefix($0 + "/") }) else { throw StewardError.blocked(String(localized: "Path is on the ignore list")) }
         let relative = inside(p, home) ? String(p.path.dropFirst(home.path.count + 1)) : ""
         let safe: Bool
         switch rule {
@@ -112,11 +112,11 @@ public struct SafetyPolicy {
             safe = configuration.projectRoots.contains(where: { inside(p, $0) }) && ProjectActivity.dependencyFolder(p)
         default: safe = false
         }
-        guard safe else { throw StewardError.blocked("No allowlisted cleanup rule for this exact path") }
+        guard safe else { throw StewardError.blocked(String(localized: "No allowlisted cleanup rule for this exact path")) }
         let forbiddenParts: Set<String> = [".git", "archives", "mobilesync", "sourcepackages", "node_modules", ".venv", "venv", "vendor", ".codex", "projects-history"]
         // The dependency rule targets node_modules itself, but never one nested inside another protected folder.
         let checkedParts = rule == "inactive-dependencies" ? p.deletingLastPathComponent().pathComponents : p.pathComponents
-        guard Set(checkedParts.map { $0.lowercased() }).isDisjoint(with: forbiddenParts), !p.pathComponents.contains(where: { $0.lowercased().hasSuffix(".xcarchive") }) else { throw StewardError.blocked("Protected storage location") }
+        guard Set(checkedParts.map { $0.lowercased() }).isDisjoint(with: forbiddenParts), !p.pathComponents.contains(where: { $0.lowercased().hasSuffix(".xcarchive") }) else { throw StewardError.blocked(String(localized: "Protected storage location")) }
         let selectedProject = configuration.projectRoots.contains(where: { inside(p, $0) })
         let globalDeveloperCache = ["gradle-generated-cache", "xcode-module-cache"].contains(rule)
         if selectedProject || globalDeveloperCache {
@@ -124,16 +124,16 @@ public struct SafetyPolicy {
             let rootResult = gitCache.root(of: directory)
             if rootResult.code == 0 {
                 let root = URL(fileURLWithPath: rootResult.output.trimmingCharacters(in: .whitespacesAndNewlines)).resolvingSymlinksInPath().standardizedFileURL
-                guard inside(p, root) else { throw StewardError.blocked("Repository root cannot be a cleanup target") }
+                guard inside(p, root) else { throw StewardError.blocked(String(localized: "Repository root cannot be a cleanup target")) }
                 let rel = String(p.path.dropFirst(root.path.count + 1))
                 let ignored = git(root, ["check-ignore", "--", rel])
-                guard let tracked = gitCache.tracks(rel, in: root), !tracked, ignored.code == 0 else { throw StewardError.blocked("Tracked or non-ignored files are protected") }
+                guard let tracked = gitCache.tracks(rel, in: root), !tracked, ignored.code == 0 else { throw StewardError.blocked(String(localized: "Tracked or non-ignored files are protected")) }
             } else {
                 // A verified producer-owned global cache may be outside Git, but
                 // a missing Git executable or an ambiguous failure is not proof.
                 guard !selectedProject, globalDeveloperCache, rootResult.code == 128,
                       rootResult.error.contains("not a git repository") else {
-                    throw StewardError.blocked("Cannot verify Git protection for this cache")
+                    throw StewardError.blocked(String(localized: "Cannot verify Git protection for this cache"))
                 }
             }
         }
@@ -142,19 +142,19 @@ public struct SafetyPolicy {
     /// (a recent cache keeps changing); every path, activity and running-app check still applies.
     func validate(_ finding: Finding, activity: ActivitySnapshot, approved: Bool = false) throws -> TreeInventory {
         let held = approved && finding.safety != .automatic && finding.userCleanable
-        guard finding.safety == .automatic || held else { throw StewardError.blocked("Review-only item cannot be automatically cleaned") }
-        guard activity.reliable else { throw StewardError.blocked("Cannot verify running processes and open files") }
+        guard finding.safety == .automatic || held else { throw StewardError.blocked(String(localized: "Review-only item cannot be automatically cleaned")) }
+        guard activity.reliable else { throw StewardError.blocked(String(localized: "Cannot verify running processes and open files")) }
         let url = URL(fileURLWithPath: finding.path, isDirectory: FileManager.default.fileExists(atPath: finding.path))
         try validatePath(url, rule: finding.rule)
-        guard !activity.isActive(url), !DeveloperJunk.producerActive(rule: finding.rule, path: finding.path, activity: activity), !(finding.rule == "application-web-cache" && ApplicationWebCaches.producerActive(url, home: configuration.home, activity: activity)) else { throw StewardError.blocked("A running process uses this path") }
-        if finding.rule == "inactive-dependencies", let reason = ProjectActivity.busyReason(url.deletingLastPathComponent(), activity: activity, sessions: .load(claudeHome: configuration.claudeHome, codexHome: configuration.codexHome)) { throw StewardError.blocked("Project is in use: " + reason) }
-        if finding.rule == "app-cache", BroadCaches.ownerRunning(url.lastPathComponent, running: BroadCaches.runningApps()) { throw StewardError.blocked("Its app is running") }
-        if finding.rule == "simulator-cache", BroadCaches.simulatorRunning(activity) { throw StewardError.blocked("A simulator is running") }
+        guard !activity.isActive(url), !DeveloperJunk.producerActive(rule: finding.rule, path: finding.path, activity: activity), !(finding.rule == "application-web-cache" && ApplicationWebCaches.producerActive(url, home: configuration.home, activity: activity)) else { throw StewardError.blocked(String(localized: "A running process uses this path")) }
+        if finding.rule == "inactive-dependencies", let reason = ProjectActivity.busyReason(url.deletingLastPathComponent(), activity: activity, sessions: .load(claudeHome: configuration.claudeHome, codexHome: configuration.codexHome)) { throw StewardError.blocked(String(localized: "Project is in use: \(reason)")) }
+        if finding.rule == "app-cache", BroadCaches.ownerRunning(url.lastPathComponent, running: BroadCaches.runningApps()) { throw StewardError.blocked(String(localized: "Its app is running")) }
+        if finding.rule == "simulator-cache", BroadCaches.simulatorRunning(activity) { throw StewardError.blocked(String(localized: "A simulator is running")) }
         let tree = try TreeInventory.read(url, dependencies: TreeInventory.regenerableRules.contains(finding.rule))
         let days = DeveloperJunk.minimumAge(rule: finding.rule, configured: configuration.minimumAgeDays)
         let lastUse = ["gradle-generated-cache", "xcode-module-cache"].contains(finding.rule) ? max(tree.newest, tree.lastAccessed) : tree.newest
-        guard held || lastUse < Date().addingTimeInterval(-Double(days)*86400) else { throw StewardError.blocked("Files were used too recently") }
-        guard held || tree.fingerprint == finding.fingerprint else { throw StewardError.blocked("Files changed after the scan; scan again") }
+        guard held || lastUse < Date().addingTimeInterval(-Double(days)*86400) else { throw StewardError.blocked(String(localized: "Files were used too recently")) }
+        guard held || tree.fingerprint == finding.fingerprint else { throw StewardError.blocked(String(localized: "Files changed after the scan; scan again")) }
         return tree
     }
 }
@@ -171,15 +171,15 @@ struct TreeSummary {
     }
     static func read(_ root: URL, dependencies: Bool = false) throws -> TreeSummary {
         var rootInfo = stat()
-        guard lstat(root.path, &rootInfo) == 0 else { throw StewardError.blocked("Cannot inspect \(root.lastPathComponent)") }
-        guard rootInfo.st_mode & S_IFMT != S_IFLNK, rootInfo.st_uid == getuid() else { throw StewardError.blocked("Symlink or another user's file: \(root.lastPathComponent)") }
+        guard lstat(root.path, &rootInfo) == 0 else { throw StewardError.blocked(String(localized: "Cannot inspect \(root.lastPathComponent)")) }
+        guard rootInfo.st_mode & S_IFMT != S_IFLNK, rootInfo.st_uid == getuid() else { throw StewardError.blocked(String(localized: "Symlink or another user's file: \(root.lastPathComponent)")) }
         var count = 0, bytes: UInt64 = 0, newest = 0.0, accessed = 0.0
         func record(_ info: stat, name: String, top: Bool) throws {
             let type = info.st_mode & S_IFMT
-            guard info.st_uid == getuid(), type != S_IFLNK || (dependencies && !top) else { throw StewardError.blocked("Symlink or another user's file: \(name)") }
-            guard type == S_IFDIR || type == S_IFREG || (dependencies && type == S_IFLNK) else { throw StewardError.blocked("Special filesystem object") }
-            guard dependencies || !TreeInventory.isForbidden(name: name) else { throw StewardError.blocked("Protected data inside candidate: \(name)") }
-            guard info.st_dev == rootInfo.st_dev else { throw StewardError.blocked("Candidate crosses a filesystem boundary") }
+            guard info.st_uid == getuid(), type != S_IFLNK || (dependencies && !top) else { throw StewardError.blocked(String(localized: "Symlink or another user's file: \(name)")) }
+            guard type == S_IFDIR || type == S_IFREG || (dependencies && type == S_IFLNK) else { throw StewardError.blocked(String(localized: "Special filesystem object")) }
+            guard dependencies || !TreeInventory.isForbidden(name: name) else { throw StewardError.blocked(String(localized: "Protected data inside candidate: \(name)")) }
+            guard info.st_dev == rootInfo.st_dev else { throw StewardError.blocked(String(localized: "Candidate crosses a filesystem boundary")) }
             count += 1
             if type == S_IFREG { bytes += UInt64(max(0, info.st_blocks)) * 512; accessed = max(accessed, Double(info.st_atimespec.tv_sec)) }
             newest = max(newest, Double(info.st_mtimespec.tv_sec) + Double(info.st_mtimespec.tv_nsec) / 1e9)
@@ -189,14 +189,14 @@ struct TreeSummary {
             var paths: [UnsafeMutablePointer<CChar>?] = [strdup(root.path), nil]
             defer { free(paths[0]) }
             // Physical walk: symlinks are reported, never followed; other volumes are not entered.
-            guard let stream = fts_open(&paths, FTS_PHYSICAL | FTS_NOCHDIR | FTS_XDEV, nil) else { throw StewardError.blocked("Cannot enumerate candidate") }
+            guard let stream = fts_open(&paths, FTS_PHYSICAL | FTS_NOCHDIR | FTS_XDEV, nil) else { throw StewardError.blocked(String(localized: "Cannot enumerate candidate")) }
             defer { fts_close(stream) }
             while let entry = fts_read(stream) {
                 if Task.isCancelled { throw CancellationError() }
                 let item = entry.pointee
                 switch Int32(item.fts_info) {
                 case FTS_DP: continue
-                case FTS_DNR, FTS_ERR, FTS_NS: throw StewardError.blocked("Cannot inspect part of \(root.lastPathComponent)")
+                case FTS_DNR, FTS_ERR, FTS_NS: throw StewardError.blocked(String(localized: "Cannot inspect part of \(root.lastPathComponent)"))
                 default: break
                 }
                 guard item.fts_level > 0, let info = item.fts_statp?.pointee else { continue }
@@ -226,36 +226,36 @@ struct SecureRemoval {
     static func remove(_ url: URL, tree: TreeInventory) throws {
         let parent = url.deletingLastPathComponent()
         let fd = openWithoutFollowing(parent)
-        guard fd >= 0 else { throw StewardError.blocked("Cannot open parent directory") }
+        guard fd >= 0 else { throw StewardError.blocked(String(localized: "Cannot open parent directory")) }
         defer { close(fd) }
-        var parentInfo = stat(); guard fstat(fd, &parentInfo) == 0 else { throw StewardError.blocked("Cannot verify parent") }
+        var parentInfo = stat(); guard fstat(fd, &parentInfo) == 0 else { throw StewardError.blocked(String(localized: "Cannot verify parent")) }
         var rootInfo = stat()
-        guard fstatat(fd, url.lastPathComponent, &rootInfo, AT_SYMLINK_NOFOLLOW) == 0, let expected = tree.nodes[""], rootInfo.st_ino == expected.inode, rootInfo.st_dev == expected.device else { throw StewardError.blocked("Target changed before cleanup") }
+        guard fstatat(fd, url.lastPathComponent, &rootInfo, AT_SYMLINK_NOFOLLOW) == 0, let expected = tree.nodes[""], rootInfo.st_ino == expected.inode, rootInfo.st_dev == expected.device else { throw StewardError.blocked(String(localized: "Target changed before cleanup")) }
         let staged = ".mac-steward-cleaning-\(UUID().uuidString)"
-        guard renameat(fd, url.lastPathComponent, fd, staged) == 0 else { throw StewardError.blocked("Cannot stage cache for cleanup") }
+        guard renameat(fd, url.lastPathComponent, fd, staged) == 0 else { throw StewardError.blocked(String(localized: "Cannot stage cache for cleanup")) }
         do {
             try erase(parent: fd, name: staged, relative: "", nodes: tree.nodes, stagedRoot: true)
         } catch {
             // Never replace a new original directory created by an application.
             var occupied = stat()
             if fstatat(fd, url.lastPathComponent, &occupied, AT_SYMLINK_NOFOLLOW) != 0 { _ = renameat(fd, staged, fd, url.lastPathComponent) }
-            throw StewardError.blocked("Cleanup stopped: \(error.localizedDescription). Any remaining files are in \(parent.path)/\(staged) or the original cache path.")
+            throw StewardError.blocked(String(localized: "Cleanup stopped: \(error.localizedDescription). Any remaining files are in \(parent.path)/\(staged) or the original cache path."))
         }
     }
     private static func erase(parent: Int32, name: String, relative: String, nodes: [String: Node], stagedRoot: Bool = false) throws {
         var info = stat()
-        guard fstatat(parent, name, &info, AT_SYMLINK_NOFOLLOW) == 0, let expected = nodes[relative], info.st_ino == expected.inode, info.st_dev == expected.device, info.st_mode == expected.mode else { throw StewardError.blocked("Filesystem entry changed at \(relative); expected node present: \(nodes[relative] != nil)") }
+        guard fstatat(parent, name, &info, AT_SYMLINK_NOFOLLOW) == 0, let expected = nodes[relative], info.st_ino == expected.inode, info.st_dev == expected.device, info.st_mode == expected.mode else { throw StewardError.blocked(String(localized: "Filesystem entry changed at \(relative); expected node present: \(String(nodes[relative] != nil))")) }
         let isDirectory = info.st_mode & S_IFMT == S_IFDIR
         if !isDirectory {
-            guard info.st_size == expected.size, info.st_mtimespec.tv_sec == expected.mtime.tv_sec, info.st_mtimespec.tv_nsec == expected.mtime.tv_nsec, (stagedRoot || (info.st_ctimespec.tv_sec == expected.ctime.tv_sec && info.st_ctimespec.tv_nsec == expected.ctime.tv_nsec)) else { throw StewardError.blocked("File changed during cleanup") }
-            guard unlinkat(parent, name, 0) == 0 else { throw StewardError.blocked("Could not remove cache file") }
+            guard info.st_size == expected.size, info.st_mtimespec.tv_sec == expected.mtime.tv_sec, info.st_mtimespec.tv_nsec == expected.mtime.tv_nsec, (stagedRoot || (info.st_ctimespec.tv_sec == expected.ctime.tv_sec && info.st_ctimespec.tv_nsec == expected.ctime.tv_nsec)) else { throw StewardError.blocked(String(localized: "File changed during cleanup")) }
+            guard unlinkat(parent, name, 0) == 0 else { throw StewardError.blocked(String(localized: "Could not remove cache file")) }
             return
         }
         let childFD = openat(parent, name, O_RDONLY | O_DIRECTORY | O_NOFOLLOW)
-        guard childFD >= 0 else { throw StewardError.blocked("Directory replaced or unavailable") }
+        guard childFD >= 0 else { throw StewardError.blocked(String(localized: "Directory replaced or unavailable")) }
         var opened = stat()
-        guard fstat(childFD, &opened) == 0, opened.st_ino == expected.inode, opened.st_dev == expected.device else { close(childFD); throw StewardError.blocked("Directory changed while opening") }
-        guard let directory = fdopendir(childFD) else { close(childFD); throw StewardError.blocked("Cannot enumerate open directory") }
+        guard fstat(childFD, &opened) == 0, opened.st_ino == expected.inode, opened.st_dev == expected.device else { close(childFD); throw StewardError.blocked(String(localized: "Directory changed while opening")) }
+        guard let directory = fdopendir(childFD) else { close(childFD); throw StewardError.blocked(String(localized: "Cannot enumerate open directory")) }
         defer { closedir(directory) }
         while let item = readdir(directory) {
             let childName = withUnsafePointer(to: &item.pointee.d_name) { pointer in pointer.withMemoryRebound(to: CChar.self, capacity: Int(MAXNAMLEN) + 1) { String(cString: $0) } }
@@ -265,8 +265,8 @@ struct SecureRemoval {
         }
         // Check that the parent name still names the inode opened above.
         var current = stat()
-        guard fstatat(parent, name, &current, AT_SYMLINK_NOFOLLOW) == 0, current.st_ino == expected.inode, current.st_dev == expected.device else { throw StewardError.blocked("Directory moved during cleanup") }
-        guard unlinkat(parent, name, AT_REMOVEDIR) == 0 else { throw StewardError.blocked("Directory acquired new data; it was not removed") }
+        guard fstatat(parent, name, &current, AT_SYMLINK_NOFOLLOW) == 0, current.st_ino == expected.inode, current.st_dev == expected.device else { throw StewardError.blocked(String(localized: "Directory moved during cleanup")) }
+        guard unlinkat(parent, name, AT_REMOVEDIR) == 0 else { throw StewardError.blocked(String(localized: "Directory acquired new data; it was not removed")) }
     }
 }
 
@@ -286,12 +286,12 @@ enum ProjectActivity {
     /// nil when the project is idle; otherwise why it must stay.
     static func busyReason(_ project: URL, activity: ActivitySnapshot, sessions: AgentSessionIndex, now: Date = Date()) -> String? {
         let cutoff = now.addingTimeInterval(-Double(idleDays) * 86400)
-        if activity.isActive(project) { return "open in a running app" }
+        if activity.isActive(project) { return String(localized: "open in a running app") }
         let status = git(project, ["status", "--porcelain", "--untracked-files=no"])
-        guard status.code == 0 else { return "Git status could not be verified" }
-        if !status.output.isEmpty { return "uncommitted changes" }
-        if let time = TimeInterval(git(project, ["log", "-1", "--format=%ct"]).output.trimmingCharacters(in: .whitespacesAndNewlines)), Date(timeIntervalSince1970: time) > cutoff { return "committed in the last \(idleDays) days" }
-        if let used = sessions.lastUsed(project), used > cutoff { return "used by Claude Code or Codex in the last \(idleDays) days" }
+        guard status.code == 0 else { return String(localized: "Git status could not be verified") }
+        if !status.output.isEmpty { return String(localized: "uncommitted changes") }
+        if let time = TimeInterval(git(project, ["log", "-1", "--format=%ct"]).output.trimmingCharacters(in: .whitespacesAndNewlines)), Date(timeIntervalSince1970: time) > cutoff { return String(localized: "committed in the last \(idleDays) days") }
+        if let used = sessions.lastUsed(project), used > cutoff { return String(localized: "used by Claude Code or Codex in the last \(idleDays) days") }
         return nil
     }
 }

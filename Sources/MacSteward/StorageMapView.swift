@@ -124,8 +124,8 @@ final class StorageMapModel: ObservableObject {
     func chooseFolder() {
         guard canStart else { return }
         let panel = NSOpenPanel()
-        panel.title = "Map a folder or drive"; panel.prompt = "Map Folder"
-        panel.message = "Read file sizes and folder names. This never removes files."
+        panel.title = String(localized: "Map a folder or drive"); panel.prompt = String(localized: "Map Folder", comment: "Button in the folder picker: map the chosen folder")
+        panel.message = String(localized: "Read file sizes and folder names. This never removes files.")
         panel.canChooseDirectories = true; panel.canChooseFiles = false
         panel.directoryURL = root
         let completion: (NSApplication.ModalResponse) -> Void = { [weak self] response in
@@ -173,7 +173,10 @@ struct StorageMapView: View {
             Button("Startup Disk") { map.navigate(URL(fileURLWithPath: "/")) }
             Button("Applications") { map.navigate(URL(fileURLWithPath: "/Applications")) }
             Button("Choose Folder or Drive…") { map.chooseFolder() }
-        } label: { Label("Location: " + (map.root == FileManager.default.homeDirectoryForCurrentUser ? "Home" : map.root.path == "/" ? "Startup Disk" : map.root.lastPathComponent), systemImage: "folder") }
+        } label: {
+            let place = map.root == FileManager.default.homeDirectoryForCurrentUser ? String(localized: "Home") : map.root.path == "/" ? String(localized: "Startup Disk") : map.root.lastPathComponent
+            Label(String(localized: "Location: \(place)"), systemImage: "folder")
+        }
             .disabled(!map.canStart)
     }
     private func open(_ entry: StorageMapEntry) { if entry.isDirectory { map.navigate(entry.url) } else { model.reveal(entry.url.path) } }
@@ -193,8 +196,9 @@ struct StorageMapView: View {
                     Button("Choose Folder or Drive…") { map.chooseFolder() }
                 } label: { Label("Location", systemImage: "folder") }.disabled(!map.canStart)
                 Button { map.chooseFolder() } label: { Image(systemName: "folder.badge.plus") }.help("Map a folder or drive").disabled(!map.canStart)
-                if map.busy { Button("Stop") { map.cancel() } }
-                else { Button(map.snapshot == nil ? "Map Storage" : "Refresh") { map.map() }.disabled(!map.canStart) }
+                if map.busy { Button { map.cancel() } label: { Text("Stop", comment: "Button: stop mapping the disk") } }
+                else if map.snapshot == nil { Button { map.map() } label: { Text("Map Storage", comment: "Button: start mapping the disk") }.disabled(!map.canStart) }
+                else { Button { map.map() } label: { Text("Refresh", comment: "Button: map the folder again") }.disabled(!map.canStart) }
             }
             }
             if !stage, let snapshot = map.snapshot {
@@ -206,7 +210,7 @@ struct StorageMapView: View {
         .sheet(item: $trashRequest) { request in
             TrashReviewSheet(urls: request.urls) { results in
                 let moved = results.filter { $0.error == nil }.count
-                trashNote = "\(moved) moved to Trash · \(results.count - moved) skipped. Restore items in Finder with Put Back."
+                trashNote = String(localized: "\(moved) moved to Trash · \(results.count - moved) skipped. Restore items in Finder with Put Back.")
                 selection.removeAll(); map.refreshChanged(results.filter { $0.error == nil }.map { URL(fileURLWithPath: $0.path) })
             }
         }
@@ -231,9 +235,9 @@ struct StorageMapView: View {
                     Text("Space Map").font(.system(size: 44 * textScale, weight: .light)).tracking(-0.8)
                     Text("See where your space goes.").font(.system(size: 17 * textScale)).foregroundStyle(.white.opacity(0.72))
                     VStack(alignment: .leading, spacing: 18) {
-                        GlossyPoint(icon: "circle.dotted", text: "Folders and files as bubbles", accent: StewardTheme.space.accent)
-                        GlossyPoint(icon: "doc.text.magnifyingglass", text: "Largest files first", accent: StewardTheme.space.accent)
-                        GlossyPoint(icon: "lock", text: "Sizes only, nothing removed", accent: StewardTheme.space.accent)
+                        GlossyPoint(icon: "circle.dotted", text: String(localized: "Folders and files as bubbles"), accent: StewardTheme.space.accent)
+                        GlossyPoint(icon: "doc.text.magnifyingglass", text: String(localized: "Largest files first"), accent: StewardTheme.space.accent)
+                        GlossyPoint(icon: "lock", text: String(localized: "Sizes only, nothing removed"), accent: StewardTheme.space.accent)
                     }.padding(.top, 18)
                     HStack(spacing: 10) {
                         locationMenu
@@ -255,7 +259,7 @@ struct StorageMapView: View {
                         .stewardFont(.body).foregroundStyle(.secondary).multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true).frame(maxWidth: 480)
                     if map.busy {
-                        Text(formattedBytes(map.snapshot?.bytes ?? 0) + " measured so far").stewardFont(.caption).foregroundStyle(.white.opacity(0.65))
+                        Text("\(formattedBytes(map.snapshot?.bytes ?? 0)) measured so far").stewardFont(.caption).foregroundStyle(.white.opacity(0.65))
                         if map.snapshot != nil {
                             Text(map.currentPath.replacingOccurrences(of: NSHomeDirectory(), with: "~"))
                                 .stewardFont(.caption, design: .monospaced).lineLimit(1).truncationMode(.middle)
@@ -272,7 +276,7 @@ struct StorageMapView: View {
     }
     private func mapRow(_ entry: StorageMapEntry) -> some View {
         HStack(spacing: 5) {
-            Toggle("Select " + entry.url.lastPathComponent, isOn: Binding(get: { selection.contains(entry.id) }, set: { if $0 { selection.insert(entry.id) } else { selection.remove(entry.id) } }))
+            Toggle(String(localized: "Select \(entry.url.lastPathComponent)"), isOn: Binding(get: { selection.contains(entry.id) }, set: { if $0 { selection.insert(entry.id) } else { selection.remove(entry.id) } }))
                 .toggleStyle(.stewardCheckboxOnly).help("Select for review")
             Button { open(entry) } label: { mapRowLabel(entry) }.buttonStyle(.plain).disabled(!map.canStart).help(rowHelp(entry))
         }.contextMenu {
@@ -281,20 +285,17 @@ struct StorageMapView: View {
         }
     }
     private func rowHelp(_ entry: StorageMapEntry) -> String {
-        let local = "Stored on this Mac: " + formattedBytes(entry.bytes)
-        let logical = "File size: " + formattedBytes(entry.logicalBytes)
-        let cloud = "Cloud-backed files: " + formattedBytes(entry.cloudLogicalBytes)
-        return entry.url.path + "\n" + local + " · " + logical + " · " + cloud
+        entry.url.path + "\n" + String(localized: "Stored on this Mac: \(formattedBytes(entry.bytes)) · File size: \(formattedBytes(entry.logicalBytes)) · Cloud-backed files: \(formattedBytes(entry.cloudLogicalBytes))")
     }
     private func mapRowLabel(_ entry: StorageMapEntry) -> some View {
         HStack(alignment: .top, spacing: 9) {
             Image(systemName: entry.isDirectory ? "folder.fill" : "doc.fill").foregroundStyle(StewardTheme.space.accent)
             VStack(alignment: .leading, spacing: 4) {
                 Text(entry.url.lastPathComponent).stewardFont(.body, weight: .medium).lineLimit(2)
-                if entry.cloudFileCount > 0 { Text("Cloud-backed: " + formattedBytes(entry.cloudLogicalBytes)).stewardFont(.caption).foregroundStyle(StewardTheme.space.accent) }
+                if entry.cloudFileCount > 0 { Text("Cloud-backed: \(formattedBytes(entry.cloudLogicalBytes))").stewardFont(.caption).foregroundStyle(StewardTheme.space.accent) }
                 if entry.onlineOnlyCount > 0 { Text("\(entry.onlineOnlyCount) online-only").stewardFont(.caption).foregroundStyle(.secondary) }
                 if entry.unknownCloudCount > 0 { Text("Cloud availability partly unknown").stewardFont(.caption).foregroundStyle(.orange) }
-                if eligible(entry.url) > 0 { Text(formattedBytes(eligible(entry.url)) + " eligible caches").stewardFont(.caption).foregroundStyle(.mint) }
+                if eligible(entry.url) > 0 { Text("\(formattedBytes(eligible(entry.url))) eligible caches").stewardFont(.caption).foregroundStyle(.mint) }
                 if protectedCount(entry.url) > 0 { Text("\(protectedCount(entry.url)) protected / review-only findings").stewardFont(.caption).foregroundStyle(.orange) }
                 if !entry.complete { Text(map.busy ? "Measuring…" : "Partial or not measured").stewardFont(.caption).foregroundStyle(.orange) }
             }
@@ -310,13 +311,14 @@ struct StorageMapView: View {
         let start = parts.starts(with: home) ? home.count - 1 : 0
         return HStack(spacing: 6) {
             BackSquareButton { map.goBack() }.disabled(map.backStack.isEmpty || !map.canStart)
-            Button { map.goForward() } label: { Image(systemName: "chevron.right") }.disabled(map.forwardStack.isEmpty || !map.canStart).help("Forward")
+            Button { map.goForward() } label: { Image(systemName: "chevron.right").flipsForRightToLeftLayoutDirection(true) }.disabled(map.forwardStack.isEmpty || !map.canStart).help("Forward")
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 2) {
                     ForEach(start..<parts.count, id: \.self) { index in
-                        if index > start { Image(systemName: "chevron.compact.right").foregroundStyle(.secondary) }
+                        if index > start { Image(systemName: "chevron.compact.right").flipsForRightToLeftLayoutDirection(true).foregroundStyle(.secondary) }
                         let url = URL(fileURLWithPath: NSString.path(withComponents: Array(parts[0...index])))
-                        Button(index == start && start > 0 ? "Home" : parts[index] == "/" ? "Startup Disk" : parts[index]) { map.navigate(url) }
+                        let partTitle = index == start && start > 0 ? String(localized: "Home") : parts[index] == "/" ? String(localized: "Startup Disk") : parts[index]
+                        Button(partTitle) { map.navigate(url) }
                             .buttonStyle(.plain).stewardFont(.callout, weight: index == parts.count - 1 ? .semibold : .regular)
                             .foregroundStyle(index == parts.count - 1 ? .primary : .secondary)
                             .padding(.horizontal, 6).padding(.vertical, 3).background(.white.opacity(index == parts.count - 1 ? 0.08 : 0), in: Capsule())
@@ -328,12 +330,25 @@ struct StorageMapView: View {
                 .disabled(!map.canStart || map.root.path == "/").help("Up to the enclosing folder")
         }.buttonStyle(.bordered).padding(6).background(.white.opacity(0.04), in: RoundedRectangle(cornerRadius: 10))
     }
-    private func storageMetric(_ label: String, _ value: String, explanation: String, color: Color) -> some View {
+    private func storageMetric(_ label: LocalizedStringKey, _ value: String, explanation: LocalizedStringKey, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 5) {
             Text(label).stewardFont(.caption).foregroundStyle(.secondary)
             Text(value).stewardFont(.title3, weight: .semibold).foregroundStyle(color).monospacedDigit()
             Text(explanation).stewardFont(.caption2).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
         }.padding(12).frame(maxWidth: .infinity, alignment: .leading).background(.white.opacity(0.045), in: RoundedRectangle(cornerRadius: 12))
+    }
+    private func watchStatus(_ snapshot: StorageMapSnapshot) -> String {
+        guard map.watching else { return String(localized: "Change monitoring unavailable · Refresh performs a full scan") }
+        if map.hasChanges { return String(localized: "Changes detected") }
+        guard snapshot.incremental else { return String(localized: "Watching for folder changes") }
+        let folders = String(localized: "\(snapshot.refreshedFolderCount) folders"), items = String(localized: "\(snapshot.reusedCount) items")
+        return String(localized: "Refreshed \(folders) · reused \(items)")
+    }
+    private func mapNote(_ snapshot: StorageMapSnapshot) -> String {
+        if !snapshot.finished && !map.busy { return String(localized: "Map stopped. Measurements are partial.") }
+        if snapshot.limited || snapshot.entries.contains(where: { !$0.complete }) && !map.busy { return String(localized: "Partial map. Open a folder to measure it in more detail.") }
+        if snapshot.unreadableCount > 0 { return String(localized: "\(snapshot.unreadableCount) locations could not be read. macOS permissions remain in control.") }
+        return String(localized: "Folder names and sizes only. Click a bubble to explore.")
     }
     private func mapContent(_ snapshot: StorageMapSnapshot) -> some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -356,7 +371,7 @@ struct StorageMapView: View {
             if snapshot.root.path == "/" || snapshot.root.deletingLastPathComponent().path == "/Volumes" { capacityBar(snapshot) }
             if !snapshot.kinds.isEmpty { kindsRow(snapshot) }
             HStack {
-                Text("In this map: \(snapshot.cloudFileCount) cloud-backed files · \(snapshot.onlineOnlyCount) online-only").stewardFont(.caption).foregroundStyle(.secondary)
+                Text("In this map: \(String(localized: "\(snapshot.cloudFileCount) cloud-backed files")) · \(snapshot.onlineOnlyCount) online-only").stewardFont(.caption).foregroundStyle(.secondary)
                 Spacer()
                 Picker("Bubble size", selection: $cloudSizing) { Text("Stored on this Mac").tag(false); Text("Cloud-backed files").tag(true) }.pickerStyle(.segmented).frame(maxWidth: 350)
             }
@@ -370,8 +385,8 @@ struct StorageMapView: View {
                 let layout = geometry.size.width < 650 || textScale > 1.4 ? AnyLayout(VStackLayout(spacing: 14)) : AnyLayout(HStackLayout(spacing: 18))
                 layout {
                     VStack(alignment: .leading, spacing: 10) {
-                        BulkBar(title: "Select all", isOn: Binding(get: { !rows.isEmpty && selection.isSuperset(of: rows.map(\.id)) }, set: { if $0 { selection.formUnion(rows.map(\.id)) } else { selection.subtract(rows.map(\.id)) } }), enabled: !rows.isEmpty,
-                                help: "Everything listed here. You review each item before it moves to the Trash.", summary: "\(selection.count) selected") {
+                        BulkBar(title: String(localized: "Select all", comment: "Checkbox: select every item in the list"), isOn: Binding(get: { !rows.isEmpty && selection.isSuperset(of: rows.map(\.id)) }, set: { if $0 { selection.formUnion(rows.map(\.id)) } else { selection.subtract(rows.map(\.id)) } }), enabled: !rows.isEmpty,
+                                help: String(localized: "Everything listed here. You review each item before it moves to the Trash."), summary: String(localized: "\(selection.count) selected")) {
                             Button("Move \(selection.count) to Trash…", role: .destructive) { trashRequest = TrashRequest(urls: rows.filter { selection.contains($0.id) }.map(\.url)) }
                                 .buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(selection.isEmpty)
                         }
@@ -389,13 +404,13 @@ struct StorageMapView: View {
                 }
             }
             HStack {
-                Text(map.watching ? (map.hasChanges ? "Changes detected" : snapshot.incremental ? "Refreshed \(snapshot.refreshedFolderCount) \(snapshot.refreshedFolderCount == 1 ? "folder" : "folders") · reused \(snapshot.reusedCount) \(snapshot.reusedCount == 1 ? "item" : "items")" : "Watching for folder changes") : "Change monitoring unavailable · Refresh performs a full scan")
+                Text(watchStatus(snapshot))
                     .stewardFont(.caption).foregroundStyle(.secondary)
                 Spacer()
                 if map.busy { Text("\(map.checkedCount) entries checked").stewardFont(.caption).foregroundStyle(.secondary) }
             }
             HStack(alignment: .top) {
-                Text(!snapshot.finished && !map.busy ? "Map stopped. Measurements are partial." : snapshot.limited || snapshot.entries.contains(where: { !$0.complete }) && !map.busy ? "Partial map. Open a folder to measure it in more detail." : snapshot.unreadableCount > 0 ? "\(snapshot.unreadableCount) locations could not be read. macOS permissions remain in control." : "Folder names and sizes only. Click a bubble to explore.")
+                Text(mapNote(snapshot))
                     .stewardFont(.caption).foregroundStyle(snapshot.limited || snapshot.unreadableCount > 0 ? Color.orange : .secondary)
                 Spacer()
                 Image(systemName: "info.circle").help("Stored on this Mac uses allocated file blocks; file size is logical length. The cloud total counts files represented in this map, not your full cloud account, and is not reclaimable local space. No cloud file contents are read or downloads requested. Hard links are counted once; APFS clones, shared storage and system-managed space can make free-space changes differ. Small bubbles keep a minimum clickable size. Mapping only reads metadata; moving an item to Trash requires a separate review.")
@@ -404,6 +419,22 @@ struct StorageMapView: View {
     }
 }
 
+/// Display name of a file kind from Core (`StorageKind.name`, `TrashItem.kind`); the English name stays the identifier.
+func kindTitle(_ name: String) -> String {
+    switch name {
+    case "Folders": return String(localized: "Folders")
+    case "Videos": return String(localized: "Videos")
+    case "Images": return String(localized: "Images")
+    case "Audio": return String(localized: "Audio", comment: "Kind of file: sound files")
+    case "Archives": return String(localized: "Archives")
+    case "Disk images": return String(localized: "Disk images")
+    case "Documents": return String(localized: "Documents")
+    case "Code & data": return String(localized: "Code & data")
+    case "Apps & libraries": return String(localized: "Apps & libraries")
+    case "Other": return String(localized: "Other", comment: "Kind of file: everything else")
+    default: return name
+    }
+}
 let kindColors: [String: Color] = ["Folders": .mint, "Videos": .pink, "Images": .orange, "Audio": .yellow, "Archives": .brown, "Disk images": .purple, "Documents": .blue, "Code & data": .teal, "Apps & libraries": .indigo, "Other": .gray]
 extension StorageMapView {
     /// Whole-drive maps show mapped, other (system, purgeable, unreadable) and free space.
@@ -411,7 +442,7 @@ extension StorageMapView {
         let disk = DiskSpace.read(at: snapshot.root.path)
         let mapped = min(snapshot.bytes, disk.total), free = min(disk.free, disk.total - mapped)
         let other = disk.total - mapped - free
-        let parts: [(String, UInt64, Color)] = [("Mapped", mapped, StewardTheme.space.accent), ("Other", other, .white.opacity(0.35)), ("Free", free, .white.opacity(0.08))]
+        let parts: [(String, UInt64, Color, String)] = [("Mapped", mapped, StewardTheme.space.accent, String(localized: "Mapped \(formattedBytes(mapped))")), ("Other", other, .white.opacity(0.35), String(localized: "Other \(formattedBytes(other))")), ("Free", free, .white.opacity(0.08), String(localized: "Free \(formattedBytes(free))"))]
         return VStack(alignment: .leading, spacing: 6) {
             GeometryReader { geometry in
                 HStack(spacing: 2) {
@@ -421,7 +452,7 @@ extension StorageMapView {
                 }
             }.frame(height: 10)
             HStack(spacing: 16) {
-                ForEach(parts, id: \.0) { part in Label(part.0 + " " + formattedBytes(part.1), systemImage: "circle.fill").stewardFont(.caption).foregroundStyle(.secondary).labelStyle(.titleAndIcon).tint(part.2) }
+                ForEach(parts, id: \.0) { part in Label(part.3, systemImage: "circle.fill").stewardFont(.caption).foregroundStyle(.secondary).labelStyle(.titleAndIcon).tint(part.2) }
                 Spacer()
                 Image(systemName: "info.circle").help("Other is space on this drive the map could not attribute to a file: macOS system data, snapshots, purgeable space and folders macOS did not let Artifloam read.")
             }
@@ -434,7 +465,7 @@ extension StorageMapView {
                 ForEach(snapshot.kinds.prefix(9)) { kind in
                     HStack(spacing: 6) {
                         Circle().fill(kindColors[kind.name] ?? .gray).frame(width: 8, height: 8)
-                        Text(kind.name).stewardFont(.caption, weight: .semibold)
+                        Text(kindTitle(kind.name)).stewardFont(.caption, weight: .semibold)
                         Text(formattedBytes(kind.bytes)).stewardFont(.caption).foregroundStyle(.secondary)
                     }.padding(.horizontal, 10).padding(.vertical, 6).background(.white.opacity(0.06), in: Capsule())
                     .help("\(kind.files) files")
@@ -512,12 +543,14 @@ private struct StorageBubble: View {
     /// Same gold as the section; white labels stay readable on its deep shade.
     private var accent: Color { StewardTheme.space.vivid }
     private var helpText: String {
-        var text = entry.url.lastPathComponent + " · Stored on this Mac: " + formattedBytes(entry.bytes)
-        text += " · Cloud-backed files: " + formattedBytes(entry.cloudLogicalBytes)
-        if !entry.complete { text += " · partial measurement" }
-        return text
+        let name = entry.url.lastPathComponent, local = formattedBytes(entry.bytes), cloud = formattedBytes(entry.cloudLogicalBytes)
+        return entry.complete ? String(localized: "\(name) · Stored on this Mac: \(local) · Cloud-backed files: \(cloud)")
+            : String(localized: "\(name) · Stored on this Mac: \(local) · Cloud-backed files: \(cloud) · partial measurement")
     }
-    private var accessibilityText: String { entry.url.lastPathComponent + ", " + formattedBytes(displayBytes) + (cloudSizing ? " cloud-backed files" : " stored on this Mac") }
+    private var accessibilityText: String {
+        let name = entry.url.lastPathComponent, size = formattedBytes(displayBytes)
+        return cloudSizing ? String(localized: "\(name), \(size) cloud-backed files") : String(localized: "\(name), \(size) stored on this Mac")
+    }
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 24, paused: reduceMotion || scenePhase != .active)) { timeline in
             let phase = reduceMotion || scenePhase != .active ? 0 : timeline.date.timeIntervalSinceReferenceDate * 0.7 + Double(index)
@@ -539,7 +572,7 @@ private struct StorageBubble: View {
             VStack(spacing: 6) {
                 HStack(spacing: 4) {
                     Image(systemName: entry.isDirectory ? "folder.fill" : "doc.fill").foregroundStyle(.white.opacity(0.85))
-                    if eligibleBytes > 0 { Image(systemName: "sparkles").foregroundStyle(.mint).help(formattedBytes(eligibleBytes) + " eligible caches") }
+                    if eligibleBytes > 0 { Image(systemName: "sparkles").foregroundStyle(.mint).help("\(formattedBytes(eligibleBytes)) eligible caches") }
                 }.font(.system(size: min(34, diameter * 0.22)))
                 if diameter > 95 {
                     Text(entry.url.lastPathComponent).stewardFont(.body, weight: .medium).lineLimit(2).multilineTextAlignment(.center)

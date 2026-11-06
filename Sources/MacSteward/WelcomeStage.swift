@@ -180,13 +180,13 @@ struct WelcomeStage: View {
             try UpdateChecker.reopen(AppInstall.destination)
         } catch { moveError = error.localizedDescription }
     }
-    private func heading(_ text: String) -> some View {
+    private func heading(_ text: LocalizedStringKey) -> some View {
         Text(text).font(.system(size: 44 * textScale, weight: .light)).tracking(-0.8).fixedSize(horizontal: false, vertical: true)
     }
-    private func line(_ text: String) -> some View {
+    private func line(_ text: LocalizedStringKey) -> some View {
         Text(text).font(.system(size: 17 * textScale)).foregroundStyle(.white.opacity(0.72)).fixedSize(horizontal: false, vertical: true)
     }
-    private func primary(_ title: String, action: @escaping () -> Void) -> some View {
+    private func primary(_ title: LocalizedStringKey, action: @escaping () -> Void) -> some View {
         Button(title, action: action).buttonStyle(CleanupGlassButtonStyle()).stewardFont(.body, weight: .semibold).keyboardShortcut(.defaultAction).padding(.top, 8)
     }
     /// macOS doesn't always list a new app, and a running app may not get access until it reopens. Apple offers no API for either.
@@ -205,8 +205,8 @@ struct WelcomeStage: View {
             heading("Welcome to Artifloam")
             line("Room to breathe, for your Mac.")
             VStack(alignment: .leading, spacing: 14) {
-                GlossyPoint(icon: "hand.raised.fill", text: "Nothing is removed until you choose it", accent: theme.accent)
-                GlossyPoint(icon: "lock.fill", text: "Your files stay on this Mac", accent: theme.accent)
+                GlossyPoint(icon: "hand.raised.fill", text: String(localized: "Nothing is removed until you choose it"), accent: theme.accent)
+                GlossyPoint(icon: "lock.fill", text: String(localized: "Your files stay on this Mac"), accent: theme.accent)
             }.padding(.top, 6)
             primary("Continue") { advance(to: offerMove ? .move : .permissions) }.disabled(!copyShown) // Someone still typing must not press it unseen.
         }
@@ -227,13 +227,13 @@ struct WelcomeStage: View {
             heading("Permissions")
             line("macOS asks you first. Both are optional, and you can change them later in System Settings.")
             VStack(spacing: 12) {
-                WelcomePermissionCard(icon: "lock.shield.fill", title: "Full Disk Access", detail: "Measures protected folders like the Trash.", accent: theme.accent, granted: fullDisk == .granted, actionTitle: askedFullDisk ? "Settings" : "Allow") {
+                WelcomePermissionCard(icon: "lock.shield.fill", title: String(localized: "Full Disk Access"), detail: String(localized: "Measures protected folders like the Trash."), accent: theme.accent, granted: fullDisk == .granted, actionTitle: askedFullDisk ? String(localized: "Settings", comment: "Button: open System Settings") : String(localized: "Allow", comment: "Button: allow this permission")) {
                     // Trying a protected folder first is what puts this app in the list. There's no API for this.
                     _ = FullDiskAccess.status()
                     askedFullDisk = true
                     NSWorkspace.shared.open(FullDiskAccess.settingsURL)
                 }
-                WelcomePermissionCard(icon: "trash.fill", title: "Finder", detail: "Lists and empties the Trash when you ask.", accent: theme.accent, granted: finder == true) {
+                WelcomePermissionCard(icon: "trash.fill", title: "Finder", detail: String(localized: "Lists and empties the Trash when you ask."), accent: theme.accent, granted: finder == true) {
                     Task { finder = await Task.detached { TrashBins.requestFinderAccess() }.value }
                 }
             }.padding(.top, 6)
@@ -248,7 +248,7 @@ private struct WelcomePermissionCard: View {
     /// The green of the leaf in the app icon.
     private static let leafGreen = Color(red: 0.30, green: 0.76, blue: 0.36)
     let icon: String, title: String, detail: String, accent: Color, granted: Bool
-    var actionTitle = "Allow"
+    var actionTitle = String(localized: "Allow", comment: "Button: allow this permission")
     let allow: () -> Void
     @Environment(\.stewardTextScale) private var textScale
     @State private var hovered = false
@@ -277,7 +277,7 @@ private struct WelcomePermissionCard: View {
         .allowsHitTesting(!granted) // Not `.disabled`: that would also fade the check.
         .onHover { hovered = $0 }
         .animation(.easeOut(duration: 0.15), value: hovered)
-        .accessibilityLabel(title + ". " + detail)
+        .accessibilityLabel(String(localized: "\(title). \(detail)"))
         .accessibilityValue(granted ? "Allowed" : "Not allowed")
     }
 }

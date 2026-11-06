@@ -6,21 +6,39 @@ struct ToolsView: View {
     @State private var search = ""
     struct Tool: Identifiable {
         let id: String; let icon: String; let detail: String; let action: String
+        /// What people read; `id` stays the English identifier (navigation, artwork, scan info).
+        var title: String {
+            switch id {
+            case "Junk cleanup": return String(localized: "Junk cleanup")
+            case "Worktrees": return String(localized: "Worktrees")
+            case "Duplicates": return String(localized: "Duplicates")
+            case "Memory": return String(localized: "Memory")
+            case "Space Map": return String(localized: "Space Map")
+            case "Large & old files": return String(localized: "Large & old files")
+            case "App removal": return String(localized: "App removal")
+            case "Leftovers": return String(localized: "Leftovers")
+            case "Browser data": return String(localized: "Browser data")
+            case "Trash bins": return String(localized: "Trash bins")
+            case "Login & background items": return String(localized: "Login & background items")
+            case "System": return String(localized: "System")
+            default: return id
+            }
+        }
     }
     /// Also read by the scan info popover, so both name the tools the same way.
     static let catalog = [
-        Tool(id: "Junk cleanup", icon: "sparkles", detail: "Find old, regenerable caches and recognised diagnostic logs.", action: "Scan"),
-        Tool(id: "Worktrees", icon: "arrow.triangle.branch", detail: "See which Claude Code and Codex checkouts are in use. Move finished, merged ones to Trash.", action: "Scan"),
-        Tool(id: "Duplicates", icon: "square.on.square", detail: "Find exact copies across your home folder by content. Keep one, move the rest to Trash.", action: "Scan"),
-        Tool(id: "Memory", icon: "memorychip", detail: "Live pressure, swap and app footprints. Release RAM by quitting apps you choose.", action: "Open memory"),
-        Tool(id: "Space Map", icon: "magnifyingglass", detail: "Explore the folders and large files taking up space on your Mac.", action: "Explore storage"),
-        Tool(id: "Large & old files", icon: "doc.text.magnifyingglass", detail: "Find large files and older downloads. Review sizes and dates before moving your selection to Trash.", action: "Find large files"),
-        Tool(id: "App removal", icon: "app.badge", detail: "Review installed apps and move selected app bundles to Trash. Running and system apps stay protected.", action: "Review apps"),
-        Tool(id: "Leftovers", icon: "shippingbox", detail: "Find support files, caches and settings left by apps you already deleted.", action: "Scan"),
-        Tool(id: "Browser data", icon: "globe", detail: "Caches and website data per browser and profile. Group by browser or by website.", action: "Scan"),
-        Tool(id: "Trash bins", icon: "trash", detail: "See how much the Trash holds on your Mac and drives, then empty it.", action: "Check"),
-        Tool(id: "Login & background items", icon: "power", detail: "Inspect launch agents and services. Manage enabled login items using macOS System Settings.", action: "Review background items"),
-        Tool(id: "System", icon: "checkmark.shield", detail: "See what protects your Mac and what runs on it.", action: "Check")
+        Tool(id: "Junk cleanup", icon: "sparkles", detail: String(localized: "Find old, regenerable caches and recognised diagnostic logs."), action: String(localized: "Scan", comment: "Button: scan with this tool")),
+        Tool(id: "Worktrees", icon: "arrow.triangle.branch", detail: String(localized: "See which Claude Code and Codex checkouts are in use. Move finished, merged ones to Trash."), action: String(localized: "Scan", comment: "Button: scan with this tool")),
+        Tool(id: "Duplicates", icon: "square.on.square", detail: String(localized: "Find exact copies across your home folder by content. Keep one, move the rest to Trash."), action: String(localized: "Scan", comment: "Button: scan with this tool")),
+        Tool(id: "Memory", icon: "memorychip", detail: String(localized: "Live pressure, swap and app footprints. Release RAM by quitting apps you choose."), action: String(localized: "Open memory")),
+        Tool(id: "Space Map", icon: "magnifyingglass", detail: String(localized: "Explore the folders and large files taking up space on your Mac."), action: String(localized: "Explore storage")),
+        Tool(id: "Large & old files", icon: "doc.text.magnifyingglass", detail: String(localized: "Find large files and older downloads. Review sizes and dates before moving your selection to Trash."), action: String(localized: "Find large files")),
+        Tool(id: "App removal", icon: "app.badge", detail: String(localized: "Review installed apps and move selected app bundles to Trash. Running and system apps stay protected."), action: String(localized: "Review apps")),
+        Tool(id: "Leftovers", icon: "shippingbox", detail: String(localized: "Find support files, caches and settings left by apps you already deleted."), action: String(localized: "Scan", comment: "Button: scan with this tool")),
+        Tool(id: "Browser data", icon: "globe", detail: String(localized: "Caches and website data per browser and profile. Group by browser or by website."), action: String(localized: "Scan", comment: "Button: scan with this tool")),
+        Tool(id: "Trash bins", icon: "trash", detail: String(localized: "See how much the Trash holds on your Mac and drives, then empty it."), action: String(localized: "Check", comment: "Button: check with this tool")),
+        Tool(id: "Login & background items", icon: "power", detail: String(localized: "Inspect launch agents and services. Manage enabled login items using macOS System Settings."), action: String(localized: "Review background items")),
+        Tool(id: "System", icon: "checkmark.shield", detail: String(localized: "See what protects your Mac and what runs on it."), action: String(localized: "Check", comment: "Button: check with this tool"))
     ]
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -36,10 +54,10 @@ struct ToolsView: View {
             Text("Each tool below scans only its own area. The button above runs the cleanup, worktree, duplicate and system checks together. Scanning never deletes files or quits apps.").stewardFont(.body).foregroundStyle(.secondary)
             TextField("Find a tool", text: $search).stewardInput()
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 245), spacing: 16)], spacing: 16) {
-                ForEach(Self.catalog.filter { search.isEmpty || $0.id.localizedCaseInsensitiveContains(search) || $0.detail.localizedCaseInsensitiveContains(search) }) { tool in
+                ForEach(Self.catalog.filter { search.isEmpty || $0.id.localizedCaseInsensitiveContains(search) || $0.title.localizedCaseInsensitiveContains(search) || $0.detail.localizedCaseInsensitiveContains(search) }) { tool in
                     VStack(alignment: .leading, spacing: 14) {
                         StewardNavigationArtwork(name: tool.id, fallback: tool.icon, size: 42)
-                        Text(tool.id).stewardFont(.headline).fixedSize(horizontal: false, vertical: true)
+                        Text(tool.title).stewardFont(.headline).fixedSize(horizontal: false, vertical: true)
                         Text(tool.detail).stewardFont(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                         Button(tool.action) { activate(tool.id) }.buttonStyle(.bordered).disabled(model.busy)
                     }.fixedSize(horizontal: false, vertical: true).padding(22).frame(maxWidth: .infinity, minHeight: 235, alignment: .topLeading)

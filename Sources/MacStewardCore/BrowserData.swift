@@ -16,6 +16,24 @@ public struct BrowserItem: Identifiable, Sendable {
     public let recommended: Bool
     /// Site storage (IndexedDB, Firefox site storage) can keep a sign-in or offline session; caches never do.
     public var mayHoldSignIn: Bool { site != nil }
+    /// `kind` and the shared `profile` value stay English identifiers; these are what a person reads.
+    public var kindTitle: String {
+        switch kind {
+        case "Code cache": return String(localized: "Code cache")
+        case "GPU cache": return String(localized: "GPU cache")
+        case "Graphics cache": return String(localized: "Graphics cache")
+        case "WebGPU cache": return String(localized: "WebGPU cache")
+        case "Shader cache": return String(localized: "Shader cache")
+        case "Graphite shader cache": return String(localized: "Graphite shader cache")
+        case "Component downloads": return String(localized: "Component downloads")
+        case "On-device AI model": return String(localized: "On-device AI model")
+        case "Web cache": return String(localized: "Web cache")
+        case "Offline site cache": return String(localized: "Offline site cache")
+        case "Website database": return String(localized: "Website database")
+        default: return kind
+        }
+    }
+    public var profileTitle: String { profile == "All profiles" ? String(localized: "All profiles") : profile }
 }
 public struct BrowserReport: Identifiable, Sendable {
     public var id: String { name }
@@ -128,17 +146,17 @@ public enum BrowserData {
         for report in current {
             let chosen = report.items.filter { paths.contains($0.id) }
             guard !chosen.isEmpty else { continue }
-            if isRunning(report.bundleID) { skipped += chosen.map { "\($0.browser) is open: \($0.kind)" }; continue }
+            if isRunning(report.bundleID) { skipped += chosen.map { String(localized: "\($0.browser) is open: \($0.kindTitle)") }; continue }
             for item in chosen {
-                if ignoredPaths.contains(where: { item.id == $0 || item.id.hasPrefix($0 + "/") }) { skipped.append("\(item.browser) \(item.kind): on your keep list"); continue }
+                if ignoredPaths.contains(where: { item.id == $0 || item.id.hasPrefix($0 + "/") }) { skipped.append(String(localized: "\(item.browser) \(item.kindTitle): on your keep list")); continue }
                 // A browser under another bundle identifier, or a helper still running, shows up here.
-                guard activity.reliable, !activity.isActive(item.url) else { skipped.append("\(item.browser) \(item.kind): still in use"); continue }
+                guard activity.reliable, !activity.isActive(item.url) else { skipped.append(String(localized: "\(item.browser) \(item.kindTitle): still in use")); continue }
                 do { try SecureRemoval.remove(item.url, tree: try TreeInventory.read(item.url, dependencies: true)); removed.append(item.id) }
-                catch { skipped.append("\(item.browser) \(item.kind): \(error.localizedDescription)") }
+                catch { skipped.append(String(localized: "\(item.browser) \(item.kindTitle): \(error.localizedDescription)")) }
             }
         }
         let known = Set(current.flatMap(\.items).map(\.id))
-        skipped += paths.subtracting(known).map { "No longer present: " + URL(fileURLWithPath: $0).lastPathComponent }
+        skipped += paths.subtracting(known).map { path in let name = URL(fileURLWithPath: path).lastPathComponent; return String(localized: "No longer present: \(name)") }
         return (removed, skipped)
     }
 }

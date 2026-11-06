@@ -8,11 +8,21 @@ struct FolderGrant: Codable, Identifiable {
         case project, downloads, claude, codex, additional
         var title: String {
             switch self {
-            case .project: return "Project folder"
-            case .downloads: return "Duplicate search folder"
-            case .claude: return "Claude configuration"
-            case .codex: return "Codex configuration"
-            case .additional: return "Additional access"
+            case .project: return String(localized: "Project folder")
+            case .downloads: return String(localized: "Duplicate search folder")
+            case .claude: return String(localized: "Claude configuration")
+            case .codex: return String(localized: "Codex configuration")
+            case .additional: return String(localized: "Additional access")
+            }
+        }
+        /// Title of the folder chooser; whole sentences so each language can phrase them.
+        var chooserTitle: String {
+            switch self {
+            case .project: return String(localized: "Choose project folders")
+            case .downloads: return String(localized: "Choose duplicate search folder")
+            case .claude: return String(localized: "Choose Claude configuration folder")
+            case .codex: return String(localized: "Choose Codex configuration folder")
+            case .additional: return String(localized: "Choose additional access folder")
             }
         }
     }
@@ -44,8 +54,8 @@ final class FolderAccess: ObservableObject {
                 urls[grants[index].id] = url
                 if url.startAccessingSecurityScopedResource() { scoped.insert(grants[index].id) }
                 if stale { grants[index].bookmark = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil); grants[index].path = url.path }
-                status[grants[index].id] = "Selected · not checked"
-            } catch { status[grants[index].id] = "Choose this folder again" }
+                status[grants[index].id] = String(localized: "Selected · not checked")
+            } catch { status[grants[index].id] = String(localized: "Choose this folder again") }
         }
         save()
         // Protected-folder discovery waits for Scan or the Settings feature.
@@ -113,11 +123,11 @@ final class FolderAccess: ObservableObject {
     }
     func choose(_ role: FolderGrant.Role, afterSelection: (() -> Void)? = nil) {
         let panel = NSOpenPanel()
-        panel.title = role == .project ? "Choose project folders" : "Choose \(role.title.lowercased()) folder"
-        panel.message = afterSelection == nil ? "macOS controls access. Selecting a folder does not start a scan or remove anything." : "Choose a folder to compare file sizes and hashes locally. No files will be removed."
+        panel.title = role.chooserTitle
+        panel.message = afterSelection == nil ? String(localized: "macOS controls access. Selecting a folder does not start a scan or remove anything.") : String(localized: "Choose a folder to compare file sizes and hashes locally. No files will be removed.")
         panel.canChooseDirectories = true; panel.canChooseFiles = false
         panel.allowsMultipleSelection = role == .project || role == .additional
-        panel.prompt = "Allow Folder"
+        panel.prompt = String(localized: "Allow Folder")
         let home = FileManager.default.homeDirectoryForCurrentUser
         switch role {
         case .project: panel.directoryURL = home
@@ -143,7 +153,7 @@ final class FolderAccess: ObservableObject {
         do {
             for selectedURL in selected {
                 let url = selectedURL.standardizedFileURL.resolvingSymlinksInPath()
-                if role == .project && url.path == "/" { throw StewardError.blocked("Choose a project directory, not the entire disk.") }
+                if role == .project && url.path == "/" { throw StewardError.blocked(String(localized: "Choose a project directory, not the entire disk.")) }
                 if grants.contains(where: { $0.role == role && $0.path == url.path }) { continue }
                 excludedProjects.removeAll { $0 == url.path }
                 defaults.set(excludedProjects, forKey: "excludedDetectedProjects")
@@ -154,7 +164,7 @@ final class FolderAccess: ObservableObject {
                 let grant = FolderGrant(id: UUID(), role: role, path: url.path, bookmark: bookmark)
                 grants.append(grant); urls[grant.id] = selectedURL
                 if selectedURL.startAccessingSecurityScopedResource() { scoped.insert(grant.id) }
-                status[grant.id] = "Selected · not checked"
+                status[grant.id] = String(localized: "Selected · not checked")
             }
             save()
             checkAccess()
@@ -168,12 +178,12 @@ final class FolderAccess: ObservableObject {
     func checkAccess() {
         detectAgentFolders()
         let checks = grants.compactMap { grant in urls[grant.id].map { (grant.id, $0) } }
-        for (id, _) in checks { status[id] = "Checking read access…" }
+        for (id, _) in checks { status[id] = String(localized: "Checking read access…") }
         for (id, url) in checks {
             Task {
                 let result = await Task.detached(priority: .utility) {
-                    do { _ = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil); return "Readable · cleanup still needs its safety checks" }
-                    catch { return "Access unavailable · select again or review macOS settings" }
+                    do { _ = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil); return String(localized: "Readable · cleanup still needs its safety checks") }
+                    catch { return String(localized: "Access unavailable · select again or review macOS settings") }
                 }.value
                 if urls[id] == url { status[id] = result }
             }
@@ -201,8 +211,11 @@ struct AccessSettingsView: View {
     /// Looked up off the main thread: the first Git lookup runs xcode-select.
     @State private var gitAvailable: Bool?
     @AppStorage(UsagePing.enabledKey, store: StewardPreferences.defaults) private var sendUsagePing = false
+    /// macOS picks the language at launch, so this remembers what the running app is showing.
+    private static let launchLanguage = AppLanguage.chosen(in: UserDefaults.standard.persistentDomain(forName: Bundle.main.bundleIdentifier ?? "")) ?? ""
+    @State private var language = Self.launchLanguage
     /// One System Settings-style group: a heading, rows separated by hairlines, one short footer.
-    private func section<Content: View>(_ title: String, footer: String? = nil, @ViewBuilder rows: () -> Content) -> some View {
+    private func section<Content: View>(_ title: LocalizedStringKey, footer: LocalizedStringKey? = nil, @ViewBuilder rows: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title).stewardFont(.headline)
             VStack(spacing: 0) { rows() }
@@ -232,8 +245,8 @@ struct AccessSettingsView: View {
         }
     }
     private func agentDetail(_ role: FolderGrant.Role) -> String {
-        guard let result = access.agentFolders[role] else { return "Checking…" }
-        guard result.state == .found else { return "Not found" }
+        guard let result = access.agentFolders[role] else { return String(localized: "Checking…") }
+        guard result.state == .found else { return String(localized: "Not found") }
         return ((result.url ?? access.url(for: role))?.path ?? "").replacingOccurrences(of: NSHomeDirectory(), with: "~")
     }
     var body: some View {
@@ -243,20 +256,34 @@ struct AccessSettingsView: View {
         VStack(alignment: .leading, spacing: 26) {
             Text("Settings").stewardFont(.title, weight: .semibold)
             section("Appearance") {
-                row("Text size", icon: "textformat.size", divider: false) {
+                row(String(localized: "Text size"), icon: "textformat.size", divider: false) {
                     Button { model.changeTextScale(-0.15) } label: { Image(systemName: "minus") }.accessibilityLabel("Smaller text").disabled(model.textScale <= 1)
                     Text("\(Int((model.textScale * 100).rounded()))%").monospacedDigit().frame(minWidth: 44)
                     Button { model.changeTextScale(0.15) } label: { Image(systemName: "plus") }.accessibilityLabel("Bigger text").disabled(model.textScale >= 2)
                     Button("Reset") { model.setTextScale(1) }.disabled(model.textScale == 1)
                 }
             }
+            section("Language", footer: language == Self.launchLanguage ? nil : "Artifloam needs to restart to change language.") {
+                row(String(localized: "Language"), icon: "globe", divider: false) {
+                    if language != Self.launchLanguage, Bundle.main.bundleURL.pathExtension == "app" { Button("Restart Now") { try? UpdateChecker.reopen(Bundle.main.bundleURL) } }
+                    Picker("Language", selection: $language) {
+                        Text("Same as system").tag("")
+                        Divider()
+                        ForEach(AppLanguage.all, id: \.code) { Text(verbatim: $0.name).tag($0.code) }
+                    }.labelsHidden().fixedSize()
+                    .onChange(of: language) { _, code in
+                        if code.isEmpty { UserDefaults.standard.removeObject(forKey: "AppleLanguages") }
+                        else { UserDefaults.standard.set(AppLanguage.preference(for: code), forKey: "AppleLanguages") }
+                    }
+                }
+            }
             section("Scans include", footer: "Only recognised caches qualify. Source files, credentials and unfinished work always stay.") {
-                toggleRow("Application web caches", icon: "globe", isOn: $model.includeAppCaches, key: "includeAppCaches")
-                toggleRow("Unused developer caches", icon: "hammer", isOn: $model.includeDeveloperCaches, key: "includeDeveloperCaches")
-                toggleRow("Old diagnostic logs", icon: "doc.text", isOn: $model.includeAdditionalLogs, key: "includeAdditionalLogs", divider: false)
+                toggleRow(String(localized: "Application web caches"), icon: "globe", isOn: $model.includeAppCaches, key: "includeAppCaches")
+                toggleRow(String(localized: "Unused developer caches"), icon: "hammer", isOn: $model.includeDeveloperCaches, key: "includeDeveloperCaches")
+                toggleRow(String(localized: "Old diagnostic logs"), icon: "doc.text", isOn: $model.includeAdditionalLogs, key: "includeAdditionalLogs", divider: false)
             }
             section("Permissions", footer: "Full Disk Access is optional. It lets Artifloam measure the Trash, Safari, Chrome and other protected folders.") {
-                row("Full Disk Access", detail: fullDisk == .granted ? "Allowed" : fullDisk == .denied ? "Off" : "Unknown", icon: "lock.shield") {
+                row(String(localized: "Full Disk Access"), detail: fullDisk == .granted ? String(localized: "Allowed") : fullDisk == .denied ? String(localized: "Off", comment: "Status: Full Disk Access is turned off") : String(localized: "Unknown"), icon: "lock.shield") {
                     Button("Open Settings") { access.openPrivacySettings(fullDisk: true) }
                 }
                 ForEach(extra) { grant in
@@ -264,7 +291,7 @@ struct AccessSettingsView: View {
                         Button("Remove") { access.remove(grant) }
                     }
                 }
-                row("Other folders", detail: extra.isEmpty ? "Add one only if a tool cannot reach it" : "\(extra.count) added", icon: "folder.badge.plus", divider: false) {
+                row(String(localized: "Other folders"), detail: extra.isEmpty ? String(localized: "Add one only if a tool cannot reach it") : String(localized: "\(extra.count) added"), icon: "folder.badge.plus", divider: false) {
                     Button("Add…") { access.choose(.additional) }
                     Button("Files & Folders") { access.openPrivacySettings() }
                 }
@@ -278,11 +305,11 @@ struct AccessSettingsView: View {
                     Button("Change…") { access.choose(.codex) }
                     if let grant = access.grants.first(where: { $0.role == .codex }) { Button("Automatic") { access.remove(grant) } }
                 }
-                row("Projects", detail: access.discoveringProjects ? "Finding projects…" : "\(access.suggestedProjects.count) found automatically" + (projects.isEmpty ? "" : " · \(projects.count) added"), icon: "folder.badge.gearshape") {
+                row(String(localized: "Projects"), detail: access.discoveringProjects ? String(localized: "Finding projects…") : projects.isEmpty ? String(localized: "\(access.suggestedProjects.count) found automatically") : String(localized: "\(access.suggestedProjects.count) found automatically · \(projects.count) added"), icon: "folder.badge.gearshape") {
                     Button("Manage…") { showingProjects = true }.disabled(access.discoveringProjects)
                     Button("Add…") { access.choose(.project) }
                 }
-                row("Git", detail: gitAvailable.map { $0 ? "Available" : "Not installed" } ?? "Checking…", icon: "arrow.triangle.branch", divider: false) {
+                row("Git", detail: gitAvailable.map { $0 ? String(localized: "Available") : String(localized: "Not installed") } ?? String(localized: "Checking…"), icon: "arrow.triangle.branch", divider: false) {
                     if gitAvailable == false { Button("Install Command Line Tools") { Task.detached { DeveloperTools.installCommandLineTools() } } }
                     Button("Check Again") { access.checkAccess(); access.discoverProjects() }
                 }
@@ -290,10 +317,10 @@ struct AccessSettingsView: View {
             if UpdateChecker.current == nil {
                 section("Privacy", footer: "Your files, file names and scan results stay on this Mac and are never sent anywhere. This build doesn't connect to anything.") { EmptyView() }
             } else { section("Privacy", footer: "Your files, file names and scan results stay on this Mac and are never sent anywhere. Artifloam connects to vasquezgroup.ch for one thing on its own: once a day it asks if a new version exists. If you turn on the count below, then once a month it also sends only this: \(UsagePing.Payload(version: UpdateChecker.current ?? "0.0.0").summary), plus a random number that proves about a second of work, to discourage fake counts. The count stores no IP address, but like any website the host may keep standard server logs of these visits.") {
-                toggleRow("Help count active users", icon: "chart.bar", isOn: $sendUsagePing, key: UsagePing.enabledKey, divider: false)
+                toggleRow(String(localized: "Help count active users"), icon: "chart.bar", isOn: $sendUsagePing, key: UsagePing.enabledKey, divider: false)
             } }
             section("Uninstall", footer: "Your own files stay where they are. Only what Artifloam created is removed, and you see the list first.") {
-                row("Uninstall Artifloam", detail: "The app, its data, its daily cleanup and its settings", icon: "trash", divider: false) {
+                row(String(localized: "Uninstall Artifloam"), detail: String(localized: "The app, its data, its daily cleanup and its settings"), icon: "trash", divider: false) {
                     Button("Uninstall…") { model.requestUninstall() }
                 }
             }

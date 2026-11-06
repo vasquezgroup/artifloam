@@ -24,6 +24,10 @@ fi
 for steward_resources in "$steward_arm"/*.bundle(N); do
   ditto "$steward_resources" "$steward_app/Contents/Resources/${steward_resources:t}"
 done
+# Translations go straight in the app bundle: that is where SwiftUI's default lookups and macOS's language and right-to-left choice look.
+for steward_catalog in Localization/*.xcstrings; do
+  xcrun xcstringstool compile "$steward_catalog" --output-directory "$steward_app/Contents/Resources" >/dev/null
+done
 # Icon Composer raster layers use a 1024-point design canvas.
 sips -z 1024 1024 design/brand/artifloam-dock-compact-master.png --out design/Artifloam.icon/Assets/artifloam-emblem.png >/dev/null
 xcrun ictool design/Artifloam.icon --compile "$steward_app/Contents/Resources" --platform macosx --minimum-deployment-target 14.0 --app-icon Artifloam --output-partial-info-plist "$PWD/dist/icon-info.plist"
@@ -31,6 +35,7 @@ cat > "$steward_app/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
+<key>CFBundleDevelopmentRegion</key><string>en</string>
 <key>CFBundleExecutable</key><string>MacSteward</string>
 <key>CFBundleIdentifier</key><string>com.vasquezgroup.artifloam</string>
 <key>CFBundleName</key><string>Artifloam</string>

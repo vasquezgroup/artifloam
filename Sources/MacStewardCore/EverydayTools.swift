@@ -20,7 +20,7 @@ public enum LargeFileAudit {
     public static func scan(root: URL, minimumBytes: UInt64 = 100_000_000, modifiedBefore: Date? = nil, maximumEntries: Int = 300_000, maximumDuration: TimeInterval = 45) throws -> LargeFileReport {
         let root = root.standardizedFileURL.resolvingSymlinksInPath(), deadline = Date().addingTimeInterval(maximumDuration)
         var files = [LargeFileItem](), examined = 0, unreadable = 0, limited = false, identities = Set<String>()
-        var rootStat = stat(); guard lstat(root.path, &rootStat) == 0 else { throw StewardError.blocked("Folder is not accessible.") }
+        var rootStat = stat(); guard lstat(root.path, &rootStat) == 0 else { throw StewardError.blocked(String(localized: "Folder is not accessible.")) }
         var stack = [root]
         while let folder = stack.popLast() {
             try Task.checkCancellation()
@@ -65,10 +65,10 @@ public enum AppUsageAge: Int, CaseIterable, Identifiable, Sendable {
     public var id: Int { rawValue }
     public var title: String {
         switch self {
-        case .overYear: return "Over a year ago"
-        case .sixMonths: return "6–12 months ago"
-        case .months: return "1–6 months ago"
-        case .recent: return "This month"
+        case .overYear: return String(localized: "Over a year ago")
+        case .sixMonths: return String(localized: "6–12 months ago")
+        case .months: return String(localized: "1–6 months ago")
+        case .recent: return String(localized: "This month")
         }
     }
     public init(lastUsed: Date?, now: Date = Date()) {
@@ -95,7 +95,7 @@ public enum ApplicationInventory {
                     examined += 1; if examined > 5000 { break }
                     var info = stat(); guard lstat(url.path, &info) == 0, info.st_mode & S_IFMT == S_IFDIR else { continue }
                     if url.pathExtension.lowercased() == "app", let bundle = Bundle(url: url) {
-                        apps.append(InstalledApplication(url: url, name: bundle.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? url.deletingPathExtension().lastPathComponent, identifier: bundle.bundleIdentifier ?? "Unknown identifier", version: bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown version", lastUsed: lastUsed(url)))
+                        apps.append(InstalledApplication(url: url, name: bundle.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? url.deletingPathExtension().lastPathComponent, identifier: bundle.bundleIdentifier ?? String(localized: "Unknown identifier"), version: bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? String(localized: "Unknown version"), lastUsed: lastUsed(url)))
                     } else if depth < 2, !url.lastPathComponent.hasPrefix(".") { folders.append((url, depth + 1)) }
                 }
             }
@@ -110,7 +110,7 @@ public struct BackgroundItem: Identifiable, Sendable {
     public let program: String
     public let scope: String
     public var arguments: [String] = []
-    public var schedule = "Only when needed"
+    public var schedule = BackgroundSchedule.whenNeeded
     /// The program it points at is gone, usually left behind by an uninstalled app.
     public var programMissing = false
 }
@@ -120,7 +120,7 @@ public enum BackgroundInventory {
             ((try? FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil)) ?? []).filter { $0.pathExtension == "plist" }.compactMap { url -> BackgroundItem? in
                 var value = stat(); guard lstat(url.path, &value) == 0, value.st_mode & S_IFMT == S_IFREG, value.st_size < 1_048_576, let data = try? Data(contentsOf: url), let info = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any] else { return nil }
                 let arguments = info["ProgramArguments"] as? [String] ?? []
-                let program = info["Program"] as? String ?? arguments.first ?? "Not specified"
+                let program = info["Program"] as? String ?? arguments.first ?? String(localized: "Not specified")
                 return BackgroundItem(url: url, label: info["Label"] as? String ?? url.lastPathComponent, program: program, scope: scope, arguments: arguments,
                                       schedule: BackgroundItem.schedule(info, scope: scope), programMissing: program.hasPrefix("/") && !FileManager.default.fileExists(atPath: program))
             }

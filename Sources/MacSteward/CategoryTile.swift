@@ -29,18 +29,18 @@ enum CategoryArt {
     /// One short line per category; the full explanation lives on the Review page.
     static func tagline(for group: CleanupGroup) -> String {
         switch group {
-        case .agentBuilds: return "Old Claude, Codex and Cursor leftovers"
-        case .worktrees: return "Finished checkouts you can delete"
-        case .xcode: return "Build data and simulators. Some can't be rebuilt, so you choose."
-        case .developerCaches: return "Gradle and Xcode module caches"
-        case .projectCaches: return "Generated caches inside your projects"
-        case .inactiveDependencies: return "Dependencies of projects you haven't touched"
-        case .userCaches: return "Caches apps rebuild on their own"
-        case .userLogs: return "Old diagnostic logs"
-        case .systemCaches, .systemLogs: return "Managed by macOS"
-        case .universalApps, .languages: return "Kept: part of signed apps"
-        case .deviceBackups: return "iPhone and iPad backups"
-        case .documentVersions: return "Saved document history"
+        case .agentBuilds: return String(localized: "Old Claude, Codex and Cursor leftovers")
+        case .worktrees: return String(localized: "Finished checkouts you can delete")
+        case .xcode: return String(localized: "Build data and simulators. Some can't be rebuilt, so you choose.")
+        case .developerCaches: return String(localized: "Gradle and Xcode module caches")
+        case .projectCaches: return String(localized: "Generated caches inside your projects")
+        case .inactiveDependencies: return String(localized: "Dependencies of projects you haven't touched")
+        case .userCaches: return String(localized: "Caches apps rebuild on their own")
+        case .userLogs: return String(localized: "Old diagnostic logs")
+        case .systemCaches, .systemLogs: return String(localized: "Managed by macOS")
+        case .universalApps, .languages: return String(localized: "Kept: part of signed apps")
+        case .deviceBackups: return String(localized: "iPhone and iPad backups")
+        case .documentVersions: return String(localized: "Saved document history")
         }
     }
     /// Icons of installed apps, for tiles that are about specific apps.
@@ -83,8 +83,8 @@ struct CategoryTile: View {
     }
     private var actions: some View {
         HStack(spacing: 8) {
-            Button("Review", action: review).buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
-            if let clean { Button("Clean", action: clean).buttonStyle(CleanupGlassButtonStyle(compact: true)) }
+            Button(action: review) { Text("Review", comment: "Button: open the details and choose what goes") }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
+            if let clean { Button(action: clean) { Text("Clean", comment: "Button: clean what is ticked in this tile") }.buttonStyle(CleanupGlassButtonStyle(compact: true)) }
         }
     }
     var body: some View {
@@ -95,7 +95,7 @@ struct CategoryTile: View {
                         Text(amount).font(.system(size: 26 * textScale, weight: .semibold, design: .rounded)).monospacedDigit().foregroundStyle(theme.accent)
                             .lineLimit(1).minimumScaleFactor(0.7)
                     }
-                    Text(amount == nil || !found ? name : name + " found").font(.system(size: 15 * textScale, weight: .semibold)).lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                    Text(amount == nil || !found ? name : String(localized: "\(name) found")).font(.system(size: 15 * textScale, weight: .semibold)).lineLimit(2).fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 4)
                 if appIcons.isEmpty {

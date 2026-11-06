@@ -2,7 +2,7 @@ import Foundation
 
 struct CommandResult { let code: Int32; let output: String; let error: String }
 func run(_ executable: String, _ arguments: [String], timeout: TimeInterval = 30) -> CommandResult {
-    if Task.isCancelled { return CommandResult(code: 130, output: "", error: "Operation cancelled") }
+    if Task.isCancelled { return CommandResult(code: 130, output: "", error: String(localized: "Operation cancelled")) }
     let process = Process(); process.executableURL = URL(fileURLWithPath: executable); process.arguments = arguments
     // A fixed environment: DEVELOPER_DIR, GIT_*, PATH and friends can be set for every app with `launchctl setenv`
     // and would otherwise choose which binaries run here, with whatever access this app holds.
@@ -24,7 +24,7 @@ func run(_ executable: String, _ arguments: [String], timeout: TimeInterval = 30
         process.standardOutput = out; process.standardError = err; try process.run()
         let end = Date().addingTimeInterval(timeout)
         while exited.wait(timeout: .now() + 0.05) == .timedOut && Date() < end && !Task.isCancelled {}
-        if process.isRunning { process.terminate(); Thread.sleep(forTimeInterval: 0.1); if process.isRunning { kill(process.processIdentifier, SIGKILL) }; process.waitUntilExit(); return CommandResult(code: Task.isCancelled ? 130 : 124, output: "", error: Task.isCancelled ? "Operation cancelled" : "Command timed out") }
+        if process.isRunning { process.terminate(); Thread.sleep(forTimeInterval: 0.1); if process.isRunning { kill(process.processIdentifier, SIGKILL) }; process.waitUntilExit(); return CommandResult(code: Task.isCancelled ? 130 : 124, output: "", error: Task.isCancelled ? String(localized: "Operation cancelled") : String(localized: "Command timed out")) }
         process.waitUntilExit()
         return CommandResult(code: process.terminationStatus, output: (try? String(contentsOf: stdout, encoding: .utf8)) ?? "", error: (try? String(contentsOf: stderr, encoding: .utf8)) ?? "")
     } catch { try? FileManager.default.removeItem(at: folder); return CommandResult(code: 125, output: "", error: error.localizedDescription) }
@@ -62,7 +62,7 @@ public enum DeveloperTools {
     }
 }
 func git(_ directory: URL, _ args: [String]) -> CommandResult {
-    guard let executable = DeveloperTools.gitExecutable, let profile = DeveloperTools.gitSandboxProfile else { return CommandResult(code: 127, output: "", error: "Git is unavailable. Install Git or Apple's Command Line Tools for project/worktree verification.") }
+    guard let executable = DeveloperTools.gitExecutable, let profile = DeveloperTools.gitSandboxProfile else { return CommandResult(code: 127, output: "", error: String(localized: "Git is unavailable. Install Git or Apple's Command Line Tools for project/worktree verification.")) }
     return run("/usr/bin/sandbox-exec", ["-p", profile, executable, "-c", "core.fsmonitor=false", "-c", "core.hooksPath=/dev/null", "-C", directory.path] + args)
 }
 public struct ActivitySnapshot: Sendable {

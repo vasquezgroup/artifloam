@@ -162,7 +162,7 @@ public enum Scheduler {
         return true
     }
     public static func enable(helper: URL) throws {
-        guard FileManager.default.isExecutableFile(atPath: helper.path), ["Mac Steward.app", "Artifloam.app"].contains(where: { helper.standardizedFileURL.path == "/Applications/\($0)/Contents/Helpers/stewardctl" }) else { throw StewardError.blocked("Install Artifloam in Applications before enabling the schedule") }
+        guard FileManager.default.isExecutableFile(atPath: helper.path), ["Mac Steward.app", "Artifloam.app"].contains(where: { helper.standardizedFileURL.path == "/Applications/\($0)/Contents/Helpers/stewardctl" }) else { throw StewardError.blocked(String(localized: "Install Artifloam in Applications before enabling the schedule")) }
         let directory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support/MacSteward")
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
         try FileManager.default.createDirectory(at: agentURL.deletingLastPathComponent(), withIntermediateDirectories: true)
@@ -172,7 +172,7 @@ public enum Scheduler {
         if isInstalled { _ = run("/bin/launchctl", ["bootout", "gui/\(getuid())/\(label)"]) }
         try data.write(to: agentURL, options: [.atomic])
         let result = run("/bin/launchctl", ["bootstrap", "gui/\(getuid())", agentURL.path])
-        guard result.code == 0 else { try? FileManager.default.removeItem(at: agentURL); throw StewardError.blocked("Could not enable schedule: \(result.error)") }
+        guard result.code == 0 else { try? FileManager.default.removeItem(at: agentURL); throw StewardError.blocked(String(localized: "Could not enable schedule: \(result.error)")) }
     }
     public static func disable() throws {
         retireLegacy()

@@ -48,7 +48,7 @@ struct MacDashboardView: View {
                 Image(systemName: "desktopcomputer").font(.system(size: 26)).foregroundStyle(.mint)
                 VStack(alignment: .leading, spacing: 3) {
                     Text("Your Mac").font(.system(size: 22, weight: .semibold))
-                    Text(health.health.map { "Health \($0.score) · " + ($0.issues.isEmpty ? "Level \($0.level)" : "\($0.issues.count) \($0.issues.count == 1 ? "thing" : "things") to fix") } ?? "Live system overview")
+                    Text(health.health.map { $0.issues.isEmpty ? String(localized: "Health \($0.score) · Level \($0.level)") : String(localized: "Health \($0.score) · \(String(localized: "\($0.issues.count) things to fix"))") } ?? String(localized: "Live system overview"))
                         .font(.system(size: 13)).foregroundStyle(.white.opacity(0.62)).monospacedDigit()
                 }
                 Spacer()
@@ -63,14 +63,14 @@ struct MacDashboardView: View {
             HStack(spacing: 12) {
                 let disk = monitor.sample?.disk
                 let lowDisk = disk.map { $0.total > 0 && Double($0.free) / Double($0.total) < 0.1 } ?? false
-                card(.storage, metricCard("Storage", icon: "internaldrive.fill", value: disk.map { formattedBytes($0.free) } ?? "Reading…", detail: "Free on this Mac", action: "Details", tint: lowDisk ? .orange : .mint, flag: issue(.storage)))
+                card(.storage, metricCard("Storage", icon: "internaldrive.fill", value: disk.map { formattedBytes($0.free) } ?? String(localized: "Reading…"), detail: String(localized: "Free on this Mac"), action: "Details", tint: lowDisk ? .orange : .mint, flag: issue(.storage)))
                     .help("Filesystem free space. macOS may also include purgeable storage in its available-space estimate.")
-                card(.memory, metricCard("Memory", icon: "memorychip.fill", value: memory.reading.map { ByteCountFormatter.string(fromByteCount: Int64(clamping: $0.available), countStyle: .memory) } ?? "Reading…", detail: "Available · Pressure: " + (memory.reading?.pressure.rawValue ?? "Measuring"), action: "Details", tint: pressureColor, flag: issue(.memory)))
+                card(.memory, metricCard("Memory", icon: "memorychip.fill", value: memory.reading.map { ByteCountFormatter.string(fromByteCount: Int64(clamping: $0.available), countStyle: .memory) } ?? String(localized: "Reading…"), detail: memory.reading.map { String(localized: "Available · Pressure: \($0.pressure.displayTitle)") } ?? String(localized: "Available · Pressure: Measuring"), action: "Details", tint: pressureColor, flag: issue(.memory)))
             }
             HStack(spacing: 12) {
                 card(.battery, batteryCard)
                 let busy = (monitor.cpuPercent ?? 0) >= 80 || (monitor.sample.map { $0.thermalState != "Normal" } ?? false)
-                card(.cpu, metricCard("CPU", icon: "cpu.fill", value: monitor.cpuPercent.map { String(format: "%.0f%%", $0) } ?? "Measuring…", detail: "Thermal: " + (monitor.sample?.thermalState ?? "Reading"), action: "Details", tint: busy ? .orange : .mint, flag: issue(.cpu)))
+                card(.cpu, metricCard("CPU", icon: "cpu.fill", value: monitor.cpuPercent.map { String(localized: "\(Int($0.rounded()))%") } ?? String(localized: "Measuring…"), detail: monitor.sample.map { String(localized: "Thermal: \(thermalTitle($0.thermalState))") } ?? String(localized: "Thermal: Reading…"), action: "Details", tint: busy ? .orange : .mint, flag: issue(.cpu)))
                     .help("CPU use is measured between samples. Thermal state comes from macOS; no guessed temperature is displayed.")
             }
             HStack(alignment: .top, spacing: 12) { card(.network, networkCard); card(.devices, devicesCard) }
@@ -79,8 +79,8 @@ struct MacDashboardView: View {
                 HStack(spacing: 10) {
                     Image(systemName: "arrow.down.circle.fill").font(.system(size: 18)).foregroundStyle(.mint)
                     VStack(alignment: .leading, spacing: 1) {
-                        Text("\(installers.urls.count) old \(installers.urls.count == 1 ? "installer" : "installers") in Downloads").font(.system(size: 14, weight: .medium))
-                        Text(formattedBytes(installers.bytes) + " · untouched for 30+ days").font(.system(size: 12)).foregroundStyle(.white.opacity(0.6))
+                        Text("\(installers.urls.count) old installers in Downloads").font(.system(size: 14, weight: .medium))
+                        Text("\(formattedBytes(installers.bytes)) · untouched for 30+ days").font(.system(size: 12)).foregroundStyle(.white.opacity(0.6))
                     }
                     Spacer()
                     Button("Review") { NSWorkspace.shared.activateFileViewerSelecting(installers.urls) }.buttonStyle(.plain)
@@ -109,7 +109,7 @@ struct MacDashboardView: View {
             }
             .onAppear { health.readInstallers() }
     }
-    private func metricCard(_ title: String, icon: String, value: String, detail: String, action: String? = nil, tint: Color = .mint, flag: MacIssue? = nil) -> some View {
+    private func metricCard(_ title: LocalizedStringKey, icon: String, value: String, detail: String, action: LocalizedStringKey? = nil, tint: Color = .mint, flag: MacIssue? = nil) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Label(title, systemImage: icon).font(.system(size: 14, weight: .semibold)).foregroundStyle(.white.opacity(0.90))
             Text(value).font(.system(size: 19, weight: .semibold)).monospacedDigit().foregroundStyle(flag == nil ? tint : .orange).lineLimit(1).minimumScaleFactor(0.8)
@@ -121,7 +121,7 @@ struct MacDashboardView: View {
                     Text(detail).font(.system(size: 12)).foregroundStyle(.white.opacity(0.65)).lineLimit(1)
                 }
                 Spacer(minLength: 0)
-                if action != nil && flag == nil { Image(systemName: "chevron.right").font(.system(size: 11, weight: .semibold)).foregroundStyle(.mint) }
+                if action != nil && flag == nil { Image(systemName: "chevron.right").font(.system(size: 11, weight: .semibold)).foregroundStyle(.mint).flipsForRightToLeftLayoutDirection(true) }
             }
         }.padding(15).frame(maxWidth: .infinity, minHeight: 108, alignment: .topLeading)
             .background(.white.opacity(0.065), in: RoundedRectangle(cornerRadius: 14))
@@ -130,13 +130,13 @@ struct MacDashboardView: View {
     }
     private var batteryCard: some View {
         let battery = monitor.sample?.battery
-        let value = battery?.percent.map { "\($0)%" } ?? (monitor.sample == nil ? "Reading…" : "Not reported")
-        let detail = battery.map { $0.charging ? "Charging" : $0.externalPower ? "On external power" : "On battery" } ?? "Desktop or unavailable"
+        let value = battery?.percent.map { String(localized: "\($0)%") } ?? (monitor.sample == nil ? String(localized: "Reading…") : String(localized: "Not reported"))
+        let detail = battery.map { $0.charging ? String(localized: "Charging") : $0.externalPower ? String(localized: "On external power") : String(localized: "On battery") } ?? String(localized: "Desktop or unavailable")
         return metricCard("Battery", icon: "battery.100", value: value, detail: detail, action: "Details", tint: (battery?.percent ?? 100) <= 20 && battery?.externalPower == false ? .orange : .mint, flag: issue(.battery))
     }
     private var networkCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Label(monitor.sample?.network?.kind ?? "Network", systemImage: "network").font(.system(size: 14, weight: .semibold))
+            Label(monitor.sample?.network?.kind ?? String(localized: "Network"), systemImage: "network").font(.system(size: 14, weight: .semibold))
             Label(rate(monitor.download), systemImage: "arrow.down").font(.system(size: 15, weight: .medium)).monospacedDigit()
             Label(rate(monitor.upload), systemImage: "arrow.up").font(.system(size: 15, weight: .medium)).monospacedDigit()
             Text(monitor.sample?.network == nil ? "No active interface reported" : "Current traffic")
@@ -154,8 +154,8 @@ struct MacDashboardView: View {
             ForEach(Array(monitor.devices.prefix(3))) { device in
                 VStack(alignment: .leading, spacing: 1) {
                     Text(device.name).font(.system(size: 13, weight: .medium)).lineLimit(1).truncationMode(.middle)
-                    Text(device.transport).font(.system(size: 11)).foregroundStyle(.white.opacity(0.55))
-                }.help(device.name + " · " + device.transport)
+                    Text(device.transportTitle).font(.system(size: 11)).foregroundStyle(.white.opacity(0.55))
+                }.help(device.name + " · " + device.transportTitle)
             }
             Spacer(minLength: 0)
         }.padding(15).frame(maxWidth: .infinity, minHeight: 168, maxHeight: 168, alignment: .topLeading)
@@ -180,8 +180,22 @@ struct MacDashboardView: View {
         }
     }
     private func rate(_ value: Double?) -> String {
-        guard let value, value.isFinite else { return monitor.sample?.network == nil ? "Unavailable" : "Measuring…" }
-        if value < 1 { return "0 B/s" }
-        return formattedBytes(UInt64(min(Double(Int64.max / 2), max(0, value)))) + "/s"
+        guard let value, value.isFinite else { return monitor.sample?.network == nil ? String(localized: "Unavailable") : String(localized: "Measuring…") }
+        if value < 1 { return String(localized: "0 B/s") }
+        return String(localized: "\(formattedBytes(UInt64(min(Double(Int64.max / 2), max(0, value)))))/s")
+    }
+}
+
+/// What a person reads for a thermal state from `MacDashboardSample` / `SystemStatusReading`; the English value stays the identifier.
+func thermalTitle(_ state: String) -> String {
+    switch state {
+    case "Normal": return String(localized: "Normal", comment: "Thermal state")
+    case "Warm": return String(localized: "Warm", comment: "Thermal state")
+    case "High": return String(localized: "High", comment: "Thermal state")
+    case "Hot": return String(localized: "Hot", comment: "Thermal state")
+    case "Critical": return String(localized: "Critical", comment: "Thermal state")
+    case "Unavailable": return String(localized: "Unavailable", comment: "Thermal state")
+    case "Unknown": return String(localized: "Unknown", comment: "Thermal state")
+    default: return state
     }
 }

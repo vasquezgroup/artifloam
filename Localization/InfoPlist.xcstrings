@@ -1,0 +1,622 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSAppleEventsUsageDescription" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يسأل Artifloam فايندر عمّا تحتويه سلة المهملات وعن إفراغها، ويسأل System Events لعرض عناصر تسجيل الدخول التي تختارها أو إضافتها أو إزالتها."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pregunta al Finder què conté la paperera i li demana que la buidi, i demana a System Events que llisti, afegeixi o elimini els ítems d’inici de sessió que triïs."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam fragt den Finder, was der Papierkorb enthält, und bittet ihn, ihn zu leeren, und bittet System Events, von dir gewählte Anmeldeobjekte aufzulisten, hinzuzufügen oder zu entfernen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam asks Finder what the Trash holds and to empty it, and System Events to list, add or remove login items you choose."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam asks Finder what the Bin holds and to empty it, and System Events to list, add or remove login items you choose."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam asks Finder what the Trash holds and to empty it, and System Events to list, add or remove login items you choose."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam asks Finder what the Bin holds and to empty it, and System Events to list, add or remove login items you choose."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pregunta al Finder qué contiene la Papelera y le pide vaciarla, y pide a System Events que liste, añada o quite los ítems de inicio que elijas."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pregunta al Finder qué contiene el Basurero y le pide vaciarlo, y pide a System Events que liste, añada o quite los elementos de inicio que elijas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam demande au Finder ce que contient la Corbeille et de la vider, et à System Events de lister, ajouter ou retirer les éléments d’ouverture que vous choisissez."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam bittet de Finder, aazzeige, was im Papierkorb isch, und ihn z leere, und System Events, Anmeldeobjekt, wo du uuswählsch, ufzlischte, zuezfüege oder z entferne."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam Finder से पूछता है कि रद्दी में क्या है और उसे खाली करने को कहता है, और System Events से आपके चुने लॉगइन आइटम सूचीबद्ध करने, जोड़ने या हटाने को कहता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pita Finder što Smeće sadrži i da ga isprazni, a System Events da navede, doda ili ukloni stavke za prijavu koje odabereš."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam chiede al Finder cosa contiene il Cestino e di svuotarlo, e a System Events di elencare, aggiungere o rimuovere gli elementi login che scegli."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloamは、ゴミ箱の中身の確認と、ゴミ箱を空にする操作をFinderに依頼し、選択されたログイン項目の一覧表示、追加、削除をSystem Eventsに依頼します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam은 Finder에 휴지통 내용을 묻고 비우도록 요청하며, System Events에 사용자가 선택한 로그인 항목을 나열, 추가 또는 제거하도록 요청합니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam jautā Finder, ko satur Atkritne, un lūdz to iztukšot, kā arī lūdz System Events uzskaitīt, pievienot vai noņemt tevis izvēlētos pieteikšanās vienumus."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pyta Findera, co zawiera Kosz, i prosi o jego opróżnienie, a System Events o wyświetlenie, dodanie lub usunięcie wybranych przez Ciebie elementów logowania."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Artifloam pergunta ao Finder o que o Lixo contém e pede-lhe que o esvazie, e pede ao System Events que liste, adicione ou remova os itens de início de sessão que escolher."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pyet Finder çfarë mban Koshi dhe i kërkon ta boshatisë, dhe pyet System Events për të listuar, shtuar ose hequr elementët e hyrjes që zgjedh."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam пита Finder шта Отпад садржи и да га испразни, а System Events да наведе, дода или уклони ставке за пријављивање које изаберете."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pita Finder šta Otpad sadrži i da ga isprazni, a System Events da navede, doda ili ukloni stavke za prijavljivanje koje izaberete."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam frågar Finder vad papperskorgen innehåller och ber den tömma den, och ber System Events att lista, lägga till eller ta bort startobjekt som du väljer."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam, Finder’dan Çöp Sepeti’nde nelerin olduğunu ve onu boşaltmasını, System Events’ten ise seçtiğiniz oturum açma öğelerini listelemesini, eklemesini veya kaldırmasını ister."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam 会向访达询问废纸篓里有什么并将其清倒，并通过 System Events 列出、添加或移除你选择的登录项。"
+          }
+        }
+      }
+    },
+    "NSDesktopFolderUsageDescription" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قياس مساحة سطح المكتب لـ «خريطة المساحة». تبقى الملفات دون تغيير إلى أن تراجع عملية تنظيف."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mesura l’emmagatzematge de l’Escriptori per al Mapa d’espai. Els arxius no canvien fins que revisis una neteja."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misst den Speicherplatz auf dem Schreibtisch für die Platzkarte. Dateien bleiben unverändert, bis du eine Bereinigung durchsiehst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Measure Desktop storage for Space Map. Files stay unchanged until you review a cleanup."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Measure Desktop storage for Space Map. Files stay unchanged until you review a cleanup."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Measure Desktop storage for Space Map. Files stay unchanged until you review a cleanup."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Measure Desktop storage for Space Map. Files stay unchanged until you review a cleanup."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mide el almacenamiento del Escritorio para el Mapa de espacio. Los archivos no cambian hasta que revises una limpieza."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mide el almacenamiento del Escritorio para el Mapa de espacio. Los archivos no cambian hasta que revises una limpieza."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mesure le stockage du Bureau pour la Carte de l’espace. Les fichiers restent inchangés tant que vous n’avez pas examiné un nettoyage."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mässt dr Speicher uf em Schreibtisch für d Platz-Charte. Dateie blibed unverändert, bis du es Ufruume prüefsch."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Space Map के लिए डेस्कटॉप स्टोरेज मापता है। जब तक आप सफ़ाई की समीक्षा नहीं करते, फ़ाइलें जैसी हैं वैसी रहती हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mjeri pohranu Radne površine za Kartu prostora. Datoteke ostaju nepromijenjene dok ne pregledaš čišćenje."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misura lo spazio della Scrivania per la Mappa dello spazio. I file restano invariati finché non rivedi una pulizia."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "容量マップのためにデスクトップのストレージを計測します。クリーンアップを確認するまで、ファイルは変更されません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공간 맵을 위해 데스크탑 저장 공간을 측정합니다. 정리를 검토하기 전까지 파일은 변경되지 않습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mēra darbvirsmas krātuvi Vietas kartei. Faili paliek nemainīti, kamēr nepārskati tīrīšanu."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mierzy miejsce zajmowane przez Biurko na potrzeby Mapy miejsca. Pliki pozostają bez zmian, dopóki nie przejrzysz czyszczenia."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mede o armazenamento da Secretária para o Mapa de espaço. Os ficheiros não são alterados até rever uma limpeza."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mat ruajtjen e Desktop për Hartën e hapësirës. Skedarët mbeten të pandryshuar derisa të rishikosh një pastrim."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мери складиште на Радној површини за Мапу простора. Фајлови остају непромењени док не прегледате чишћење."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meri skladište na Radnoj površini za Mapu prostora. Fajlovi ostaju nepromenjeni dok ne pregledate čišćenje."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mäta lagring på Skrivbordet för Utrymmeskartan. Filerna förblir oförändrade tills du granskar en rensning."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alan Haritası için Masaüstü saklama alanını ölçer. Bir temizliği inceleyene dek dosyalar değişmeden kalır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "为“空间地图”测量桌面的储存空间。在你审阅清理之前，文件保持不变。"
+          }
+        }
+      }
+    },
+    "NSDocumentsFolderUsageDescription" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قياس المساحة والعثور على المخلّفات التي يمكن التخلص منها في المستندات. أنت من يراجع كل عملية تنظيف."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mesura l’emmagatzematge i troba restes prescindibles a Documents. Revises cada neteja."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misst den Speicherplatz in „Dokumente“ und findet entbehrliche Reste. Du siehst jede Bereinigung durch."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Measure storage and find disposable leftovers in Documents. You review every cleanup."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Measure storage and find disposable leftovers in Documents. You review every cleanup."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Measure storage and find disposable leftovers in Documents. You review every cleanup."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Measure storage and find disposable leftovers in Documents. You review every cleanup."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mide el almacenamiento y encuentra restos desechables en Documentos. Tú revisas cada limpieza."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mide el almacenamiento y encuentra restos desechables en Documentos. Tú revisas cada limpieza."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mesure le stockage et trouve les résidus jetables dans Documents. Vous examinez chaque nettoyage."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mässt dr Speicher und findet entbehrlichi Überbliibsel i Dokumente. Du prüefsch jedes Ufruume."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "दस्तावेज़ में स्टोरेज मापता है और फ़ालतू बचे हुए आइटम खोजता है। हर सफ़ाई की समीक्षा आप करते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mjeri pohranu i pronalazi ostatke koji se mogu odbaciti u Dokumentima. Ti pregledavaš svako čišćenje."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misura lo spazio e trova i residui eliminabili in Documenti. Rivedi ogni pulizia."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書類内のストレージを計測し、不要な残りファイルを見つけます。クリーンアップはすべて、ご自身で確認します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "문서 폴더의 저장 공간을 측정하고 삭제해도 되는 잔여 파일을 찾습니다. 모든 정리는 직접 검토합니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mēra krātuvi un atrod izmetamas paliekas mapē Dokumenti. Tu pārskati katru tīrīšanu."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mierzy miejsce i znajduje zbędne pozostałości w folderze Dokumenty. Każde czyszczenie przeglądasz Ty."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mede o armazenamento e encontra sobras descartáveis em Documentos. Cada limpeza é revista por si."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mat ruajtjen dhe gjen mbetje të hedhshme te Documents. Ti rishikon çdo pastrim."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мери складиште и проналази остатке за одбацивање у Документима. Свако чишћење прегледате ви."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meri skladište i pronalazi ostatke za odbacivanje u Dokumentima. Svako čišćenje pregledate vi."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mäta lagring och hitta rester som kan kasseras i Dokument. Du granskar varje rensning."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belgeler’deki saklama alanını ölçer ve atılabilir kalıntıları bulur. Her temizliği siz incelersiniz."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "测量储存空间，并在“文稿”中查找可丢弃的残留文件。每次清理都由你审阅。"
+          }
+        }
+      }
+    },
+    "NSDownloadsFolderUsageDescription" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العثور على الملفات الكبيرة والنسخ المكررة المطابقة تمامًا في التنزيلات. أنت من يختار ما يُنقل إلى سلة المهملات."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Troba arxius grans i duplicats exactes a Descàrregues. Tries què es mou a la paperera."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Findet große Dateien und exakte Duplikate in „Downloads“. Du wählst, was in den Papierkorb kommt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find large files and exact duplicates in Downloads. You choose what moves to Trash."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find large files and exact duplicates in Downloads. You choose what moves to Bin."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find large files and exact duplicates in Downloads. You choose what moves to Trash."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find large files and exact duplicates in Downloads. You choose what moves to Bin."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encuentra archivos grandes y duplicados exactos en Descargas. Tú eliges lo que se mueve a la Papelera."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encuentra archivos grandes y duplicados exactos en Descargas. Tú eliges lo que se mueve al Basurero."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trouve les gros fichiers et les doublons exacts dans Téléchargements. Vous choisissez ce qui est placé dans la Corbeille."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Findet grossi Dateie und exakti Duplikat i Downloads. Du wählsch uus, was id Papierkorb chunnt."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "डाउनलोड में बड़ी फ़ाइलें और बिल्कुल एक जैसे डुप्लिकेट खोजता है। रद्दी में क्या जाए, यह आप चुनते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pronalazi velike datoteke i točne duplikate u Preuzimanjima. Ti biraš što ide u Smeće."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trova file grandi e duplicati esatti in Download. Scegli tu cosa va nel Cestino."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダウンロード内の大きなファイルと完全な重複を見つけます。ゴミ箱に移動するものはご自身で選びます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다운로드 폴더에서 큰 파일과 완전히 같은 중복 파일을 찾습니다. 휴지통으로 이동할 항목은 직접 선택합니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atrod lielus failus un precīzus dublikātus mapē Lejupielādes. Tu izvēlies, ko pārvietot uz Atkritni."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Znajduje duże pliki i dokładne duplikaty w folderze Pobrane rzeczy. To Ty wybierasz, co trafi do Kosza."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encontra ficheiros grandes e duplicados exatos em Descargas. Escolhe o que vai para o Lixo."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gjen skedarë të mëdhenj dhe dublikata të sakta te Downloads. Ti zgjedh çfarë zhvendoset në Kosh."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проналази велике фајлове и тачне дупликате у Преузимањима. Ви бирате шта се премешта у Отпад."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pronalazi velike fajlove i tačne duplikate u Preuzimanjima. Vi birate šta se premešta u Otpad."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hitta stora filer och exakta dubbletter i Hämtade filer. Du väljer vad som flyttas till papperskorgen."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İndirilenler’deki büyük dosyaları ve birebir kopyaları bulur. Neyin Çöp Sepeti’ne taşınacağını siz seçersiniz."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在“下载”中查找大文件和完全相同的重复项。由你选择将什么移到废纸篓。"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

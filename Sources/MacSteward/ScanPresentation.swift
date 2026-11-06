@@ -200,19 +200,16 @@ private struct ScanMovieSurface: NSViewRepresentable {
 
 struct ScanStage: View {
     let progress: String
+    let step: ScanStep
     /// The page that started the scan keeps its colour and artwork while it runs.
     let theme: StewardTheme
     @Environment(\.stewardTextScale) private var textScale
-    private var phase: Int {
-        if progress.hasPrefix("Preparing") { return 0 }
-        if progress.contains("system settings") || progress.contains("duplicate") { return 4 }
-        if progress.contains("logs") { return 3 }
-        if progress.contains("worktrees") { return 2 }
-        if progress.contains("caches") || progress.contains("build") || progress.contains("Xcode") { return 1 }
-        return 0
+    private var phase: Int { step.rawValue }
+    private var stepNames: [String] {
+        [String(localized: "Access", comment: "Scan step: checking access to folders"), String(localized: "Caches", comment: "Scan step"), String(localized: "Worktrees", comment: "Section: Git worktrees, the developer term"), String(localized: "Logs", comment: "Scan step"), String(localized: "Tools", comment: "Section: the single-purpose tools")]
     }
     private var steps: some View {
-        ForEach(Array(["Access", "Caches", "Worktrees", "Logs", "Tools"].enumerated()), id: \.offset) { index, name in
+        ForEach(Array(stepNames.enumerated()), id: \.offset) { index, name in
             HStack(spacing: 5) {
                 Image(systemName: index < phase ? "checkmark.circle.fill" : index == phase ? "circle.inset.filled" : "circle")
                 Text(name).fixedSize(horizontal: false, vertical: true)
@@ -234,7 +231,7 @@ struct ScanStage: View {
                     ViewThatFits(in: .horizontal) {
                         HStack(spacing: 13) { steps }
                         VStack(alignment: .leading, spacing: 6) { steps }
-                    }.padding(.top, 8).accessibilityElement(children: .ignore).accessibilityLabel("Current inspection: \(["Access", "Caches", "Worktrees", "Logs", "Tools"][phase])")
+                    }.padding(.top, 8).accessibilityElement(children: .ignore).accessibilityLabel("Current inspection: \(stepNames[phase])")
                 }.padding(.horizontal, 45).padding(.bottom, 8)
                     .frame(maxWidth: .infinity, minHeight: geometry.size.height)
             }.scrollIndicators(.hidden)
@@ -259,11 +256,11 @@ struct ScanCategoryCard: View {
     private var value: String { formattedBytes(summary.foundBytes > 0 ? summary.foundBytes : summary.totalBytes) }
     private var status: String {
         let ready = summary.automaticCount, choose = summary.choosableCount
-        if ready > 0 && choose > 0 { return "\(ready) ready · \(choose) to choose" }
-        if ready > 0 { return "\(ready) ready \(ready == 1 ? "cache" : "caches")" }
-        if choose > 0 { return "\(choose) \(choose == 1 ? "item" : "items") to choose" }
-        if summary.foundBytes > 0 { return "\(summary.count) \(summary.count == 1 ? "item" : "items") to review" }
-        return summary.count > 0 ? "\(summary.count) \(summary.count == 1 ? "item" : "items") · kept" : "Nothing found"
+        if ready > 0 && choose > 0 { return String(localized: "\(ready) ready · \(choose) to choose") }
+        if ready > 0 { return String(localized: "\(ready) ready caches") }
+        if choose > 0 { return String(localized: "\(choose) items to choose") }
+        if summary.foundBytes > 0 { return String(localized: "\(summary.count) items to review") }
+        return summary.count > 0 ? String(localized: "\(summary.count) items · kept") : String(localized: "Nothing found")
     }
     var body: some View {
         Button(action: action) {
@@ -276,7 +273,7 @@ struct ScanCategoryCard: View {
                         .stewardFont(.caption).foregroundStyle(.white.opacity(0.52))
                 }.fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                 if !compact { StewardIllustration(theme: theme).frame(width: 76, height: 76).allowsHitTesting(false) }
-                Image(systemName: "arrow.up.right").stewardFont(.caption).foregroundStyle(.white.opacity(hovered ? 0.9 : 0.35))
+                Image(systemName: "arrow.up.right").flipsForRightToLeftLayoutDirection(true).stewardFont(.caption).foregroundStyle(.white.opacity(hovered ? 0.9 : 0.35))
             }.padding(compact ? 16 : 19).frame(maxWidth: .infinity, minHeight: compact ? 90 : 108, alignment: .leading)
                 .background {
                     RoundedRectangle(cornerRadius: 19)
@@ -339,7 +336,7 @@ struct ScanResultsStage: View {
                         }
                     }.frame(maxWidth: 780)
                     if noteCount > 0 {
-                        Button(action: showNotes) { Label("\(noteCount) scan \(noteCount == 1 ? "note" : "notes")", systemImage: "info.circle").stewardFont(.caption) }
+                        Button(action: showNotes) { Label("\(noteCount) scan notes", systemImage: "info.circle").stewardFont(.caption) }
                             .buttonStyle(.plain).foregroundStyle(.orange)
                     }
                 }.padding(.horizontal, 60).padding(.vertical, 8)

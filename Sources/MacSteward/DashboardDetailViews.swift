@@ -41,7 +41,7 @@ struct FlyoutWarningBanner: View {
                 Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 16)).foregroundStyle(.orange)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(warning.issue.title).font(.system(size: 14, weight: .semibold)).fixedSize(horizontal: false, vertical: true)
-                    Text(warning.issue.flag + " · health +\(warning.issue.points) when fixed").font(.system(size: 12)).foregroundStyle(.white.opacity(0.65))
+                    Text("\(warning.issue.flag) · health +\(warning.issue.points) when fixed").font(.system(size: 12)).foregroundStyle(.white.opacity(0.65))
                 }
                 Spacer(minLength: 8)
                 if let label = warning.issue.fixLabel {
@@ -93,7 +93,7 @@ private struct StatTile: View {
 /// Busiest apps with a normal Quit request per row. Apps may still ask to save.
 private struct TopCPUApps: View {
     @ObservedObject var memory: MemoryMonitor
-    let title: String
+    let title: LocalizedStringKey
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title).font(.system(size: 14, weight: .semibold))
@@ -107,7 +107,7 @@ private struct TopCPUApps: View {
                     Image(nsImage: NSWorkspace.shared.icon(forFile: row.app.bundlePath)).resizable().frame(width: 24, height: 24)
                     Text(row.app.name).font(.system(size: 14, weight: .medium)).lineLimit(1).truncationMode(.tail)
                     Spacer(minLength: 4)
-                    Text(String(format: "%.1f%%", percent)).font(.system(size: 14, weight: .medium)).monospacedDigit()
+                    Text((percent / 100).formatted(.percent.precision(.fractionLength(1)))).font(.system(size: 14, weight: .medium)).monospacedDigit()
                         .foregroundStyle(percent >= 50 ? .orange : .white)
                     let force = memory.ignoredQuit(row.id)
                     Button(force ? "Force quit" : "Quit") { if force { memory.forceQuit(row) } else { memory.quit(row) } }
@@ -147,7 +147,7 @@ private struct CPUDetailView: View {
     @ObservedObject var dashboard: MacDashboardMonitor
     @ObservedObject var memory: MemoryMonitor
     var body: some View {
-        DetailShell(title: "CPU", icon: "cpu.fill") {
+        DetailShell(title: String(localized: "CPU"), icon: "cpu.fill") {
             HStack(alignment: .top, spacing: 12) {
                 Sparkline(values: dashboard.cpuHistory, ceiling: 100).frame(height: 104)
                     .background(.white.opacity(0.04), in: RoundedRectangle(cornerRadius: 10))
@@ -158,9 +158,9 @@ private struct CPUDetailView: View {
                 }.frame(width: 116)
             }
             HStack(spacing: 10) {
-                StatTile(title: "Uptime", value: uptime, note: (dashboard.sample?.uptime ?? 0) > 7 * 86_400 ? "A restart clears stuck background work." : (dashboard.sample?.uptime ?? 0) < 86_400 ? "Restarted recently." : "No restart needed yet.")
-                let thermal = dashboard.sample?.thermalState ?? "Reading"
-                StatTile(title: "Thermal state", value: thermal, note: thermal == "Normal" ? "Running cool." : "macOS is slowing the CPU to cool down.", tint: thermal == "Normal" ? .mint : .orange)
+                StatTile(title: String(localized: "Uptime"), value: uptime, note: (dashboard.sample?.uptime ?? 0) > 7 * 86_400 ? String(localized: "A restart clears stuck background work.") : (dashboard.sample?.uptime ?? 0) < 86_400 ? String(localized: "Restarted recently.") : String(localized: "No restart needed yet."))
+                let thermal = dashboard.sample?.thermalState
+                StatTile(title: String(localized: "Thermal state"), value: thermal.map(thermalTitle) ?? String(localized: "Reading…"), note: thermal == "Normal" ? String(localized: "Running cool.") : String(localized: "macOS is slowing the CPU to cool down."), tint: thermal == "Normal" ? .mint : .orange)
             }
             TopCPUApps(memory: memory, title: "Top CPU users")
         } footer: {
@@ -169,11 +169,11 @@ private struct CPUDetailView: View {
             Button("Activity Monitor", action: openActivityMonitor)
         }
     }
-    private func legend(_ title: String, _ value: Double?, _ color: Color) -> some View {
+    private func legend(_ title: LocalizedStringKey, _ value: Double?, _ color: Color) -> some View {
         HStack(spacing: 6) {
             RoundedRectangle(cornerRadius: 2).fill(color).frame(width: 3, height: 26)
             VStack(alignment: .leading, spacing: 0) {
-                Text(value.map { String(format: "%.1f%%", $0) } ?? "—").font(.system(size: 16, weight: .semibold)).monospacedDigit()
+                Text(value.map { ($0 / 100).formatted(.percent.precision(.fractionLength(1))) } ?? "—").font(.system(size: 16, weight: .semibold)).monospacedDigit()
                 Text(title).font(.system(size: 12)).foregroundStyle(.white.opacity(0.6))
             }
         }
@@ -184,7 +184,7 @@ private struct CPUDetailView: View {
     }
     private var load: String {
         var values = [Double](repeating: 0, count: 3)
-        return getloadavg(&values, 3) == 3 ? "Load " + values.map { String(format: "%.2f", $0) }.joined(separator: " · ") : ""
+        return getloadavg(&values, 3) == 3 ? String(localized: "Load \(values.map { $0.formatted(.number.precision(.fractionLength(2))) }.joined(separator: " · "))") : ""
     }
 }
 
@@ -192,14 +192,14 @@ private struct BatteryDetailView: View {
     @ObservedObject var dashboard: MacDashboardMonitor
     @ObservedObject var memory: MemoryMonitor
     var body: some View {
-        DetailShell(title: "Battery", icon: "battery.100") {
+        DetailShell(title: String(localized: "Battery"), icon: "battery.100") {
             if let battery = dashboard.sample?.battery {
                 HStack(spacing: 18) {
                     ZStack {
                         Circle().stroke(.white.opacity(0.08), lineWidth: 12)
                         Circle().trim(from: 0, to: CGFloat(battery.percent ?? 0) / 100)
                             .stroke(battery.percent ?? 100 <= 20 ? Color.orange : .mint, style: StrokeStyle(lineWidth: 12, lineCap: .round)).rotationEffect(.degrees(-90))
-                        Text(battery.percent.map { "\($0)%" } ?? "—").font(.system(size: 26, weight: .semibold)).monospacedDigit()
+                        Text(battery.percent.map { String(localized: "\($0)%") } ?? "—").font(.system(size: 26, weight: .semibold)).monospacedDigit()
                     }.frame(width: 116, height: 116).padding(6)
                     VStack(alignment: .leading, spacing: 4) {
                         Text(battery.charging ? "Charging" : battery.externalPower ? "Not charging" : "On battery").font(.system(size: 17, weight: .semibold))
@@ -208,10 +208,10 @@ private struct BatteryDetailView: View {
                 }
                 HStack(spacing: 10) {
                     let health = battery.healthPercent
-                    StatTile(title: "Health", value: health.map { "\($0)%" } ?? "—",
-                             note: health.map { $0 >= 80 ? "Holds most of its original charge." : "Holds noticeably less charge. Consider a service check." } ?? "Not reported by this Mac.",
+                    StatTile(title: String(localized: "Health", comment: "Battery health"), value: health.map { String(localized: "\($0)%") } ?? "—",
+                             note: health.map { $0 >= 80 ? String(localized: "Holds most of its original charge.") : String(localized: "Holds noticeably less charge. Consider a service check.") } ?? String(localized: "Not reported by this Mac."),
                              tint: (health ?? 100) >= 80 ? .mint : .orange)
-                    StatTile(title: "Charge cycles", value: battery.cycleCount.map(String.init) ?? "—", note: "Mac batteries are rated for about 1000 cycles.")
+                    StatTile(title: String(localized: "Charge cycles"), value: battery.cycleCount.map { $0.formatted() } ?? "—", note: String(localized: "Mac batteries are rated for about 1000 cycles."))
                 }
                 TopCPUApps(memory: memory, title: "Using the most energy (by CPU)")
             } else {
@@ -223,9 +223,8 @@ private struct BatteryDetailView: View {
         }
     }
     private func timeNote(_ battery: MacBattery) -> String {
-        guard let minutes = battery.minutesRemaining else { return battery.externalPower ? "Powered by the adapter. macOS may hold charge to protect the battery." : "Estimating time left…" }
-        let time = "\(minutes / 60) h \(minutes % 60) min"
-        return battery.charging ? time + " until full" : time + " left"
+        guard let minutes = battery.minutesRemaining else { return battery.externalPower ? String(localized: "Powered by the adapter. macOS may hold charge to protect the battery.") : String(localized: "Estimating time left…") }
+        return battery.charging ? String(localized: "\(minutes / 60) h \(minutes % 60) min until full") : String(localized: "\(minutes / 60) h \(minutes % 60) min left")
     }
 }
 
@@ -250,8 +249,8 @@ private struct StorageDetailView: View {
                     }.frame(height: 10)
                 }
                 HStack(spacing: 10) {
-                    StatTile(title: "Used", value: formattedBytes(used), note: String(format: "%.0f%% of the disk", fraction * 100))
-                    StatTile(title: "Available for apps", value: important.map(formattedBytes) ?? "—", note: "Includes space macOS can free on its own (purgeable).")
+                    StatTile(title: String(localized: "Used", comment: "Disk space in use"), value: formattedBytes(used), note: String(localized: "\(Int((fraction * 100).rounded()))% of the disk"))
+                    StatTile(title: String(localized: "Available for apps"), value: important.map(formattedBytes) ?? "—", note: String(localized: "Includes space macOS can free on its own (purgeable)."))
                 }
                 Text(fraction > 0.9 ? "Under 10% free: macOS slows down and updates may fail. Start with the biggest items." : "Find what takes the most room, then review it before anything moves to the Trash.")
                     .font(.system(size: 13)).foregroundStyle(fraction > 0.9 ? .orange : .white.opacity(0.65)).fixedSize(horizontal: false, vertical: true)
@@ -271,10 +270,10 @@ private struct StorageDetailView: View {
             }.value
         }
     }
-    private var volumeName: String { (try? URL(fileURLWithPath: "/").resourceValues(forKeys: [.volumeNameKey]).volumeName) ?? "Storage" }
-    private func action(_ title: String, icon: String, section: String) -> some View {
+    private var volumeName: String { (try? URL(fileURLWithPath: "/").resourceValues(forKeys: [.volumeNameKey]).volumeName) ?? String(localized: "Storage") }
+    private func action(_ title: LocalizedStringKey, icon: String, section: String) -> some View {
         Button { openWindow(section) } label: {
-            HStack { Label(title, systemImage: icon); Spacer(); Image(systemName: "chevron.right").font(.system(size: 11, weight: .semibold)) }
+            HStack { Label(title, systemImage: icon); Spacer(); Image(systemName: "chevron.right").font(.system(size: 11, weight: .semibold)).flipsForRightToLeftLayoutDirection(true) }
                 .font(.system(size: 14, weight: .medium)).padding(.horizontal, 12).frame(height: 38)
                 .background(.white.opacity(0.055), in: RoundedRectangle(cornerRadius: 8)).contentShape(Rectangle())
         }.buttonStyle(.plain)
@@ -284,7 +283,7 @@ private struct StorageDetailView: View {
 private struct NetworkDetailView: View {
     @ObservedObject var dashboard: MacDashboardMonitor
     var body: some View {
-        DetailShell(title: dashboard.sample?.network?.kind ?? "Network", icon: "wifi") {
+        DetailShell(title: dashboard.sample?.network?.kind ?? String(localized: "Network"), icon: "wifi") {
             if let network = dashboard.sample?.network {
                 Text("Interface \(network.interface)").font(.system(size: 13)).foregroundStyle(.white.opacity(0.6))
                 traffic("Download", rate: dashboard.download, total: network.received, history: dashboard.downloadHistory, tint: .blue)
@@ -297,13 +296,13 @@ private struct NetworkDetailView: View {
             Button("Network settings") { NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.Network-Settings.extension")!) }
         }
     }
-    private func traffic(_ title: String, rate: Double?, total: UInt64, history: [Double], tint: Color) -> some View {
+    private func traffic(_ title: LocalizedStringKey, rate: Double?, total: UInt64, history: [Double], tint: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Text(title).font(.system(size: 14, weight: .semibold))
                 Text(formattedBytes(total)).font(.system(size: 13)).foregroundStyle(.white.opacity(0.6)).monospacedDigit()
                 Spacer()
-                Text(rate.map { formattedBytes(UInt64(max(0, min($0, 1e15)))) + "/s" } ?? "Measuring…").font(.system(size: 15, weight: .semibold)).monospacedDigit()
+                Text(rate.map { String(localized: "\(formattedBytes(UInt64(max(0, min($0, 1e15)))))/s") } ?? String(localized: "Measuring…")).font(.system(size: 15, weight: .semibold)).monospacedDigit()
             }
             Sparkline(values: history, tint: tint).frame(height: 96)
         }.padding(14).background(.white.opacity(0.065), in: RoundedRectangle(cornerRadius: 14))
@@ -313,7 +312,7 @@ private struct NetworkDetailView: View {
 private struct DevicesDetailView: View {
     @ObservedObject var dashboard: MacDashboardMonitor
     var body: some View {
-        DetailShell(title: "Connected devices", icon: "keyboard.fill") {
+        DetailShell(title: String(localized: "Connected devices"), icon: "keyboard.fill") {
             if dashboard.devices.isEmpty {
                 Text(dashboard.sample == nil ? "Reading…" : "No devices reported.").foregroundStyle(.white.opacity(0.65))
             }
@@ -323,7 +322,7 @@ private struct DevicesDetailView: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Image(systemName: icon(device)).font(.system(size: 24)).foregroundStyle(.mint)
                             Text(device.name).font(.system(size: 14, weight: .semibold)).lineLimit(2)
-                            Label(device.transport, systemImage: device.transport.hasPrefix("Bluetooth") ? "dot.radiowaves.left.and.right" : "cable.connector")
+                            Label(device.transportTitle, systemImage: device.transport.hasPrefix("Bluetooth") ? "dot.radiowaves.left.and.right" : "cable.connector")
                                 .font(.system(size: 12)).foregroundStyle(.white.opacity(0.6))
                         }.padding(14).frame(maxWidth: .infinity, minHeight: 116, alignment: .topLeading)
                             .background(.white.opacity(0.065), in: RoundedRectangle(cornerRadius: 12))

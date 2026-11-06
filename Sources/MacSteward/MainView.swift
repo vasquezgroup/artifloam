@@ -100,12 +100,12 @@ struct MainView: View {
     private var toolProgressText: String {
         if let fixing = m.health.fixing { return fixing.detail }
         switch m.section {
-        case "Applications": return "Finding unused apps and what removed apps left behind…"
-        case "Leftovers": return "Comparing Library folders with the apps you have…"
-        case "Login & background items": return "Reading what starts with your Mac…"
-        case "Browsers": return "Measuring caches and website data for each browser…"
-        case "Trash bins": return "Asking Finder what the Trash holds…"
-        case "My Clutter" where m.largeFiles.task != nil && !m.checking: return "Reading file sizes…"
+        case "Applications": return String(localized: "Finding unused apps and what removed apps left behind…")
+        case "Leftovers": return String(localized: "Comparing Library folders with the apps you have…")
+        case "Login & background items": return String(localized: "Reading what starts with your Mac…")
+        case "Browsers": return String(localized: "Measuring caches and website data for each browser…")
+        case "Trash bins": return String(localized: "Asking Finder what the Trash holds…")
+        case "My Clutter" where m.largeFiles.task != nil && !m.checking: return String(localized: "Reading file sizes…")
         default: return m.progress
         }
     }
@@ -210,7 +210,7 @@ struct MainView: View {
                             }
                         }.toggleStyle(.stewardCheckbox)
                     }
-                    if !batch.blocked.isEmpty { Text("Kept after recheck:\n" + batch.blocked.joined(separator: "\n")).stewardFont(.caption).foregroundStyle(.secondary) }
+                    if !batch.blocked.isEmpty { Text("Kept after recheck:\n\(batch.blocked.joined(separator: "\n"))").stewardFont(.caption).foregroundStyle(.secondary) }
                 }
             }.frame(maxHeight: 380)
             HStack {
@@ -230,21 +230,32 @@ struct MainView: View {
     }
     private var stageProgressText: String {
         if m.scanning, let status = m.scanProgress, let total = status.total {
-            return "\(Int((status.fraction ?? 0) * 100))% · \(status.completed) of \(total) checks · \(status.remaining ?? 0) remaining"
+            return String(localized: "\(Int((status.fraction ?? 0) * 100))% · \(status.completed) of \(total) checks · \(status.remaining ?? 0) remaining")
         }
         if isMapStage, storageMap.busy, let snapshot = storageMap.snapshot, !snapshot.entries.isEmpty {
             let complete = snapshot.entries.filter(\.complete).count
-            return "\(complete) of \(snapshot.entries.count) top-level items measured · \(snapshot.entries.count - complete) remaining"
+            return String(localized: "\(complete) of \(snapshot.entries.count) top-level items measured · \(snapshot.entries.count - complete) remaining")
         }
-        return m.scanning ? "Preparing the scan checklist…" : "Measuring work…"
+        return m.scanning ? String(localized: "Preparing the scan checklist…") : String(localized: "Measuring work…")
+    }
+    private var orbTitle: String {
+        if isMapStage { return storageMap.busy ? String(localized: "Stop", comment: "Button: stop the running scan") : String(localized: "Map", comment: "Button: start mapping the disk") }
+        if stageWorking { return String(localized: "Stop", comment: "Button: stop the running scan") }
+        if isSummary { return String(localized: "Run", comment: "Button: clean what is ticked on the scan summary") }
+        switch m.section {
+        case "Worktrees": return String(localized: "Inspect", comment: "Button: inspect Git worktrees")
+        case "Duplicates": return String(localized: "Compare", comment: "Button: compare files to find duplicates")
+        case "System": return String(localized: "Check", comment: "Button: check this Mac's settings")
+        default: return String(localized: "Scan", comment: "Button: start a scan")
+        }
     }
     var stageControls: some View {
         VStack(spacing: 7) {
             // Same line as On-device, so the health readout never adds height under the artwork.
             HStack(spacing: 10) {
                 if m.section == "Overview", !m.scanning, !isSummary, let health = m.health.health {
-                    let freed = m.memory.freedThisMonth > 0 ? " · \(formattedBytes(m.memory.freedThisMonth)) freed this month" : ""
-                    Label("Mac health \(health.score) · Level \(health.level)" + (health.issues.isEmpty ? freed : ""), systemImage: "heart.fill")
+                    let line = health.issues.isEmpty && m.memory.freedThisMonth > 0 ? String(localized: "Mac health \(health.score) · Level \(health.level) · \(formattedBytes(m.memory.freedThisMonth)) freed this month") : String(localized: "Mac health \(health.score) · Level \(health.level)")
+                    Label(line, systemImage: "heart.fill")
                         .stewardFont(.caption).foregroundStyle(health.issues.isEmpty ? Color.mint.opacity(0.85) : Color.orange.opacity(0.9))
                         .contentTransition(.numericText()).animation(.easeOut, value: health.score)
                     Text("·").stewardFont(.caption).foregroundStyle(.white.opacity(0.4))
@@ -260,7 +271,7 @@ struct MainView: View {
             // On stage screens the banner sits under the progress line, never over the artwork.
             // Hidden while a scan runs, so it never pushes the progress labels into the artwork.
             if !(stageWorking || storageMap.busy || m.busy || isSummary) { FullDiskAccessBanner().frame(maxWidth: 760) }
-            OrbAction(title: isMapStage ? (storageMap.busy ? "Stop" : "Map") : stageWorking ? "Stop" : isSummary ? "Run" : m.section == "Worktrees" ? "Inspect" : m.section == "Duplicates" ? "Compare" : m.section == "System" ? "Check" : "Scan",
+            OrbAction(title: orbTitle,
                       icon: isMapStage ? (storageMap.busy ? "stop.fill" : "magnifyingglass") : stageWorking ? "stop.fill" : isSummary ? "sparkles" : m.section == "System" ? "checkmark.shield" : m.section == "Duplicates" ? "square.on.square" : "magnifyingglass", accent: theme.vivid,
                       // A running scan can always be stopped; only other busy work disables the orb.
                       disabled: isMapStage ? (!storageMap.busy && !storageMap.canStart) : !stageWorking && (m.busy || m.waitingForCancelledScan), showingProgress: stageWorking || storageMap.busy || m.busy, progress: stageProgress) {
@@ -305,15 +316,15 @@ struct MainView: View {
             }
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 250, maximum: 320), spacing: 14)], spacing: 14) {
                 careTile("Cleanup", value: formattedBytes(cleanupFound), detail: Self.readyLine(findings), selected: $runCleanup, review: { m.review(); m.section = "Overview"; overviewDetail = "Cleanup" })
-                careTile("My Clutter", value: m.duplicateChecked ? "\(m.duplicates.count) duplicates" : "Not checked", detail: m.duplicateChecked ? formattedBytes(duplicateBytes) + " in extra copies" : "Choose a folder to compare", review: { overviewDetail = "My Clutter" })
-                careTile("Applications", value: m.unusedApps.map { "\($0) unused apps" } ?? "Checking…", detail: leftoverBytes.map { "Unused 6+ months · " + formattedBytes($0) + " leftovers" } ?? "Finding leftovers…", review: { overviewDetail = "Applications" })
-                careTile("Performance", value: m.memory.reading?.pressure.rawValue ?? "–", detail: "Memory pressure" + (m.agentCount.map { " · \($0) background agents" } ?? ""), review: { overviewDetail = "Performance" })
-                careTile("Status", value: m.checks.isEmpty ? "Not checked" : "\(m.protections.on) of \(m.protections.total) on", detail: "Protection, updates and remote access", review: { overviewDetail = "System" })
+                careTile("My Clutter", value: m.duplicateChecked ? String(localized: "\(m.duplicates.count) duplicates") : String(localized: "Not checked"), detail: m.duplicateChecked ? String(localized: "\(formattedBytes(duplicateBytes)) in extra copies") : String(localized: "Choose a folder to compare"), review: { overviewDetail = "My Clutter" })
+                careTile("Applications", value: m.unusedApps.map { String(localized: "\($0) unused apps") } ?? String(localized: "Checking…"), detail: leftoverBytes.map { String(localized: "Unused 6+ months · \(formattedBytes($0)) leftovers") } ?? String(localized: "Finding leftovers…"), review: { overviewDetail = "Applications" })
+                careTile("Performance", value: m.memory.reading?.pressure.title ?? "–", detail: m.agentCount.map { String(localized: "Memory pressure · \($0) background agents") } ?? String(localized: "Memory pressure"), review: { overviewDetail = "Performance" })
+                careTile("Status", value: m.checks.isEmpty ? String(localized: "Not checked") : String(localized: "\(m.protections.on) of \(m.protections.total) on"), detail: String(localized: "Protection, updates and remote access"), review: { overviewDetail = "System" })
             }.frame(maxWidth: 1000)
             if let note = m.report?.notices.first {
                 HStack(spacing: 8) {
                     Image(systemName: "info.circle").foregroundStyle(.orange)
-                    Text(note.components(separatedBy: ". ").first.map { $0 + "." } ?? note).lineLimit(1).help(m.report?.notices.joined(separator: "\n\n") ?? "")
+                    Text(firstSentence(note)).lineLimit(1).help(m.report?.notices.joined(separator: "\n\n") ?? "")
                 }.stewardFont(.caption).foregroundStyle(muted)
             }
         }.frame(maxWidth: .infinity).padding(.horizontal, 30).padding(.top, 8).padding(.bottom, 12).overlayScrollers() }
@@ -326,8 +337,8 @@ struct MainView: View {
             HStack(spacing: 10) {
                 BackSquareButton { overviewDetail = nil }
                 Text("Overview").stewardFont(.body).foregroundStyle(muted)
-                Image(systemName: "chevron.compact.right").foregroundStyle(muted)
-                Text(detail == "System" ? "Status" : detail).stewardFont(.body, weight: .semibold)
+                Image(systemName: "chevron.compact.right").flipsForRightToLeftLayoutDirection(true).foregroundStyle(muted)
+                Text(sectionTitle(detail == "System" ? "Status" : detail)).stewardFont(.body, weight: .semibold)
             }
             if detail == "Cleanup" { cleanupDetails.frame(maxWidth: .infinity, maxHeight: .infinity) }
             else { ScrollView { content(detail).padding(.bottom, 28).frame(maxWidth: .infinity, alignment: .leading) } }
@@ -341,7 +352,7 @@ struct MainView: View {
             HStack(alignment: .top, spacing: 10) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(value).font(.system(size: 24 * textScale, weight: .semibold, design: .rounded)).monospacedDigit().foregroundStyle(mint).lineLimit(1).minimumScaleFactor(0.7)
-                    Text(module).font(.system(size: 15 * textScale, weight: .semibold))
+                    Text(sectionTitle(module)).font(.system(size: 15 * textScale, weight: .semibold))
                 }
                 Spacer(minLength: 4)
                 StewardNavigationArtwork(name: module, fallback: "sparkles", size: 50)
@@ -350,30 +361,37 @@ struct MainView: View {
             HStack(spacing: 8) {
                 if let selected { Toggle("Include in Run", isOn: selected).toggleStyle(.stewardCheckboxOnly).help("Include in Run") }
                 Spacer()
-                Button("Review", action: review).buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
+                Button(action: review) { Text("Review", comment: "Button: open the details and choose what goes") }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
             }
         }.padding(16).frame(maxWidth: .infinity, alignment: .topLeading)
         .background(LinearGradient(colors: [.white.opacity(0.09), .white.opacity(0.04)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         .overlay { RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(.white.opacity(0.08), lineWidth: 0.7) }
+    }
+    /// Whether Settings can fix a scan note. Notes are translated, so their wording can't decide this: the Git note is recognised
+    /// by its whole key, an unreadable folder by the path only that note names, and a failed duplicate search (it only fails on access) by its key.
+    private func settingsFixes(_ note: String) -> Bool {
+        if note.contains("/") || note == String(localized: "Git is unavailable. Git-dependent caches remain protected and worktree checks are skipped; install Git or Command Line Tools to enable verification.") { return true }
+        let duplicateSearch = String(localized: "Duplicate search: \("\u{1}")").components(separatedBy: "\u{1}")
+        return duplicateSearch.count == 2 && note.hasPrefix(duplicateSearch[0]) && note.hasSuffix(duplicateSearch[1])
     }
     /// Each note as a row with the action that resolves it, instead of a hidden popover.
     @ViewBuilder private var scanNotes: some View {
         ForEach(m.report?.notices ?? [], id: \.self) { note in
             HStack(spacing: 10) {
                 Image(systemName: "info.circle").foregroundStyle(.orange)
-                Text(note.components(separatedBy: ". ").first.map { $0 + "." } ?? note).stewardFont(.caption).foregroundStyle(muted).lineLimit(2).help(note)
+                Text(firstSentence(note)).stewardFont(.caption).foregroundStyle(muted).lineLimit(2).help(note)
                 Spacer(minLength: 8)
-                if note.contains("Cannot read") || note.contains("permission") || note.contains("Git") { Button("Settings") { m.section = "Settings" }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)) }
+                if settingsFixes(note) { Button("Settings") { m.section = "Settings" }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)) }
             }.padding(.horizontal, 14).padding(.vertical, 8).frame(maxWidth: 620)
             .background(panel, in: RoundedRectangle(cornerRadius: 12))
         }
     }
     @ViewBuilder private var extraScanResults: some View {
         if m.duplicateChecked {
-            summaryPill("Duplicates", icon: "square.on.square", value: "\(m.duplicates.count) duplicate groups") { m.section = "Duplicates" }
+            summaryPill(sectionTitle("Duplicates"), icon: "square.on.square", value: String(localized: "\(m.duplicates.count) duplicate groups")) { m.section = "Duplicates" }
         }
         if !m.checks.isEmpty {
-            summaryPill("System", icon: "checkmark.shield", value: "\(m.protections.on) of \(m.protections.total) protections on") { m.section = "System" }
+            summaryPill(sectionTitle("System"), icon: "checkmark.shield", value: String(localized: "\(m.protections.on) of \(m.protections.total) protections on")) { m.section = "System" }
         }
     }
     static let modules = [("Overview", "sparkles"), ("Cleanup", "externaldrive.fill"), ("My Clutter", "doc.on.doc"), ("Applications", "checkmark.shield"), ("Browsers", "globe"), ("Space Map", "circle.dotted")]
@@ -415,12 +433,12 @@ struct MainView: View {
                 Button { go(name) } label: {
                     HStack(spacing: 6) {
                         StewardNavigationArtwork(name: name, fallback: icon, size: 16)
-                        Text(name).font(.system(size: 12 * textScale, weight: active ? .semibold : .medium))
+                        Text(sectionTitle(name)).font(.system(size: 12 * textScale, weight: active ? .semibold : .medium))
                     }.foregroundStyle(.white).padding(.horizontal, 11).frame(height: 28)
                     .background(.white.opacity(active ? 0.18 : 0.07), in: Capsule())
                     .overlay { Capsule().stroke(.white.opacity(active ? 0.22 : 0.10), lineWidth: 0.7) }
                     .contentShape(Capsule())
-                }.buttonStyle(.plain).help(name).accessibilityLabel(name)
+                }.buttonStyle(.plain).help(sectionTitle(name)).accessibilityLabel(sectionTitle(name))
             }
         }
     }
@@ -432,7 +450,7 @@ struct MainView: View {
                         StewardNavigationArtwork(name: name, fallback: "square.grid.2x2")
                             .frame(width: 39, height: 39)
                             .background((m.scanning ? name == "Cleanup" : m.section == name) ? .white.opacity(0.10) : .clear, in: RoundedRectangle(cornerRadius: 12))
-                    }.buttonStyle(.plain).help(name).accessibilityLabel(name).disabled(m.scanning)
+                    }.buttonStyle(.plain).help(sectionTitle(name)).accessibilityLabel(sectionTitle(name)).disabled(m.scanning)
                 }
             }.overlayScrollers()
             // A gutter for the scroller, so it shows beside the icons rather than over them.
@@ -471,7 +489,7 @@ struct MainView: View {
             HStack(spacing: 14) {
                 StewardNavigationArtwork(name: name, fallback: icon, size: 28)
                     .opacity(m.section == name || hovered ? 1 : 0.85)
-                Text(name).font(.system(size: 15 * textScale, weight: m.section == name ? .semibold : .medium)).fixedSize(horizontal: false, vertical: true); Spacer(minLength: 0)
+                Text(sectionTitle(name)).font(.system(size: 15 * textScale, weight: m.section == name ? .semibold : .medium)).fixedSize(horizontal: false, vertical: true); Spacer(minLength: 0)
             }.frame(minHeight: 40).foregroundStyle(.white).padding(.horizontal, 12).padding(.vertical, 3)
                 .background {
                     ZStack {
@@ -485,7 +503,7 @@ struct MainView: View {
                         RoundedRectangle(cornerRadius: 12, style: .continuous).fill(.white.opacity(0.06)).opacity(hovered && m.section != name ? 1 : 0)
                     }
                 }
-        }.buttonStyle(.plain).padding(.vertical, 2).help(name).accessibilityLabel(name).disabled(m.scanning)
+        }.buttonStyle(.plain).padding(.vertical, 2).help(sectionTitle(name)).accessibilityLabel(sectionTitle(name)).disabled(m.scanning)
             .onHover { inside in
                 withAnimation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.8)) {
                     if inside { hoveredNavigation = name }
@@ -510,67 +528,67 @@ struct MainView: View {
         let points: [(String, String)]
         switch section {
         case "Cleanup":
-            title = "A little less clutter."
-            subtitle = "Find old caches and build leftovers, without touching the work you want to keep."
-            points = [("app", "Recognised application caches"), ("doc.text", "Old diagnostic logs"), ("lock", "Personal files protected")]
+            title = String(localized: "A little less clutter.")
+            subtitle = String(localized: "Find old caches and build leftovers, without touching the work you want to keep.")
+            points = [("app", String(localized: "Recognised application caches")), ("doc.text", String(localized: "Old diagnostic logs")), ("lock", String(localized: "Personal files protected"))]
         case "Worktrees":
-            title = "Room for your next idea."
-            subtitle = "See which checkouts are finished and which still hold your work."
-            points = [("arrow.triangle.branch", "Git status & unmerged commits"), ("person.crop.circle", "Active sessions protected"), ("eye", "Review before archiving")]
+            title = String(localized: "Room for your next idea.")
+            subtitle = String(localized: "See which checkouts are finished and which still hold your work.")
+            points = [("arrow.triangle.branch", String(localized: "Git status & unmerged commits")), ("person.crop.circle", String(localized: "Active sessions protected")), ("eye", String(localized: "Review before archiving"))]
         case "Duplicates":
-            title = "Same file. Extra space."
-            subtitle = "Find exact copies across your home folder. Decide which one to keep."
-            points = [("square.on.square", "Content compared, not names"), ("lock", "Everything stays on your Mac"), ("folder", "Review copies in Finder")]
+            title = String(localized: "Same file. Extra space.")
+            subtitle = String(localized: "Find exact copies across your home folder. Decide which one to keep.")
+            points = [("square.on.square", String(localized: "Content compared, not names")), ("lock", String(localized: "Everything stays on your Mac")), ("folder", String(localized: "Review copies in Finder"))]
         case "My Clutter":
-            title = "Find what you forgot."
-            subtitle = "Exact duplicates across your Mac and large, old files. Nothing is removed without your review."
-            points = [("square.on.square", "Duplicates compared by content"), ("doc.text.magnifyingglass", "Large and old files"), ("house", "Across your whole home folder")]
+            title = String(localized: "Find what you forgot.")
+            subtitle = String(localized: "Exact duplicates across your Mac and large, old files. Nothing is removed without your review.")
+            points = [("square.on.square", String(localized: "Duplicates compared by content")), ("doc.text.magnifyingglass", String(localized: "Large and old files")), ("house", String(localized: "Across your whole home folder"))]
         case "Browsers":
-            title = "Lighter browsers, still signed in."
-            subtitle = "Caches and website data for every browser and profile on your Mac."
-            points = [("globe", "Every browser and profile"), ("checkmark.shield", "Caches clean, sign-ins stay"), ("person.crop.circle", "Website data only when you choose")]
+            title = String(localized: "Lighter browsers, still signed in.")
+            subtitle = String(localized: "Caches and website data for every browser and profile on your Mac.")
+            points = [("globe", String(localized: "Every browser and profile")), ("checkmark.shield", String(localized: "Caches clean, sign-ins stay")), ("person.crop.circle", String(localized: "Website data only when you choose"))]
         case "Applications":
-            title = "Apps you no longer need."
-            subtitle = "See when each app was last used, and what deleted apps left behind."
-            points = [("clock", "Last used, least used first"), ("shippingbox", "Leftovers of removed apps"), ("lock", "Running and Apple apps protected")]
+            title = String(localized: "Apps you no longer need.")
+            subtitle = String(localized: "See when each app was last used, and what deleted apps left behind.")
+            points = [("clock", String(localized: "Last used, least used first")), ("shippingbox", String(localized: "Leftovers of removed apps")), ("lock", String(localized: "Running and Apple apps protected"))]
         case "Login & background items":
-            title = "What starts with your Mac."
-            subtitle = "Apps that open at login and programs that run in the background."
-            points = [("power", "Apps that open at login"), ("gearshape.2", "Background agents, in plain language"), ("arrow.uturn.backward", "Anything you switch off can come back")]
+            title = String(localized: "What starts with your Mac.")
+            subtitle = String(localized: "Apps that open at login and programs that run in the background.")
+            points = [("power", String(localized: "Apps that open at login")), ("gearshape.2", String(localized: "Background agents, in plain language")), ("arrow.uturn.backward", String(localized: "Anything you switch off can come back"))]
         case "Leftovers":
             if m.leftovers.items?.isEmpty == true && !m.leftovers.busy {
-                title = "Apps you removed left nothing behind that Artifloam can identify."
+                title = String(localized: "Apps you removed left nothing behind that Artifloam can identify.")
                 subtitle = title
-                points = [("checkmark.circle", "Nothing left to clean here"), ("shippingbox", "Library folders compared with your apps"), ("internaldrive", formattedBytes(m.disk.free) + " free on this Mac")]
+                points = [("checkmark.circle", String(localized: "Nothing left to clean here")), ("shippingbox", String(localized: "Library folders compared with your apps")), ("internaldrive", String(localized: "\(formattedBytes(m.disk.free)) free on this Mac"))]
             } else {
-                title = "What removed apps left behind."
-                subtitle = "Support files, caches and settings from apps you no longer have."
-                points = [("shippingbox", "Grouped by app"), ("exclamationmark.triangle", "Possibly shared files stay unticked"), ("arrow.uturn.backward", "Everything goes to the Trash first")]
+                title = String(localized: "What removed apps left behind.")
+                subtitle = String(localized: "Support files, caches and settings from apps you no longer have.")
+                points = [("shippingbox", String(localized: "Grouped by app")), ("exclamationmark.triangle", String(localized: "Possibly shared files stay unticked")), ("arrow.uturn.backward", String(localized: "Everything goes to the Trash first"))]
             }
         case "System":
-            title = "Know where your Mac stands."
-            subtitle = "What protects it, who can reach it and what runs on it."
-            points = [("checkmark.shield", "Protection and updates"), ("network", "Remote access and backup"), ("app", "Background items and app signatures")]
+            title = String(localized: "Know where your Mac stands.")
+            subtitle = String(localized: "What protects it, who can reach it and what runs on it.")
+            points = [("checkmark.shield", String(localized: "Protection and updates")), ("network", String(localized: "Remote access and backup")), ("app", String(localized: "Background items and app signatures"))]
         case "Trash bins":
             if trashEmpty {
-                title = "Your Trash is empty, so nothing here is using space."
+                title = String(localized: "Your Trash is empty, so nothing here is using space.")
                 subtitle = title
                 let autoEmpty = UserDefaults(suiteName: "com.apple.finder")?.bool(forKey: "FXRemoveOldTrashItems") == true
-                points = [("checkmark.circle", "Nothing left to clean here"), ("internaldrive", formattedBytes(m.disk.free) + " free on this Mac"), autoEmpty ? ("clock.arrow.circlepath", "Finder clears old items after 30 days") : ("hand.raised", "Items stay until you empty it")]
+                points = [("checkmark.circle", String(localized: "Nothing left to clean here")), ("internaldrive", String(localized: "\(formattedBytes(m.disk.free)) free on this Mac")), autoEmpty ? ("clock.arrow.circlepath", String(localized: "Finder clears old items after 30 days")) : ("hand.raised", String(localized: "Items stay until you empty it"))]
             } else {
-                title = "What the Trash still holds."
-                subtitle = "Files in the Trash use space until it's emptied."
-                points = [("trash", "On your Mac and connected drives"), ("internaldrive", "Space you can get back"), ("lock", "Nothing goes until you confirm")]
+                title = String(localized: "What the Trash still holds.")
+                subtitle = String(localized: "Files in the Trash use space until it's emptied.")
+                points = [("trash", String(localized: "On your Mac and connected drives")), ("internaldrive", String(localized: "Space you can get back")), ("lock", String(localized: "Nothing goes until you confirm"))]
             }
         default:
-            title = "More room. Less clutter."
-            subtitle = "A simple check for the leftovers your Mac can leave behind."
-            points = [("sparkles", "Find disposable caches"), ("arrow.triangle.branch", "Protect your unfinished work"), ("checkmark.shield", "Review every cleanup")]
+            title = String(localized: "More room. Less clutter.")
+            subtitle = String(localized: "A simple check for the leftovers your Mac can leave behind.")
+            points = [("sparkles", String(localized: "Find disposable caches")), ("arrow.triangle.branch", String(localized: "Protect your unfinished work")), ("checkmark.shield", String(localized: "Review every cleanup"))]
         }
         // After a cleanup the start screen says what was freed instead of the generic line.
-        let lead = m.lastFreed.map { "Last cleanup freed \(formattedBytes($0)). Scan again any time." }
-        return IntroStage(theme: themeFor(section), heading: trashEmpty || (section == "Leftovers" && m.leftovers.items?.isEmpty == true && !m.leftovers.busy) ? "All clean." : section, title: title, subtitle: ["Overview", "Cleanup"].contains(section) ? (lead ?? subtitle) : subtitle, points: points, scanning: stageWorking, progress: m.scanning ? m.progress : toolProgressText,
-                          health: section == "Overview" ? m.health.health : nil, fix: { issue in m.health.performOnStage(issue.fix, prepare: { await m.startup.load() }) { m.section = $0 } }, workingTitle: m.health.fixing?.title, reportsFrames: section == "Overview" && m.welcoming)
+        let lead = m.lastFreed.map { String(localized: "Last cleanup freed \(formattedBytes($0)). Scan again any time.") }
+        return IntroStage(theme: themeFor(section), heading: trashEmpty || (section == "Leftovers" && m.leftovers.items?.isEmpty == true && !m.leftovers.busy) ? String(localized: "All clean.") : sectionTitle(section), title: title, subtitle: ["Overview", "Cleanup"].contains(section) ? (lead ?? subtitle) : subtitle, points: points, scanning: stageWorking, progress: m.scanning ? m.progress : toolProgressText,
+                          health: section == "Overview" ? m.health.health : nil, fix: { issue in m.health.performOnStage(issue.fix, prepare: { await m.startup.load() }) { m.section = $0 } }, workingTitle: m.health.fixing?.title, reportsFrames: section == "Overview" && m.welcoming, subtitleIsLastCleanup: ["Overview", "Cleanup"].contains(section) && lead != nil)
     }
     /// Header, pages, banner and footer to the right of the sidebar.
     private var mainColumn: some View {
@@ -610,7 +628,7 @@ struct MainView: View {
                           receipt: { m.settingsTab = "Activity"; m.finishCleaning(thenShow: "Settings"); cleanupReviewing = false })
                 .transition(.opacity.combined(with: .scale(scale: reduceMotion ? 1 : 0.97)))
         } else if m.scanning {
-            ScanStage(progress: m.progress, theme: theme).transition(.opacity.combined(with: .scale(scale: reduceMotion ? 1 : 0.97)))
+            ScanStage(progress: m.progress, step: m.scanProgress?.step ?? .access, theme: theme).transition(.opacity.combined(with: .scale(scale: reduceMotion ? 1 : 0.97)))
         } else if isIntroPage(section) {
             intro(section)
         } else if section == "Space Map" {
@@ -648,18 +666,18 @@ struct MainView: View {
         case "Browsers": BrowsersModuleView(state: m.browsers)
         case "Status": StatusView(state: m.status, memory: m.memory)
         case "Memory": MemoryView(monitor: m.memory)
-        case "My Clutter": module("My Clutter", "Duplicates across your home folder and large, old files.", tabs: ["Duplicates", "Large & old files"], selection: $clutterTab, summary: clutterSummary, scanAll: scanClutter) {
+        case "My Clutter": module("My Clutter", String(localized: "Duplicates across your home folder and large, old files."), tabs: ["Duplicates", "Large & old files"], selection: $clutterTab, summary: clutterSummary, scanAll: scanClutter) {
             if clutterTab == "Duplicates" { duplicatesDetails } else { LargeFilesView(location: m.largeFileLocation, state: m.largeFiles) }
         }
-        case "Performance": module("Performance", "Memory and the apps that start with your Mac.", tabs: ["Memory", "Login & background items"], selection: $performanceTab, summary: performanceSummary, scanAll: { m.startup.refresh() }) {
+        case "Performance": module("Performance", String(localized: "Memory and the apps that start with your Mac."), tabs: ["Memory", "Login & background items"], selection: $performanceTab, summary: performanceSummary, scanAll: { m.startup.refresh() }) {
             if performanceTab == "Memory" { MemoryView(monitor: m.memory, loginItems: m.startup.loginItems?.count, reviewStartup: { performanceTab = "Login & background items" }) } else { BackgroundItemsView(state: m.startup) }
         }.onAppear { if m.startup.loginItems == nil && m.startup.error == nil { m.startup.refresh() } }
-        case "Applications": module("Applications", "Remove apps you no longer use and what they left behind.", tabs: ["Uninstaller", "Leftovers"], selection: $applicationsTab, summary: applicationsSummary, scanAll: { m.leftovers.scan() }) {
+        case "Applications": module("Applications", String(localized: "Remove apps you no longer use and what they left behind."), tabs: ["Uninstaller", "Leftovers"], selection: $applicationsTab, summary: applicationsSummary, scanAll: { m.leftovers.scan() }) {
             if applicationsTab == "Uninstaller" { AppRemovalView() } else { LeftoversView(state: m.leftovers) }
         }
         case "Settings":
             VStack(alignment: .leading, spacing: 20) {
-                Picker("Settings", selection: $m.settingsTab) { ForEach(["General", "Automation", "Activity"], id: \.self) { Text($0).tag($0) } }
+                Picker("Settings", selection: $m.settingsTab) { ForEach(["General", "Automation", "Activity"], id: \.self) { Text(sectionTitle($0)).tag($0) } }
                     // Natural width: in a wider frame macOS centres a segmented control, which pushed it off the page's left edge.
                     .pickerStyle(.segmented).labelsHidden().fixedSize()
                 switch m.settingsTab {
@@ -676,23 +694,23 @@ struct MainView: View {
             HStack(spacing: 10) {
                 Image(systemName: icon).foregroundStyle(mint)
                 VStack(alignment: .leading, spacing: 5) { Text(title).stewardFont(.caption).foregroundStyle(muted); Text(value).stewardFont(.body, weight: .medium) }
-                Image(systemName: "chevron.right").stewardFont(.caption).foregroundStyle(muted)
+                Image(systemName: "chevron.forward").stewardFont(.caption).foregroundStyle(muted)
             }.padding(.horizontal, 18).padding(.vertical, 13).background(.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 13))
         }.buttonStyle(.plain)
     }
     var cleanupDetails: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Button { cleanupReviewing = false } label: { Label("Summary", systemImage: "chevron.left").stewardFont(.callout) }.buttonStyle(.plain).foregroundStyle(muted)
+            Button { cleanupReviewing = false } label: { Label("Summary", systemImage: "chevron.backward").stewardFont(.callout) }.buttonStyle(.plain).foregroundStyle(muted)
             HStack(alignment: .top) {
-                title("Review your cleanup", "Choose what goes. Keep what matters.")
+                title(String(localized: "Review your cleanup"), String(localized: "Choose what goes. Keep what matters."))
                 Spacer()
                 // Trash bins are part of Cleanup, as a compact row.
                 Button { m.section = "Trash bins" } label: {
-                    Label(m.trashBins.report.map { r in "Trash · " + (r.items.map { $0 == 1 ? "1 item" : "\($0) items" } ?? "private") + (r.bytes.map { " · " + formattedBytes($0) } ?? "") } ?? "Trash", systemImage: "trash")
+                    Label(trashPillTitle, systemImage: "trash")
                         .stewardFont(.callout).padding(.horizontal, 14).padding(.vertical, 9).background(panel, in: Capsule())
                 }.buttonStyle(.plain).help("Open Trash bins to empty the Trash")
                 Button { m.section = "Browsers" } label: {
-                    Label(m.browsers.reports.map { "Browsers · " + formattedBytes($0.flatMap(\.items).reduce(0) { $0 + $1.bytes }) } ?? "Browsers", systemImage: "globe")
+                    Label(browsersPillTitle, systemImage: "globe")
                         .stewardFont(.callout).padding(.horizontal, 14).padding(.vertical, 9).background(panel, in: Capsule())
                 }.buttonStyle(.plain).help("Open Browser data")
             }.onAppear { if m.trashBins.report == nil { m.trashBins.inspect() } }
@@ -719,7 +737,7 @@ struct MainView: View {
                     .frame(width: min(280, geometry.size.width * 0.40), height: geometry.size.height)
                     .background(panel, in: RoundedRectangle(cornerRadius: 14))
                     VStack(alignment: .leading, spacing: 12) {
-                        Text(m.showAllFindings ? "All findings" : m.group.title).stewardFont(.title3, weight: .semibold).fixedSize(horizontal: false, vertical: true)
+                        Text(m.showAllFindings ? String(localized: "All findings") : m.group.title).stewardFont(.title3, weight: .semibold).fixedSize(horizontal: false, vertical: true)
                         TextField("Filter paths", text: $m.search).stewardInput()
                             .accessibilityLabel("Filter finding paths")
                         reviewBulkBar
@@ -731,9 +749,9 @@ struct MainView: View {
                                     Text(m.group.explanation).stewardFont(.body).foregroundStyle(muted).fixedSize(horizontal: false, vertical: true)
                                 }
                                 if m.groupFindings.isEmpty {
-                                    if m.search.isEmpty { empty("No removable findings in this group.", "Protected categories are intentionally excluded from automatic cleanup.") }
+                                    if m.search.isEmpty { empty(String(localized: "No removable findings in this group."), String(localized: "Protected categories are intentionally excluded from automatic cleanup.")) }
                                     else {
-                                        empty("No paths match “\(m.search)”.", "The filter is hiding items in this list. Nothing was removed.")
+                                        empty(String(localized: "No paths match “\(m.search)”."), String(localized: "The filter is hiding items in this list. Nothing was removed."))
                                         Button("Clear filter") { m.search = "" }.buttonStyle(CleanupGlassButtonStyle(compact: true))
                                     }
                                 }
@@ -745,14 +763,25 @@ struct MainView: View {
             }
         }
     }
+    private var trashPillTitle: String {
+        guard let report = m.trashBins.report else { return String(localized: "Trash") }
+        let items = report.items.map { String(localized: "\($0) items") } ?? String(localized: "private", comment: "The Trash's item count, when macOS won't say what it holds")
+        if let bytes = report.bytes { return String(localized: "Trash · \(items) · \(formattedBytes(bytes))") }
+        return String(localized: "Trash · \(items)")
+    }
+    private var browsersPillTitle: String {
+        guard let reports = m.browsers.reports else { return String(localized: "Browsers") }
+        let bytes = reports.flatMap(\.items).reduce(UInt64(0)) { $0 + $1.bytes }
+        return String(localized: "Browsers · \(formattedBytes(bytes))")
+    }
     private var reviewBulkBar: some View {
         let scope = m.bulkScope, isWorktrees = !m.showAllFindings && m.group == .worktrees
         let chosen = m.reviewableWorktrees.filter { m.worktreeSelection.contains($0.id) }
         let count = isWorktrees ? chosen.count : m.selectedFindings.count
         let bytes = isWorktrees ? chosen.reduce(0) { $0 + $1.bytes } : m.selectedBytes
-        return BulkBar(title: m.showAllFindings ? "Select ready" : m.search.isEmpty ? "Select all" : "Select shown", isOn: Binding(get: { m.allSelected(scope) }, set: { m.setSelected(scope, $0) }), enabled: !scope.isEmpty && !m.busy,
-                       help: m.showAllFindings ? "Every category's ready items. Recent caches and running apps are chosen per category." : "Everything listed here that can be removed, including recently used caches. You confirm before anything goes.",
-                       summary: "\(count) selected · \(formattedBytes(bytes))") {
+        return BulkBar(title: m.showAllFindings ? String(localized: "Select ready") : m.search.isEmpty ? String(localized: "Select all") : String(localized: "Select shown"), isOn: Binding(get: { m.allSelected(scope) }, set: { m.setSelected(scope, $0) }), enabled: !scope.isEmpty && !m.busy,
+                       help: m.showAllFindings ? String(localized: "Every category's ready items. Recent caches and running apps are chosen per category.") : String(localized: "Everything listed here that can be removed, including recently used caches. You confirm before anything goes."),
+                       summary: String(localized: "\(count) selected · \(formattedBytes(bytes))")) {
             if isWorktrees {
                 Button("Delete \(count)…") { m.requestWorktreeRemoval(chosen) }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(count == 0 || m.busy)
             } else {
@@ -767,8 +796,8 @@ struct MainView: View {
             HStack(alignment: .top, spacing: 9) {
                 Image(systemName: "square.grid.2x2.fill").frame(width: 18).foregroundStyle(mint)
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("All").stewardFont(.body, weight: .semibold)
-                    Text(formattedBytes(m.overview.eligibleBytes) + " eligible").stewardFont(.caption).foregroundStyle(mint)
+                    Text("All", comment: "List row: every cleanup category").stewardFont(.body, weight: .semibold)
+                    Text("\(formattedBytes(m.overview.eligibleBytes)) eligible").stewardFont(.caption).foregroundStyle(mint)
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }.padding(10).frame(maxWidth: .infinity, alignment: .leading)
                 .background(m.showAllFindings ? mint.opacity(0.12) : .clear, in: RoundedRectangle(cornerRadius: 9))
@@ -804,9 +833,9 @@ struct MainView: View {
                 Image(systemName: group.icon).frame(width: 18).foregroundStyle(mint)
                 VStack(alignment: .leading, spacing: 5) {
                     Text(group.title).stewardFont(.body, weight: .medium)
-                    Text(items.isEmpty ? "No automatic removal" : "\(items.count) \(items.count == 1 ? "finding" : "findings")").stewardFont(.caption).foregroundStyle(muted)
+                    Text(items.isEmpty ? "No automatic removal" : "\(items.count) findings").stewardFont(.caption).foregroundStyle(muted)
                     if !items.isEmpty {
-                        Text(items.contains(where: { $0.safety == .automatic }) ? formattedBytes(items.filter { $0.safety == .automatic }.reduce(0) { $0 + $1.bytes }) : "Review")
+                        Text(items.contains(where: { $0.safety == .automatic }) ? formattedBytes(items.filter { $0.safety == .automatic }.reduce(0) { $0 + $1.bytes }) : String(localized: "Review", comment: "Button: open the details and choose what goes"))
                             .stewardFont(.caption, weight: .medium).foregroundStyle(mint)
                     }
                 }.fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
@@ -818,7 +847,7 @@ struct MainView: View {
     }
     private func categoryToggle(_ group: CleanupGroup?) -> some View {
         let eligible = !m.choosable(group).isEmpty
-        return Toggle("Select everything removable in " + (group?.title ?? "All"), isOn: Binding(get: { m.categorySelected(group) }, set: { m.setCategory(group, selected: $0) }))
+        return Toggle(group.map { String(localized: "Select everything removable in \($0.title)") } ?? String(localized: "Select everything removable in All"), isOn: Binding(get: { m.categorySelected(group) }, set: { m.setCategory(group, selected: $0) }))
             .toggleStyle(.stewardCheckboxOnly).disabled(!eligible || m.busy)
             .help(!eligible ? "Nothing here can be removed right now" : group == nil ? "Select every category's ready items" : "Select everything removable here, including recently used caches")
     }
@@ -839,30 +868,30 @@ struct MainView: View {
                 else { ForEach(finding.warnings ?? [], id: \.self) { Label($0, systemImage: "exclamationmark.triangle").stewardFont(.caption).foregroundStyle(.orange) } }
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Modified \(finding.modifiedAt.formatted(date: .abbreviated, time: .shortened))").stewardFont(.caption).foregroundStyle(muted)
-                    HStack { Button("Finder") { m.reveal(finding.path) }; if finding.rule == "xcode-managed-review" { Button("Open Xcode") { m.openXcode() } }; if finding.rule == BroadCaches.brewOldVersionsRule { Button("Run brew cleanup in Terminal") { m.runBrewCleanup(cellar: finding.path) }.help("Opens Terminal and runs Homebrew's own cleanup there") }; if finding.group == .worktrees { Button("Delete…") { m.requestWorktreeRemoval([finding]) }.disabled(m.busy || finding.safety != .review).help(finding.safety == .review ? "Review and delete this merged worktree" : finding.reason) }; if finding.safety == .automatic { Button("Select to clean") { m.selected.insert(finding.id) }.disabled(m.selected.contains(finding.id) || m.busy) }; Button("Keep") { m.ignore(finding) } }
+                    HStack { Button("Finder") { m.reveal(finding.path) }; if finding.rule == "xcode-managed-review" { Button("Open Xcode") { m.openXcode() } }; if finding.rule == BroadCaches.brewOldVersionsRule { Button("Run brew cleanup in Terminal") { m.runBrewCleanup(cellar: finding.path) }.help("Opens Terminal and runs Homebrew's own cleanup there") }; if finding.group == .worktrees { Button("Delete…") { m.requestWorktreeRemoval([finding]) }.disabled(m.busy || finding.safety != .review).help(finding.safety == .review ? String(localized: "Review and delete this merged worktree") : finding.reason) }; if finding.safety == .automatic { Button("Select to clean") { m.selected.insert(finding.id) }.disabled(m.selected.contains(finding.id) || m.busy) }; Button { m.ignore(finding) } label: { Text("Keep", comment: "Button: keep this item and never suggest it again") } }
                         .buttonStyle(.bordered).stewardFont(.body).foregroundStyle(mint)
                 }
             }
         }.padding(14).background(panel, in: RoundedRectangle(cornerRadius: 12))
     }
     private func usage(_ finding: Finding) -> String {
-        guard let used = finding.lastUsedAt else { return "No agent session in 90 days" }
-        if Date().timeIntervalSince(used) < 60 { return "In use now" }
-        return "Used " + used.formatted(.relative(presentation: .named))
+        guard let used = finding.lastUsedAt else { return String(localized: "No agent session in 90 days") }
+        if Date().timeIntervalSince(used) < 60 { return String(localized: "In use now") }
+        return String(localized: "Used: \(used.formatted(.relative(presentation: .named)))")
     }
-    private var worktreeSections: [(id: String, icon: String, detail: String, items: [Finding])] {
+    private var worktreeSections: [(id: String, name: String, icon: String, detail: String, items: [Finding])] {
         let trees = m.report?.findings.filter { $0.group == .worktrees } ?? []
         return [
-            ("Finished", "checkmark.circle", "Merged and not in use. Safe to delete.", trees.filter { !StewardModel.inUse($0) && $0.safety == .review }),
-            ("In use", "bolt.circle", "A running process or a Claude Code or Codex session used these in the last 24 hours.", trees.filter(StewardModel.inUse)),
-            ("Unfinished", "lock.circle", "Uncommitted edits or commits that are not merged. Always kept.", trees.filter { !StewardModel.inUse($0) && $0.safety != .review })
+            ("Finished", String(localized: "Finished", comment: "Worktrees: merged and not in use"), "checkmark.circle", String(localized: "Merged and not in use. Safe to delete."), trees.filter { !StewardModel.inUse($0) && $0.safety == .review }),
+            ("In use", String(localized: "In use"), "bolt.circle", String(localized: "A running process or a Claude Code or Codex session used these in the last 24 hours."), trees.filter(StewardModel.inUse)),
+            ("Unfinished", String(localized: "Unfinished", comment: "Worktrees: uncommitted or unmerged work"), "lock.circle", String(localized: "Uncommitted edits or commits that are not merged. Always kept."), trees.filter { !StewardModel.inUse($0) && $0.safety != .review })
         ]
     }
     var worktrees: some View {
         let sections = worktreeSections
         let current = sections.first { $0.id == worktreeSection } ?? sections[0]
         return VStack(alignment: .leading, spacing: 16) {
-            title("Your worktrees", "See what is in use. Delete what is finished.")
+            title(String(localized: "Your worktrees"), String(localized: "See what is in use. Delete what is finished."))
             GeometryReader { geometry in
                 HStack(alignment: .top, spacing: 16) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -871,7 +900,7 @@ struct MainView: View {
                                 HStack(spacing: 10) {
                                     Image(systemName: section.icon).frame(width: 20).foregroundStyle(mint)
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text(section.id).stewardFont(.body, weight: .semibold)
+                                        Text(section.name).stewardFont(.body, weight: .semibold)
                                         Text("\(section.items.count) · \(formattedBytes(section.items.reduce(0) { $0 + $1.bytes }))").stewardFont(.caption).foregroundStyle(muted)
                                     }
                                     Spacer()
@@ -887,11 +916,11 @@ struct MainView: View {
                         let finished = current.items.filter { $0.safety == .review && !StewardModel.inUse($0) }
                         let chosen = m.reviewableWorktrees.filter { m.worktreeSelection.contains($0.id) }
                         if !finished.isEmpty {
-                            BulkBar(title: "Select all", isOn: Binding(get: { m.allSelected(finished) }, set: { m.setSelected(finished, $0) }), enabled: !m.busy, summary: "\(chosen.count) selected · \(formattedBytes(chosen.reduce(0) { $0 + $1.bytes }))") {
+                            BulkBar(title: String(localized: "Select all"), isOn: Binding(get: { m.allSelected(finished) }, set: { m.setSelected(finished, $0) }), enabled: !m.busy, summary: String(localized: "\(chosen.count) selected · \(formattedBytes(chosen.reduce(0) { $0 + $1.bytes }))")) {
                                 Button("Delete \(chosen.count)…") { m.requestWorktreeRemoval(chosen) }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(chosen.isEmpty || m.busy)
                             }
                         }
-                        if current.items.isEmpty { empty(m.report == nil ? "Scan to inspect your worktrees." : "Nothing here.", "Claude Code and Codex checkouts appear here with Git evidence.") }
+                        if current.items.isEmpty { empty(m.report == nil ? String(localized: "Scan to inspect your worktrees.") : String(localized: "Nothing here."), String(localized: "Claude Code and Codex checkouts appear here with Git evidence.")) }
                         ScrollView {
                             LazyVStack(spacing: 2) { ForEach(current.items) { worktreeRow($0) } }
                         }
@@ -924,7 +953,7 @@ struct MainView: View {
     }
     var duplicatesDetails: some View {
         VStack(alignment: .leading, spacing: 20) {
-            if m.section != "My Clutter" { title("Same content. Clear evidence.", "Exact duplicate files anywhere in your home folder, compared locally by SHA-256.") }
+            if m.section != "My Clutter" { title(String(localized: "Same content. Clear evidence."), String(localized: "Exact duplicate files anywhere in your home folder, compared locally by SHA-256.")) }
             DuplicatesView { paths in m.recheckDuplicates(paths) { safe in duplicateTrash = TrashRequest(urls: safe.map { URL(fileURLWithPath: $0) }) } }
         }.sheet(item: $duplicateTrash) { request in
             TrashReviewSheet(urls: request.urls, duplicateGroups: m.duplicates) { results in m.removeDuplicates(results.filter { $0.error == nil }.map(\.path)) }
@@ -951,20 +980,20 @@ struct MainView: View {
                         Text("Cleaning now…").stewardFont(.callout)
                     } else if let last = keeper.lastRun {
                         Image(systemName: "checkmark.circle.fill").foregroundStyle(mint)
-                        Text("Last run \(last.formatted(.relative(presentation: .named))) · freed \(formattedBytes(keeper.lastFreed))").stewardFont(.callout)
+                        Text("Last run: \(last.formatted(.relative(presentation: .named))) · freed \(formattedBytes(keeper.lastFreed))").stewardFont(.callout)
                     } else {
                         Image(systemName: "clock").foregroundStyle(muted)
                         Text("First run starts in a moment.").stewardFont(.callout).foregroundStyle(muted)
                     }
                     Spacer()
-                    Button("Run now") { keeper.run(m.configuration) }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).disabled(keeper.running || m.busy)
+                    Button { keeper.run(m.configuration) } label: { Text("Run now", comment: "Button: run the space-keeping cleanup now") }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).disabled(keeper.running || m.busy)
                 }
                 if keeper.needsReview && !keeper.running {
                     HStack(spacing: 10) {
                         Image(systemName: "exclamationmark.circle.fill").foregroundStyle(.orange)
                         Text("Still low on space. Larger items need your choice.").stewardFont(.callout)
                         Spacer()
-                        Button("Review") { m.reviewLowSpace() }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(m.busy)
+                        Button { m.reviewLowSpace() } label: { Text("Review", comment: "Button: open the details and choose what goes") }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(m.busy)
                     }
                 }
                 if keeper.hasXcode {
@@ -980,7 +1009,7 @@ struct MainView: View {
     }
     var automation: some View {
         VStack(alignment: .leading, spacing: 24) {
-            title("A routine you can trust.", "Off by default. Conservative by design.")
+            title(String(localized: "A routine you can trust."), String(localized: "Off by default. Conservative by design."))
             keepSpaceFreeCard
             VStack(alignment: .leading, spacing: 20) {
                 Toggle(isOn: Binding(get: { m.scheduleEnabled }, set: { m.setSchedule($0) })) { VStack(alignment: .leading, spacing: 6) { Text("Daily safe cleanup").stewardFont(.headline); Text("12:15 local time, as your signed-in user. Install in Applications first.").stewardFont(.body).foregroundStyle(muted) } }.toggleStyle(.switch).tint(mint)
@@ -1000,17 +1029,17 @@ struct MainView: View {
     }
     var activity: some View {
         VStack(alignment: .leading, spacing: 20) {
-            title("A receipt, not a promise.", "Content removed and actual free-space change are different measurements.")
+            title(String(localized: "A receipt, not a promise."), String(localized: "Content removed and actual free-space change are different measurements."))
             Button("Open local receipts") { m.showReceipts() }.buttonStyle(.bordered)
             if let receipt = m.receipt {
                 HStack(spacing: 40) {
-                    metric("CACHES REMOVED", "\(receipt.removedCount)")
-                    metric("FREE BEFORE", formattedBytes(receipt.before.free))
-                    metric("FREE AFTER", formattedBytes(receipt.after.free))
+                    metric(String(localized: "CACHES REMOVED"), receipt.removedCount.formatted())
+                    metric(String(localized: "FREE BEFORE"), formattedBytes(receipt.before.free))
+                    metric(String(localized: "FREE AFTER"), formattedBytes(receipt.after.free))
                 }.padding(25).frame(maxWidth: .infinity, alignment: .leading).background(panel, in: RoundedRectangle(cornerRadius: 16))
                 Text("Measured change: \(receipt.measuredChange >= 0 ? "+" : "−")\(formattedBytes(UInt64(abs(receipt.measuredChange)))). Other applications and shared filesystem blocks can affect this number.").stewardFont(.body).foregroundStyle(muted)
-                ForEach(Array(receipt.items.enumerated()), id: \.offset) { _, item in VStack(alignment: .leading, spacing: 6) { HStack { Text(item.outcome.uppercased()).foregroundStyle(item.outcome == "removed" ? mint : .orange).stewardFont(.caption, weight: .bold); Text(URL(fileURLWithPath: item.path).lastPathComponent).stewardFont(.body) }; Text(item.detail).stewardFont(.callout).foregroundStyle(muted).textSelection(.enabled) }.padding(14).frame(maxWidth: .infinity, alignment: .leading).background(panel, in: RoundedRectangle(cornerRadius: 12)) }
-            } else { empty("No cleanup in this session.", "Older JSON receipts stay in your local application support folder.") }
+                ForEach(Array(receipt.items.enumerated()), id: \.offset) { _, item in VStack(alignment: .leading, spacing: 6) { HStack { Text(item.outcome == "removed" ? "REMOVED" : "SKIPPED", comment: "Receipt: what happened to this item").foregroundStyle(item.outcome == "removed" ? mint : .orange).stewardFont(.caption, weight: .bold); Text(URL(fileURLWithPath: item.path).lastPathComponent).stewardFont(.body) }; Text(item.detail).stewardFont(.callout).foregroundStyle(muted).textSelection(.enabled) }.padding(14).frame(maxWidth: .infinity, alignment: .leading).background(panel, in: RoundedRectangle(cornerRadius: 12)) }
+            } else { empty(String(localized: "No cleanup in this session."), String(localized: "Older JSON receipts stay in your local application support folder.")) }
         }
     }
     /// Groups that are always reviewed one by one, never cleaned from a tile.
@@ -1024,8 +1053,8 @@ struct MainView: View {
     private static func ready(_ findings: [Finding]) -> UInt64 { findings.filter { $0.safety == .automatic && !reviewOnlyGroups.contains($0.group) }.reduce(0) { $0 + $1.bytes } }
     private static func readyLine(_ findings: [Finding]) -> String {
         let ready = ready(findings), rest = found(findings) - min(found(findings), ready)
-        if ready > 0 && rest > 0 { return "\(formattedBytes(ready)) ready · \(formattedBytes(rest)) for you to choose" }
-        return ready > 0 ? "\(formattedBytes(ready)) ready to clean" : rest > 0 ? "Review to choose what goes" : "Nothing to clean"
+        if ready > 0 && rest > 0 { return String(localized: "\(formattedBytes(ready)) ready · \(formattedBytes(rest)) for you to choose") }
+        return ready > 0 ? String(localized: "\(formattedBytes(ready)) ready to clean") : rest > 0 ? String(localized: "Review to choose what goes") : String(localized: "Nothing to clean")
     }
     private var cleanupSummary: some View {
         let findings = m.report?.findings ?? []
@@ -1063,15 +1092,15 @@ struct MainView: View {
         var extras = [CleanExtra](), steps = [() -> Void]()
         if !items.isEmpty { m.review(); m.selected = Set(items.map(\.id)); steps.append { m.clean() } }
         if !worktrees.isEmpty {
-            extras.append(CleanExtra(icon: CleanupGroup.worktrees.icon, title: CleanupGroup.worktrees.title, bytes: worktrees.reduce(0) { $0 + $1.bytes }, warning: "Git rechecks each worktree next, and you confirm them one more time."))
+            extras.append(CleanExtra(icon: CleanupGroup.worktrees.icon, title: CleanupGroup.worktrees.title, bytes: worktrees.reduce(0) { $0 + $1.bytes }, warning: String(localized: "Git rechecks each worktree next, and you confirm them one more time.")))
             steps.append { m.requestWorktreeRemoval(worktrees) }
         }
         if !browsers.isEmpty {
-            extras.append(CleanExtra(icon: "globe", title: "Browser caches", bytes: browsers.reduce(0) { $0 + $1.bytes }))
+            extras.append(CleanExtra(icon: "globe", title: String(localized: "Browser caches"), bytes: browsers.reduce(0) { $0 + $1.bytes }))
             steps.append { m.browsers.selection = Set(browsers.map(\.id)); m.browsers.clean(on: m) { m.disk = .read() } }
         }
         if trash {
-            extras.append(CleanExtra(icon: "trash", title: "Trash", bytes: m.trashBins.report?.bytes, warning: "Everything in the Trash is deleted permanently and cannot be put back."))
+            extras.append(CleanExtra(icon: "trash", title: String(localized: "Trash"), bytes: m.trashBins.report?.bytes, warning: String(localized: "Everything in the Trash is deleted permanently and cannot be put back.")))
             steps.append { trashTicked = false; m.trashBins.empty(on: m) { m.disk = .read() } }
         }
         pendingFindings = items; pendingExtras = extras; pendingSteps = steps; confirmingClean = true
@@ -1084,8 +1113,8 @@ struct MainView: View {
         let report = m.trashBins.report
         let empty = report == nil || report?.items == 0
         let ticked = trashTicked && !empty
-        let status = empty ? (report == nil ? "Checking…" : "Empty") : !ticked ? "Not selected" : report?.bytes.map { formattedBytes($0) + " selected" } ?? "Selected"
-        return CategoryTile(amount: report?.bytes.map(formattedBytes), name: "Trash", tagline: "Deleted files still using space", art: "trash", status: status,
+        let status = empty ? (report == nil ? String(localized: "Checking…") : String(localized: "Empty", comment: "The Trash holds nothing")) : !ticked ? String(localized: "Not selected") : report?.bytes.map { String(localized: "\(formattedBytes($0)) selected") } ?? String(localized: "Selected")
+        return CategoryTile(amount: report?.bytes.map(formattedBytes), name: String(localized: "Trash"), tagline: String(localized: "Deleted files still using space"), art: "trash", status: status,
                             chosen: Binding(get: { ticked }, set: { trashTicked = $0 }), canChoose: !empty, review: { m.section = "Trash bins" },
                             clean: ticked ? { confirmRemoval([], trash: true) } : nil)
     }
@@ -1095,8 +1124,8 @@ struct MainView: View {
         let closed = closedBrowserCaches
         let bytes: UInt64 = closed.reduce(0) { $0 + $1.bytes }
         let ticked = browsersTicked && !closed.isEmpty
-        let status = reports == nil ? "Checking…" : closed.isEmpty ? (found > 0 ? "Browser open" : "Nothing to clean") : ticked ? formattedBytes(bytes) + " selected" : "Not selected"
-        return CategoryTile(amount: reports.map { _ in formattedBytes(found) }, name: "Browser caches", tagline: "Rebuilt as you browse. You stay signed in.", art: "globe",
+        let status = reports == nil ? String(localized: "Checking…") : closed.isEmpty ? (found > 0 ? String(localized: "Browser open") : String(localized: "Nothing to clean")) : ticked ? String(localized: "\(formattedBytes(bytes)) selected") : String(localized: "Not selected")
+        return CategoryTile(amount: reports.map { _ in formattedBytes(found) }, name: String(localized: "Browser caches"), tagline: String(localized: "Rebuilt as you browse. You stay signed in."), art: "globe",
                             appIcons: CategoryArt.appIcons(bundleIDs: reports?.map(\.bundleID) ?? []), status: status,
                             chosen: Binding(get: { ticked }, set: { browsersTicked = $0 }), canChoose: !closed.isEmpty, review: { m.section = "Browsers" },
                             clean: ticked ? { confirmRemoval([], browsers: closed) } : nil)
@@ -1117,7 +1146,7 @@ struct MainView: View {
         let ticked = choosable.filter { (isWorktrees ? m.worktreeSelection : m.selected).contains($0.id) }
         let tickedBytes = ticked.reduce(UInt64(0)) { $0 + $1.bytes }
         let inUse = items.contains { $0.hold == .inUse }
-        let status: String = tickedBytes > 0 ? formattedBytes(tickedBytes) + " selected" : !choosable.isEmpty ? "Not selected" : inUse ? "In use" : "Kept"
+        let status: String = tickedBytes > 0 ? String(localized: "\(formattedBytes(tickedBytes)) selected") : !choosable.isEmpty ? String(localized: "Not selected") : inUse ? String(localized: "In use") : String(localized: "Kept")
         let chosen = Binding<Bool>(get: { !ticked.isEmpty }, set: { on in
             // Ticking takes everything you can delete in the tile; unticking clears it. Review picks single items.
             let ids = choosable.map(\.id)
@@ -1133,13 +1162,13 @@ struct MainView: View {
     func module<Content: View>(_ heading: String, _ detail: String, tabs: [String], selection: Binding<String>, summary: [String], scanAll: @escaping () -> Void, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack(alignment: .top) {
-                title(heading, detail)
+                title(sectionTitle(heading), detail)
                 Spacer()
                 Button("Scan all") { scanAll() }.buttonStyle(CleanupGlassButtonStyle()).disabled(m.busy)
             }
             // Same segment control as Settings; what the module's scan found for this tab sits beside it.
             HStack(spacing: 12) {
-                Picker(heading, selection: selection) { ForEach(tabs, id: \.self) { Text($0).tag($0) } }.pickerStyle(.segmented).labelsHidden().fixedSize()
+                Picker(sectionTitle(heading), selection: selection) { ForEach(tabs, id: \.self) { Text(sectionTitle($0)).tag($0) } }.pickerStyle(.segmented).labelsHidden().fixedSize()
                 Spacer(minLength: 8)
                 if let index = tabs.firstIndex(of: selection.wrappedValue), index < summary.count {
                     Text(summary[index]).stewardFont(.callout, weight: .medium).foregroundStyle(muted).lineLimit(1)
@@ -1149,17 +1178,28 @@ struct MainView: View {
         }
     }
     private var clutterSummary: [String] {
-        [m.duplicateChecked ? "\(m.duplicates.count) groups · \(formattedBytes(m.duplicates.reduce(0) { $0 + $1.potentialBytes }))" : "Not scanned",
-         m.largeFiles.report.map { "\($0.files.count) files · \(formattedBytes($0.files.reduce(0) { $0 + $1.localBytes }))" } ?? (m.largeFiles.task != nil ? "Scanning…" : "Not scanned")]
+        [m.duplicateChecked ? String(localized: "\(m.duplicates.count) groups · \(formattedBytes(m.duplicates.reduce(0) { $0 + $1.potentialBytes }))") : String(localized: "Not scanned"),
+         m.largeFiles.report.map { String(localized: "\($0.files.count) files · \(formattedBytes($0.files.reduce(0) { $0 + $1.localBytes }))") } ?? (m.largeFiles.task != nil ? String(localized: "Scanning…") : String(localized: "Not scanned"))]
     }
     private func scanClutter() { m.scanDuplicates(); m.largeFiles.scan(m.largeFileLocation.url) }
     private var performanceSummary: [String] {
         // Health and pressure, not a GB figure: this card refreshes throttled, so a live number would disagree with the ring below.
-        [m.memory.reading.map { "Health \(MemoryVerdict.evaluate(pressure: $0.pressure, swap: $0.swap, total: $0.total, loginItems: m.startup.loginItems?.count).score) · " + $0.pressure.rawValue + " pressure" } ?? "Reading…",
-         m.startup.loginItems.map { "\($0.count) at login · \(m.startup.agents.count) agents" } ?? "Not scanned"]
+        [m.memory.reading.map { reading in
+            let score = MemoryVerdict.evaluate(pressure: reading.pressure, swap: reading.swap, total: reading.total, loginItems: m.startup.loginItems?.count).score
+            switch reading.pressure {
+            case .normal: return String(localized: "Health \(score) · Normal pressure")
+            case .warning: return String(localized: "Health \(score) · Elevated pressure")
+            case .critical: return String(localized: "Health \(score) · High pressure")
+            case .unknown: return String(localized: "Health \(score) · Pressure unavailable")
+            }
+        } ?? String(localized: "Reading…"),
+         m.startup.loginItems.map { items in
+            let agents = String(localized: "\(m.startup.agents.count) agents")
+            return String(localized: "\(items.count) at login · \(agents)")
+        } ?? String(localized: "Not scanned")]
     }
     private var applicationsSummary: [String] {
-        ["Installed apps", m.leftovers.items.map { "\($0.count) · \(formattedBytes($0.reduce(0) { $0 + $1.bytes }))" } ?? (m.leftovers.busy ? "Scanning…" : "Not scanned")]
+        [String(localized: "Installed apps"), m.leftovers.items.map { String(localized: "\($0.count) · \(formattedBytes($0.reduce(0) { $0 + $1.bytes }))") } ?? (m.leftovers.busy ? String(localized: "Scanning…") : String(localized: "Not scanned"))]
     }
     func title(_ heading: String, _ detail: String) -> some View { VStack(alignment: .leading, spacing: 10) { Text(heading).stewardFont(.title, weight: .semibold).tracking(-0.5); Text(detail).stewardFont(.body).foregroundStyle(muted) }.padding(.bottom, 7) }
     func empty(_ heading: String, _ detail: String) -> some View { VStack(alignment: .leading, spacing: 10) { Text(heading).stewardFont(.headline, weight: .medium); Text(detail).stewardFont(.body).foregroundStyle(muted) }.padding(23).frame(maxWidth: .infinity, alignment: .leading).background(panel, in: RoundedRectangle(cornerRadius: 14)) }
@@ -1233,3 +1273,13 @@ private struct OverlayScrollers: ViewModifier {
     }
 }
 extension View { func overlayScrollers() -> some View { modifier(OverlayScrollers()) } }
+
+/// A note's first sentence, by the text's own punctuation: Japanese ends one with "。", and a German "z. B." doesn't.
+private func firstSentence(_ text: String) -> String {
+    var first = text
+    text.enumerateSubstrings(in: text.startIndex..., options: .bySentences) { sentence, _, _, stop in
+        first = sentence?.trimmingCharacters(in: .whitespaces) ?? text
+        stop = true
+    }
+    return first
+}

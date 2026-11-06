@@ -26,27 +26,27 @@ public final class Scanner: @unchecked Sendable {
         // Checks start on a few workers as soon as discovery plans them, so results are gathered under a lock.
         let resultLock = NSLock()
         func collect(_ body: () -> Void) { resultLock.lock(); body(); resultLock.unlock() }
-        var checklistLimited = false, planned = 0, completed = 0, failure: Error?, stopped = false, latest: String?
+        var checklistLimited = false, planned = 0, completed = 0, failure: Error?, stopped = false, latest: String?, latestStep = ScanStep.access
         let checkLimit = max(1, maximumChecks)
         let queue = OperationQueue(), running = DispatchGroup()
         // Utility priority: faster, while macOS keeps the Mac responsive for the user.
         queue.maxConcurrentOperationCount = workerOverride ?? ScanPacing.workers(); queue.qualityOfService = priority == .userInitiated ? .userInitiated : .utility
-        func progress(_ message: String) { status(ScanProgress(message: "Preparing scan… " + message)) }
+        func progress(_ message: String) { status(ScanProgress(message: String(localized: "Preparing scan… \(message)"))) }
         try Task.checkCancellation()
-        progress("Checking running apps and open files…")
+        progress(String(localized: "Checking running apps and open files…"))
         // lsof takes about a second; discovery doesn't need it, so it runs alongside. Checks wait for it: their own
         // git and simctl processes must not appear in the snapshot as other apps' activity.
         let capture = Pending(priority) { activityOverride ?? ActivitySnapshot.capture() }
         var activity: ActivitySnapshot { capture.value }
         /// `independent` checks start without the activity snapshot: nothing they run looks like a candidate's user.
-        func plan(_ label: String, independent: Bool = false, _ check: @escaping () throws -> Void) {
+        func plan(_ label: String, step: ScanStep = .caches, independent: Bool = false, _ check: @escaping () throws -> Void) {
             resultLock.lock(); defer { resultLock.unlock() }
             guard planned < checkLimit else { checklistLimited = true; return }
             planned += 1; running.enter()
             queue.addOperation {
                 defer { running.leave() }
                 // Workers only note what they start; the scan thread reports it.
-                resultLock.lock(); let skip = stopped || failure != nil; if !skip { latest = label }; resultLock.unlock()
+                resultLock.lock(); let skip = stopped || failure != nil; if !skip { latest = label; latestStep = step }; resultLock.unlock()
                 guard !skip else { return }
                 if !independent { _ = capture.value }
                 do { try check() } catch { collect { failure = failure ?? error } }
@@ -55,33 +55,34 @@ public final class Scanner: @unchecked Sendable {
         }
         // However the scan ends, no check is still running once it returns.
         defer { collect { stopped = true }; running.wait() }
-        if DeveloperTools.gitExecutable == nil && !configuration.projectRoots.isEmpty { notices.append("Git is unavailable. Git-dependent caches remain protected and worktree checks are skipped; install Git or Command Line Tools to enable verification.") }
+        if DeveloperTools.gitExecutable == nil && !configuration.projectRoots.isEmpty { notices.append(String(localized: "Git is unavailable. Git-dependent caches remain protected and worktree checks are skipped; install Git or Command Line Tools to enable verification.")) }
         try Task.checkCancellation()
-        progress("Checking access to project folders…")
+        progress(String(localized: "Checking access to project folders…"))
         for root in configuration.projectRoots + [configuration.agentTemp] where FileManager.default.fileExists(atPath: root.path) {
             try Task.checkCancellation()
             do { _ = try FileManager.default.contentsOfDirectory(atPath: root.path) }
-            catch { notices.append("Cannot read \(root.path): \(error.localizedDescription). Grant folder access in macOS Privacy & Security if needed.") }
+            catch { notices.append(String(localized: "Cannot read \(root.path): \(error.localizedDescription). Grant folder access in macOS Privacy & Security if needed.")) }
         }
         let policy = SafetyPolicy(configuration: configuration)
         let runningApps = BroadCaches.runningApps()
         summaries?.prepare(watching: [configuration.home, configuration.agentTemp] + configuration.projectRoots)
         /// `busy` runs inside the check rather than during discovery: per-project git calls would serialize the walk.
         func add(_ url: URL, group: CleanupGroup, rule: String, reason: String, busy: (() -> Bool)? = nil) {
+            let path = url.path.replacingOccurrences(of: configuration.home.path, with: "~")
             let label: String
             switch group {
-            case .agentBuilds: label = "Inspecting session build caches"
-            case .xcode: label = rule == "simulator-cache" ? "Inspecting simulator caches" : "Inspecting Xcode build intermediates"
-            case .developerCaches: label = "Inspecting developer caches"
-            case .projectCaches: label = "Inspecting project caches"
-            case .inactiveDependencies: label = "Inspecting idle project dependencies"
-            case .userCaches: label = rule == "application-web-cache" ? "Inspecting application web caches" : "Inspecting app caches"
-            default: label = "Inspecting old user logs"
+            case .agentBuilds: label = String(localized: "Inspecting session build caches: \(path)")
+            case .xcode: label = rule == "simulator-cache" ? String(localized: "Inspecting simulator caches: \(path)") : String(localized: "Inspecting Xcode build intermediates: \(path)")
+            case .developerCaches: label = String(localized: "Inspecting developer caches: \(path)")
+            case .projectCaches: label = String(localized: "Inspecting project caches: \(path)")
+            case .inactiveDependencies: label = String(localized: "Inspecting idle project dependencies: \(path)")
+            case .userCaches: label = rule == "application-web-cache" ? String(localized: "Inspecting application web caches: \(path)") : String(localized: "Inspecting app caches: \(path)")
+            default: label = String(localized: "Inspecting old user logs: \(path)")
             }
             // A check with a `busy` test starts after the open-files snapshot, like before. The others measure their
             // folder while lsof runs (the snapshot leaves out this process's own files) and wait for it only before
             // the first Git call: Git processes must not appear in the snapshot as other apps' activity.
-            plan(label + ": " + url.path.replacingOccurrences(of: configuration.home.path, with: "~"), independent: busy == nil) {
+            plan(label, step: group == .userLogs || group == .systemLogs ? .logs : .caches, independent: busy == nil) {
             do {
                 if let busy, busy() { return }
                 // Totals only; the full per-file inventory runs right before removal.
@@ -100,7 +101,7 @@ public final class Scanner: @unchecked Sendable {
                 let active = activity.isActive(url) || DeveloperJunk.producerActive(rule: rule, path: url.path, activity: activity) || (rule == "application-web-cache" && ApplicationWebCaches.producerActive(url, home: self.configuration.home, activity: activity))
                     || (rule == "app-cache" && BroadCaches.ownerRunning(url.lastPathComponent, running: runningApps)) || (rule == "simulator-cache" && BroadCaches.simulatorRunning(activity))
                 let safe = old && !active && activity.reliable
-                let note = active ? "In use: its app or a running process uses it." : !old ? "Used or modified within the last \(days) days." : !activity.reliable ? "Protected: process inspection is incomplete." : reason
+                let note = active ? String(localized: "In use: its app or a running process uses it.") : !old ? String(localized: "Used or modified within the last \(days) days.") : !activity.reliable ? String(localized: "Protected: process inspection is incomplete.") : reason
                 let hold: Hold? = safe ? nil : active ? .inUse : !old ? .recent : .unverified
                 // Only an app-owned cache gets an owner: that's the one case Artifloam can resolve by quitting an app.
                 let owner = hold == .inUse && rule == "app-cache" ? BroadCaches.owner(of: url.lastPathComponent, running: runningApps) : nil
@@ -112,72 +113,72 @@ public final class Scanner: @unchecked Sendable {
         // The longest single checks start first, so they overlap everything else instead of finishing last.
         if configuration.includeDeveloperCaches, wants(.developerCaches), configuration.home.standardizedFileURL == FileManager.default.homeDirectoryForCurrentUser.standardizedFileURL,
            let cellar = BroadCaches.cellars.first(where: { FileManager.default.fileExists(atPath: $0) }) {
-            plan("Measuring old Homebrew versions…", independent: true) {
+            plan(String(localized: "Measuring old Homebrew versions…"), independent: true) {
                 let old = BroadCaches.oldVersions(cellar: URL(fileURLWithPath: cellar))
                 let bytes = old.reduce(UInt64(0)) { $0 + directoryBytes($1) }
                 guard bytes > 1_000_000 else { return }
-                collect { findings.append(Finding(path: cellar, group: .developerCaches, bytes: bytes, modifiedAt: Date(), safety: .review, reason: "\(old.count) older \(old.count == 1 ? "version" : "versions") of installed formulae. Homebrew removes these itself, in Terminal, where you can watch it.", rule: BroadCaches.brewOldVersionsRule, fingerprint: "review-only", label: "Old Homebrew versions")) }
+                collect { findings.append(Finding(path: cellar, group: .developerCaches, bytes: bytes, modifiedAt: Date(), safety: .review, reason: String(localized: "\(old.count) older versions of installed formulae. Homebrew removes these itself, in Terminal, where you can watch it."), rule: BroadCaches.brewOldVersionsRule, fingerprint: "review-only", label: String(localized: "Old Homebrew versions"))) }
             }
         }
-        if wants(.worktrees) { plan("Reviewing Git worktrees…") { let rows = self.worktreeFindings(activity: activity); collect { findings += rows } } }
+        if wants(.worktrees) { plan(String(localized: "Reviewing Git worktrees…"), step: .worktrees) { let rows = self.worktreeFindings(activity: activity); collect { findings += rows } } }
         if wants(.xcode) {
-            plan("Reviewing Xcode storage…") {
+            plan(String(localized: "Reviewing Xcode storage…")) {
                 let xcodeStorage = XcodeStorageInventory.inspect(home: self.configuration.home, ignoredPaths: self.configuration.ignoredPaths)
                 collect { findings += xcodeStorage.findings; notices += xcodeStorage.notices }
             }
         }
         if wants(.agentBuilds) {
-        progress("Inspecting Claude temporary builds…")
+        progress(String(localized: "Inspecting Claude temporary builds…"))
         walk(configuration.agentTemp, maximumDepth: 8) { url, names in
             if names.contains("Build") && (names.contains("info.plist") || names.contains("ModuleCache.noindex")) {
                 for relative in ["Build/Intermediates.noindex", "ModuleCache.noindex", "SDKStatCaches.noindex", "CompilationCache.noindex"] {
                     let p = url.appendingPathComponent(relative, isDirectory: true)
-                    if FileManager.default.fileExists(atPath: p.path) { add(p, group: .agentBuilds, rule: "agent-xcode-intermediates", reason: "Regenerable temporary build cache; no source, app products or archives.") }
+                    if FileManager.default.fileExists(atPath: p.path) { add(p, group: .agentBuilds, rule: "agent-xcode-intermediates", reason: String(localized: "Regenerable temporary build cache; no source, app products or archives.")) }
                 }
                 return false
             }
             return true
         }
-        progress("Inspecting old AI tool versions…")
+        progress(String(localized: "Inspecting old AI tool versions…"))
         for root in DeveloperJunk.agentVersionRoots(home: configuration.home) {
             for version in DeveloperJunk.oldAgentVersions(in: root) {
-                add(version, group: .agentBuilds, rule: "old-agent-version", reason: "Older copy of an AI tool; the newest version stays and is the one that runs.")
+                add(version, group: .agentBuilds, rule: "old-agent-version", reason: String(localized: "Older copy of an AI tool; the newest version stays and is the one that runs."))
             }
         }
         }
         let derived = configuration.home.appendingPathComponent("Library/Developer/Xcode/DerivedData")
         if wants(.xcode) {
-        progress("Inspecting Xcode build intermediates…")
+        progress(String(localized: "Inspecting Xcode build intermediates…"))
         for project in children(derived) {
             let intermediates = project.appendingPathComponent("Build/Intermediates.noindex", isDirectory: true)
-            if FileManager.default.fileExists(atPath: intermediates.path) { add(intermediates, group: .xcode, rule: "xcode-intermediates", reason: "Regenerable compiler output. Final products, archives and source packages are preserved.") }
+            if FileManager.default.fileExists(atPath: intermediates.path) { add(intermediates, group: .xcode, rule: "xcode-intermediates", reason: String(localized: "Regenerable compiler output. Final products, archives and source packages are preserved.")) }
         }
         }
         // Simulator asset folders are the slowest single checks; planned before thousands of Gradle folders, they start first.
         if wants(.xcode) {
-        progress("Inspecting simulator caches…")
+        progress(String(localized: "Inspecting simulator caches…"))
         for candidate in BroadCaches.simulatorCandidates(home: configuration.home) {
-            add(candidate.url, group: .xcode, rule: "simulator-cache", reason: candidate.label + ". iOS downloads these again when the simulator needs them.")
+            add(candidate.url, group: .xcode, rule: "simulator-cache", reason: String(localized: "\(candidate.label). iOS downloads these again when the simulator needs them."))
         }
         }
         if configuration.includeDeveloperCaches && wants(.developerCaches) {
-            progress("Inspecting developer caches…")
+            progress(String(localized: "Inspecting developer caches…"))
             for (index, cache) in DeveloperJunk.gradleCandidates(home: configuration.home).enumerated() {
                 try Task.checkCancellation()
-                if index.isMultiple(of: 100) { progress("Inspecting developer caches: " + cache.path.replacingOccurrences(of: configuration.home.path, with: "~")) }
-                add(cache, group: .developerCaches, rule: "gradle-generated-cache", reason: "Generated Gradle output unused for at least 30 days. Dependencies, wrappers and configuration are kept.")
+                if index.isMultiple(of: 100) { let path = cache.path.replacingOccurrences(of: configuration.home.path, with: "~"); progress(String(localized: "Inspecting developer caches: \(path)")) }
+                add(cache, group: .developerCaches, rule: "gradle-generated-cache", reason: String(localized: "Generated Gradle output unused for at least 30 days. Dependencies, wrappers and configuration are kept."))
             }
             for cache in children(derived.appendingPathComponent("ModuleCache.noindex")) {
-                add(cache, group: .developerCaches, rule: "xcode-module-cache", reason: "Regenerable compiler module cache unused for at least 30 days.")
+                add(cache, group: .developerCaches, rule: "xcode-module-cache", reason: String(localized: "Regenerable compiler module cache unused for at least 30 days."))
             }
             let npm = configuration.home.appendingPathComponent(".npm/_cacache")
             // Measured and removed here rather than by running `brew`: that binary is writable by any process of this user.
             let homebrew = configuration.home.appendingPathComponent("Library/Caches/Homebrew")
-            if FileManager.default.fileExists(atPath: homebrew.path) { add(homebrew, group: .developerCaches, rule: "homebrew-cache", reason: "Homebrew's download cache, unused for at least 30 days. Installed formulae stay; Homebrew downloads again when needed.") }
-            if FileManager.default.fileExists(atPath: npm.path) { add(npm, group: .developerCaches, rule: "npm-cache", reason: "npm's download cache, unused for at least 30 days. npm downloads packages again when needed; projects keep what they installed.") }
+            if FileManager.default.fileExists(atPath: homebrew.path) { add(homebrew, group: .developerCaches, rule: "homebrew-cache", reason: String(localized: "Homebrew's download cache, unused for at least 30 days. Installed formulae stay; Homebrew downloads again when needed.")) }
+            if FileManager.default.fileExists(atPath: npm.path) { add(npm, group: .developerCaches, rule: "npm-cache", reason: String(localized: "npm's download cache, unused for at least 30 days. npm downloads packages again when needed; projects keep what they installed.")) }
         }
         let sessions = wants(.inactiveDependencies) ? AgentSessionIndex.load(claudeHome: configuration.claudeHome, codexHome: configuration.codexHome) : AgentSessionIndex()
-        progress("Inspecting project caches…")
+        progress(String(localized: "Inspecting project caches…"))
         // Each project is walked on its own thread; the scan thread reports where they are and passes on a cancel.
         let walkers = DispatchGroup()
         var walking: String?
@@ -198,7 +199,7 @@ public final class Scanner: @unchecked Sendable {
                 for folder in ["node_modules", "target", ".build"] where names.contains(folder) {
                     let candidate = url.appendingPathComponent(folder, isDirectory: true)
                     if ProjectActivity.dependencyFolder(candidate) {
-                        add(candidate, group: .inactiveDependencies, rule: "inactive-dependencies", reason: "Project idle for 30+ days. Reinstall with the project's package manager when you need it again.",
+                        add(candidate, group: .inactiveDependencies, rule: "inactive-dependencies", reason: String(localized: "Project idle for 30+ days. Reinstall with the project's package manager when you need it again."),
                             busy: { ProjectActivity.busyReason(url, activity: activity, sessions: sessions) != nil })
                     }
                 }
@@ -206,40 +207,40 @@ public final class Scanner: @unchecked Sendable {
             guard self.wants(.projectCaches) else { return true }
             if name == "cache" && url.deletingLastPathComponent().lastPathComponent == ".nx" {
                 for task in children(url) where !task.lastPathComponent.isEmpty && task.lastPathComponent.allSatisfy(\.isNumber) {
-                    add(task, group: .projectCaches, rule: "nx-task-cache", reason: "Old Nx task output; current tasks, locks and workspace metadata are preserved.")
+                    add(task, group: .projectCaches, rule: "nx-task-cache", reason: String(localized: "Old Nx task output; current tasks, locks and workspace metadata are preserved."))
                 }
                 return false
             }
             if name == "cache" && [".next", ".angular"].contains(url.deletingLastPathComponent().lastPathComponent) {
-                add(url, group: .projectCaches, rule: "framework-cache", reason: "Regenerable framework cache; Git confirms that it is ignored and untracked."); return false
+                add(url, group: .projectCaches, rule: "framework-cache", reason: String(localized: "Regenerable framework cache; Git confirms that it is ignored and untracked.")); return false
             }
-            if name == "__pycache__" { add(url, group: .projectCaches, rule: "python-bytecode", reason: "Compiled Python bytecode. Original .py files stay."); return false }
-            if [".pytest_cache", ".mypy_cache", ".ruff_cache"].contains(name) { add(url, group: .projectCaches, rule: "project-test-cache", reason: "Regenerable test or analysis cache."); return false }
+            if name == "__pycache__" { add(url, group: .projectCaches, rule: "python-bytecode", reason: String(localized: "Compiled Python bytecode. Original .py files stay.")); return false }
+            if [".pytest_cache", ".mypy_cache", ".ruff_cache"].contains(name) { add(url, group: .projectCaches, rule: "project-test-cache", reason: String(localized: "Regenerable test or analysis cache.")); return false }
             return true
         }
         }
         }
         if configuration.includeApplicationCaches && wants(.userCaches) {
-            progress("Inspecting app caches…")
+            progress(String(localized: "Inspecting app caches…"))
             for url in BroadCaches.appCacheCandidates(home: configuration.home) {
-                add(url, group: .userCaches, rule: "app-cache", reason: "Cache its app rebuilds when needed. Settings, documents and sign-ins are elsewhere.")
+                add(url, group: .userCaches, rule: "app-cache", reason: String(localized: "Cache its app rebuilds when needed. Settings, documents and sign-ins are elsewhere."))
             }
             for url in BroadCaches.xdgCandidates(home: configuration.home) {
-                add(url, group: .userCaches, rule: "xdg-cache", reason: "Command-line tool cache in ~/.cache; downloaded again when needed.")
+                add(url, group: .userCaches, rule: "xdg-cache", reason: String(localized: "Command-line tool cache in ~/.cache; downloaded again when needed."))
             }
-            progress("Inspecting application web caches…")
+            progress(String(localized: "Inspecting application web caches…"))
             for location in ApplicationWebCaches.locations {
                 let relative = location.path
                 for file in children(configuration.home.appendingPathComponent(relative)) where file.lastPathComponent != "index" {
-                    add(file, group: .userCaches, rule: "application-web-cache", reason: "Old web cache entry; accounts, cookies and application data are preserved.")
+                    add(file, group: .userCaches, rule: "application-web-cache", reason: String(localized: "Old web cache entry; accounts, cookies and application data are preserved."))
                 }
             }
         }
         if wants(.userLogs) {
-        progress("Inspecting old user logs…")
+        progress(String(localized: "Inspecting old user logs…"))
         let logs = configuration.home.appendingPathComponent("Library/Logs")
         walk(logs, maximumDepth: 3, includeFiles: true) { url, _ in
-            if url.pathExtension == "log" { add(url, group: .userLogs, rule: "old-user-log", reason: "Recognised application log older than 30 days; settings and conversation history are kept.") }
+            if url.pathExtension == "log" { add(url, group: .userLogs, rule: "old-user-log", reason: String(localized: "Recognised application log older than 30 days; settings and conversation history are kept.")) }
             return true
         }
         }
@@ -247,7 +248,7 @@ public final class Scanner: @unchecked Sendable {
         for (bundle, app) in [("com.microsoft.Word", "WORD"), ("com.microsoft.Excel", "EXCEL"), ("com.microsoft.Powerpoint", "POWERPNT")] {
             let diagnostics = configuration.home.appendingPathComponent("Library/Containers/\(bundle)/Data/Library/Logs/Diagnostics/\(app)")
             walk(diagnostics, maximumDepth: 2, includeFiles: true) { url, _ in
-                if url.pathExtension == "log" { add(url, group: .userLogs, rule: "old-user-log", reason: "Old Office diagnostic log. Documents, recovery files and settings are kept.") }
+                if url.pathExtension == "log" { add(url, group: .userLogs, rule: "old-user-log", reason: String(localized: "Old Office diagnostic log. Documents, recovery files and settings are kept.")) }
                 return true
             }
         }
@@ -257,23 +258,23 @@ public final class Scanner: @unchecked Sendable {
         while walkers.wait(timeout: .now() + 0.05) == .timedOut {
             if Task.isCancelled { collect { stopped = true }; continue }
             resultLock.lock(); let now = walking; resultLock.unlock()
-            if let now, now != shown { progress("Inspecting project caches: \(now)…"); shown = now }
+            if let now, now != shown { progress(String(localized: "Inspecting project caches: \(now)…")); shown = now }
         }
         try Task.checkCancellation()
         resultLock.lock(); let total = planned, done = completed, limited = checklistLimited; resultLock.unlock()
-        if limited { collect { notices.append("The scan checklist reached \(checkLimit) checks. Some candidates were not inspected; narrow the selected locations and scan again.") } }
+        if limited { collect { notices.append(String(localized: "The scan checklist reached \(checkLimit) checks. Some candidates were not inspected; narrow the selected locations and scan again.")) } }
         // Checks already finished during discovery count straight away.
-        status(ScanProgress(message: "Checking discovered items…", completed: done, total: total))
+        status(ScanProgress(message: String(localized: "Checking discovered items…"), completed: done, total: total))
         var reported = (done, String?.none)
         while running.wait(timeout: .now() + 0.05) == .timedOut {
             if Task.isCancelled { collect { stopped = true }; continue }
-            resultLock.lock(); let now = (completed, latest); resultLock.unlock()
-            if now != reported, let label = now.1 { status(ScanProgress(message: label, completed: now.0, total: total)); reported = now }
+            resultLock.lock(); let now = (completed, latest), step = latestStep; resultLock.unlock()
+            if now != reported, let label = now.1 { status(ScanProgress(message: label, completed: now.0, total: total, step: step)); reported = now }
         }
         try Task.checkCancellation()
         if let failure { throw failure }
-        if !activity.reliable { notices.append("Open-file inspection was incomplete. Automatic cleanup will remain blocked until it can be verified.") }
-        status(ScanProgress(message: "Checking discovered items…", completed: total, total: total))
+        if !activity.reliable { notices.append(String(localized: "Open-file inspection was incomplete. Automatic cleanup will remain blocked until it can be verified.")) }
+        status(ScanProgress(message: String(localized: "Checking discovered items…"), completed: total, total: total))
         let unique = Dictionary(findings.map { ($0.path, $0) }, uniquingKeysWith: { first, _ in first })
         try Task.checkCancellation()
         return ScanReport(home: configuration.home.path, findings: XcodeStorageInventory.countingNestedCachesOnce(Array(unique.values)).sorted { $0.bytes > $1.bytes }, notices: notices)
@@ -303,7 +304,7 @@ public final class Scanner: @unchecked Sendable {
         return parallelMap(paths) { path in
             let url = URL(fileURLWithPath: path, isDirectory: true)
             let verdict = WorktreeReview.assess(path, configuration: configuration, activity: activity, sessions: sessions)
-            let merged = verdict.unmerged > 0 ? [] : [verdict.base == "HEAD" ? "Merged into the primary checkout." : "Merged into \(verdict.base)."]
+            let merged = verdict.unmerged > 0 ? [] : [verdict.base == "HEAD" ? String(localized: "Merged into the primary checkout.") : String(localized: "Merged into \(verdict.base).")]
             let reason = verdict.blocker ?? (merged + verdict.warnings).joined(separator: " ")
             let values = try? url.resourceValues(forKeys: [.contentModificationDateKey])
             return Finding(path: path, group: .worktrees, bytes: directoryBytes(url), modifiedAt: values?.contentModificationDate ?? Date(), safety: verdict.blocker == nil ? .review : .protected, reason: reason, rule: "worktree-review-only", fingerprint: verdict.fingerprint, lastUsedAt: verdict.lastUsed, warnings: verdict.warnings)

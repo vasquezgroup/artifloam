@@ -81,7 +81,14 @@ final class MacHealthMonitor: ObservableObject {
             let center = UNUserNotificationCenter.current()
             let content = UNMutableNotificationContent()
             content.title = issue.title
-            content.body = issue.fixLabel.map { "Open Artifloam from the leaf in the menu bar to \($0.lowercased())." } ?? "Open Artifloam from the leaf in the menu bar for details."
+            switch issue.fix {
+            case .quit: content.body = String(localized: "Open Artifloam from the leaf in the menu bar to quit the app.")
+            case .forceQuit: content.body = String(localized: "Open Artifloam from the leaf in the menu bar to force quit the app.")
+            case .freeSpace: content.body = String(localized: "Open Artifloam from the leaf in the menu bar to free up space.")
+            case .quitIdleApps: content.body = String(localized: "Open Artifloam from the leaf in the menu bar to quit idle apps.")
+            case .batterySettings, .networkSettings: content.body = String(localized: "Open Artifloam from the leaf in the menu bar to open settings.")
+            case .none: content.body = String(localized: "Open Artifloam from the leaf in the menu bar for details.")
+            }
             let request = UNNotificationRequest(identifier: "health-" + issue.id, content: content, trigger: nil)
             center.requestAuthorization(options: [.alert]) { granted, _ in if granted { center.add(request) } }
         }
@@ -116,7 +123,7 @@ final class MacHealthMonitor: ObservableObject {
     func performOnStage(_ fix: MacIssue.Fix, prepare: @escaping @MainActor () async -> Void, openSection: @escaping (String) -> Void) {
         switch fix {
         case .quitIdleApps:
-            stage("Seeing which apps you can quit…", "Reading what each app uses and what starts with your Mac…", work: { [memory] in
+            stage(String(localized: "Seeing which apps you can quit…"), String(localized: "Reading what each app uses and what starts with your Mac…"), work: { [memory] in
                 await memory.refresh(); await prepare()
             }, then: { openSection("Performance") })
         case .quit(let pid), .forceQuit(let pid):
@@ -124,7 +131,7 @@ final class MacHealthMonitor: ObservableObject {
             var asked = false
             if case .quit = fix { asked = memory.quit(row) } else { asked = memory.forceQuit(row) }
             guard asked else { return }
-            stage("Asking \(row.app.name.displaySafe) to quit…", "Save your work if \(row.app.name.displaySafe) asks.", work: { [memory] in await memory.waitForQuit(pid) })
+            stage(String(localized: "Asking \(row.app.name.displaySafe) to quit…"), String(localized: "Save your work if \(row.app.name.displaySafe) asks."), work: { [memory] in await memory.waitForQuit(pid) })
         default: perform(fix, openSection: openSection)
         }
     }

@@ -9,7 +9,7 @@ struct FullDiskGate: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var waiting = false
     @State private var unlocked = false
-    private let perks = [("trash", "The whole Trash, folders included"), ("safari", "Safari, Mail and other browser data"), ("lock.open", "Protected app folders")]
+    private var perks: [(String, String)] { [("trash", String(localized: "The whole Trash, folders included")), ("safari", String(localized: "Safari, Mail and other browser data")), ("lock.open", String(localized: "Protected app folders"))] }
     private var glow: Color { unlocked ? .mint : theme.accent }
 
     /// A slowly turning ring and sparks around the shield, like an item waiting to be unlocked.
@@ -40,7 +40,7 @@ struct FullDiskGate: View {
             }.frame(width: 300, height: 280)
         }.accessibilityHidden(true)
     }
-    private func step(_ number: Int, _ text: String) -> some View {
+    private func step(_ number: Int, _ text: LocalizedStringKey) -> some View {
         HStack(spacing: 10) {
             Text("\(number)").font(.system(size: 12, weight: .bold, design: .rounded)).foregroundStyle(.black.opacity(0.8)).frame(width: 22, height: 22).background(glow, in: Circle())
             Text(text).stewardFont(.callout).fixedSize(horizontal: false, vertical: true)

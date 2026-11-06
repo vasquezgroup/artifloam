@@ -4,6 +4,14 @@ public enum SystemStatus: Sendable { case good, review, info, unknown }
 public enum SystemArea: String, CaseIterable, Identifiable, Sendable {
     case protection = "Protection", updates = "Updates", remote = "Remote access", backup = "Backup"
     public var id: String { rawValue }
+    public var title: String {
+        switch self {
+        case .protection: return String(localized: "Protection")
+        case .updates: return String(localized: "Updates")
+        case .remote: return String(localized: "Remote access")
+        case .backup: return String(localized: "Backup")
+        }
+    }
 }
 /// What Artifloam can put right itself, after macOS asks for the password.
 public enum SystemFix: Sendable { case firewall }
@@ -26,15 +34,18 @@ public struct SecurityCheck: Identifiable, Sendable {
 /// Reads macOS settings with its own tools. Only `apply` changes one, when a person presses its button and macOS has their password.
 /// A value that can't be read stays "unknown", never a pass.
 public enum SystemAudit {
-    private static let unread = "Artifloam couldn't read this setting."
+    private static let unread = String(localized: "Artifloam couldn't read this setting.")
     private static func toggle(_ id: String, _ area: SystemArea, _ title: String, _ value: Bool?, offTitle: String, on: String, off: String, settings: String? = nil, action: String? = nil, nextStep: String? = nil, fix: SystemFix? = nil) -> SecurityCheck {
         SecurityCheck(id: id, area: area, title: value == false ? offTitle : title, detail: value.map { $0 ? on : off } ?? unread, status: value.map { $0 ? .good : .review } ?? .unknown, counts: true,
                       settings: value == false ? settings : nil, action: value == false ? action : nil, nextStep: value == false ? nextStep : nil, fix: value == false ? fix : nil)
     }
     /// A fixed command with nothing from outside in it; `with administrator privileges` is macOS's own password dialog.
+    /// Only the prompt is translated, and a translation holding `"` or `\` must not end the AppleScript string early.
     static func script(for fix: SystemFix) -> String {
         switch fix {
-        case .firewall: return #"do shell script "/usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on" with prompt "Artifloam needs your password to turn on the firewall." with administrator privileges"#
+        case .firewall:
+            let prompt = String(localized: "Artifloam needs your password to turn on the firewall.").replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\"")
+            return #"do shell script "/usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on" with prompt ""# + prompt + #"" with administrator privileges"#
         }
     }
     /// osascript reports the person pressing Cancel as error -128.
@@ -77,37 +88,39 @@ public enum SystemAudit {
     static func updateChecks(_ preferences: [String: Any]?, now: Date = Date()) -> [SecurityCheck] {
         let panel = "x-apple.systempreferences:com.apple.Software-Update-Settings.extension"
         let pending = preferences?["LastRecommendedUpdatesAvailable"] as? Int
-        var when = ""
-        if let date = preferences?["LastSuccessfulDate"] as? Date { when = " Last checked " + date.formatted(.relative(presentation: .named, unitsStyle: .wide).locale(Locale(identifier: "en"))) + "." }
+        let checked = (preferences?["LastSuccessfulDate"] as? Date)?.formatted(.relative(presentation: .named, unitsStyle: .wide))
         let current: SecurityCheck
         if let pending {
-            current = SecurityCheck(id: "macos-updates", area: .updates, title: pending == 0 ? "macOS is up to date" : pending == 1 ? "1 macOS update is ready" : "\(pending) macOS updates are ready",
-                                    detail: (pending == 0 ? "No recommended updates are waiting." : "Updates often fix security problems, so install this when you can.") + when, status: pending == 0 ? .good : .review, counts: true, settings: pending == 0 ? nil : panel, action: pending == 0 ? nil : "See update", nextStep: pending == 0 ? nil : "Then click Update Now. Your Mac may restart.")
-        } else { current = SecurityCheck(id: "macos-updates", area: .updates, title: "macOS updates", detail: unread, status: .unknown, counts: true) }
+            let detail: String
+            if pending == 0 { detail = checked.map { String(localized: "No recommended updates are waiting. Last checked \($0).") } ?? String(localized: "No recommended updates are waiting.") }
+            else { detail = checked.map { String(localized: "Updates often fix security problems, so install this when you can. Last checked \($0).") } ?? String(localized: "Updates often fix security problems, so install this when you can.") }
+            current = SecurityCheck(id: "macos-updates", area: .updates, title: pending == 0 ? String(localized: "macOS is up to date") : String(localized: "\(pending) macOS updates are ready"),
+                                    detail: detail, status: pending == 0 ? .good : .review, counts: true, settings: pending == 0 ? nil : panel, action: pending == 0 ? nil : String(localized: "See update"), nextStep: pending == 0 ? nil : String(localized: "Then click Update Now. Your Mac may restart."))
+        } else { current = SecurityCheck(id: "macos-updates", area: .updates, title: String(localized: "macOS updates"), detail: unread, status: .unknown, counts: true) }
         // Apple's default is on, so only an explicit "off" counts as off.
         let automatic = preferences.map { values in ["AutomaticCheckEnabled", "CriticalUpdateInstall", "ConfigDataInstall"].allSatisfy { values[$0] as? Bool != false } }
-        return [current, toggle("automatic-updates", .updates, "Automatic security updates", automatic, offTitle: "Automatic security updates are off", on: "macOS checks for security fixes and installs them by itself.", off: "Security fixes wait until you install them by hand.", settings: panel, action: "Open Settings", nextStep: "Then click the (i) next to Automatic Updates and turn everything on.")]
+        return [current, toggle("automatic-updates", .updates, String(localized: "Automatic security updates"), automatic, offTitle: String(localized: "Automatic security updates are off"), on: String(localized: "macOS checks for security fixes and installs them by itself."), off: String(localized: "Security fixes wait until you install them by hand."), settings: panel, action: String(localized: "Open Settings"), nextStep: String(localized: "Then click the (i) next to Automatic Updates and turn everything on."))]
     }
     static func backupCheck(destinations: String, latest: () -> String, now: Date = Date()) -> SecurityCheck {
         let panel = "x-apple.systempreferences:com.apple.Time-Machine-Settings.extension"
         if destinations.contains("No destinations") {
-            return SecurityCheck(id: "backup", area: .backup, title: "Time Machine isn't set up", detail: "A backup is what saves you if this Mac is lost or fails. Skip this if you back up another way.", status: .review, settings: panel, action: "Set up", nextStep: "Connect a drive, then click Add Backup Disk.")
+            return SecurityCheck(id: "backup", area: .backup, title: String(localized: "Time Machine isn't set up"), detail: String(localized: "A backup is what saves you if this Mac is lost or fails. Skip this if you back up another way."), status: .review, settings: panel, action: String(localized: "Set up", comment: "Button: open Time Machine settings to set up backups"), nextStep: String(localized: "Connect a drive, then click Add Backup Disk."))
         }
-        guard destinations.contains("ID") else { return SecurityCheck(id: "backup", area: .backup, title: "Time Machine", detail: unread, status: .unknown) }
+        guard destinations.contains("ID") else { return SecurityCheck(id: "backup", area: .backup, title: String(localized: "Time Machine"), detail: unread, status: .unknown) }
         let path = latest(), format = DateFormatter()
         format.dateFormat = "yyyy-MM-dd-HHmmss"; format.locale = Locale(identifier: "en_US_POSIX")
         // Backups are folders named by date; macOS keeps them private without Full Disk Access.
         guard let found = path.range(of: #"\d{4}-\d{2}-\d{2}-\d{6}"#, options: .regularExpression), let date = format.date(from: String(path[found])) else {
-            return SecurityCheck(id: "backup", area: .backup, title: "Time Machine is set up", detail: "macOS didn't share the date of the last backup.", status: .info, settings: panel, action: "Open Settings")
+            return SecurityCheck(id: "backup", area: .backup, title: String(localized: "Time Machine is set up"), detail: String(localized: "macOS didn't share the date of the last backup."), status: .info, settings: panel, action: String(localized: "Open Settings"))
         }
         let days = Int(now.timeIntervalSince(date) / 86400)
-        let age = days < 1 ? "today" : days == 1 ? "yesterday" : "\(days) days ago"
-        return days > 14 ? SecurityCheck(id: "backup", area: .backup, title: "Last backup was \(age)", detail: "Connect the backup drive so recent work is covered too.", status: .review, settings: panel, action: "Open Settings", nextStep: "Then click Back Up Now.")
-                         : SecurityCheck(id: "backup", area: .backup, title: "Last backup was \(age)", detail: "Time Machine is keeping recent copies of your files.", status: .good)
+        let title = days < 1 ? String(localized: "Last backup was today") : days == 1 ? String(localized: "Last backup was yesterday") : String(localized: "Last backup was \(days) days ago")
+        return days > 14 ? SecurityCheck(id: "backup", area: .backup, title: title, detail: String(localized: "Connect the backup drive so recent work is covered too."), status: .review, settings: panel, action: String(localized: "Open Settings"), nextStep: String(localized: "Then click Back Up Now."))
+                         : SecurityCheck(id: "backup", area: .backup, title: title, detail: String(localized: "Time Machine is keeping recent copies of your files."), status: .good)
     }
-    static func remoteCheck(_ id: String, _ title: String, _ value: Bool?, on: String, off: String) -> SecurityCheck {
+    static func remoteCheck(_ id: String, _ title: String, _ value: Bool?, on: String, off: String, nextStep: String = String(localized: "If you don't use this, turn it off.")) -> SecurityCheck {
         SecurityCheck(id: id, area: .remote, title: title, detail: value.map { $0 ? on : off } ?? unread, status: value.map { $0 ? .review : .good } ?? .unknown,
-                      settings: value == true ? "x-apple.systempreferences:com.apple.Sharing-Settings.extension" : nil, action: value == true ? "Open Settings" : nil, nextStep: value == true ? "If you don't use this, turn \(title) off." : nil)
+                      settings: value == true ? "x-apple.systempreferences:com.apple.Sharing-Settings.extension" : nil, action: value == true ? String(localized: "Open Settings") : nil, nextStep: value == true ? nextStep : nil)
     }
 
     public static func checks() -> [SecurityCheck] {
@@ -117,26 +130,26 @@ public enum SystemAudit {
         let loginPreferences = preferences(autoLoginFile)
         let noAutoLogin: Bool? = loginPreferences.map { $0["autoLoginUser"] == nil } ?? (FileManager.default.fileExists(atPath: autoLoginFile) ? nil : true)
         var found = [
-            toggle("gatekeeper", .protection, "Gatekeeper", gatekeeper(text(run("/usr/sbin/spctl", ["--status"]))), offTitle: "Apps aren't being checked before they open", on: "Apps must come from known developers before they open.", off: "Any app can open, even from an unknown source.", settings: security + "?Security", action: "Open Settings", nextStep: "Then choose App Store & Known Developers."),
-            toggle("filevault", .protection, "FileVault", fileVault(text(run("/usr/bin/fdesetup", ["status"]))), offTitle: "Your disk isn't encrypted", on: "Your disk is encrypted. A lost Mac doesn't expose your files.", off: "Anyone holding this Mac could read your files.", settings: security + "?FileVault", action: "Open Settings", nextStep: "Then click Turn On. Keep the recovery key safe."),
-            toggle("firewall", .protection, "Firewall", firewall(text(run("/usr/libexec/ApplicationFirewall/socketfilterfw", ["--getglobalstate"]))), offTitle: "Your firewall is off", on: "Unwanted connections from other devices are blocked.", off: "Other devices on your network can try to reach your apps. Turning it on matters most on public Wi-Fi.", action: "Turn on", nextStep: "macOS asks for your password, and that's it.", fix: .firewall),
+            toggle("gatekeeper", .protection, String(localized: "Gatekeeper"), gatekeeper(text(run("/usr/sbin/spctl", ["--status"]))), offTitle: String(localized: "Apps aren't being checked before they open"), on: String(localized: "Apps must come from known developers before they open."), off: String(localized: "Any app can open, even from an unknown source."), settings: security + "?Security", action: String(localized: "Open Settings"), nextStep: String(localized: "Then choose App Store & Known Developers.")),
+            toggle("filevault", .protection, String(localized: "FileVault"), fileVault(text(run("/usr/bin/fdesetup", ["status"]))), offTitle: String(localized: "Your disk isn't encrypted"), on: String(localized: "Your disk is encrypted. A lost Mac doesn't expose your files."), off: String(localized: "Anyone holding this Mac could read your files."), settings: security + "?FileVault", action: String(localized: "Open Settings"), nextStep: String(localized: "Then click Turn On. Keep the recovery key safe.")),
+            toggle("firewall", .protection, String(localized: "Firewall"), firewall(text(run("/usr/libexec/ApplicationFirewall/socketfilterfw", ["--getglobalstate"]))), offTitle: String(localized: "Your firewall is off"), on: String(localized: "Unwanted connections from other devices are blocked."), off: String(localized: "Other devices on your network can try to reach your apps. Turning it on matters most on public Wi-Fi."), action: String(localized: "Turn on", comment: "Button: turn on the firewall"), nextStep: String(localized: "macOS asks for your password, and that's it."), fix: .firewall),
             // macOS only allows this from Recovery, so there is no button; anyone who turned it off knows how to turn it on.
-            toggle("integrity", .protection, "System Integrity Protection", integrity(text(run("/usr/bin/csrutil", ["status"]))), offTitle: "macOS isn't protecting its own files", on: "macOS protects its own files, even from admin apps.", off: "System Integrity Protection is off. This is usually done on purpose by developers; it can only be turned on again from Recovery."),
-            toggle("screen-lock", .protection, "Password after sleep", screenLock(text(run("/usr/sbin/sysadminctl", ["-screenLock", "status"]))), offTitle: "Your Mac doesn't lock quickly", on: "Your Mac asks for a password soon after it sleeps.", off: "Someone could use it for a while after it goes to sleep.", settings: "x-apple.systempreferences:com.apple.Lock-Screen-Settings.extension", action: "Open Settings", nextStep: "Then set Require password to Immediately."),
-            toggle("auto-login", .protection, "Password at startup", noAutoLogin, offTitle: "Your Mac signs in by itself", on: "Nobody gets in by just turning this Mac on.", off: "Anyone who turns it on reaches your files.", settings: "x-apple.systempreferences:com.apple.Users-Groups-Settings.extension", action: "Open Settings", nextStep: "Then set Automatically log in as to Off.")
+            toggle("integrity", .protection, String(localized: "System Integrity Protection"), integrity(text(run("/usr/bin/csrutil", ["status"]))), offTitle: String(localized: "macOS isn't protecting its own files"), on: String(localized: "macOS protects its own files, even from admin apps."), off: String(localized: "System Integrity Protection is off. This is usually done on purpose by developers; it can only be turned on again from Recovery.")),
+            toggle("screen-lock", .protection, String(localized: "Password after sleep"), screenLock(text(run("/usr/sbin/sysadminctl", ["-screenLock", "status"]))), offTitle: String(localized: "Your Mac doesn't lock quickly"), on: String(localized: "Your Mac asks for a password soon after it sleeps."), off: String(localized: "Someone could use it for a while after it goes to sleep."), settings: "x-apple.systempreferences:com.apple.Lock-Screen-Settings.extension", action: String(localized: "Open Settings"), nextStep: String(localized: "Then set Require password to Immediately.")),
+            toggle("auto-login", .protection, String(localized: "Password at startup"), noAutoLogin, offTitle: String(localized: "Your Mac signs in by itself"), on: String(localized: "Nobody gets in by just turning this Mac on."), off: String(localized: "Anyone who turns it on reaches your files."), settings: "x-apple.systempreferences:com.apple.Users-Groups-Settings.extension", action: String(localized: "Open Settings"), nextStep: String(localized: "Then set Automatically log in as to Off."))
         ]
         found += updateChecks(preferences("/Library/Preferences/com.apple.SoftwareUpdate.plist"))
-        for (id, title, label, on, off) in [
-            ("remote-login", "Remote Login (SSH)", "com.openssh.sshd", "Other computers can sign in to this Mac with a password or key.", "No one can sign in to this Mac from another computer."),
-            ("screen-sharing", "Screen Sharing", "com.apple.screensharing", "Other computers can see and control this screen.", "Your screen can't be viewed or controlled remotely."),
-            ("file-sharing", "File Sharing", "com.apple.smbd", "Other computers can open your shared folders.", "Your folders aren't shared on the network.")
+        for (id, title, label, on, off, step) in [
+            ("remote-login", String(localized: "Remote Login (SSH)"), "com.openssh.sshd", String(localized: "Other computers can sign in to this Mac with a password or key."), String(localized: "No one can sign in to this Mac from another computer."), String(localized: "If you don't use this, turn Remote Login (SSH) off.")),
+            ("screen-sharing", String(localized: "Screen Sharing"), "com.apple.screensharing", String(localized: "Other computers can see and control this screen."), String(localized: "Your screen can't be viewed or controlled remotely."), String(localized: "If you don't use this, turn Screen Sharing off.")),
+            ("file-sharing", String(localized: "File Sharing"), "com.apple.smbd", String(localized: "Other computers can open your shared folders."), String(localized: "Your folders aren't shared on the network."), String(localized: "If you don't use this, turn File Sharing off."))
         ] {
             let result = run("/bin/launchctl", ["print", "system/" + label], timeout: 5)
-            found.append(remoteCheck(id, title, service(code: result.code, text: text(result)), on: on, off: off))
+            found.append(remoteCheck(id, title, service(code: result.code, text: text(result)), on: on, off: off, nextStep: step))
         }
         // lsof also exits 1 when nothing listens; output is what counts. Without admin rights it sees only this account's apps.
         let listeners = networkListeners(lsof: run("/usr/sbin/lsof", ["-nP", "-iTCP", "-sTCP:LISTEN", "-Fcn"]).output)
-        found.append(SecurityCheck(id: "listeners", area: .remote, title: listeners.isEmpty ? "None of your apps accept connections" : "\(listeners.count) of your apps accept connections", detail: listeners.isEmpty ? "No app in your account is waiting for connections from other devices." : listeners.joined(separator: ", ") + ". Many apps do this to sync or to find nearby devices.", status: .info))
+        found.append(SecurityCheck(id: "listeners", area: .remote, title: listeners.isEmpty ? String(localized: "None of your apps accept connections") : String(localized: "\(listeners.count) of your apps accept connections"), detail: listeners.isEmpty ? String(localized: "No app in your account is waiting for connections from other devices.") : String(localized: "\(listeners.joined(separator: ", ")). Many apps do this to sync or to find nearby devices."), status: .info))
         found.append(backupCheck(destinations: text(run("/usr/bin/tmutil", ["destinationinfo"], timeout: 8)), latest: { run("/usr/bin/tmutil", ["latestbackup"], timeout: 8).output }))
         return found
     }
@@ -148,20 +161,20 @@ public struct AppTrustFinding: Identifiable, Sendable {
         case notNotarized, modified, revoked, unsigned, unverified
         public var title: String {
             switch self {
-            case .notNotarized: return "Not notarized by Apple"
-            case .modified: return "Changed since it was signed"
-            case .revoked: return "Developer certificate revoked"
-            case .unsigned: return "Not signed"
-            case .unverified: return "Couldn't be verified"
+            case .notNotarized: return String(localized: "Not notarized by Apple")
+            case .modified: return String(localized: "Changed since it was signed")
+            case .revoked: return String(localized: "Developer certificate revoked")
+            case .unsigned: return String(localized: "Not signed")
+            case .unverified: return String(localized: "Couldn't be verified")
             }
         }
         public var detail: String {
             switch self {
-            case .notNotarized: return "Apple hasn't checked this version. Common for small developers and open-source apps."
-            case .modified: return "Files inside differ from what the developer signed. Often a plugin or an update; reinstall if you didn't expect it."
-            case .revoked: return "Apple or the developer withdrew the certificate that signed this copy. Get the latest version from the developer."
-            case .unsigned: return "Nothing says who made this app. Keep it only if you trust where it came from."
-            case .unverified: return "Gatekeeper gave an answer Artifloam doesn't recognize."
+            case .notNotarized: return String(localized: "Apple hasn't checked this version. Common for small developers and open-source apps.")
+            case .modified: return String(localized: "Files inside differ from what the developer signed. Often a plugin or an update; reinstall if you didn't expect it.")
+            case .revoked: return String(localized: "Apple or the developer withdrew the certificate that signed this copy. Get the latest version from the developer.")
+            case .unsigned: return String(localized: "Nothing says who made this app. Keep it only if you trust where it came from.")
+            case .unverified: return String(localized: "Gatekeeper gave an answer Artifloam doesn't recognize.")
             }
         }
     }

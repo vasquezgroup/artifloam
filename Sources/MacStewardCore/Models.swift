@@ -5,20 +5,20 @@ public enum CleanupGroup: String, Codable, CaseIterable, Identifiable, Sendable 
     public var id: String { rawValue }
     public var title: String {
         switch self {
-        case .agentBuilds: return "AI session leftovers"
-        case .worktrees: return "Claude & Codex worktrees"
-        case .xcode: return "Xcode storage"
-        case .developerCaches: return "Developer caches"
-        case .projectCaches: return "Project caches"
-        case .inactiveDependencies: return "Inactive project dependencies"
-        case .userCaches: return "Application caches"
-        case .userLogs: return "Old application logs"
-        case .systemCaches: return "System caches"
-        case .systemLogs: return "System logs"
-        case .universalApps: return "Universal applications"
-        case .languages: return "Language resources"
-        case .deviceBackups: return "iPhone & iPad backups"
-        case .documentVersions: return "Document versions"
+        case .agentBuilds: return String(localized: "AI session leftovers")
+        case .worktrees: return String(localized: "Claude & Codex worktrees")
+        case .xcode: return String(localized: "Xcode storage")
+        case .developerCaches: return String(localized: "Developer caches")
+        case .projectCaches: return String(localized: "Project caches")
+        case .inactiveDependencies: return String(localized: "Inactive project dependencies")
+        case .userCaches: return String(localized: "Application caches")
+        case .userLogs: return String(localized: "Old application logs")
+        case .systemCaches: return String(localized: "System caches")
+        case .systemLogs: return String(localized: "System logs")
+        case .universalApps: return String(localized: "Universal applications")
+        case .languages: return String(localized: "Language resources")
+        case .deviceBackups: return String(localized: "iPhone & iPad backups")
+        case .documentVersions: return String(localized: "Document versions")
         }
     }
     public var icon: String {
@@ -38,19 +38,19 @@ public enum CleanupGroup: String, Codable, CaseIterable, Identifiable, Sendable 
     }
     public var explanation: String {
         switch self {
-        case .agentBuilds: return "Older copies of Claude Code and Cursor agent (the newest stays), and regenerable Xcode output inside Claude's temporary sessions. Conversation history and original images stay."
-        case .worktrees: return "Git status, preserved commits, session activity and running processes decide whether a checkout needs review. Worktrees are never removed automatically."
-        case .xcode: return "Old build intermediates may qualify for cleanup. Simulator runtimes are managed in Xcode. Simulators you no longer use can be ticked one by one. Archives, symbols and source packages stay protected."
-        case .developerCaches: return "Unused Gradle artifact transforms, generated Gradle JARs, Xcode module caches and npm's download cache. Recent or active caches, downloaded dependencies and configuration stay protected."
-        case .projectCaches: return "Known generated caches only. Tracked files, secrets, databases, dependencies and recent files are excluded."
-        case .inactiveDependencies: return "node_modules, Rust target and Swift .build folders in projects untouched for 30 days: no commit, no uncommitted change, no running process and no Claude Code or Codex session. Each has a lockfile, so one install rebuilds it. Never selected or scheduled automatically."
-        case .userCaches: return "Recognised web caches from closed applications. App data, accounts, cookies and documents stay."
-        case .userLogs: return "Recognised CoreSimulator, Adobe NGL and Office diagnostic .log files older than 30 days. Settings, credentials, other logs and conversation histories stay protected."
-        case .systemCaches, .systemLogs: return "System-managed data. This version does not request administrator access or remove these files."
-        case .universalApps: return "Application binaries stay intact to preserve their signatures and compatibility."
-        case .languages: return "Language resources stay inside their signed applications."
-        case .deviceBackups: return "Backups contain personal data. Review in Finder; no automatic deletion."
-        case .documentVersions: return "Saved document history is protected. No version is treated as disposable cache."
+        case .agentBuilds: return String(localized: "Older copies of Claude Code and Cursor agent (the newest stays), and regenerable Xcode output inside Claude's temporary sessions. Conversation history and original images stay.")
+        case .worktrees: return String(localized: "Git status, preserved commits, session activity and running processes decide whether a checkout needs review. Worktrees are never removed automatically.")
+        case .xcode: return String(localized: "Old build intermediates may qualify for cleanup. Simulator runtimes are managed in Xcode. Simulators you no longer use can be ticked one by one. Archives, symbols and source packages stay protected.")
+        case .developerCaches: return String(localized: "Unused Gradle artifact transforms, generated Gradle JARs, Xcode module caches and npm's download cache. Recent or active caches, downloaded dependencies and configuration stay protected.")
+        case .projectCaches: return String(localized: "Known generated caches only. Tracked files, secrets, databases, dependencies and recent files are excluded.")
+        case .inactiveDependencies: return String(localized: "node_modules, Rust target and Swift .build folders in projects untouched for 30 days: no commit, no uncommitted change, no running process and no Claude Code or Codex session. Each has a lockfile, so one install rebuilds it. Never selected or scheduled automatically.")
+        case .userCaches: return String(localized: "Recognised web caches from closed applications. App data, accounts, cookies and documents stay.")
+        case .userLogs: return String(localized: "Recognised CoreSimulator, Adobe NGL and Office diagnostic .log files older than 30 days. Settings, credentials, other logs and conversation histories stay protected.")
+        case .systemCaches, .systemLogs: return String(localized: "System-managed data. This version does not request administrator access or remove these files.")
+        case .universalApps: return String(localized: "Application binaries stay intact to preserve their signatures and compatibility.")
+        case .languages: return String(localized: "Language resources stay inside their signed applications.")
+        case .deviceBackups: return String(localized: "Backups contain personal data. Review in Finder; no automatic deletion.")
+        case .documentVersions: return String(localized: "Saved document history is protected. No version is treated as disposable cache.")
         }
     }
 }

@@ -11,7 +11,7 @@ final class ToolFolderSelection: ObservableObject {
     func choose() {
         guard panel == nil else { return }
         let picker = NSOpenPanel(); panel = picker
-        picker.title = "Choose a folder to inspect"; picker.prompt = "Choose Folder"
+        picker.title = String(localized: "Choose a folder to inspect"); picker.prompt = String(localized: "Choose Folder", comment: "Button in the folder picker: use the selected folder")
         picker.canChooseDirectories = true; picker.canChooseFiles = false; picker.directoryURL = url
         DispatchQueue.main.async { [self] in
             NSApp.activate(ignoringOtherApps: true)
@@ -42,7 +42,7 @@ final class LargeFilesState: ObservableObject {
         let size = UInt64(minimum), before = months == 0 ? nil : Calendar.current.date(byAdding: .month, value: -months, to: Date())
         let work = Task.detached(priority: .utility) { try LargeFileAudit.scan(root: folder, minimumBytes: size, modifiedBefore: before) }
         task = work
-        Task { defer { task = nil }; do { report = try await work.value } catch is CancellationError { error = "Search stopped. Run Find files to search again." } catch { self.error = error.localizedDescription } }
+        Task { defer { task = nil }; do { report = try await work.value } catch is CancellationError { error = String(localized: "Search stopped. Run Find files to search again.") } catch { self.error = error.localizedDescription } }
     }
     func cancel() { task?.cancel() }
 }
@@ -76,26 +76,26 @@ struct LargeFilesView: View {
                 }
                 if !files.isEmpty {
                     let chosen = files.filter { selection.contains($0.id) }
-                    BulkBar(title: "Select all", isOn: Binding(get: { chosen.count == files.count }, set: { if $0 { state.selection.formUnion(files.map(\.id)) } else { state.selection.subtract(files.map(\.id)) } }), enabled: task == nil,
-                            summary: "\(chosen.count) selected · \(formattedBytes(chosen.reduce(0) { $0 + $1.localBytes }))") {
+                    BulkBar(title: String(localized: "Select all", comment: "Checkbox: select every item in the list"), isOn: Binding(get: { chosen.count == files.count }, set: { if $0 { state.selection.formUnion(files.map(\.id)) } else { state.selection.subtract(files.map(\.id)) } }), enabled: task == nil,
+                            summary: String(localized: "\(chosen.count) selected · \(formattedBytes(chosen.reduce(0) { $0 + $1.localBytes }))")) {
                         Button("Review \(chosen.count) for Trash…", role: .destructive) { trashRequest = TrashRequest(urls: chosen.map(\.url)) }
                             .buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(chosen.isEmpty || task != nil)
                     }
                 }
-                if report.limited || report.unreadable > 0 { Text("Partial results · \(report.examined) entries checked · \(report.unreadable) unreadable folders. Choose a smaller folder for more detail.").stewardFont(.caption).foregroundStyle(.orange) }
+                if report.limited || report.unreadable > 0 { Text(partialNote(report)).stewardFont(.caption).foregroundStyle(.orange) }
                 if files.isEmpty { Text("No files matched these filters in the scanned area.").foregroundStyle(.secondary) }
                 LazyVStack(spacing: 8) {
                     ForEach(files) { file in
                         HStack(spacing: 12) {
-                            Toggle("Select " + file.url.lastPathComponent, isOn: Binding(get: { selection.contains(file.id) }, set: { if $0 { state.selection.insert(file.id) } else { state.selection.remove(file.id) } })).toggleStyle(.stewardCheckboxOnly)
+                            Toggle(String(localized: "Select \(file.url.lastPathComponent)"), isOn: Binding(get: { selection.contains(file.id) }, set: { if $0 { state.selection.insert(file.id) } else { state.selection.remove(file.id) } })).toggleStyle(.stewardCheckboxOnly)
                             Image(systemName: "doc.fill").foregroundStyle(.purple)
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(file.url.lastPathComponent).stewardFont(.body, weight: .medium)
                                 Text(file.url.deletingLastPathComponent().path).stewardFont(.caption).foregroundStyle(.secondary).lineLimit(1).truncationMode(.middle)
-                                Text("Modified " + file.modified.formatted(date: .abbreviated, time: .omitted)).stewardFont(.caption).foregroundStyle(.secondary)
+                                Text("Modified \(file.modified.formatted(date: .abbreviated, time: .omitted))").stewardFont(.caption).foregroundStyle(.secondary)
                             }
                             Spacer()
-                            VStack(alignment: .trailing) { Text(formattedBytes(file.localBytes)).monospacedDigit(); Text(formattedBytes(file.logicalBytes) + " file size").stewardFont(.caption).foregroundStyle(.secondary) }
+                            VStack(alignment: .trailing) { Text(formattedBytes(file.localBytes)).monospacedDigit(); Text("\(formattedBytes(file.logicalBytes)) file size").stewardFont(.caption).foregroundStyle(.secondary) }
                             Button("Reveal") { NSWorkspace.shared.activateFileViewerSelecting([file.url]) }
                         }.padding(14).background(.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 12))
                     }
@@ -105,10 +105,14 @@ struct LargeFilesView: View {
             if let error = state.error { Text(error).stewardFont(.body).foregroundStyle(.orange) }
         }.sheet(item: $trashRequest) { request in
             TrashReviewSheet(urls: request.urls) { results in
-                note = "\(results.filter { $0.error == nil }.count) moved to Trash. Restore in Finder with Put Back."
+                note = String(localized: "\(results.filter { $0.error == nil }.count) moved to Trash. Restore in Finder with Put Back.")
                 state.selection.removeAll(); scan()
             }
         }.onChange(of: location.url) { _, _ in state.reset() }
+    }
+    private func partialNote(_ report: LargeFileReport) -> String {
+        let entries = String(localized: "\(report.examined) entries checked"), folders = String(localized: "\(report.unreadable) unreadable folders")
+        return String(localized: "Partial results · \(entries) · \(folders). Choose a smaller folder for more detail.")
     }
     private func scan() { state.scan(location.url) }
     private func choose() { location.choose() }
@@ -129,9 +133,9 @@ struct AppRemovalView: View {
         return byLastUsed ? found.sorted { ($0.lastUsed ?? .distantPast) < ($1.lastUsed ?? .distantPast) } : found
     }
     private func used(_ app: InstalledApplication) -> String {
-        guard let date = app.lastUsed else { return "No usage record" }
-        if Date().timeIntervalSince(date) < 86400 { return "Today" }
-        return date.formatted(.relative(presentation: .named).locale(Locale(identifier: "en")))
+        guard let date = app.lastUsed else { return String(localized: "No usage record") }
+        if Date().timeIntervalSince(date) < 86400 { return String(localized: "Today") }
+        return date.formatted(.relative(presentation: .named))
     }
     private var runningPaths: Set<String> { Set(NSWorkspace.shared.runningApplications.compactMap { $0.bundleURL?.path }) }
     private func protected(_ app: InstalledApplication) -> Bool { AppleCode.isProtectedApp(app.url, identifier: app.identifier) }
@@ -144,7 +148,7 @@ struct AppRemovalView: View {
             ToolHeading(title: "Uninstaller", detail: "Move apps you no longer use to the Trash. Your documents and support data stay in place.")
             HStack(spacing: 12) {
                 ForEach(AppUsageAge.allCases) { age in
-                    CountCard(count: groups[age]?.count ?? 0, title: age.title, active: open.contains(age), help: "Show apps last used " + age.title.lowercased()) { open = [age] }
+                    CountCard(count: groups[age]?.count ?? 0, title: age.title, active: open.contains(age), help: String(localized: "Show apps last used: \(age.title)")) { open = [age] }
                 }
             }
             HStack(spacing: 10) {
@@ -152,8 +156,8 @@ struct AppRemovalView: View {
                 Picker("Sort", selection: $byLastUsed) { Text("Least used").tag(true); Text("Name").tag(false) }.pickerStyle(.segmented).labelsHidden().fixedSize()
             }
             if let note { Text(note).foregroundStyle(.mint) }
-            BulkBar(title: "Select all shown", isOn: Binding(get: { !shown.isEmpty && selection.isSuperset(of: shown) }, set: { if $0 { selection.formUnion(shown) } else { selection.subtract(shown) } }), enabled: !shown.isEmpty,
-                    help: "Apps in the open sections. Running apps, Apple apps and Artifloam stay protected.", summary: "\(selection.count) selected") {
+            BulkBar(title: String(localized: "Select all shown"), isOn: Binding(get: { !shown.isEmpty && selection.isSuperset(of: shown) }, set: { if $0 { selection.formUnion(shown) } else { selection.subtract(shown) } }), enabled: !shown.isEmpty,
+                    help: String(localized: "Apps in the open sections. Running apps, Apple apps and Artifloam stay protected."), summary: String(localized: "\(selection.count) selected")) {
                 Button("Move \(selection.count) to Trash…", role: .destructive) { trashRequest = TrashRequest(urls: apps.filter { selection.contains($0.id) && removable($0) }.map(\.url)) }
                     .buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(selection.isEmpty)
             }
@@ -165,19 +169,19 @@ struct AppRemovalView: View {
         }.onAppear { refresh() }
         .sheet(item: $trashRequest) { request in
             TrashReviewSheet(urls: request.urls, allowApplications: true) { results in
-                note = "\(results.filter { $0.error == nil }.count) app bundles moved to Trash. Restore in Finder with Put Back."; refresh()
+                note = String(localized: "\(results.filter { $0.error == nil }.count) app bundles moved to Trash. Restore in Finder with Put Back."); refresh()
             }
         }
     }
     /// One age group: a header that folds it and ticks all of it, then one compact row per app.
     private func section(_ age: AppUsageAge, _ list: [InstalledApplication], removable: @escaping (InstalledApplication) -> Bool, running: Set<String>) -> some View {
         let ids = list.filter(removable).map(\.id)
-        return FoldSection(title: age.title, count: "\(list.count) \(list.count == 1 ? "app" : "apps")", open: open.contains(age) || !search.isEmpty, canSelectAll: !ids.isEmpty,
+        return FoldSection(title: age.title, count: String(localized: "\(list.count) apps"), open: open.contains(age) || !search.isEmpty, canSelectAll: !ids.isEmpty,
                            selectAll: Binding(get: { !ids.isEmpty && selection.isSuperset(of: ids) }, set: { if $0 { selection.formUnion(ids) } else { selection.subtract(ids) } }),
                            toggle: { if open.contains(age) { open.remove(age) } else { open.insert(age) } }) {
             ForEach(list) { app in
                 Divider().opacity(0.25)
-                AppRow(app: app, used: used(app), locked: !removable(app), lockReason: running.contains(app.url.path) ? "Running" : "Protected",
+                AppRow(app: app, used: used(app), locked: !removable(app), lockReason: running.contains(app.url.path) ? String(localized: "Running", comment: "Label on an app that is open right now") : String(localized: "Protected", comment: "Label on an app Artifloam will not remove"),
                        selected: Binding(get: { selection.contains(app.id) }, set: { if $0 { selection.insert(app.id) } else { selection.remove(app.id) } }))
             }
         }
@@ -220,7 +224,7 @@ struct FoldSection<Content: View>: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 12) {
-                if let selectAll { Toggle("Select all " + title, isOn: selectAll).toggleStyle(.stewardCheckboxOnly).disabled(!canSelectAll) }
+                if let selectAll { Toggle(String(localized: "Select all \(title)"), isOn: selectAll).toggleStyle(.stewardCheckboxOnly).disabled(!canSelectAll) }
                 Button(action: toggle) {
                     HStack(spacing: 8) {
                         Text(title).stewardFont(.headline)
@@ -244,7 +248,7 @@ private struct AppRow: View {
     @State private var hovered = false
     var body: some View {
         HStack(spacing: 12) {
-            Toggle("Select " + app.name, isOn: $selected).toggleStyle(.stewardCheckboxOnly).disabled(locked).opacity(locked ? 0.4 : 1)
+            Toggle(String(localized: "Select \(app.name)"), isOn: $selected).toggleStyle(.stewardCheckboxOnly).disabled(locked).opacity(locked ? 0.4 : 1)
             Image(nsImage: NSWorkspace.shared.icon(forFile: app.url.path)).resizable().scaledToFit().frame(width: 28, height: 28)
             Text(app.name).stewardFont(.body, weight: .medium).lineLimit(1).help(app.identifier + " · " + app.version)
             if locked { Text(lockReason).stewardFont(.caption).foregroundStyle(.secondary) }
@@ -340,7 +344,7 @@ struct BackgroundItemsView: View {
     @State private var search = ""
     @State private var chosen = Set<String>()
     private func filterCard(_ kind: Kind, _ value: String, _ title: String, _ note: String) -> some View {
-        Button { open = [kind] } label: { ResultMetric(accent: theme.accent, value: value, title: title, note: note).contentShape(RoundedRectangle(cornerRadius: 14)) }.buttonStyle(.plain).help("Show " + title.lowercased())
+        Button { open = [kind] } label: { ResultMetric(accent: theme.accent, value: value, title: title, note: note).contentShape(RoundedRectangle(cornerRadius: 14)) }.buttonStyle(.plain).help(String(localized: "Show \(title)"))
     }
     /// Agents that deserve a second look: broken, or waking up every few minutes.
     private func attention(_ items: [BackgroundItem]) -> some View {
@@ -373,19 +377,19 @@ struct BackgroundItemsView: View {
         return VStack(alignment: .leading, spacing: 18) {
             if inModule { ToolHeading(title: "Login & background items", detail: "What starts with your Mac. Removing a login item keeps the app, and an agent you switch off can be switched on again.") }
             else {
-                ResultHero(theme: theme, title: "\(allLogins + active.count) things start with your Mac.", subtitle: "\(allLogins) \(allLogins == 1 ? "app opens" : "apps open") at login and \(active.count) \(active.count == 1 ? "agent runs" : "agents run") in the background. Removing a login item keeps the app.") {
+                ResultHero(theme: theme, title: String(localized: "\(allLogins + active.count) things start with your Mac."), subtitle: heroSubtitle(logins: allLogins, agents: active.count)) {
                     Button("Check again") { state.scan() }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).disabled(state.scanning)
                     Button("Open Login Items") { openSettings() }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
                 }
             }
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 210), spacing: 12, alignment: .top)], spacing: 12) {
-                filterCard(.login, "\(allLogins)", "Open at login", "Apps that open each time you sign in.")
-                filterCard(.yours, "\(allYours.count)", "Your agents", "\(allYours.count - active.count) off. Switch any off, and back on.")
-                filterCard(.yours, "\(active.filter { $0.rhythm == "Always running" }.count)", "Always running", "Stay on even while you don't use them.")
-                filterCard(.managed, "\(allManaged)", "Managed by macOS", "Only System Settings can change these.")
+                filterCard(.login, "\(allLogins)", String(localized: "Open at login"), String(localized: "Apps that open each time you sign in."))
+                filterCard(.yours, "\(allYours.count)", String(localized: "Your agents"), String(localized: "\(allYours.count - active.count) off. Switch any off, and back on."))
+                filterCard(.yours, "\(active.filter { $0.rhythm == "Always running" }.count)", String(localized: "Always running"), String(localized: "Stay on even while you don't use them."))
+                filterCard(.managed, "\(allManaged)", String(localized: "Managed by macOS"), String(localized: "Only System Settings can change these."))
             }
             if !flagged.isEmpty { attention(flagged) }
-            if !rhythms.isEmpty { ShareBreakdown(title: "When your agents run", parts: rhythms.map { ($0.name, UInt64($0.count), $0.count, colors[$0.name] ?? .gray) }, countsOnly: true) }
+            if !rhythms.isEmpty { ShareBreakdown(title: String(localized: "When your agents run"), parts: rhythms.map { (rhythmTitle($0.name), UInt64($0.count), $0.count, colors[$0.name] ?? .gray) }, countsOnly: true) }
             HStack(spacing: 10) {
                 TextField("Find an item", text: $search).stewardInput()
                 Button { addApps() } label: { Label("Add app…", systemImage: "plus") }.buttonStyle(CleanupGlassButtonStyle(compact: true)).help("Choose an app to open each time you sign in")
@@ -394,12 +398,12 @@ struct BackgroundItemsView: View {
             }
             if let error = state.error { Text(error).stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true) }
             if !logins.isEmpty {
-                BulkBar(title: "Select all", isOn: Binding(get: { Set(logins).isSubset(of: chosen) }, set: { if $0 { chosen.formUnion(logins) } else { chosen.subtract(logins) } }), help: "Every app listed under Open at login. The apps themselves stay installed.", summary: "\(toRemove.count) selected") {
+                BulkBar(title: String(localized: "Select all", comment: "Checkbox: select every item in the list"), isOn: Binding(get: { Set(logins).isSubset(of: chosen) }, set: { if $0 { chosen.formUnion(logins) } else { chosen.subtract(logins) } }), help: String(localized: "Every app listed under Open at login. The apps themselves stay installed."), summary: String(localized: "\(toRemove.count) selected")) {
                     Button("Remove \(toRemove.count) from login") { state.remove(toRemove); chosen.removeAll() }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(toRemove.isEmpty)
                 }
             }
             if !logins.isEmpty {
-                FoldSection(title: "Open at login", count: "\(logins.count) \(logins.count == 1 ? "app" : "apps")", open: isOpen(.login), canSelectAll: true,
+                FoldSection(title: String(localized: "Open at login"), count: String(localized: "\(logins.count) apps"), open: isOpen(.login), canSelectAll: true,
                             selectAll: Binding(get: { Set(logins).isSubset(of: chosen) }, set: { if $0 { chosen.formUnion(logins) } else { chosen.subtract(logins) } }), toggle: { fold(.login) }) {
                     ForEach(logins, id: \.self) { name in
                         Divider().opacity(0.25)
@@ -408,7 +412,7 @@ struct BackgroundItemsView: View {
                 }
             }
             if !yours.isEmpty {
-                FoldSection(title: "Your agents", count: "\(yours.count) · \(yours.filter { state.disabled.contains($0.label) }.count) off", open: isOpen(.yours), toggle: { fold(.yours) }) {
+                FoldSection(title: String(localized: "Your agents"), count: String(localized: "\(yours.count) · \(yours.filter { state.disabled.contains($0.label) }.count) off"), open: isOpen(.yours), toggle: { fold(.yours) }) {
                     ForEach(yours) { item in
                         Divider().opacity(0.25)
                         AgentRow(item: item) { Toggle("On", isOn: Binding(get: { !state.disabled.contains(item.label) }, set: { state.set(item, enabled: $0) })).toggleStyle(.switch).labelsHidden().tint(.mint).controlSize(.small) }
@@ -416,18 +420,31 @@ struct BackgroundItemsView: View {
                 }
             }
             if !managed.isEmpty {
-                FoldSection(title: "Managed by macOS", count: "\(managed.count) · change these in System Settings", open: isOpen(.managed), toggle: { fold(.managed) }) {
+                FoldSection(title: String(localized: "Managed by macOS"), count: String(localized: "\(managed.count) · change these in System Settings"), open: isOpen(.managed), toggle: { fold(.managed) }) {
                     ForEach(managed) { item in
                         Divider().opacity(0.25)
-                        AgentRow(item: item) { Text(item.scope).stewardFont(.caption).foregroundStyle(.secondary) }
+                        AgentRow(item: item) { Text(item.scopeTitle).stewardFont(.caption).foregroundStyle(.secondary) }
                     }
                 }
             }
         }
     }
+    private func heroSubtitle(logins: Int, agents: Int) -> String {
+        let apps = String(localized: "\(logins) apps open at login"), running = String(localized: "\(agents) agents run in the background")
+        return String(localized: "\(apps) and \(running). Removing a login item keeps the app.")
+    }
+    private func rhythmTitle(_ name: String) -> String {
+        switch name {
+        case "Always running": return String(localized: "Always running")
+        case "On a schedule": return String(localized: "On a schedule")
+        case "At login": return String(localized: "At login")
+        case "When needed": return String(localized: "When needed")
+        default: return name
+        }
+    }
     private func addApps() {
         let panel = NSOpenPanel()
-        panel.title = "Open at login"; panel.prompt = "Add"; panel.message = "Choose the apps to open each time you sign in."
+        panel.title = String(localized: "Open at login"); panel.prompt = String(localized: "Add", comment: "Button in the app picker: add the chosen apps to login items"); panel.message = String(localized: "Choose the apps to open each time you sign in.")
         panel.allowedContentTypes = [.applicationBundle]; panel.allowsMultipleSelection = true; panel.canChooseDirectories = false
         panel.directoryURL = URL(fileURLWithPath: "/Applications")
         panel.begin { response in
@@ -438,7 +455,7 @@ struct BackgroundItemsView: View {
     }
     private func openSettings() {
         if let url = URL(string: "x-apple.systempreferences:com.apple.LoginItems-Settings.extension"), NSWorkspace.shared.open(url) { return }
-        state.error = "Open System Settings → General → Login Items & Extensions."
+        state.error = String(localized: "Open System Settings → General → Login Items & Extensions.")
     }
 }
 
@@ -454,7 +471,7 @@ private struct LoginRow: View {
     }
     var body: some View {
         HStack(spacing: 12) {
-            Toggle("Select " + name, isOn: $selected).toggleStyle(.stewardCheckboxOnly)
+            Toggle(String(localized: "Select \(name)"), isOn: $selected).toggleStyle(.stewardCheckboxOnly)
             if let icon { Image(nsImage: icon).resizable().scaledToFit().frame(width: 28, height: 28) }
             else { Image(systemName: "power").foregroundStyle(.mint).frame(width: 28, height: 28) }
             Text(name.displaySafe).stewardFont(.body, weight: .medium).lineLimit(1)

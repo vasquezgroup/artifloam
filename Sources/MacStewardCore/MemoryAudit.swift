@@ -6,6 +6,14 @@ public enum MemoryPressure: String, Sendable {
     public init(dispatchLevel: Int32?) {
         switch dispatchLevel { case 1: self = .normal; case 2: self = .warning; case 4: self = .critical; default: self = .unknown }
     }
+    public var title: String {
+        switch self {
+        case .normal: return String(localized: "Normal", comment: "Status: thermal state or memory pressure")
+        case .warning: return String(localized: "Elevated", comment: "Status: memory pressure")
+        case .critical: return String(localized: "High", comment: "Status: thermal state or memory pressure")
+        case .unknown: return String(localized: "Unavailable", comment: "Status: thermal state or memory pressure could not be read")
+        }
+    }
 }
 public struct MemoryAppDescriptor: Sendable {
     public let pid: Int32
@@ -61,7 +69,7 @@ public struct MemoryReading: Sendable {
         let result = withUnsafeMutablePointer(to: &vm) { pointer in
             pointer.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { host_statistics64(host, HOST_VM_INFO64, $0, &count) }
         }
-        guard result == KERN_SUCCESS else { throw StewardError.blocked("macOS memory statistics are unavailable.") }
+        guard result == KERN_SUCCESS else { throw StewardError.blocked(String(localized: "macOS memory statistics are unavailable.")) }
         let page = UInt64(vm_kernel_page_size), total = ProcessInfo.processInfo.physicalMemory
         let values = accounting(total: total, free: UInt64(vm.free_count) * page, inactive: UInt64(vm.inactive_count) * page, speculative: UInt64(vm.speculative_count) * page, purgeable: UInt64(vm.purgeable_count) * page, external: UInt64(vm.external_page_count) * page)
         var level: Int32 = 0, size = MemoryLayout<Int32>.size

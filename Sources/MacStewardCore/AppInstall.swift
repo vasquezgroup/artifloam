@@ -18,14 +18,14 @@ public enum AppInstall {
         var source: SecStaticCode?, requirement: SecRequirement?
         guard SecStaticCodeCreateWithPath(bundle as CFURL, [], &source) == errSecSuccess, let source,
               SecCodeCopyDesignatedRequirement(source, [], &requirement) == errSecSuccess, let requirement else {
-            throw StewardError.blocked("This copy of Artifloam isn't signed, so it wasn't moved.")
+            throw StewardError.blocked(String(localized: "This copy of Artifloam isn't signed, so it wasn't moved."))
         }
         try FileManager.default.copyItem(at: bundle, to: destination)
         var copied: SecStaticCode?
         guard SecStaticCodeCreateWithPath(destination as CFURL, [], &copied) == errSecSuccess, let copied,
               SecStaticCodeCheckValidity(copied, SecCSFlags(rawValue: kSecCSCheckAllArchitectures | kSecCSCheckNestedCode | kSecCSStrictValidate), requirement) == errSecSuccess else {
             try? FileManager.default.removeItem(at: destination)
-            throw StewardError.blocked("The copy in Applications failed its signature check, so it was removed.")
+            throw StewardError.blocked(String(localized: "The copy in Applications failed its signature check, so it was removed."))
         }
         _ = run("/usr/bin/xattr", ["-dr", "com.apple.quarantine", destination.path], timeout: 30)
     }

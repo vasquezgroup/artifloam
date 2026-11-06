@@ -26,8 +26,8 @@ struct MacStewardApp {
             }
             lease = acquired
         } catch {
-            let alert = NSAlert(); alert.messageText = "Artifloam could not open its window"
-            alert.informativeText = "The single-window lock could not be opened. " + error.localizedDescription
+            let alert = NSAlert(); alert.messageText = String(localized: "Artifloam could not open its window")
+            alert.informativeText = String(localized: "The single-window lock could not be opened. \(error.localizedDescription)")
             alert.runModal(); return
         }
         // Before anything reads the schedule: a schedule from an older version moves to the new label.
@@ -111,7 +111,7 @@ final class StewardApplicationDelegate: NSObject, NSApplicationDelegate, NSPopov
     @objc private func showWindow() {
         if window == nil {
             let view = StewardRootView(activity: activity).environmentObject(model)
-                .frame(minWidth: 840, minHeight: 600).preferredColorScheme(.dark)
+                .frame(minWidth: 840, minHeight: 600).preferredColorScheme(.dark).environment(\.layoutDirection, appLayoutDirection)
             let window = StewardGlassWindow(contentRect: NSRect(x: 0, y: 0, width: 1160, height: 678),
                                   styleMask: [.titled, .fullSizeContentView, .resizable, .closable, .miniaturizable],
                                   backing: .buffered, defer: false)
@@ -157,12 +157,12 @@ final class StewardApplicationDelegate: NSObject, NSApplicationDelegate, NSPopov
 
     private func installMemoryMenu() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        let symbol = NSImage(systemSymbolName: "leaf.fill", accessibilityDescription: "Artifloam Mac dashboard")?
+        let symbol = NSImage(systemSymbolName: "leaf.fill", accessibilityDescription: String(localized: "Artifloam Mac dashboard"))?
             .withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 18, weight: .semibold))
         symbol?.isTemplate = true
         item.button?.image = symbol
         item.button?.imageScaling = .scaleProportionallyDown
-        item.button?.toolTip = "Artifloam · Mac dashboard"
+        item.button?.toolTip = String(localized: "Artifloam · Mac dashboard")
         item.button?.target = self
         item.button?.action = #selector(toggleMemoryMenu(_:))
         memoryStatusItem = item
@@ -205,7 +205,7 @@ final class StewardApplicationDelegate: NSObject, NSApplicationDelegate, NSPopov
             self?.memoryDetailsPopover.performClose(nil)
             self?.memoryPopover.performClose(nil)
             self?.model.section = section; self?.showWindow()
-        }).preferredColorScheme(.dark))
+        }).preferredColorScheme(.dark).environment(\.layoutDirection, appLayoutDirection))
         // Closed by the dashboard (same card again, or the dashboard itself closing), never by its own
         // outside-click rule: that would close it on the very click that should switch cards.
         memoryDetailsPopover.behavior = .applicationDefined
@@ -227,7 +227,7 @@ final class StewardApplicationDelegate: NSObject, NSApplicationDelegate, NSPopov
             memoryPopover.contentViewController = NSHostingController(rootView:
                 MacDashboardView(monitor: dashboard, memory: model.memory, health: model.health, openWindow: { [weak self] section in
                     self?.memoryPopover.performClose(nil); self?.model.section = section; self?.showWindow()
-                }, openDetail: { [weak self] kind in self?.showDetails(kind) })
+                }, openDetail: { [weak self] kind in self?.showDetails(kind) }).environment(\.layoutDirection, appLayoutDirection)
             )
             if sender is NSStatusBarButton {
                 memoryPopover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
@@ -287,38 +287,38 @@ final class StewardApplicationDelegate: NSObject, NSApplicationDelegate, NSPopov
             return submenu
         }
         let application = submenu("Artifloam")
-        application.addItem(withTitle: "About Artifloam", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
-        let updates = application.addItem(withTitle: "Check for Updates…", action: #selector(checkForUpdates), keyEquivalent: "")
+        application.addItem(withTitle: String(localized: "About Artifloam"), action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
+        let updates = application.addItem(withTitle: String(localized: "Check for Updates…"), action: #selector(checkForUpdates), keyEquivalent: "")
         updates.target = self
-        let settings = application.addItem(withTitle: "Settings…", action: #selector(self.settings), keyEquivalent: ",")
+        let settings = application.addItem(withTitle: String(localized: "Settings…"), action: #selector(self.settings), keyEquivalent: ",")
         settings.target = self
-        let uninstall = application.addItem(withTitle: "Uninstall Artifloam…", action: #selector(self.uninstall), keyEquivalent: "")
+        let uninstall = application.addItem(withTitle: String(localized: "Uninstall Artifloam…"), action: #selector(self.uninstall), keyEquivalent: "")
         uninstall.target = self
         application.addItem(.separator())
-        application.addItem(withTitle: "Hide Artifloam", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
-        application.addItem(withTitle: "Quit Artifloam", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
-        let file = submenu("File")
-        let open = file.addItem(withTitle: "Show Artifloam", action: #selector(showWindow), keyEquivalent: "n")
+        application.addItem(withTitle: String(localized: "Hide Artifloam"), action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
+        application.addItem(withTitle: String(localized: "Quit Artifloam"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        let file = submenu(String(localized: "File"))
+        let open = file.addItem(withTitle: String(localized: "Show Artifloam"), action: #selector(showWindow), keyEquivalent: "n")
         open.target = self
-        let scan = file.addItem(withTitle: "Scan Mac", action: #selector(self.scan), keyEquivalent: "r")
+        let scan = file.addItem(withTitle: String(localized: "Scan Mac"), action: #selector(self.scan), keyEquivalent: "r")
         scan.target = self
-        file.addItem(withTitle: "Close Window", action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
-        let edit = submenu("Edit")
-        for (title, action, key) in [("Undo", "undo:", "z"), ("Cut", "cut:", "x"), ("Copy", "copy:", "c"), ("Paste", "paste:", "v"), ("Select All", "selectAll:", "a")] {
+        file.addItem(withTitle: String(localized: "Close Window"), action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
+        let edit = submenu(String(localized: "Edit"))
+        for (title, action, key) in [(String(localized: "Undo"), "undo:", "z"), (String(localized: "Cut"), "cut:", "x"), (String(localized: "Copy"), "copy:", "c"), (String(localized: "Paste"), "paste:", "v"), (String(localized: "Select All"), "selectAll:", "a")] {
             edit.addItem(withTitle: title, action: Selector(action), keyEquivalent: key)
         }
-        let view = submenu("View")
-        for (title, action, key) in [("Bigger Text", #selector(biggerText), "="), ("Smaller Text", #selector(smallerText), "-"), ("Actual Text Size", #selector(resetText), "0")] {
+        let view = submenu(String(localized: "View"))
+        for (title, action, key) in [(String(localized: "Bigger Text"), #selector(biggerText), "="), (String(localized: "Smaller Text"), #selector(smallerText), "-"), (String(localized: "Actual Text Size"), #selector(resetText), "0")] {
             let item = view.addItem(withTitle: title, action: action, keyEquivalent: key)
             item.target = self
         }
-        let memoryMenu = view.addItem(withTitle: "Mac Dashboard", action: #selector(toggleMemoryMenu(_:)), keyEquivalent: "m")
+        let memoryMenu = view.addItem(withTitle: String(localized: "Mac Dashboard"), action: #selector(toggleMemoryMenu(_:)), keyEquivalent: "m")
         memoryMenu.target = self; memoryMenu.keyEquivalentModifierMask = [.command, .shift]
-        let equal = view.addItem(withTitle: "Bigger Text", action: #selector(biggerText), keyEquivalent: "+")
+        let equal = view.addItem(withTitle: String(localized: "Bigger Text"), action: #selector(biggerText), keyEquivalent: "+")
         equal.target = self; equal.isHidden = true; equal.allowsKeyEquivalentWhenHidden = true
-        let windows = submenu("Window")
-        windows.addItem(withTitle: "Minimize", action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
-        windows.addItem(withTitle: "Zoom", action: #selector(NSWindow.performZoom(_:)), keyEquivalent: "")
+        let windows = submenu(String(localized: "Window"))
+        windows.addItem(withTitle: String(localized: "Minimize"), action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
+        windows.addItem(withTitle: String(localized: "Zoom"), action: #selector(NSWindow.performZoom(_:)), keyEquivalent: "")
         NSApp.windowsMenu = windows
         NSApp.mainMenu = menu
     }

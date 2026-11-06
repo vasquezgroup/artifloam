@@ -46,7 +46,7 @@ final class UpdateChecker: ObservableObject {
 
     /// `reportResult` is for the menu item: say "up to date" or the failure instead of staying quiet.
     func check(reportResult: Bool) async {
-        guard let current = Self.current else { return alert("Not an official build", "This build doesn't check for updates. Update it from where you got its source.") }
+        guard let current = Self.current else { return alert(String(localized: "Not an official build"), String(localized: "This build doesn't check for updates. Update it from where you got its source.")) }
         do {
             let (data, response) = try await URLSession.shared.data(for: URLRequest(url: Self.feed, cachePolicy: .reloadIgnoringLocalCacheData))
             guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw URLError(.badServerResponse) }
@@ -57,10 +57,10 @@ final class UpdateChecker: ObservableObject {
                 if reportResult { offer() }
             } else {
                 available = nil
-                if reportResult { alert("Artifloam is up to date", "Version \(current) is the latest version.") }
+                if reportResult { alert(String(localized: "Artifloam is up to date"), String(localized: "Version \(current) is the latest version.")) }
             }
         } catch {
-            if reportResult { alert("Could not check for updates", error.localizedDescription) }
+            if reportResult { alert(String(localized: "Could not check for updates"), error.localizedDescription) }
         }
     }
 
@@ -68,9 +68,9 @@ final class UpdateChecker: ObservableObject {
     func offer() {
         guard let available, !downloading else { return }
         let alert = NSAlert()
-        alert.messageText = "Update to Artifloam \(available.version)?"
-        alert.informativeText = "You have version \(Self.current ?? "?"). Artifloam downloads the update, checks that it's genuine, and reopens."
-        alert.addButton(withTitle: "Update and Reopen"); alert.addButton(withTitle: "Later")
+        alert.messageText = String(localized: "Update to Artifloam \(available.version)?")
+        alert.informativeText = String(localized: "You have version \(Self.current ?? "?"). Artifloam downloads the update, checks that it's genuine, and reopens.")
+        alert.addButton(withTitle: String(localized: "Update and Reopen")); alert.addButton(withTitle: String(localized: "Later"))
         guard alert.runModal() == .alertFirstButtonReturn else { return }
         downloading = true
         Task {
@@ -79,7 +79,7 @@ final class UpdateChecker: ObservableObject {
                 try await install(available)
                 try Self.reopen(Bundle.main.bundleURL)
             } catch {
-                self.alert("Couldn't update Artifloam", error.localizedDescription)
+                self.alert(String(localized: "Couldn't update Artifloam"), error.localizedDescription)
             }
         }
     }
@@ -91,7 +91,7 @@ final class UpdateChecker: ObservableObject {
         let app = Bundle.main.bundleURL
         try await Task.detached {
             guard try UpdateFeed.sha256(ofFile: file) == release.sha256 else {
-                throw StewardError.blocked("The download doesn't match the signed release, so it was discarded. Nothing was changed.")
+                throw StewardError.blocked(String(localized: "The download doesn't match the signed release, so it was discarded. Nothing was changed."))
             }
             try AppUpdate.install(archive: file, version: release.version, over: app)
         }.value
@@ -133,7 +133,7 @@ struct UpdateBadge: View {
                 Image(systemName: "arrow.down.circle.fill").font(.system(size: 14 * scale, weight: .semibold))
                     .symbolRenderingMode(.palette).foregroundStyle(.white, accent)
                     .offset(y: bob ? 1.5 : -1)
-                Text(downloading ? "Downloading…" : "Update").font(.system(size: 12 * scale, weight: .semibold))
+                Group { if downloading { Text("Downloading…") } else { Text("Update", comment: "Button: install the available app update") } }.font(.system(size: 12 * scale, weight: .semibold))
             }
             .foregroundStyle(.white).padding(.horizontal, 11).frame(height: 28)
             .background {

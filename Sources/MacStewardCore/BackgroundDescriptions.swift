@@ -1,5 +1,34 @@
 import Foundation
 
+/// When launchd starts an agent, read from its plist. Logic reads the case; only `title` is for people.
+public enum BackgroundSchedule: Sendable, Equatable {
+    case alwaysRunning, onSchedule, whenFilesChange, whenNeeded, whenNeededRestarting
+    case every(seconds: Int)
+    /// The time is "05:00", as launchd has it.
+    case daily(String), weekly(String), monthly(String)
+    case atLogin(restarting: Bool), atStartup(restarting: Bool)
+
+    public var title: String {
+        switch self {
+        case .alwaysRunning: return String(localized: "Always running")
+        case .onSchedule: return String(localized: "On a schedule")
+        case .whenFilesChange: return String(localized: "When certain files change")
+        case .whenNeeded: return String(localized: "Only when needed")
+        case .whenNeededRestarting: return String(localized: "When needed, restarts if it stops")
+        case .every(let seconds):
+            if seconds % 86400 == 0 { return seconds == 86400 ? String(localized: "Every day") : String(localized: "Every \(seconds / 86400) days") }
+            if seconds % 3600 == 0 { return seconds == 3600 ? String(localized: "Every hour") : String(localized: "Every \(seconds / 3600) hours") }
+            if seconds % 60 == 0 { return seconds == 60 ? String(localized: "Every minute") : String(localized: "Every \(seconds / 60) minutes") }
+            return String(localized: "Every \(seconds) seconds")
+        case .daily(let clock): return String(localized: "Daily at \(clock)")
+        case .weekly(let clock): return String(localized: "Weekly at \(clock)")
+        case .monthly(let clock): return String(localized: "Monthly at \(clock)")
+        case .atLogin(let restarting): return restarting ? String(localized: "At login, restarts if it stops") : String(localized: "At login")
+        case .atStartup(let restarting): return restarting ? String(localized: "At startup, restarts if it stops") : String(localized: "At startup")
+        }
+    }
+}
+
 /// Plain-language descriptions of launch agents, read from their plist: what they run and when. No network and no AI.
 /// The "what" for app agents is a keyword match on the label, so it can be generic.
 extension BackgroundItem {
@@ -16,38 +45,59 @@ extension BackgroundItem {
         let parts = program.components(separatedBy: "/")
         return parts.firstIndex { $0.hasSuffix(".app") }.map { parts[...$0].joined(separator: "/") }
     }
-    /// Which of four rhythms it keeps, for "when your agents run".
+    /// Which of four rhythms it keeps, for "when your agents run". An identifier: people see `rhythmTitle(_:)`.
     public var rhythm: String {
-        if schedule == "Always running" { return "Always running" }
-        if schedule.hasPrefix("Every") || schedule.hasPrefix("Daily") || schedule.hasPrefix("Weekly") { return "On a schedule" }
-        if schedule.hasPrefix("At login") { return "At login" }
-        return "When needed"
+        switch schedule {
+        case .alwaysRunning: return "Always running"
+        case .every, .daily, .weekly: return "On a schedule"
+        case .atLogin: return "At login"
+        default: return "When needed"
+        }
+    }
+    public static func rhythmTitle(_ rhythm: String) -> String {
+        switch rhythm {
+        case "Always running": return String(localized: "Always running")
+        case "On a schedule": return String(localized: "On a schedule")
+        case "At login": return String(localized: "At login")
+        case "When needed": return String(localized: "When needed")
+        default: return rhythm
+        }
+    }
+    /// `scope` is an identifier; this is what people see.
+    public var scopeTitle: String {
+        switch scope {
+        case "Your account": return String(localized: "Your account")
+        case "All users": return String(localized: "All users")
+        case "System service": return String(localized: "System service")
+        default: return scope
+        }
     }
     /// Wakes the Mac over and over: every few minutes or more often.
     public var runsOften: Bool {
-        schedule.hasSuffix("second") || schedule.hasSuffix("seconds") || schedule == "Every minute" || (schedule.hasSuffix("minutes") && (Int(schedule.split(separator: " ").dropFirst().first ?? "") ?? 99) <= 5)
+        guard case .every(let seconds) = schedule, seconds % 3600 != 0 else { return false }
+        return seconds % 60 != 0 || seconds / 60 <= 5
     }
     /// What it does and when it runs: "Runs server.mjs from teams-presence · Always running".
-    public var summary: String { what + " · " + schedule }
+    public var summary: String { what + " · " + schedule.title }
 
     private var what: String {
         let name = URL(fileURLWithPath: program).lastPathComponent
-        let servers = ["mysqld": "MySQL database server", "mysqld_safe": "MySQL database server", "redis-server": "Redis database server", "postgres": "PostgreSQL database server", "pg_ctl": "PostgreSQL database server", "mongod": "MongoDB database server", "php-fpm": "PHP server for local websites", "nginx": "Nginx web server", "httpd": "Apache web server", "dnsmasq": "Local DNS server", "ollama": "Ollama, runs AI models locally"]
+        let servers = ["mysqld": String(localized: "MySQL database server"), "mysqld_safe": String(localized: "MySQL database server"), "redis-server": String(localized: "Redis database server"), "postgres": String(localized: "PostgreSQL database server"), "pg_ctl": String(localized: "PostgreSQL database server"), "mongod": String(localized: "MongoDB database server"), "php-fpm": String(localized: "PHP server for local websites"), "nginx": String(localized: "Nginx web server"), "httpd": String(localized: "Apache web server"), "dnsmasq": String(localized: "Local DNS server"), "ollama": String(localized: "Ollama, runs AI models locally")]
         if let server = servers[name] { return server }
-        if let script = scriptPath { return "Runs \(URL(fileURLWithPath: script).lastPathComponent) from \(Self.home(ofScript: script))" }
+        if let script = scriptPath { return String(localized: "Runs \(URL(fileURLWithPath: script).lastPathComponent) from \(Self.home(ofScript: script))") }
         let who = maker.name
-        if who == "Homebrew" { return "\(maker.rest) service, installed with Homebrew" }
+        if who == "Homebrew" { return String(localized: "\(maker.rest) service, installed with Homebrew") }
         let text = label.lowercased()
-        if text.contains("uninstall") { return "Part of the \(who) uninstaller" }
-        if text.contains("updat") { return "Keeps \(who) up to date" }
-        if text.contains("licens") { return "Checks your \(who) license" }
-        if text.contains("install") { return "Installs \(who) components" }
-        if text.contains("report") { return "Sends reports to \(who)" }
-        if text.contains("sync") { return "Syncs files for \(who)" }
-        if text.contains("launcher") { return "Starts \(who) apps" }
-        if text.contains("helper") { return scope == "Your account" ? "Helper for \(who)" : "Lets \(who) do tasks that need admin rights" }
-        if ["agent", "daemon", "service", "assistant"].contains(where: text.contains) { return "Runs \(who) in the background" }
-        return label == who ? "Background program" : "Background program from \(who)"
+        if text.contains("uninstall") { return String(localized: "Part of the \(who) uninstaller") }
+        if text.contains("updat") { return String(localized: "Keeps \(who) up to date") }
+        if text.contains("licens") { return String(localized: "Checks your \(who) license") }
+        if text.contains("install") { return String(localized: "Installs \(who) components") }
+        if text.contains("report") { return String(localized: "Sends reports to \(who)") }
+        if text.contains("sync") { return String(localized: "Syncs files for \(who)") }
+        if text.contains("launcher") { return String(localized: "Starts \(who) apps") }
+        if text.contains("helper") { return scope == "Your account" ? String(localized: "Helper for \(who)") : String(localized: "Lets \(who) do tasks that need admin rights") }
+        if ["agent", "daemon", "service", "assistant"].contains(where: text.contains) { return String(localized: "Runs \(who) in the background") }
+        return label == who ? String(localized: "Background program") : String(localized: "Background program from \(who)")
     }
     /// The script an interpreter was told to run, if this agent is one.
     private var scriptPath: String? {
@@ -64,25 +114,18 @@ extension BackgroundItem {
         return parts.dropLast().last ?? path
     }
     /// When launchd starts it, from the plist's own keys.
-    static func schedule(_ info: [String: Any], scope: String) -> String {
-        if info["KeepAlive"] as? Bool == true { return "Always running" }
-        if let seconds = info["StartInterval"] as? Int { return every(seconds) }
+    static func schedule(_ info: [String: Any], scope: String) -> BackgroundSchedule {
+        if info["KeepAlive"] as? Bool == true { return .alwaysRunning }
+        if let seconds = info["StartInterval"] as? Int { return .every(seconds: seconds) }
         if let time = info["StartCalendarInterval"] as? [String: Int] {
-            guard let hour = time["Hour"] else { return "On a schedule" }
+            guard let hour = time["Hour"] else { return .onSchedule }
             let clock = String(format: "%02d:%02d", hour, time["Minute"] ?? 0)
-            return time["Weekday"] != nil ? "Weekly at \(clock)" : time["Day"] != nil ? "Monthly at \(clock)" : "Daily at \(clock)"
+            return time["Weekday"] != nil ? .weekly(clock) : time["Day"] != nil ? .monthly(clock) : .daily(clock)
         }
-        if info["StartCalendarInterval"] != nil { return "On a schedule" }
-        if info["WatchPaths"] != nil { return "When certain files change" }
-        let start = scope == "Your account" ? "At login" : "At startup"
-        let starts = info["RunAtLoad"] as? Bool == true
-        if info["KeepAlive"] != nil { return (starts ? start : "When needed") + ", restarts if it stops" }
-        return starts ? start : "Only when needed"
-    }
-    private static func every(_ seconds: Int) -> String {
-        if seconds % 86400 == 0 { return seconds == 86400 ? "Every day" : "Every \(seconds / 86400) days" }
-        if seconds % 3600 == 0 { return seconds == 3600 ? "Every hour" : "Every \(seconds / 3600) hours" }
-        if seconds % 60 == 0 { return seconds == 60 ? "Every minute" : "Every \(seconds / 60) minutes" }
-        return "Every \(seconds) seconds"
+        if info["StartCalendarInterval"] != nil { return .onSchedule }
+        if info["WatchPaths"] != nil { return .whenFilesChange }
+        let starts = info["RunAtLoad"] as? Bool == true, restarting = info["KeepAlive"] != nil
+        if starts { return scope == "Your account" ? .atLogin(restarting: restarting) : .atStartup(restarting: restarting) }
+        return restarting ? .whenNeededRestarting : .whenNeeded
     }
 }

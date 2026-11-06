@@ -20,10 +20,10 @@ public struct TrashOutcome: Identifiable, Sendable {
 public enum ReviewedTrash {
     private static func fingerprint(_ url: URL) throws -> (String, Bool) {
         var value = stat()
-        guard lstat(url.path, &value) == 0 else { throw StewardError.blocked("This item is no longer accessible. Refresh and review again.") }
-        guard value.st_mode & S_IFMT != S_IFLNK else { throw StewardError.blocked("Symbolic links cannot be removed here. Reveal the item in Finder.") }
+        guard lstat(url.path, &value) == 0 else { throw StewardError.blocked(String(localized: "This item is no longer accessible. Refresh and review again.")) }
+        guard value.st_mode & S_IFMT != S_IFLNK else { throw StewardError.blocked(String(localized: "Symbolic links cannot be removed here. Reveal the item in Finder.")) }
         let kind = value.st_mode & S_IFMT
-        guard kind == S_IFDIR || kind == S_IFREG else { throw StewardError.blocked("Only ordinary files and folders can be moved to Trash here.") }
+        guard kind == S_IFDIR || kind == S_IFREG else { throw StewardError.blocked(String(localized: "Only ordinary files and folders can be moved to Trash here.")) }
         return ("\(value.st_dev):\(value.st_ino):\(value.st_gen):\(value.st_size):\(value.st_mtimespec.tv_sec):\(value.st_mtimespec.tv_nsec):\(value.st_ctimespec.tv_sec):\(value.st_ctimespec.tv_nsec)", kind == S_IFDIR)
     }
     static let credentialFolders: Set<String> = [".ssh", ".gnupg", ".aws", ".azure", ".kube", ".docker", ".config", ".password-store", ".gcloud", ".trash"]
@@ -69,10 +69,10 @@ public enum ReviewedTrash {
     }
     public static func review(_ urls: [URL], home: URL = FileManager.default.homeDirectoryForCurrentUser, allowApplications: Bool = false, allowLeftovers: Bool = false) throws -> [TrashCandidate] {
         let unique = Array(Set(urls.map { $0.standardizedFileURL })).sorted { $0.path < $1.path }
-        guard !unique.isEmpty else { throw StewardError.blocked("Select an item first.") }
+        guard !unique.isEmpty else { throw StewardError.blocked(String(localized: "Select an item first.")) }
         var result = [TrashCandidate]()
         for url in unique {
-            guard allowed(url, home: home, allowApplication: allowApplications, allowLeftover: allowLeftovers) else { throw StewardError.blocked("\(url.lastPathComponent) is a protected location. Use Finder or the app’s own management tools.") }
+            guard allowed(url, home: home, allowApplication: allowApplications, allowLeftover: allowLeftovers) else { throw StewardError.blocked(String(localized: "\(url.lastPathComponent) is a protected location. Use Finder or the app’s own management tools.")) }
             if result.contains(where: { url.path.hasPrefix($0.url.path + "/") }) { continue }
             let (identity, directory) = try fingerprint(url)
             result.append(TrashCandidate(url: url, isDirectory: directory, cloud: StorageMapper.cloudStatus(url, flags: 0, home: home), identity: identity))
@@ -86,7 +86,7 @@ public enum ReviewedTrash {
         let results = move(candidates, home: home, allowApplications: allowApplications, allowLeftovers: allowLeftovers, duplicateGroups: duplicateGroups, progress: progress, shouldStop: shouldStop) { url in
             var result: NSURL?
             let running = NSWorkspace.shared.runningApplications.compactMap(\.bundleURL)
-            guard !running.contains(where: { $0.path == url.path || $0.path.hasPrefix(url.path + "/") || url.path.hasPrefix($0.path + "/") }) else { throw StewardError.blocked("A selected item is used by a running app. Quit it yourself and review again.") }
+            guard !running.contains(where: { $0.path == url.path || $0.path.hasPrefix(url.path + "/") || url.path.hasPrefix($0.path + "/") }) else { throw StewardError.blocked(String(localized: "A selected item is used by a running app. Quit it yourself and review again.")) }
             try FileManager.default.trashItem(at: url, resultingItemURL: &result)
             return result?.path
         }
@@ -110,9 +110,9 @@ public enum ReviewedTrash {
                 if !duplicateGroups.isEmpty {
                     let groups = duplicateGroups.filter { $0.files.contains(candidate.url.path) }
                     let safe = try DuplicateFinder.stillSafeToTrash(candidates.map { $0.url.path }, in: groups)
-                    guard safe.paths.contains(candidate.url.path) else { throw StewardError.blocked("The duplicate or the copy being kept changed. Scan again.") }
+                    guard safe.paths.contains(candidate.url.path) else { throw StewardError.blocked(String(localized: "The duplicate or the copy being kept changed. Scan again.")) }
                 }
-                guard allowed(candidate.url, home: home, allowApplication: allowApplications, allowLeftover: allowLeftovers), try fingerprint(candidate.url).0 == candidate.identity else { throw StewardError.blocked("Item changed since review. Refresh and review again.") }
+                guard allowed(candidate.url, home: home, allowApplication: allowApplications, allowLeftover: allowLeftovers), try fingerprint(candidate.url).0 == candidate.identity else { throw StewardError.blocked(String(localized: "Item changed since review. Refresh and review again.")) }
                 let destination = try operation(candidate.url)
                 moved += size
                 outcomes.append(TrashOutcome(path: candidate.url.path, trashPath: destination, error: nil))

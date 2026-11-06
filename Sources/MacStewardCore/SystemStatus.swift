@@ -15,7 +15,9 @@ public struct SystemStatusReading: Sendable {
     public let networkInPerSecond: UInt64
     public let networkOutPerSecond: UInt64
     public let battery: Battery?
+    /// An identifier, compared by the views. People see `thermalTitle`.
     public let thermal: String
+    public var thermalTitle: String { MacDashboard.thermalTitle(thermal) }
     public let uptime: TimeInterval
     public let processes: [ProcessUsage]
     public struct Battery: Sendable {
@@ -156,7 +158,7 @@ public struct CleanupHistory: Sendable {
     public let totalFreed: UInt64
     public let lastThirtyDays: UInt64
     public let cleanups: Int
-    /// Freed bytes by kind of item, largest first.
+    /// Freed bytes by kind of item, largest first. The names are identifiers: people see `kindTitle(_:)`.
     public let byKind: [(name: String, bytes: UInt64)]
     public static let empty = CleanupHistory(totalFreed: 0, lastThirtyDays: 0, cleanups: 0, byKind: [])
     public static func load(home: URL = FileManager.default.homeDirectoryForCurrentUser, now: Date = Date()) -> CleanupHistory {
@@ -172,6 +174,18 @@ public struct CleanupHistory: Sendable {
             }
         }
         return CleanupHistory(totalFreed: total, lastThirtyDays: recent, cleanups: receipts.count, byKind: kinds.map { ($0.key, $0.value) }.sorted { $0.1 > $1.1 })
+    }
+    public static func kindTitle(_ kind: String) -> String {
+        switch kind {
+        case "Simulators": return String(localized: "Simulators")
+        case "Dependencies": return String(localized: "Dependencies")
+        case "Project caches": return String(localized: "Project caches")
+        case "Developer caches": return String(localized: "Developer caches")
+        case "App caches": return String(localized: "App caches")
+        case "Logs": return String(localized: "Logs", comment: "Kind of file: log files")
+        case "Other": return String(localized: "Other", comment: "Kind of file: everything else")
+        default: return kind
+        }
     }
     static func kind(_ path: String) -> String {
         if path.contains("/CoreSimulator/") { return "Simulators" }

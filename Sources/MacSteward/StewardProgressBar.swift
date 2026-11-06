@@ -31,7 +31,7 @@ struct StewardProgressBar: View {
                     }.clipShape(Capsule()).overlay { Capsule().stroke(.white.opacity(0.12), lineWidth: 0.5) }
                 }.frame(height: thickness)
             }
-        }.accessibilityElement(children: .ignore).accessibilityLabel(title ?? "Progress")
-            .accessibilityValue(value.map { "\(Int(min(1, max(0, $0)) * 100)) percent" } ?? "In progress; total not yet known")
+        }.accessibilityElement(children: .ignore).accessibilityLabel(title ?? String(localized: "Progress"))
+            .accessibilityValue(value.map { String(localized: "\(Int(min(1, max(0, $0)) * 100)) percent") } ?? String(localized: "In progress; total not yet known"))
     }
 }

@@ -57,7 +57,7 @@ final class SpaceKeeperRunner: ObservableObject {
             }.value
             lastRun = Date(); lastFreed = freed; running = false
             defaults.set(lastRun, forKey: "keepSpaceFreeLastRun"); defaults.set(NSNumber(value: freed), forKey: "keepSpaceFreeLastFreed")
-            if notify && freed > 50_000_000 { Self.notify("Freed \(formattedBytes(freed))", "Keep space free cleaned caches that rebuild themselves. Your files were not touched.") }
+            if notify && freed > 50_000_000 { Self.notify(String(localized: "Freed \(formattedBytes(freed))"), String(localized: "Keep space free cleaned caches that rebuild themselves. Your files were not touched.")) }
             let disk = DiskSpace.read()
             needsReview = enabled && SpaceKeeper.isLow(free: disk.free, total: disk.total)
             if notify && needsReview { offerReview() }
@@ -69,7 +69,7 @@ final class SpaceKeeperRunner: ObservableObject {
         let last = defaults.object(forKey: "keepSpaceFreeReviewOffered") as? Date ?? .distantPast
         guard Date().timeIntervalSince(last) >= 86_400 else { return }
         defaults.set(Date(), forKey: "keepSpaceFreeReviewOffered")
-        Self.notify("Your Mac is still low on space", "Artifloam cleaned what's safe to remove on its own. Click to review larger items you can choose to remove.", identifier: Self.reviewNotification)
+        Self.notify(String(localized: "Your Mac is still low on space"), String(localized: "Artifloam cleaned what's safe to remove on its own. Click to review larger items you can choose to remove."), identifier: Self.reviewNotification)
     }
 
     private static func notify(_ title: String, _ body: String, identifier: String = "keep-space-free") {

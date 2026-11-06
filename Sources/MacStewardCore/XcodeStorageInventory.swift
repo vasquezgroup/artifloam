@@ -23,7 +23,7 @@ public enum XcodeStorageInventory {
                 let idle = used.map { now.timeIntervalSince($0) >= Double(simulatorIdleDays) * 86_400 } ?? false
                 guard bytes >= 100_000_000, !available || idle else { return nil }
                 let os = runtime.components(separatedBy: "SimRuntime.").last?.replacingOccurrences(of: "-", with: ".").replacingOccurrences(of: "iOS.", with: "iOS ") ?? ""
-                return UnusedSimulator(udid: udid, name: [device["name"] as? String ?? "Simulator", os].filter { !$0.isEmpty }.joined(separator: " · "), bytes: bytes, available: available, lastUsed: used)
+                return UnusedSimulator(udid: udid, name: [device["name"] as? String ?? String(localized: "Simulator"), os].filter { !$0.isEmpty }.joined(separator: " · "), bytes: bytes, available: available, lastUsed: used)
             }
         }
     }
@@ -46,12 +46,12 @@ public enum XcodeStorageInventory {
     static func removeSimulator(_ finding: Finding, configuration: Configuration, activity: ActivitySnapshot) throws {
         let udid = URL(fileURLWithPath: finding.path).lastPathComponent
         let base = configuration.home.appendingPathComponent("Library/Developer/CoreSimulator/Devices/\(udid)").path
-        guard finding.rule == simulatorRule, finding.path == base else { throw StewardError.blocked("Not a simulator Artifloam can remove.") }
-        guard !configuration.ignoredPaths.contains(where: { base == $0 || base.hasPrefix($0 + "/") }) else { throw StewardError.blocked("Path is on the ignore list") }
-        guard activity.reliable, !BroadCaches.simulatorRunning(activity) else { throw StewardError.blocked("A simulator is running") }
-        guard listSimulators()?.contains(where: { $0.udid == udid }) == true else { throw StewardError.blocked("This simulator was used or changed; scan again") }
+        guard finding.rule == simulatorRule, finding.path == base else { throw StewardError.blocked(String(localized: "Not a simulator Artifloam can remove.")) }
+        guard !configuration.ignoredPaths.contains(where: { base == $0 || base.hasPrefix($0 + "/") }) else { throw StewardError.blocked(String(localized: "Path is on the ignore list")) }
+        guard activity.reliable, !BroadCaches.simulatorRunning(activity) else { throw StewardError.blocked(String(localized: "A simulator is running")) }
+        guard listSimulators()?.contains(where: { $0.udid == udid }) == true else { throw StewardError.blocked(String(localized: "This simulator was used or changed; scan again")) }
         let result = run("/usr/bin/xcrun", ["simctl", "delete", udid], timeout: 120)
-        guard result.code == 0 else { throw StewardError.blocked("simctl could not delete it: " + result.error.trimmingCharacters(in: .whitespacesAndNewlines)) }
+        guard result.code == 0 else { throw StewardError.blocked(String(localized: "simctl could not delete it: \(result.error.trimmingCharacters(in: .whitespacesAndNewlines))")) }
     }
     static func inspect(home: URL, ignoredPaths: [String] = []) -> (findings: [Finding], notices: [String]) {
         var rows: [Finding] = [], notices: [String] = []
@@ -66,18 +66,18 @@ public enum XcodeStorageInventory {
             guard bytes >= 1_000_000 else { return }
             let modified = value.contentModificationDate ?? Date()
             // "in use" = modified in the last 30 days; Xcode records no last-used date for these folders.
-            let warnings = ([flag] + [rule == trashRule && Date().timeIntervalSince(modified) < 30 * 86_400 ? "Used in the last 30 days." : nil]).compactMap { $0 }
+            let warnings = ([flag] + [rule == trashRule && Date().timeIntervalSince(modified) < 30 * 86_400 ? String(localized: "Used in the last 30 days.") : nil]).compactMap { $0 }
             rows.append(Finding(path: url.path, group: .xcode, bytes: bytes, modifiedAt: modified, safety: safety, reason: reason, rule: rule, fingerprint: "review-only", warnings: warnings.isEmpty ? nil : warnings))
         }
         for url in children(home.appendingPathComponent("Library/Developer/Xcode/Archives")) {
-            add(url, reason: "Release archives from Xcode Organizer. Moves to the Trash.", flag: "May hold the only signed build and debug symbols of a release.")
+            add(url, reason: String(localized: "Release archives from Xcode Organizer. Moves to the Trash."), flag: String(localized: "May hold the only signed build and debug symbols of a release."))
         }
         for url in children(home.appendingPathComponent("Library/Developer/Xcode/iOS DeviceSupport")) {
-            add(url, reason: "Device support for one iOS version. Xcode rebuilds it the next time you connect a device with it.")
+            add(url, reason: String(localized: "Device support for one iOS version. Xcode rebuilds it the next time you connect a device with it."))
         }
         for project in children(home.appendingPathComponent("Library/Developer/Xcode/DerivedData")) where project.lastPathComponent != "ModuleCache.noindex" {
-            add(project.appendingPathComponent("Build/Products"), reason: "Built apps and frameworks. Xcode builds them again.", flag: "May include signed builds you still need.")
-            add(project.appendingPathComponent("SourcePackages"), reason: "Downloaded Swift packages. Xcode fetches them again when you open the project.")
+            add(project.appendingPathComponent("Build/Products"), reason: String(localized: "Built apps and frameworks. Xcode builds them again."), flag: String(localized: "May include signed builds you still need."))
+            add(project.appendingPathComponent("SourcePackages"), reason: String(localized: "Downloaded Swift packages. Xcode fetches them again when you open the project."))
         }
         let hasXcodeStorage = [home.appendingPathComponent("Library/Developer/CoreSimulator").path, "/Library/Developer/CoreSimulator", "/Applications/Xcode.app"].contains { FileManager.default.fileExists(atPath: $0) }
         if hasXcodeStorage, home.standardizedFileURL == FileManager.default.homeDirectoryForCurrentUser.standardizedFileURL, DeveloperTools.gitExecutable != nil {
@@ -86,18 +86,21 @@ public enum XcodeStorageInventory {
                 for runtime in object["runtimes"] as? [[String: Any]] ?? [] {
                     guard let path = runtime["bundlePath"] as? String, path.hasPrefix("/"), path.hasSuffix(".simruntime"),
                           path.hasPrefix("/Library/Developer/CoreSimulator/") || path.hasPrefix("/private/var/run/com.apple.security.cryptexd/mnt/") else { continue }
-                    add(URL(fileURLWithPath: path), reason: "Simulator OS runtime. Manage removal in Xcode > Settings > Components (Platforms on older Xcode). Simulators Xcode can still run, and their data, are not cleaned automatically.", immutable: true, rule: "xcode-managed-review")
+                    add(URL(fileURLWithPath: path), reason: String(localized: "Simulator OS runtime. Manage removal in Xcode > Settings > Components (Platforms on older Xcode). Simulators Xcode can still run, and their data, are not cleaned automatically."), immutable: true, rule: "xcode-managed-review")
                 }
             }
             if result.code != 0 || !result.error.isEmpty {
-                notices.append("Xcode could not provide a complete simulator-runtime inventory. Review installed runtimes in Xcode Settings > Components.")
+                notices.append(String(localized: "Xcode could not provide a complete simulator-runtime inventory. Review installed runtimes in Xcode Settings > Components."))
             }
             let devices = home.appendingPathComponent("Library/Developer/CoreSimulator/Devices")
             for simulator in listSimulators() ?? [] {
                 let path = devices.appendingPathComponent(simulator.udid).path
                 guard !excluded.contains(where: { path == $0 || path.hasPrefix($0 + "/") }) else { continue }
-                let why = simulator.available ? "Not used since \(simulator.lastUsed?.formatted(date: .abbreviated, time: .omitted) ?? "it was set up")." : "Xcode can no longer run it."
-                rows.append(Finding(path: path, group: .xcode, bytes: simulator.bytes, modifiedAt: simulator.lastUsed ?? Date(), safety: .review, reason: why + " Removed by Xcode's own simctl.", rule: simulatorRule, fingerprint: "review-only", warnings: ["Deletes the apps and data inside this simulator for good."], label: simulator.name))
+                let why: String
+                if !simulator.available { why = String(localized: "Xcode can no longer run it. Removed by Xcode's own simctl.") }
+                else if let used = simulator.lastUsed?.formatted(date: .abbreviated, time: .omitted) { why = String(localized: "Not used since \(used). Removed by Xcode's own simctl.") }
+                else { why = String(localized: "Not used since it was set up. Removed by Xcode's own simctl.") }
+                rows.append(Finding(path: path, group: .xcode, bytes: simulator.bytes, modifiedAt: simulator.lastUsed ?? Date(), safety: .review, reason: why, rule: simulatorRule, fingerprint: "review-only", warnings: [String(localized: "Deletes the apps and data inside this simulator for good.")], label: simulator.name))
             }
         }
         return (rows, notices)
@@ -116,12 +119,12 @@ public enum XcodeStorageInventory {
     /// Rechecks a ticked folder right before moving it to the Trash, where the person can restore it.
     static func trash(_ finding: Finding, configuration: Configuration, activity: ActivitySnapshot) throws {
         let url = URL(fileURLWithPath: finding.path)
-        guard finding.rule == trashRule, trashable(url, home: configuration.home) else { throw StewardError.blocked("Not an Xcode folder Artifloam moves. Use Finder.") }
-        guard !configuration.ignoredPaths.contains(where: { url.path == $0 || url.path.hasPrefix($0 + "/") }) else { throw StewardError.blocked("Path is on the ignore list") }
-        guard activity.reliable else { throw StewardError.blocked("Cannot verify running processes and open files") }
-        guard !activity.isActive(url) else { throw StewardError.blocked("A running process uses this folder") }
+        guard finding.rule == trashRule, trashable(url, home: configuration.home) else { throw StewardError.blocked(String(localized: "Not an Xcode folder Artifloam moves. Use Finder.")) }
+        guard !configuration.ignoredPaths.contains(where: { url.path == $0 || url.path.hasPrefix($0 + "/") }) else { throw StewardError.blocked(String(localized: "Path is on the ignore list")) }
+        guard activity.reliable else { throw StewardError.blocked(String(localized: "Cannot verify running processes and open files")) }
+        guard !activity.isActive(url) else { throw StewardError.blocked(String(localized: "A running process uses this folder")) }
         var info = stat()
-        guard lstat(url.path, &info) == 0, info.st_uid == getuid(), info.st_mode & S_IFMT == S_IFDIR else { throw StewardError.blocked("Folder changed or belongs to another user; scan again") }
+        guard lstat(url.path, &info) == 0, info.st_uid == getuid(), info.st_mode & S_IFMT == S_IFDIR else { throw StewardError.blocked(String(localized: "Folder changed or belongs to another user; scan again")) }
         try FileManager.default.trashItem(at: url, resultingItemURL: nil)
     }
     /// Installed runtimes are read-only and never change, but measuring one takes seconds (about 6 s for watchOS),

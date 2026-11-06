@@ -17,6 +17,8 @@ struct IntroStage: View {
     var workingTitle: String? = nil
     /// Overview during first launch: says where the sculpture and words are, so the welcome can land on them.
     var reportsFrames = false
+    /// The subtitle is the "Last cleanup freed …" line, which a module page keeps instead of its own title.
+    var subtitleIsLastCleanup = false
     @Environment(\.stewardTextScale) private var textScale
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
@@ -47,7 +49,7 @@ struct IntroStage: View {
                         .reportingWelcomeFrame("hero", enabled: reportsFrames)
                     VStack(alignment: scanning ? .center : .leading, spacing: 12) {
                         if scanning {
-                            Text(workingTitle ?? (theme == .trash ? "Looking through your Trash…" : "Finding a little more room…")).stewardFont(.title).tracking(-0.6).multilineTextAlignment(.center)
+                            Text(workingTitle ?? (theme == .trash ? String(localized: "Looking through your Trash…") : String(localized: "Finding a little more room…"))).stewardFont(.title).tracking(-0.6).multilineTextAlignment(.center)
                             Text(progress).stewardFont(.body).foregroundStyle(.white.opacity(0.65)).multilineTextAlignment(.center)
                                 .lineLimit(nil).fixedSize(horizontal: false, vertical: true).frame(minHeight: 32)
                         } else {
@@ -55,12 +57,12 @@ struct IntroStage: View {
                                 .fixedSize(horizontal: false, vertical: true).contentTransition(.opacity)
                             let issues = Array((health?.issues ?? []).prefix(2))
                             if issues.isEmpty {
-                                Text(heading == nil ? subtitle : (subtitle.hasPrefix("Last cleanup") ? subtitle : title))
+                                Text(heading == nil ? subtitle : (subtitleIsLastCleanup ? subtitle : title))
                                     .font(.system(size: 17 * textScale)).foregroundStyle(.white.opacity(0.72))
                                     .lineLimit(nil).fixedSize(horizontal: false, vertical: true)
                             } else {
                                 let count = health?.issues.count ?? 0
-                                Text("\(count) \(count == 1 ? "thing is" : "things are") slowing your Mac")
+                                Text("\(count) things are slowing your Mac")
                                     .font(.system(size: 17 * textScale, weight: .medium)).foregroundStyle(Color(red: 0.98, green: 0.78, blue: 0.46))
                             }
                             VStack(alignment: .leading, spacing: 18) {

@@ -38,30 +38,30 @@ public enum WorktreeReview {
             WorktreeAssessment(primary: primary, base: base, branch: branch, head: head, blocker: reason, warnings: [], lastUsed: lastUsed, fingerprint: head)
         }
         let excluded = configuration.ignoredPaths.map { URL(fileURLWithPath: $0).standardizedFileURL.resolvingSymlinksInPath().path }
-        guard (try? URL(fileURLWithPath: path).resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == false else { return keep("Keep: the path is a symbolic link or missing.") }
-        guard !excluded.contains(where: { url.path == $0 || url.path.hasPrefix($0 + "/") }) else { return keep("Keep: in your keep list.") }
-        guard activity.reliable else { return keep("Keep: running processes could not be verified.") }
-        guard !activity.isActive(url) else { return keep("Keep: used by a running process.") }
+        guard (try? URL(fileURLWithPath: path).resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == false else { return keep(String(localized: "Keep: the path is a symbolic link or missing.")) }
+        guard !excluded.contains(where: { url.path == $0 || url.path.hasPrefix($0 + "/") }) else { return keep(String(localized: "Keep: in your keep list.")) }
+        guard activity.reliable else { return keep(String(localized: "Keep: running processes could not be verified.")) }
+        guard !activity.isActive(url) else { return keep(String(localized: "Keep: used by a running process.")) }
         let list = git(url, ["worktree", "list", "--porcelain", "-z"])
-        guard list.code == 0 else { return keep("Keep: Git registration could not be verified.") }
+        guard list.code == 0 else { return keep(String(localized: "Keep: Git registration could not be verified.")) }
         let blocks = list.output.components(separatedBy: "\0\0").filter { !$0.isEmpty }.map { $0.components(separatedBy: "\0") }
         func location(_ fields: [String]) -> URL? { fields.first { $0.hasPrefix("worktree ") }.map { URL(fileURLWithPath: String($0.dropFirst(9))).standardizedFileURL.resolvingSymlinksInPath() } }
-        guard let first = blocks.first, let primary = location(first) else { return keep("Keep: the primary checkout could not be found.") }
-        guard primary.path != url.path, let fields = blocks.dropFirst().first(where: { location($0)?.path == url.path }) else { return keep("Keep: primary or unregistered checkouts are managed in Git.") }
-        guard !fields.contains(where: { $0.hasPrefix("locked") || $0.hasPrefix("prunable") || $0 == "bare" }) else { return keep("Keep: Git marks this worktree locked.", primary: primary) }
+        guard let first = blocks.first, let primary = location(first) else { return keep(String(localized: "Keep: the primary checkout could not be found.")) }
+        guard primary.path != url.path, let fields = blocks.dropFirst().first(where: { location($0)?.path == url.path }) else { return keep(String(localized: "Keep: primary or unregistered checkouts are managed in Git.")) }
+        guard !fields.contains(where: { $0.hasPrefix("locked") || $0.hasPrefix("prunable") || $0 == "bare" }) else { return keep(String(localized: "Keep: Git marks this worktree locked."), primary: primary) }
         let branch = fields.first { $0.hasPrefix("branch refs/heads/") }.map { String($0.dropFirst(18)) }
-        guard !FileManager.default.fileExists(atPath: url.appendingPathComponent(".gitmodules").path) else { return keep("Keep: worktrees with submodules must be managed in Git.", primary: primary, branch: branch) }
+        guard !FileManager.default.fileExists(atPath: url.appendingPathComponent(".gitmodules").path) else { return keep(String(localized: "Keep: worktrees with submodules must be managed in Git."), primary: primary, branch: branch) }
         let headResult = git(url, ["rev-parse", "HEAD"])
         let head = headResult.output.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard headResult.code == 0, !head.isEmpty else { return keep("Keep: Git status could not be verified.", primary: primary, branch: branch) }
+        guard headResult.code == 0, !head.isEmpty else { return keep(String(localized: "Keep: Git status could not be verified."), primary: primary, branch: branch) }
 
         // Ignored build output and dependencies are not listed; they are deleted with the checkout.
         let status = git(url, ["status", "--porcelain=v1", "-z", "--untracked-files=all"])
-        guard status.code == 0 else { return keep("Keep: Git status could not be verified.", primary: primary, branch: branch, head: head) }
+        guard status.code == 0 else { return keep(String(localized: "Keep: Git status could not be verified."), primary: primary, branch: branch, head: head) }
         // Status leaves out ignored files, but they go with the checkout and Git can't restore them.
         // A .env or local database is often the only copy, so it gets the same warning as uncommitted work.
         let ignored = git(url, ["ls-files", "--others", "--ignored", "--exclude-standard", "-z"])
-        guard ignored.code == 0 else { return keep("Keep: ignored files could not be checked.", primary: primary, branch: branch, head: head) }
+        guard ignored.code == 0 else { return keep(String(localized: "Keep: ignored files could not be checked."), primary: primary, branch: branch, head: head) }
         let installed: Set<String> = ["node_modules", ".build", "target", "vendor", "venv", ".venv", "Pods", "DerivedData"]
         let sensitive = ignored.output.split(separator: "\0").map(String.init).filter { path in
             let parts = path.split(separator: "/").map(String.init)
@@ -80,22 +80,22 @@ public enum WorktreeReview {
             let cherry = git(primary, ["cherry", ref, head])
             return (ref, cherry.code == 0 ? cherry.output.split(separator: "\n").filter { $0.hasPrefix("+") }.count : .max)
         }.min { $0.count < $1.count }!
-        guard unmerged.count != .max else { return keep("Keep: merge state could not be verified.", primary: primary, base: base, branch: branch, head: head) }
+        guard unmerged.count != .max else { return keep(String(localized: "Keep: merge state could not be verified."), primary: primary, base: base, branch: branch, head: head) }
         // Unfinished work is the person's call: flagged and left unticked, never blocked.
         var warnings = [String]()
-        if modified > 0 { warnings.append("\(modified) tracked \(modified == 1 ? "file has" : "files have") uncommitted changes. They will be lost.") }
-        if unmerged.count > 0 { warnings.append("\(unmerged.count) \(unmerged.count == 1 ? "commit is" : "commits are") not in \(unmerged.ref == "HEAD" ? "the primary checkout" : unmerged.ref). The branch is kept, so \(unmerged.count == 1 ? "it stays" : "they stay") recoverable.") }
-        if untracked > 0 { warnings.append("\(untracked) untracked files were never committed. They will be deleted permanently.") }
-        if deleted > 0 { warnings.append("\(deleted) tracked files are deleted here; Git still has them.") }
+        if modified > 0 { warnings.append(String(localized: "\(modified) tracked files have uncommitted changes. They will be lost.")) }
+        if unmerged.count > 0 { warnings.append(unmerged.ref == "HEAD" ? String(localized: "\(unmerged.count) commits are not in the primary checkout. The branch is kept, so they stay recoverable.") : String(localized: "\(unmerged.count) commits are not in \(unmerged.ref). The branch is kept, so they stay recoverable.")) }
+        if untracked > 0 { warnings.append(String(localized: "\(untracked) untracked files were never committed. They will be deleted permanently.")) }
+        if deleted > 0 { warnings.append(String(localized: "\(deleted) tracked files are deleted here; Git still has them.")) }
         if let first = sensitive.first {
             let name = URL(fileURLWithPath: first).lastPathComponent.displaySafe
-            warnings.append(sensitive.count == 1 ? "\(name) is ignored by Git, so it can't be restored. It will be deleted permanently." : "\(sensitive.count) files Git ignores, such as \(name), can't be restored. They will be deleted permanently.")
+            warnings.append(sensitive.count == 1 ? String(localized: "\(name) is ignored by Git, so it can't be restored. It will be deleted permanently.") : String(localized: "\(sensitive.count) files Git ignores, such as \(name), can't be restored. They will be deleted permanently."))
         }
         if let time = TimeInterval(git(url, ["log", "-1", "--format=%ct"]).output.trimmingCharacters(in: .whitespacesAndNewlines)), now.timeIntervalSince1970 - time < recentInterval {
-            warnings.append("Committed in the last 6 hours; an agent session may still be open on it.")
+            warnings.append(String(localized: "Committed in the last 6 hours; an agent session may still be open on it."))
         }
         if let lastUsed, now.timeIntervalSince(lastUsed) < sessionInterval {
-            warnings.append("A Claude Code or Codex session used it in the last 24 hours.")
+            warnings.append(String(localized: "A Claude Code or Codex session used it in the last 24 hours."))
         }
         let digest = SHA256.hash(data: Data((status.output + "\0\0" + sensitive.joined(separator: "\0")).utf8)).map { String(format: "%02x", $0) }.joined()
         return WorktreeAssessment(primary: primary, base: base, branch: branch, head: head, blocker: nil, warnings: warnings, lastUsed: lastUsed, fingerprint: "\(head):\(digest)", unmerged: unmerged.count, clean: status.output.isEmpty)
@@ -112,10 +112,10 @@ public enum WorktreeReview {
         try validate(finding, configuration: configuration, activity: .capture())
     }
     static func validate(_ finding: Finding, configuration: Configuration, activity: ActivitySnapshot, sessions: AgentSessionIndex? = nil) throws -> WorktreeAssessment {
-        guard finding.group == .worktrees, finding.rule == "worktree-review-only", finding.safety == .review else { throw StewardError.blocked("Only reviewable worktrees can be deleted.") }
+        guard finding.group == .worktrees, finding.rule == "worktree-review-only", finding.safety == .review else { throw StewardError.blocked(String(localized: "Only reviewable worktrees can be deleted.")) }
         let assessment = assess(finding.path, configuration: configuration, activity: activity, sessions: sessions ?? .load(claudeHome: configuration.claudeHome, codexHome: configuration.codexHome))
         if let blocker = assessment.blocker { throw StewardError.blocked(blocker) }
-        guard assessment.fingerprint == finding.fingerprint else { throw StewardError.blocked("This worktree changed after the scan. Scan again.") }
+        guard assessment.fingerprint == finding.fingerprint else { throw StewardError.blocked(String(localized: "This worktree changed after the scan. Scan again.")) }
         return assessment
     }
 
@@ -141,11 +141,11 @@ public enum WorktreeReview {
     /// --force is used only when the person reviewed and accepted uncommitted or untracked files.
     static func gitRemove(_ worktree: URL, primary: URL, force: Bool) throws {
         let result = git(primary, ["worktree", "remove"] + (force ? ["--force"] : []) + [worktree.path])
-        guard result.code == 0 else { throw StewardError.blocked("Git could not delete the worktree: " + result.error.trimmingCharacters(in: .whitespacesAndNewlines)) }
+        guard result.code == 0 else { throw StewardError.blocked(String(localized: "Git could not delete the worktree: \(result.error.trimmingCharacters(in: .whitespacesAndNewlines))")) }
     }
     static func delete(_ finding: Finding, configuration: Configuration, activity: ActivitySnapshot, sessions: AgentSessionIndex? = nil, remove: (URL, URL, Bool) throws -> Void) throws -> WorktreeRemoval {
         let assessment = try validate(finding, configuration: configuration, activity: activity, sessions: sessions)
-        guard let primary = assessment.primary else { throw StewardError.blocked("Cannot find the primary checkout.") }
+        guard let primary = assessment.primary else { throw StewardError.blocked(String(localized: "Cannot find the primary checkout.")) }
         let source = URL(fileURLWithPath: finding.path)
         try remove(source, primary, !assessment.clean)
         _ = git(primary, ["worktree", "prune"])

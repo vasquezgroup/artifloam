@@ -26,10 +26,10 @@ public enum Uninstaller {
 
     /// This account's own files and folders at the fixed locations that exist. A symlink or another user's file is left alone.
     public static func items(home: URL = FileManager.default.homeDirectoryForCurrentUser) -> [UninstallItem] {
-        var places = [("Cleanup receipts and app data", "Library/Application Support/MacSteward")]
+        var places = [(String(localized: "Cleanup receipts and app data"), "Library/Application Support/MacSteward")]
         for domain in domains {
-            places += [("Cache", "Library/Caches/\(domain)"), ("Saved window state", "Library/Saved Application State/\(domain).savedState"),
-                       ("Web storage", "Library/HTTPStorages/\(domain)"), ("Web data", "Library/WebKit/\(domain)")]
+            places += [(String(localized: "Cache", comment: "Uninstall list: the app's cache folder"), "Library/Caches/\(domain)"), (String(localized: "Saved window state"), "Library/Saved Application State/\(domain).savedState"),
+                       (String(localized: "Web storage"), "Library/HTTPStorages/\(domain)"), (String(localized: "Web data"), "Library/WebKit/\(domain)")]
         }
         return places.compactMap { title, relative in
             let url = home.appendingPathComponent(relative)
@@ -48,22 +48,22 @@ public enum Uninstaller {
     }
     /// In order: nothing may run again, then data, then the app itself last, so a failure leaves a working app to retry from.
     public static func plan(items: [UninstallItem], app: URL?, actions: Actions = Actions()) -> [Step] {
-        var steps = [Step(title: "Stopping the daily cleanup") {
-            do { try actions.stopSchedule(); return [] } catch { return ["The daily cleanup could not be removed: " + error.localizedDescription] }
+        var steps = [Step(title: String(localized: "Stopping the daily cleanup")) {
+            do { try actions.stopSchedule(); return [] } catch { return [String(localized: "The daily cleanup could not be removed: \(error.localizedDescription)")] }
         }]
         if !items.isEmpty {
-            steps.append(Step(title: "Moving app data to the Trash") {
+            steps.append(Step(title: String(localized: "Moving app data to the Trash")) {
                 items.compactMap { item in
-                    do { try actions.trash(item.url); return nil } catch { return item.title + " stayed in place: " + error.localizedDescription }
+                    do { try actions.trash(item.url); return nil } catch { return String(localized: "\(item.title) stayed in place: \(error.localizedDescription)") }
                 }
             })
         }
-        steps.append(Step(title: "Clearing settings and permissions") {
+        steps.append(Step(title: String(localized: "Clearing settings and permissions")) {
             actions.resetPermissions(); actions.clearSettings(); return []
         })
         if let app {
-            steps.append(Step(title: "Moving Artifloam to the Trash") {
-                do { try actions.trash(app); return [] } catch { return ["Artifloam stayed in Applications. Drag it to the Trash: " + error.localizedDescription] }
+            steps.append(Step(title: String(localized: "Moving Artifloam to the Trash")) {
+                do { try actions.trash(app); return [] } catch { return [String(localized: "Artifloam stayed in Applications. Drag it to the Trash: \(error.localizedDescription)")] }
             })
         }
         return steps

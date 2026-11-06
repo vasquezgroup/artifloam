@@ -83,8 +83,8 @@ struct SystemCheckView: View {
     private var missingAgents: [BackgroundItem] { m.agents.filter(\.programMissing) }
     private var toReview: Int { attention.count + (missingAgents.isEmpty ? 0 : 1) + (m.appFindings.isEmpty ? 0 : 1) }
     private var heading: String {
-        if toReview > 0 { return toReview == 1 ? "1 thing to review." : "\(toReview) things to review." }
-        return m.checks.contains { $0.status == .unknown } ? "Some checks couldn't be read." : "Your Mac is well protected."
+        if toReview > 0 { return String(localized: "\(toReview) things to review.") }
+        return m.checks.contains { $0.status == .unknown } ? String(localized: "Some checks couldn't be read.") : String(localized: "Your Mac is well protected.")
     }
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
@@ -96,24 +96,24 @@ struct SystemCheckView: View {
     }
     private var summary: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ResultHero(theme: theme, title: heading, subtitle: "\(m.protections.on) of \(m.protections.total) protections on.") {
+            ResultHero(theme: theme, title: heading, subtitle: String(localized: "\(m.protections.on) of \(m.protections.total) protections on.")) {
                 Button("Check again") { m.checkSystem() }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).disabled(m.busy)
             }
             if toReview > 0 {
                 VStack(spacing: 8) {
                     ForEach(attention) { checkRow($0) }
                     if !missingAgents.isEmpty {
-                        row(icon: "exclamationmark.circle", tint: .orange, title: missingAgents.count == 1 ? "1 background item points at a missing program" : "\(missingAgents.count) background items point at missing programs", detail: "Usually left behind by an app you removed.") { Button("Review") { detail = "Background" }.buttonStyle(CleanupGlassButtonStyle(compact: true)) }
+                        row(icon: "exclamationmark.circle", tint: .orange, title: String(localized: "\(missingAgents.count) background items point at missing programs"), detail: String(localized: "Usually left behind by an app you removed.")) { Button("Review") { detail = "Background" }.buttonStyle(CleanupGlassButtonStyle(compact: true)) }
                     }
                     if !m.appFindings.isEmpty {
-                        row(icon: "exclamationmark.circle", tint: .orange, title: m.appFindings.count == 1 ? "1 app Gatekeeper wouldn't accept" : "\(m.appFindings.count) apps Gatekeeper wouldn't accept", detail: "That isn't a malware verdict. See the reason for each one.") { Button("Review") { detail = "Apps" }.buttonStyle(CleanupGlassButtonStyle(compact: true)) }
+                        row(icon: "exclamationmark.circle", tint: .orange, title: String(localized: "\(m.appFindings.count) apps Gatekeeper wouldn't accept"), detail: String(localized: "That isn't a malware verdict. See the reason for each one.")) { Button("Review") { detail = "Apps" }.buttonStyle(CleanupGlassButtonStyle(compact: true)) }
                     }
                 }
             }
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 260, maximum: 400), spacing: 14)], spacing: 14) {
                 ForEach(SystemArea.allCases) { area in areaTile(area) }
-                CategoryTile(amount: "\(m.agents.count)", found: false, name: "Background items", tagline: "Programs that start with your Mac, in plain language.", art: "symbol-automation", status: missingAgents.isEmpty ? "None broken" : "\(missingAgents.count) broken", review: { detail = "Background" })
-                CategoryTile(amount: m.checkingApps ? "…" : "\(m.appFindings.count)", found: false, name: "App signatures", tagline: "Apps Gatekeeper wouldn't simply accept.", art: "symbol-tools", status: m.checkingApps ? "Checking…" : "\(m.appsChecked) checked", review: { detail = "Apps" })
+                CategoryTile(amount: "\(m.agents.count)", found: false, name: String(localized: "Background items"), tagline: String(localized: "Programs that start with your Mac, in plain language."), art: "symbol-automation", status: missingAgents.isEmpty ? String(localized: "None broken") : String(localized: "\(missingAgents.count) broken"), review: { detail = "Background" })
+                CategoryTile(amount: m.checkingApps ? "…" : "\(m.appFindings.count)", found: false, name: String(localized: "App signatures"), tagline: String(localized: "Apps Gatekeeper wouldn't simply accept."), art: "symbol-tools", status: m.checkingApps ? String(localized: "Checking…") : String(localized: "\(m.appsChecked) checked"), review: { detail = "Apps" })
             }
         }
     }
@@ -121,17 +121,26 @@ struct SystemCheckView: View {
         let items = m.checks.filter { $0.area == area }, flagged = items.filter { $0.status == .review }.count, good = items.filter { $0.status == .good }.count
         let art: String, tagline: String, amount: String?
         switch area {
-        case .protection: art = "symbol-system"; tagline = "What keeps your files and this Mac safe."; amount = "\(good) of \(items.count)"
-        case .updates: art = "sparkles"; tagline = "Fixes from Apple, and whether they arrive by themselves."; amount = flagged == 0 ? "Current" : "\(flagged) to do"
-        case .remote: art = "globe"; tagline = "Who can reach this Mac from another device."; amount = flagged == 0 ? "Closed" : "\(flagged) open"
-        case .backup: art = "drive"; tagline = "Whether your files have a second home."; amount = items.first?.status == .good ? "Current" : items.first?.status == .review ? "Review" : "–"
+        case .protection: art = "symbol-system"; tagline = String(localized: "What keeps your files and this Mac safe."); amount = String(localized: "\(good) of \(items.count)")
+        case .updates: art = "sparkles"; tagline = String(localized: "Fixes from Apple, and whether they arrive by themselves."); amount = flagged == 0 ? String(localized: "Current") : String(localized: "\(flagged) to do")
+        case .remote: art = "globe"; tagline = String(localized: "Who can reach this Mac from another device."); amount = flagged == 0 ? String(localized: "Closed") : String(localized: "\(flagged) open")
+        case .backup: art = "drive"; tagline = String(localized: "Whether your files have a second home."); amount = items.first?.status == .good ? String(localized: "Current") : items.first?.status == .review ? String(localized: "Review", comment: "Status: needs a look") : "–"
         }
-        return CategoryTile(amount: amount, found: false, name: area.rawValue, tagline: tagline, art: art, status: flagged == 0 ? "Nothing to review" : "\(flagged) to review", review: { detail = area.rawValue })
+        return CategoryTile(amount: amount, found: false, name: areaTitle(area), tagline: tagline, art: art, status: flagged == 0 ? String(localized: "Nothing to review") : String(localized: "\(flagged) to review"), review: { detail = area.rawValue })
+    }
+    /// `SystemArea.rawValue` is the English identifier; this is what a person reads.
+    private func areaTitle(_ area: SystemArea) -> String {
+        switch area {
+        case .protection: return String(localized: "Protection", comment: "Section of the system check")
+        case .updates: return String(localized: "Updates", comment: "Section of the system check")
+        case .remote: return String(localized: "Remote access")
+        case .backup: return String(localized: "Backup", comment: "Section of the system check")
+        }
     }
     @ViewBuilder private func detailPage(_ name: String) -> some View {
         HStack(spacing: 10) {
             BackSquareButton { detail = nil }
-            Text(name == "Background" ? "Background items" : name == "Apps" ? "App signatures" : name).stewardFont(.title2, weight: .semibold)
+            Text(name == "Background" ? String(localized: "Background items") : name == "Apps" ? String(localized: "App signatures") : SystemArea(rawValue: name).map(areaTitle) ?? name).stewardFont(.title2, weight: .semibold)
         }
         VStack(spacing: 8) {
             switch name {
@@ -145,14 +154,14 @@ struct SystemCheckView: View {
         Button("Manage startup items…") { m.section = "Login & background items" }.buttonStyle(CleanupGlassButtonStyle(compact: true)).frame(maxWidth: .infinity, alignment: .trailing)
         // Broken ones first, then by maker.
         ForEach(m.agents.sorted { ($0.programMissing ? 0 : 1, $0.maker.name.lowercased()) < ($1.programMissing ? 0 : 1, $1.maker.name.lowercased()) }) { item in
-            row(icon: item.programMissing ? "exclamationmark.circle" : "gearshape", tint: item.programMissing ? .orange : .white.opacity(0.6), title: item.maker.name.displaySafe, detail: (item.programMissing ? "Its program is gone. " : "") + item.summary.displaySafe + " · " + item.scope) {
+            row(icon: item.programMissing ? "exclamationmark.circle" : "gearshape", tint: item.programMissing ? .orange : .white.opacity(0.6), title: item.maker.name.displaySafe, detail: item.programMissing ? String(localized: "Its program is gone. \(item.summary.displaySafe) · \(item.scopeTitle)") : item.summary.displaySafe + " · " + item.scopeTitle) {
                 Button("Reveal") { NSWorkspace.shared.activateFileViewerSelecting([item.url]) }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
             }
         }
     }
     @ViewBuilder private var appRows: some View {
-        if m.checkingApps { StewardProgressBar(title: "Asking Gatekeeper about each app…").frame(maxWidth: 380).frame(maxWidth: .infinity, alignment: .leading) }
-        if !m.checkingApps && m.appFindings.isEmpty { row(icon: "checkmark.shield.fill", tint: theme.accent, title: "Gatekeeper accepts all \(m.appsChecked) apps", detail: "Apple's own apps aren't included in this count.") { EmptyView() } }
+        if m.checkingApps { StewardProgressBar(title: String(localized: "Asking Gatekeeper about each app…")).frame(maxWidth: 380).frame(maxWidth: .infinity, alignment: .leading) }
+        if !m.checkingApps && m.appFindings.isEmpty { row(icon: "checkmark.shield.fill", tint: theme.accent, title: String(localized: "Gatekeeper accepts all \(m.appsChecked) apps"), detail: String(localized: "Apple's own apps aren't included in this count.")) { EmptyView() } }
         ForEach(m.appFindings) { app in
             row(icon: "exclamationmark.circle", tint: .orange, title: app.name + " · " + app.kind.title, detail: app.kind.detail) {
                 Button("Reveal") { NSWorkspace.shared.activateFileViewerSelecting([app.url]) }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
@@ -169,7 +178,7 @@ struct SystemCheckView: View {
         }
         return row(icon: look.0, tint: look.1, title: check.title, detail: check.detail, nextStep: check.nextStep) {
             if let fix = check.fix, let action = check.action {
-                Button(m.fixing ? "Waiting…" : action) { m.apply(fix) }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(m.fixing)
+                Button(m.fixing ? String(localized: "Waiting…") : action) { m.apply(fix) }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(m.fixing)
             } else if let settings = check.settings, let action = check.action {
                 Button(action) { m.open(settings) }.buttonStyle(CleanupGlassButtonStyle(compact: true))
             }

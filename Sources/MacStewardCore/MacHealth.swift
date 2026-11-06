@@ -15,12 +15,23 @@ public struct MacIssue: Identifiable, Equatable, Sendable {
     public let points: Int
     public var fixLabel: String? {
         switch fix {
-        case .quit: return "Quit"
-        case .forceQuit: return "Force quit"
-        case .freeSpace: return "Free up"
-        case .quitIdleApps: return "Quit idle"
-        case .batterySettings, .networkSettings: return "Settings"
+        case .quit: return String(localized: "Quit", comment: "Button: quit the app that is slowing the Mac")
+        case .forceQuit: return String(localized: "Force quit", comment: "Button: force quit the app that is slowing the Mac")
+        case .freeSpace: return String(localized: "Free up", comment: "Button: free up disk space")
+        case .quitIdleApps: return String(localized: "Quit idle", comment: "Button: quit apps that are not being used")
+        case .batterySettings, .networkSettings: return String(localized: "Settings", comment: "Button: open System Settings")
         case .none: return nil
+        }
+    }
+    /// The notification's text: whole sentences, since `fixLabel` can't be placed inside one in every language.
+    public var notificationBody: String {
+        switch fix {
+        case .quit: return String(localized: "Open Artifloam from the leaf in the menu bar to quit.")
+        case .forceQuit: return String(localized: "Open Artifloam from the leaf in the menu bar to force quit.")
+        case .freeSpace: return String(localized: "Open Artifloam from the leaf in the menu bar to free up.")
+        case .quitIdleApps: return String(localized: "Open Artifloam from the leaf in the menu bar to quit idle.")
+        case .batterySettings, .networkSettings: return String(localized: "Open Artifloam from the leaf in the menu bar to settings.")
+        case .none: return String(localized: "Open Artifloam from the leaf in the menu bar for details.")
         }
     }
 }
@@ -51,7 +62,7 @@ public struct MacHealthInput: Sendable {
 public struct MacHealth: Equatable, Sendable {
     public let score: Int
     public let issues: [MacIssue]
-    public var level: String { score >= 90 ? "Smooth" : score >= 70 ? "Busy" : "Struggling" }
+    public var level: String { score >= 90 ? String(localized: "Smooth", comment: "Mac health level") : score >= 70 ? String(localized: "Busy", comment: "Mac health level") : String(localized: "Struggling", comment: "Mac health level") }
     static let sustained: TimeInterval = 300
 
     public static func evaluate(_ input: MacHealthInput) -> MacHealth {
@@ -60,39 +71,39 @@ public struct MacHealth: Equatable, Sendable {
         if input.diskTotal > 0 {
             let used = 100 - Int(Double(input.diskFree) / Double(input.diskTotal) * 100)
             if used >= 90 {
-                issues.append(MacIssue(kind: .storage, title: "Disk \(used)% full", flag: formattedBytes(input.diskFree) + " left", fix: .freeSpace, points: 12))
+                issues.append(MacIssue(kind: .storage, title: String(localized: "Disk \(used)% full"), flag: String(localized: "\(formattedBytes(input.diskFree)) left"), fix: .freeSpace, points: 12))
             } else if let days = input.daysUntilFull, days <= 14 {
-                issues.append(MacIssue(kind: .storage, title: "Disk full in about \(days) days", flag: "Full in ~\(days) days", fix: .freeSpace, points: 8))
+                issues.append(MacIssue(kind: .storage, title: String(localized: "Disk full in about \(days) days"), flag: String(localized: "Full in ~\(days) days"), fix: .freeSpace, points: 8))
             }
         }
         if (input.pressure == .warning || input.pressure == .critical) && input.pressureHighFor >= sustained {
-            issues.append(MacIssue(kind: .memory, title: "Memory is under pressure", flag: "Pressure high · \(minutes(input.pressureHighFor)) min", fix: .quitIdleApps, points: input.pressure == .critical ? 15 : 8))
+            issues.append(MacIssue(kind: .memory, title: String(localized: "Memory is under pressure"), flag: String(localized: "Pressure high · \(minutes(input.pressureHighFor)) min"), fix: .quitIdleApps, points: input.pressure == .critical ? 15 : 8))
         } else if let swap = input.swap, input.ram > 0, swap > input.ram / 2 {
-            issues.append(MacIssue(kind: .memory, title: "Swap uses \(formattedBytes(swap)) of disk", flag: "Swap \(formattedBytes(swap))", fix: .quitIdleApps, points: 5))
+            issues.append(MacIssue(kind: .memory, title: String(localized: "Swap uses \(formattedBytes(swap)) of disk"), flag: String(localized: "Swap \(formattedBytes(swap))"), fix: .quitIdleApps, points: 5))
         }
         if let app = input.busyApp, app.percent >= 80, app.seconds >= sustained {
             let fix: MacIssue.Fix = app.ignoredQuit ? .forceQuit(pid: app.pid) : .quit(pid: app.pid)
             // One core pinned for 10+ minutes is how a frozen app looks from outside. a guess, not proof;
             // macOS has no public "not responding" check, and a busy render or build can look the same.
             if app.ignoredQuit || (app.percent >= 90 && app.percent <= 110 && app.seconds >= 2 * sustained) {
-                issues.append(MacIssue(kind: .cpu, title: "\(app.name) may not be responding", flag: "Not responding? · \(minutes(app.seconds)) min", fix: fix, points: 8))
+                issues.append(MacIssue(kind: .cpu, title: String(localized: "\(app.name) may not be responding"), flag: String(localized: "Not responding? · \(minutes(app.seconds)) min"), fix: fix, points: 8))
             } else {
-                issues.append(MacIssue(kind: .cpu, title: "\(app.name) is busy for \(minutes(app.seconds)) min", flag: "\(app.name) \(Int(app.percent))% · \(minutes(app.seconds)) min", fix: fix, points: 6))
+                issues.append(MacIssue(kind: .cpu, title: String(localized: "\(app.name) is busy for \(minutes(app.seconds)) min"), flag: String(localized: "\(app.name) \(Int(app.percent))% · \(minutes(app.seconds)) min"), fix: fix, points: 6))
             }
         }
         if input.thermal == "High" || input.thermal == "Critical" {
-            issues.append(MacIssue(kind: .heat, title: "Your Mac is slowing down to cool off", flag: "Running hot", fix: .none, points: 8))
+            issues.append(MacIssue(kind: .heat, title: String(localized: "Your Mac is slowing down to cool off"), flag: String(localized: "Running hot"), fix: .none, points: 8))
         }
         if let percent = input.batteryPercent, input.onBattery, percent < 20 {
-            issues.append(MacIssue(kind: .battery, title: "Battery at \(percent)%", flag: "\(percent)% left", fix: .batterySettings, points: 3))
+            issues.append(MacIssue(kind: .battery, title: String(localized: "Battery at \(percent)%"), flag: String(localized: "\(percent)% left"), fix: .batterySettings, points: 3))
         } else if let health = input.batteryHealth, health < 80 {
-            issues.append(MacIssue(kind: .battery, title: "Battery holds \(health)% of its charge", flag: "Health \(health)%", fix: .batterySettings, points: 4))
+            issues.append(MacIssue(kind: .battery, title: String(localized: "Battery holds \(health)% of its charge"), flag: String(localized: "Health \(health)%"), fix: .batterySettings, points: 4))
         }
         if input.uptime >= 7 * 86_400, let swap = input.swap, input.ram > 0, swap > input.ram / 4 {
-            issues.append(MacIssue(kind: .restart, title: "Restart suggested after \(Int(input.uptime / 86_400)) days", flag: "Restart suggested", fix: .none, points: 5))
+            issues.append(MacIssue(kind: .restart, title: String(localized: "Restart suggested after \(Int(input.uptime / 86_400)) days"), flag: String(localized: "Restart suggested"), fix: .none, points: 5))
         }
         if !input.online {
-            issues.append(MacIssue(kind: .network, title: "No network connection", flag: "Offline", fix: .networkSettings, points: 2))
+            issues.append(MacIssue(kind: .network, title: String(localized: "No network connection"), flag: String(localized: "Offline"), fix: .networkSettings, points: 2))
         }
         // Stable sort keeps the order above for equal points.
         issues = issues.enumerated().sorted { $0.element.points != $1.element.points ? $0.element.points > $1.element.points : $0.offset < $1.offset }.map(\.element)

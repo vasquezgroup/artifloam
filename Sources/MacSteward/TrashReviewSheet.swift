@@ -29,7 +29,7 @@ struct TrashReviewSheet: View {
             if cloudWarning { Label("Deleting cloud-backed files can also remove them from the cloud and your other devices. This does not mean ‘remove local download’.", systemImage: "icloud").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true) }
             if candidates.contains(where: \.isDirectory) { Text("Selected folders include everything inside them, including files not shown in a partial map.").stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true) }
             if allowApplications { Text("Only the application bundle is moved. Documents, subscriptions and support data are kept. Running apps must be quit by you first.").stewardFont(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true) }
-            if checking { StewardProgressBar(title: "Checking \(urls.count) \(urls.count == 1 ? "item" : "items")…").frame(maxWidth: 320) }
+            if checking { StewardProgressBar(title: String(localized: "Checking \(urls.count) items…")).frame(maxWidth: 320) }
             ScrollView {
                 // Lazy, and results by path: thousands of rows (all duplicate copies) stay responsive.
                 LazyVStack(alignment: .leading, spacing: 10) {
@@ -37,7 +37,7 @@ struct TrashReviewSheet: View {
                         VStack(alignment: .leading, spacing: 3) {
                             Text(item.url.lastPathComponent.displaySafe).stewardFont(.body, weight: .medium)
                             Text(item.url.path.displaySafe).stewardFont(.caption, design: .monospaced).foregroundStyle(.secondary).textSelection(.enabled)
-                            if let result = outcomeByPath[item.url.path] { Text(result.error ?? "Moved to Trash").stewardFont(.caption).foregroundStyle(result.error == nil ? Color.mint : .orange) }
+                            if let result = outcomeByPath[item.url.path] { Text(result.error ?? String(localized: "Moved to Trash")).stewardFont(.caption).foregroundStyle(result.error == nil ? Color.mint : .orange) }
                         }
                     }
                 }.frame(maxWidth: .infinity, alignment: .leading)
@@ -47,7 +47,7 @@ struct TrashReviewSheet: View {
                 Button(outcomes == nil ? "Cancel" : "Done") { dismiss() }.disabled(busy)
                 Spacer()
                 if outcomes == nil {
-                    Button(busy ? "Moving…" : "Move \(candidates.count) \(candidates.count == 1 ? "item" : "items") to Trash", role: .destructive) { move() }
+                    Button(busy ? String(localized: "Moving…") : String(localized: "Move \(candidates.count) items to Trash"), role: .destructive) { move() }
                         .buttonStyle(.borderedProminent).tint(.red).disabled(busy || checking || candidates.isEmpty || error != nil)
                 }
             }
@@ -66,7 +66,7 @@ struct TrashReviewSheet: View {
     private func move() {
         let running = NSWorkspace.shared.runningApplications.compactMap(\.bundleURL)
         if candidates.contains(where: { candidate in running.contains { $0.path == candidate.url.path || $0.path.hasPrefix(candidate.url.path + "/") } }) {
-            error = "A selected item contains a running app. Quit it yourself, then open a fresh review."; return
+            error = String(localized: "A selected item contains a running app. Quit it yourself, then open a fresh review."); return
         }
         // The move itself runs on the removal stage over the page, with live progress, Stop and a result.
         m.startRemoval(candidates, allowApplications: allowApplications, allowLeftovers: allowLeftovers, duplicateGroups: duplicateGroups, completed: completed)

@@ -47,13 +47,23 @@ public struct MacBattery: Sendable {
 public struct ConnectedMacDevice: Identifiable, Sendable {
     public var id: String { transport + ":" + name.lowercased() }
     public let name: String, transport: String
+    /// `transport` is an identifier; this is what people see.
+    public var transportTitle: String {
+        switch transport {
+        case "Bluetooth audio": return String(localized: "Bluetooth audio")
+        case "Bluetooth Low Energy": return String(localized: "Bluetooth Low Energy")
+        default: return transport
+        }
+    }
 }
 public struct MacDashboardSample: Sendable {
     public let uptime: TimeInterval
     public let cpu: CPUCounters?
     public let network: NetworkCounters?
     public let battery: MacBattery?
+    /// An identifier, compared by the views. People see `thermalTitle`.
     public let thermalState: String
+    public var thermalTitle: String { MacDashboard.thermalTitle(thermalState) }
     public let disk: DiskSpace
     /// nil means this inexpensive sample did not re-enumerate device names.
     public let devices: [ConnectedMacDevice]?
@@ -62,6 +72,19 @@ public struct MacDashboardSample: Sendable {
 /// Read-only public system APIs. No SMC/private temperature reader, Bluetooth
 /// scan, microphone stream, HID event tap, privileged helper or external request.
 public enum MacDashboard {
+    /// Display name of a thermal state from `MacDashboardSample` or `SystemStatusReading`.
+    public static func thermalTitle(_ state: String) -> String {
+        switch state {
+        case "Normal": return String(localized: "Normal", comment: "Status: thermal state or memory pressure")
+        case "Warm": return String(localized: "Warm", comment: "Status: thermal state")
+        case "High": return String(localized: "High", comment: "Status: thermal state or memory pressure")
+        case "Hot": return String(localized: "Hot", comment: "Status: thermal state")
+        case "Critical": return String(localized: "Critical", comment: "Status: thermal state")
+        case "Unavailable": return String(localized: "Unavailable", comment: "Status: thermal state or memory pressure could not be read")
+        case "Unknown": return String(localized: "Unknown", comment: "Status: thermal state could not be read")
+        default: return state
+        }
+    }
     public static func sample(includeDevices: Bool = true) -> MacDashboardSample {
         let thermal: String
         switch ProcessInfo.processInfo.thermalState {
@@ -114,11 +137,11 @@ public enum MacDashboard {
             if let values = SCDynamicStoreCopyValue(nil, "State:/Network/Global/\(family)" as CFString) as? [String: Any], let name = values["PrimaryInterface"] as? String { primary = name; break }
         }
         guard let primary else { return nil }
-        var kind = "Network"
+        var kind = String(localized: "Network", comment: "Kind of network connection, when not Wi-Fi or Ethernet")
         if let interfaces = SCNetworkInterfaceCopyAll() as? [SCNetworkInterface] {
             for interface in interfaces where SCNetworkInterfaceGetBSDName(interface) as String? == primary {
                 let type = SCNetworkInterfaceGetInterfaceType(interface) as String?
-                kind = type == kSCNetworkInterfaceTypeIEEE80211 as String ? "Wi-Fi" : type == kSCNetworkInterfaceTypeEthernet as String ? "Ethernet" : "Network"
+                kind = type == kSCNetworkInterfaceTypeIEEE80211 as String ? String(localized: "Wi-Fi") : type == kSCNetworkInterfaceTypeEthernet as String ? String(localized: "Ethernet") : String(localized: "Network", comment: "Kind of network connection, when not Wi-Fi or Ethernet")
             }
         }
         var mib: [Int32] = [CTL_NET, PF_ROUTE, 0, 0, NET_RT_IFLIST2, 0]

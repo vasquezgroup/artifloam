@@ -165,7 +165,7 @@ public enum StorageMapper {
         var count = 0, reused = 0, folders = 0, limited = false
         var currentPath = root.path
         var rootInfo = stat()
-        guard lstat(root.path, &rootInfo) == 0 else { throw StewardError.blocked("Cannot read the selected folder.") }
+        guard lstat(root.path, &rootInfo) == 0 else { throw StewardError.blocked(String(localized: "Cannot read the selected folder.")) }
         let initial = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil).filter {
             !(root.path == "/" && ["dev", "Volumes"].contains($0.lastPathComponent)) && $0.path != "/System/Volumes"
         }.map { root.appendingPathComponent($0.lastPathComponent) }.sorted { $0.path < $1.path }

@@ -11,10 +11,11 @@ struct StageCopy: Equatable {
     let amount: String
     /// Shown after the result, e.g. how to undo.
     let note: String?
-    static let trash = StageCopy(working: "Moving to the Trash…", done: "Cleanup complete", amount: "moved to the Trash", note: "Put Back in Finder restores them.")
-    static let emptyTrash = StageCopy(working: "Emptying the Trash…", done: "Trash emptied", amount: "freed", note: nil)
-    static let browsers = StageCopy(working: "Cleaning browser data…", done: "Browser data cleaned", amount: "freed", note: "Browsers rebuild caches as you browse.")
-    static let worktrees = StageCopy(working: "Deleting finished worktrees…", done: "Worktrees deleted", amount: "freed", note: "Restore a branch with git branch <name> <commit>.")
+    // Computed so the words follow the app language each time a stage starts.
+    static var trash: StageCopy { StageCopy(working: String(localized: "Moving to the Trash…"), done: String(localized: "Cleanup complete"), amount: String(localized: "moved to the Trash", comment: "Under a byte counter: how much was moved"), note: String(localized: "Put Back in Finder restores them.")) }
+    static var emptyTrash: StageCopy { StageCopy(working: String(localized: "Emptying the Trash…"), done: String(localized: "Trash emptied"), amount: String(localized: "freed", comment: "Under a byte counter: how much space was freed"), note: nil) }
+    static var browsers: StageCopy { StageCopy(working: String(localized: "Cleaning browser data…"), done: String(localized: "Browser data cleaned"), amount: String(localized: "freed", comment: "Under a byte counter: how much space was freed"), note: String(localized: "Browsers rebuild caches as you browse.")) }
+    static var worktrees: StageCopy { StageCopy(working: String(localized: "Deleting finished worktrees…"), done: String(localized: "Worktrees deleted"), amount: String(localized: "freed", comment: "Under a byte counter: how much space was freed"), note: String(localized: "Restore a branch with git branch <name> <commit>.")) }
 }
 
 /// Live state of a stage run, shown by `RemovalStage` in place of the page.
@@ -93,7 +94,7 @@ extension StewardModel {
             let results = ReviewedTrash.move(candidates, allowApplications: allowApplications, allowLeftovers: allowLeftovers, duplicateGroups: duplicateGroups,
                                              progress: { done, bytes, current in moved.withLock { $0 = bytes }; report(done, bytes, current) }, shouldStop: { stop.isSet })
             box.set(results)
-            return StageOutcome(completed: results.count, bytes: moved.withLock { $0 }, failures: results.compactMap { outcome in outcome.error.map { URL(fileURLWithPath: outcome.path).lastPathComponent + " · " + $0 } })
+            return StageOutcome(completed: results.count, bytes: moved.withLock { $0 }, failures: results.compactMap { outcome in outcome.error.map { String(localized: "\(URL(fileURLWithPath: outcome.path).lastPathComponent) · \($0)") } })
         }, completed: { _ in completed(box.value) })
     }
     func stopRemoval() { removalStop?.set() }
@@ -135,16 +136,16 @@ struct RemovalStage: View {
                         .shadow(color: theme.accent.opacity(0.18), radius: 32, y: 10)
                         .scaleEffect(progress.finished && settled && !reduceMotion ? 1.12 : 1)
                         .animation(reduceMotion ? nil : .spring(response: 0.55, dampingFraction: 0.5), value: settled)
-                    Text(progress.finished ? (progress.stopped ? "Stopped" : progress.copy.done) : progress.copy.working)
+                    Text(progress.finished ? (progress.stopped ? String(localized: "Stopped", comment: "Title: the operation was stopped") : progress.copy.done) : progress.copy.working)
                         .stewardFont(.title).multilineTextAlignment(.center).contentTransition(.opacity)
                     Text(progress.finished ? summary : progress.current).stewardFont(.body).foregroundStyle(.white.opacity(0.6))
                         .lineLimit(2).truncationMode(.middle).multilineTextAlignment(.center).frame(maxWidth: 620).contentTransition(.opacity)
                     HStack(spacing: 30) {
                         if !(progress.indeterminate && !progress.finished) {
-                            metric(formattedBytes(progress.bytes), progress.finished ? progress.copy.amount : "so far", tint: theme.accent)
-                            metric(progress.indeterminate ? "\(progress.completed)" : "\(progress.completed) of \(progress.total)", "items")
+                            metric(formattedBytes(progress.bytes), progress.finished ? progress.copy.amount : String(localized: "so far", comment: "Under a byte counter: amount handled until now"), tint: theme.accent)
+                            metric(progress.indeterminate ? progress.completed.formatted() : String(localized: "\(progress.completed) of \(progress.total)"), String(localized: "items", comment: "Label under a count of items"))
                         }
-                        if !progress.failures.isEmpty { metric("\(progress.failures.count)", "not moved", tint: .orange) }
+                        if !progress.failures.isEmpty { metric(progress.failures.count.formatted(), String(localized: "not moved", comment: "Label under a count of items that could not be moved"), tint: .orange) }
                     }.padding(.top, 4)
                     if !progress.finished {
                         if progress.indeterminate { ProgressView().progressViewStyle(.linear).tint(theme.accent).frame(maxWidth: 360) }
@@ -157,7 +158,7 @@ struct RemovalStage: View {
                     HStack(spacing: 12) {
                         if progress.finished {
                             if !progress.failures.isEmpty {
-                                Button(showingDetails ? "Hide details" : "Show \(progress.failures.count) not moved") { showingDetails.toggle() }
+                                Button(showingDetails ? String(localized: "Hide details") : String(localized: "Show \(progress.failures.count) not moved")) { showingDetails.toggle() }
                                     .buttonStyle(CleanupGlassButtonStyle(secondary: true))
                             }
                             Button("Done", action: done).buttonStyle(CleanupGlassButtonStyle()).keyboardShortcut(.defaultAction)
@@ -180,6 +181,7 @@ struct RemovalStage: View {
     }
     private var summary: String {
         let moved = progress.completed - progress.failures.count
-        return "\(moved) \(moved == 1 ? "item" : "items")" + (progress.stopped ? " before you stopped" : "") + "." + (progress.copy.note.map { " " + $0 } ?? "")
+        let count = progress.stopped ? String(localized: "\(moved) items before you stopped.") : String(localized: "\(moved) items.")
+        return count + (progress.copy.note.map { " " + $0 } ?? "")
     }
 }

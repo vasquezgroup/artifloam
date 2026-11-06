@@ -3,17 +3,17 @@ import XCTest
 
 final class EverydayToolsTests: XCTestCase {
     func testAgentRhythmsAndWhichRunOften() {
-        func item(_ schedule: String) -> BackgroundItem { var value = BackgroundItem(url: URL(fileURLWithPath: "/tmp/a.plist"), label: "com.a.b", program: "/bin/a", scope: "Your account"); value.schedule = schedule; return value }
-        XCTAssertEqual(item("Always running").rhythm, "Always running")
-        XCTAssertEqual(item("Every 6 hours").rhythm, "On a schedule")
-        XCTAssertEqual(item("Daily at 05:00").rhythm, "On a schedule")
-        XCTAssertEqual(item("At login, restarts if it stops").rhythm, "At login")
-        XCTAssertEqual(item("Only when needed").rhythm, "When needed")
-        XCTAssertTrue(item("Every minute").runsOften)
-        XCTAssertTrue(item("Every 30 seconds").runsOften)
-        XCTAssertTrue(item("Every 5 minutes").runsOften)
-        XCTAssertFalse(item("Every 10 minutes").runsOften)
-        XCTAssertFalse(item("Every hour").runsOften)
+        func item(_ schedule: BackgroundSchedule) -> BackgroundItem { var value = BackgroundItem(url: URL(fileURLWithPath: "/tmp/a.plist"), label: "com.a.b", program: "/bin/a", scope: "Your account"); value.schedule = schedule; return value }
+        XCTAssertEqual(item(.alwaysRunning).rhythm, "Always running")
+        XCTAssertEqual(item(.every(seconds: 21600)).rhythm, "On a schedule")
+        XCTAssertEqual(item(.daily("05:00")).rhythm, "On a schedule")
+        XCTAssertEqual(item(.atLogin(restarting: true)).rhythm, "At login")
+        XCTAssertEqual(item(.whenNeeded).rhythm, "When needed")
+        XCTAssertTrue(item(.every(seconds: 60)).runsOften)
+        XCTAssertTrue(item(.every(seconds: 30)).runsOften)
+        XCTAssertTrue(item(.every(seconds: 300)).runsOften)
+        XCTAssertFalse(item(.every(seconds: 600)).runsOften)
+        XCTAssertFalse(item(.every(seconds: 3600)).runsOften)
     }
     private func fixture() throws -> URL {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString).resolvingSymlinksInPath()
