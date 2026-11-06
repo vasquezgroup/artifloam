@@ -153415,6 +153415,15 @@
         }
       }
     },
+    "Mostly chat media. Remove it in WhatsApp: Settings, Storage and data, Manage storage. Don't delete the app unless your chats are backed up." : {
+
+    },
+    "Mostly data, so offloading won't help. Deleting clears it, and anything not synced." : {
+
+    },
+    "Mostly the app. Offloading frees this and keeps your data." : {
+
+    },
     "Move %lld items to Trash" : {
       "localizations" : {
         "ar" : {
@@ -168573,12 +168582,6 @@
       }
     },
     "Offloading frees only the app part." : {
-
-    },
-    "Offloading helps: it removes the app and keeps its data." : {
-
-    },
-    "Offloading won't help because it keeps the data. Deleting and reinstalling clears it, along with anything not synced." : {
 
     },
     "Old Claude, Codex and Cursor leftovers" : {

@@ -47,7 +47,8 @@ struct MainView: View {
         case "Trash bins": return .trash
         case "System": return .system
         case "Duplicates", "My Clutter": return .files
-        case "Applications", "iPhone": return .system
+        case "Applications": return .system
+        case "iPhone": return .iphone
         case "Browsers", "Browser data": return .browsers
         case "Worktrees": return .worktrees
         case "Space Map": return .space
@@ -271,14 +272,13 @@ struct MainView: View {
                         .contentTransition(.numericText()).animation(.easeOut, value: health.score)
                     Text("·").stewardFont(.caption).foregroundStyle(.white.opacity(0.4))
                 }
-                if !isSummary { Label("On-device", systemImage: "lock.fill").stewardFont(.caption).foregroundStyle(.white.opacity(0.5)) }
+                if !isSummary && (m.section != "iPhone" || stageWorking) { Label("On-device", systemImage: "lock.fill").stewardFont(.caption).foregroundStyle(.white.opacity(0.5)) }
             }
             // The summary already says "Scan complete" at the top; these lines only cost it room.
             if stageWorking || storageMap.busy {
                 Text(m.health.fixing != nil ? "Nothing is being removed." : stageWorking ? "Reading only. Nothing is being removed." : "Sizes only. Nothing is being removed.")
                     .stewardFont(.caption).foregroundStyle(.white.opacity(0.5))
             } else if m.section == "iPhone" {
-                Text("Sizes come from the iPhone. Nothing is changed on it.").stewardFont(.caption).foregroundStyle(.white.opacity(0.5))
                 IPhoneDevicePicker(state: m.iphone).padding(.top, 6)
             } else if !isSummary { ScanInfoButton(section: m.section, accent: theme.accent) }
             if !toolRunning && (stageWorking || storageMap.busy || m.busy) { Text(stageProgressText).stewardFont(.caption).foregroundStyle(.white.opacity(0.65)).multilineTextAlignment(.center).help("Progress counts completed checks, not an estimate of time remaining.") }

@@ -176,8 +176,7 @@ struct IPhoneView: View {
     private func appRow(_ app: IPhoneAppRow) -> some View {
         HStack(alignment: .top, spacing: 8) {
             VStack(alignment: .leading, spacing: 3) {
-                Text(app.name).stewardFont(.body, weight: .semibold).lineLimit(1)
-                Text(app.bundleID).stewardFont(.caption, design: .monospaced).foregroundStyle(.secondary).lineLimit(1)
+                Text(app.name).stewardFont(.body, weight: .semibold).lineLimit(1).help(app.bundleID)
                 if app.measured && app.totalBytes > 0 { Text(advice(app.advice)).stewardFont(.caption).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true) }
             }
             Spacer(minLength: 8)
@@ -190,9 +189,10 @@ struct IPhoneView: View {
     }
     private func advice(_ advice: IPhoneAppRow.Advice) -> String {
         switch advice {
-        case .offloadHelps: return String(localized: "Offloading helps: it removes the app and keeps its data.")
+        case .offloadHelps: return String(localized: "Mostly the app. Offloading frees this and keeps your data.")
         case .offloadFreesAppOnly: return String(localized: "Offloading frees only the app part.")
-        case .offloadKeepsData: return String(localized: "Offloading won't help because it keeps the data. Deleting and reinstalling clears it, along with anything not synced.")
+        case .offloadKeepsData: return String(localized: "Mostly data, so offloading won't help. Deleting clears it, and anything not synced.")
+        case .cleanInWhatsApp: return String(localized: "Mostly chat media. Remove it in WhatsApp: Settings, Storage and data, Manage storage. Don't delete the app unless your chats are backed up.")
         }
     }
     private var whatsApp: some View {

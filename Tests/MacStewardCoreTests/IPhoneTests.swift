@@ -36,6 +36,7 @@ final class IPhoneAppsTests: XCTestCase {
         XCTAssertEqual(row(app: 100, data: 1000).advice, .offloadKeepsData)
         XCTAssertEqual(row(app: 100, data: 200).advice, .offloadKeepsData)
         XCTAssertEqual(row(app: 100, data: 150).advice, .offloadFreesAppOnly)
+        XCTAssertEqual(IPhoneApps.rows(from: ["net.whatsapp.WhatsAppSMB": ["StaticDiskUsage": 1, "DynamicDiskUsage": 900]]).first?.advice, .cleanInWhatsApp)
     }
 
     func testDeviceLabelShowsOnlyTheEndOfTheIdentifier() {

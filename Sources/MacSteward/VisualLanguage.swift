@@ -13,7 +13,7 @@ extension EnvironmentValues {
 }
 
 enum StewardTheme: String {
-    case care, cleanup, system, files, worktrees, browsers, space, trash
+    case care, cleanup, system, files, worktrees, browsers, space, trash, iphone
     var accent: Color {
         switch self {
         case .care: return Color(red: 0.79, green: 0.59, blue: 1)
@@ -24,6 +24,7 @@ enum StewardTheme: String {
         case .browsers: return Color(red: 1, green: 0.64, blue: 0.80)
         case .space: return Color(red: 1, green: 0.86, blue: 0.42)
         case .trash: return Color(red: 1, green: 0.62, blue: 0.74)
+        case .iphone: return Color(red: 0.68, green: 0.67, blue: 1)
         }
     }
     /// Saturated twin of `accent` for the main round button, so the primary action stands out.
@@ -37,6 +38,7 @@ enum StewardTheme: String {
         case .browsers: return Color(red: 0.92, green: 0.22, blue: 0.52)
         case .space: return Color(red: 0.92, green: 0.70, blue: 0.06)
         case .trash: return Color(red: 0.84, green: 0.11, blue: 0.40)
+        case .iphone: return Color(red: 0.34, green: 0.27, blue: 0.96)
         }
     }
     var symbol: String {
@@ -49,6 +51,7 @@ enum StewardTheme: String {
         case .browsers: return "globe"
         case .space: return "chart.pie.fill"
         case .trash: return "trash.fill"
+        case .iphone: return "iphone"
         }
     }
     /// Background ramp: deep (top left), the module colour, then a brighter neighbouring hue (bottom right).
@@ -62,6 +65,7 @@ enum StewardTheme: String {
         case .browsers: return (Color(red: 0.20, green: 0.03, blue: 0.12), Color(red: 0.58, green: 0.10, blue: 0.36), Color(red: 0.98, green: 0.44, blue: 0.52))
         case .space: return (Color(red: 0.17, green: 0.12, blue: 0.02), Color(red: 0.54, green: 0.40, blue: 0.04), Color(red: 0.98, green: 0.86, blue: 0.30))
         case .trash: return (Color(red: 0.17, green: 0.02, blue: 0.08), Color(red: 0.52, green: 0.05, blue: 0.24), Color(red: 0.92, green: 0.22, blue: 0.40))
+        case .iphone: return (Color(red: 0.05, green: 0.03, blue: 0.26), Color(red: 0.19, green: 0.14, blue: 0.70), Color(red: 0.50, green: 0.46, blue: 1))
         }
     }
     var glow: Color {
@@ -74,6 +78,7 @@ enum StewardTheme: String {
         case .browsers: return Color(red: 0.42, green: 0.06, blue: 0.24)
         case .space: return Color(red: 0.40, green: 0.29, blue: 0.03)
         case .trash: return Color(red: 0.40, green: 0.03, blue: 0.17)
+        case .iphone: return Color(red: 0.15, green: 0.11, blue: 0.52)
         }
     }
 }
@@ -110,7 +115,7 @@ struct AtmosphereView: View {
 enum StewardArtwork {
     static let images: [String: NSImage] = {
         var images: [String: NSImage] = [:]
-        for name in ["overview", "cleanup", "system", "files", "worktrees", "automation", "activity", "memory", "tools", "settings", "space-map", "browsers"] {
+        for name in ["overview", "cleanup", "system", "files", "worktrees", "automation", "activity", "memory", "tools", "settings", "space-map", "browsers", "iphone"] {
             if let url = StewardResources.bundle.url(forResource: "symbol-" + name, withExtension: "heic"), let image = NSImage(contentsOf: url) { images["symbol-" + name] = image }
         }
         return images
@@ -316,7 +321,8 @@ struct StewardNavigationArtwork: View {
         case "Worktrees": return "worktrees"
         case "Duplicates", "Large & old files", "My Clutter": return "files"
         case "Space Map": return "space-map"
-        case "System", "Applications", "iPhone": return "system"
+        case "System", "Applications": return "system"
+        case "iPhone": return "iphone"
         case "Tools", "App removal", "Leftovers": return "tools"
         case "Memory", "Performance": return "memory"
         case "Status": return "activity"

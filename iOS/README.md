@@ -68,20 +68,22 @@ The Mac app's iPhone section is in `Sources/MacSteward/IPhoneView.swift`, `Sourc
 - It only reads. It never pairs, installs, removes or restores anything.
 - WhatsApp queries read names, IDs, sizes and file paths, never message text. A test enforces this. A temporary database copy, which does hold messages, exists only during a read if a `-wal` file is present.
 - Encrypted backups aren't supported yet. It says so rather than asking for a password.
-- Artifloam can't delete inside WhatsApp, and must not edit or restore backups.
+- Artifloam can't delete inside WhatsApp, and must not edit or restore backups. Never advise deleting WhatsApp itself as a cleanup: it can lose chats.
+- The section has its own indigo theme (`StewardTheme.iphone`) and artwork, rendered by `design/render-iphone-art.py` in the private repository. Encode with `design/encode-artwork-motion.swift` as for other sections.
 
 ### Mac: must check
 
 - [x] The live app lookup, device name and sizes, through `IPhoneDeviceWatcher` on a real iPhone already paired with this Mac: 308 apps, all measured.
 - [ ] The Trust flow on an iPhone that isn't paired yet.
 - [ ] The WhatsApp schema on a real, current backup, for both WhatsApp and WhatsApp Business. Reading needs Full Disk Access. Table names come from older sources, the Business domain is matched by pattern and unconfirmed, and special chats such as `status@broadcast` would show as a person.
-- [ ] The screen itself. It compiles, but nobody has seen it, because only one copy of Artifloam can run at a time. Quit every other copy first, including any debug build.
+- [x] The start, reading and results screens, with a real iPhone. Only one copy of Artifloam can run at a time, so quit others first, including debug builds.
+- [ ] The "Connect your iPhone" line with no iPhone connected. The code path is simple but hasn't been seen.
 - [ ] A Developer ID signed build. Loading the framework works with an ad-hoc hardened runtime signature.
 - [ ] Decide whether the backup list should show every device's backups by name when the chosen phone has none.
 
 ### Mac: known failing test
 
-`LocalizationTests.testEveryLanguageHasEveryStringWithMatchingPlaceholders` fails on purpose until 46 new strings are translated into 24 languages. All other 210 tests pass.
+`LocalizationTests.testEveryLanguageHasEveryStringWithMatchingPlaceholders` fails on purpose until 58 new strings are translated into 24 languages. All other Mac tests pass.
 
 ## Seen working
 

@@ -8,7 +8,7 @@ public struct IPhoneDevice: Identifiable, Hashable, Sendable {
 }
 
 public struct IPhoneAppRow: Identifiable, Equatable, Sendable {
-    public enum Advice: Equatable, Sendable { case offloadHelps, offloadFreesAppOnly, offloadKeepsData }
+    public enum Advice: Equatable, Sendable { case offloadHelps, offloadFreesAppOnly, offloadKeepsData, cleanInWhatsApp }
     public let name: String
     public let bundleID: String
     public let appBytes: UInt64
@@ -19,6 +19,8 @@ public struct IPhoneAppRow: Identifiable, Equatable, Sendable {
     public var totalBytes: UInt64 { appBytes + dataBytes }
     /// Offloading removes the app and keeps its data, so what it frees is the app part only.
     public var advice: Advice {
+        // Deleting WhatsApp can lose chats that aren't backed up, so the general advice would be unsafe here.
+        if bundleID.hasPrefix("net.whatsapp.") { return .cleanInWhatsApp }
         if appBytes > dataBytes { return .offloadHelps }
         return dataBytes / 2 >= appBytes ? .offloadKeepsData : .offloadFreesAppOnly
     }
