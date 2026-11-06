@@ -275,7 +275,7 @@ final class StewardModel: ObservableObject {
                 report = ScanReport(home: result.home, findings: (kept + result.findings).sorted { $0.bytes > $1.bytes }, notices: result.notices)
                 if allTools {
                     // Smart Care-style overview: a quick look at each module, no permission prompts.
-                    leftovers.scan(); Task { await memory.refresh() }
+                    leftovers.scan(); browsers.scan(); Task { await memory.refresh() }
                     if let (apps, agents) = await inventory?.value {
                         unusedApps = apps.filter { ($0.lastUsed ?? .distantPast) < Date().addingTimeInterval(-180 * 86400) }.count; agentCount = agents
                     }
@@ -433,7 +433,17 @@ final class StewardModel: ObservableObject {
             let result = await Task.detached(priority: .userInitiated) { (try? DuplicateFinder.stillSafeToTrash(paths, in: groups)) ?? (paths: [], dropped: paths.count) }.value
             busy = false; progress = String(localized: "Review comes before removal.")
             if result.dropped > 0 { error = String(localized: "\(result.dropped) files were left out because the file or the copy being kept changed. Scan again to refresh the list.") }
-            if !result.paths.isEmpty { review(result.paths) }
+            if result.paths.isEmpty { runNextRemoval() } else { review(result.paths) }
+        }
+    }
+    /// For items the person already confirmed in one summary: the same safety review as the Trash sheet, without a second sheet.
+    /// That sheet warns about cloud files, so here those stay for the person to review.
+    func trashConfirmed(_ urls: [URL], allowLeftovers: Bool = false, duplicateGroups: [DuplicateGroup] = [], completed: @escaping ([TrashOutcome]) -> Void) {
+        Task {
+            let reviewed = await Task.detached(priority: .userInitiated) { ReviewedTrash.reviewUnattended(urls, allowLeftovers: allowLeftovers) }.value
+            if reviewed.kept > 0 { error = String(localized: "\(reviewed.kept) items were kept for you to review.") }
+            if reviewed.ready.isEmpty { runNextRemoval() }
+            else { startRemoval(reviewed.ready, allowApplications: false, allowLeftovers: allowLeftovers, duplicateGroups: duplicateGroups, completed: completed) }
         }
     }
     func removeDuplicates(_ paths: [String]) {

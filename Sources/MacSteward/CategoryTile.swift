@@ -14,6 +14,12 @@ enum CategoryArt {
         }
         return images
     }()
+    /// The big 3D sculpture of each tool on the Overview cards. The sidebar's small symbols stay its navigation.
+    static let toolSculptures: [String: NSImage] = {
+        let files = ["Cleanup": "sculpture-motion-cleanup-look-poster", "My Clutter": "sculpture-motion-files-look-poster", "Browsers": "sculpture-motion-browsers-look-poster",
+                     "Applications": "sculpture-motion-system-look-poster", "Performance": "sculpture-card-performance", "Status": "sculpture-card-status"]
+        return files.compactMapValues { file in StewardResources.bundle.url(forResource: file, withExtension: "heic").flatMap(NSImage.init(contentsOf:)) }
+    }()
     static func name(for group: CleanupGroup) -> String {
         switch group {
         case .agentBuilds: return "sparkles"
@@ -62,6 +68,9 @@ struct CategoryTile: View {
     let name: String
     let tagline: String
     let art: String
+    /// Shows a tool's own artwork instead of `art`.
+    var module: String? = nil
+    var chooseLabel: LocalizedStringKey = "Include in Remove selected"
     var appIcons: [NSImage] = []
     var status: String? = nil
     var chosen: Binding<Bool>? = nil
@@ -74,7 +83,7 @@ struct CategoryTile: View {
     @State private var hovered = false
     private var selection: some View {
         HStack(spacing: 8) {
-            if let chosen { Toggle("Include in Remove selected", isOn: chosen).toggleStyle(.stewardCheckboxOnly).disabled(!canChoose).opacity(canChoose ? 1 : 0.4).help(canChoose ? "Include in Remove selected" : "Nothing here can be removed right now") }
+            if let chosen { Toggle(chooseLabel, isOn: chosen).toggleStyle(.stewardCheckboxOnly).disabled(!canChoose).opacity(canChoose ? 1 : 0.4).help(canChoose ? chooseLabel : module != nil ? LocalizedStringKey(status ?? "") : "Nothing here can be removed right now") }
             if let status {
                 Text(status).font(.system(size: 11 * textScale, weight: .semibold)).lineLimit(1).fixedSize().padding(.horizontal, 8).padding(.vertical, 4)
                     .background(.white.opacity(0.10), in: Capsule()).foregroundStyle(.white.opacity(0.85))
@@ -93,12 +102,14 @@ struct CategoryTile: View {
                 VStack(alignment: .leading, spacing: 2) {
                     if let amount {
                         Text(amount).font(.system(size: 26 * textScale, weight: .semibold, design: .rounded)).monospacedDigit().foregroundStyle(theme.accent)
-                            .lineLimit(1).minimumScaleFactor(0.7)
+                            .lineLimit(module == nil ? 1 : 2).minimumScaleFactor(0.7)
                     }
                     Text(amount == nil || !found ? name : String(localized: "\(name) found")).font(.system(size: 15 * textScale, weight: .semibold)).lineLimit(2).fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 4)
-                if appIcons.isEmpty {
+                if module != nil {
+                    Color.clear.frame(width: 104, height: 1) // Keeps the text clear of the sculpture behind it.
+                } else if appIcons.isEmpty {
                     if let image = CategoryArt.images[art] {
                         Image(nsImage: image).resizable().interpolation(.high).frame(width: 64, height: 64)
                             .rotationEffect(.degrees(hovered ? -4 : 0)).scaleEffect(hovered ? 1.06 : 1)
@@ -107,7 +118,8 @@ struct CategoryTile: View {
                     HStack(spacing: -10) { ForEach(Array(appIcons.enumerated()), id: \.offset) { Image(nsImage: $0.element).resizable().frame(width: 40, height: 40).shadow(color: .black.opacity(0.25), radius: 4, y: 2) } }
                 }
             }
-            Text(tagline).font(.system(size: 12.5 * textScale)).foregroundStyle(.white.opacity(0.68)).lineLimit(2).fixedSize(horizontal: false, vertical: true)
+            Text(tagline).font(.system(size: 12.5 * textScale)).foregroundStyle(.white.opacity(0.68)).lineLimit(module == nil ? 2 : 3).fixedSize(horizontal: false, vertical: true)
+                .padding(.trailing, module == nil ? 0 : 120)
             Spacer(minLength: 0)
             // One row when it fits; otherwise the checkbox and status sit above the buttons, never truncated.
             ViewThatFits(in: .horizontal) {
@@ -121,6 +133,15 @@ struct CategoryTile: View {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(LinearGradient(colors: [.white.opacity(hovered ? 0.13 : 0.09), .white.opacity(0.04)], startPoint: .topLeading, endPoint: .bottomTrailing))
         }
+        .background(alignment: .topTrailing) {
+            // Padding, not offset, so the sculpture also leaves through the right corner when the layout is mirrored.
+            if let image = module.flatMap({ CategoryArt.toolSculptures[$0] }) {
+                Image(nsImage: image).resizable().interpolation(.high).frame(width: 176, height: 176)
+                    .rotationEffect(.degrees(hovered ? -4 : 0)).scaleEffect(hovered ? 1.05 : 1)
+                    .padding(.top, -34).padding(.trailing, -44).accessibilityHidden(true)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .overlay { RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(.white.opacity(hovered ? 0.18 : 0.08), lineWidth: 0.8) }
         .onHover { inside in withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) { hovered = inside } }
     }

@@ -45,6 +45,15 @@ final class EverydayToolsTests: XCTestCase {
         let blocked = ReviewedTrash.move(filePlan, home: home) { _ in XCTFail("Changed file reached Trash"); return nil }
         XCTAssertNotNil(blocked.first?.error)
     }
+    func testUnattendedReviewKeepsCloudAndProtectedItemsOnly() throws {
+        let home = try fixture(), folder = home.appendingPathComponent("Copies"), cloud = home.appendingPathComponent("Library/Mobile Documents/com~apple~CloudDocs")
+        for directory in [folder, cloud] { try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true) }
+        let local = folder.appendingPathComponent("copy"), synced = cloud.appendingPathComponent("copy")
+        for file in [local, synced] { try Data([1]).write(to: file) }
+        let result = ReviewedTrash.reviewUnattended([local, synced, home.appendingPathComponent("Documents"), folder.appendingPathComponent("gone")], home: home)
+        XCTAssertEqual(result.ready.map(\.url.path), [local.standardizedFileURL.path])
+        XCTAssertEqual(result.kept, 3)
+    }
     func testMoveReportsProgressAndStopsBetweenItems() throws {
         let home = try fixture(), folder = home.appendingPathComponent("Copies")
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)

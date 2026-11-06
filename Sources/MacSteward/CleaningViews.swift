@@ -11,6 +11,14 @@ struct CleanExtra: Identifiable {
     var id: String { title }
 }
 
+struct PendingRemoval: Identifiable {
+    let id = UUID()
+    /// nil: whatever is ticked when the sheet opens.
+    var findings: [Finding]? = nil
+    var extras = [CleanExtra]()
+    var steps = [() -> Void]()
+}
+
 struct CleanConfirmSheet: View {
     @Environment(\.stewardTheme) private var theme
     let findings: [Finding]

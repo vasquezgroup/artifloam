@@ -12,11 +12,9 @@ struct MainView: View {
     @Namespace private var navigation
     @State private var hoveredNavigation: String?
     @StateObject private var storageMap = StorageMapModel()
-    @State private var confirmingClean = false
+    /// Everything the confirmation shows and runs. One value, so the sheet can't open with older contents.
+    @State private var pendingRemoval: PendingRemoval?
     /// What the open confirmation covers when it isn't simply the current selection.
-    @State private var pendingFindings: [Finding]?
-    @State private var pendingExtras: [CleanExtra] = []
-    @State private var pendingSteps: [() -> Void] = []
     /// Browser caches are recommended, so they start ticked. Emptying the Trash is permanent, so it never does.
     @State private var browsersTicked = true
     @State private var trashTicked = false
@@ -25,8 +23,12 @@ struct MainView: View {
     @State private var clutterTab = "Duplicates"
     /// After a Cleanup scan the summary tiles show first; Review opens the detailed list.
     @State private var cleanupReviewing = false
-    /// Summary tiles the person unticked; everything else cleanable goes with Remove selected.
+    /// What Run on the Overview summary includes. Only the safe parts start ticked.
     @State private var runCleanup = true
+    @State private var runDuplicates = true
+    @State private var runBrowsers = false
+    @State private var runLeftovers = false
+    @State private var runQuitApps = false
     /// A module opened from an Overview tile; Back returns to the tiles without leaving Overview.
     @State private var overviewDetail: String?
     @State private var performanceTab = "Memory"
@@ -113,7 +115,8 @@ struct MainView: View {
     private func isSummaryPage(_ section: String) -> Bool { !m.scanning && section == "Overview" && m.report != nil && overviewDetail == nil }
     private var isMapStage: Bool { isMapStagePage(m.section) }
     private func isMapStagePage(_ section: String) -> Bool { !m.scanning && section == "Space Map" && (storageMap.snapshot == nil || storageMap.mappingFully) }
-    private var isStage: Bool { isIntro || isSummary || isMapStage }
+    /// A removal has the whole window, so Run can't be pressed again under it.
+    private var isStage: Bool { m.removal == nil && m.cleaning == nil && (isIntro || isSummary || isMapStage) }
     /// Scans, Trash moves and cleanups take the whole window: the sidebar hides.
     private var focusedScan: Bool { stageWorking || storageMap.mappingFully || m.removal != nil || m.cleaning != nil }
     private var navigationWidth: CGFloat { focusedScan ? 0 : hideSidebar ? 72 : sidebarWidth }
@@ -177,7 +180,7 @@ struct MainView: View {
         }
         .onChange(of: focusedScan) { _, _ in windowPointer = nil }
         .onChange(of: isStage) { _, _ in windowPointer = nil }
-        .onChange(of: m.scanning) { _, scanning in if scanning { storageMap.cancel(); cleanupReviewing = false } }
+        .onChange(of: m.scanning) { _, scanning in if scanning { storageMap.cancel(); cleanupReviewing = false; runCleanup = true; runDuplicates = true; runBrowsers = false; runLeftovers = false; runQuitApps = false } }
         .onChange(of: m.section) { _, section in if section != "Overview" { overviewDetail = nil } }
         .onChange(of: m.report == nil) { _, empty in if empty { overviewDetail = nil } }
         .animation(reduceMotion ? .easeOut(duration: 0.18) : .spring(response: 0.58, dampingFraction: 0.88), value: focusedScan)
@@ -185,8 +188,8 @@ struct MainView: View {
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.28), value: isIntro)
         .animation(reduceMotion ? nil : .spring(response: 0.48, dampingFraction: 0.88), value: m.scanning)
         .animation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.9), value: hideSidebar)
-        .sheet(isPresented: $confirmingClean) { CleanConfirmSheet(findings: pendingFindings ?? m.selectedFindings, appsToQuit: (pendingFindings?.isEmpty ?? false) ? [] : m.appsToQuit, extras: pendingExtras) {
-            if pendingSteps.isEmpty { m.clean() } else { m.removalQueue = pendingSteps; m.runNextRemoval() }
+        .sheet(item: $pendingRemoval) { pending in CleanConfirmSheet(findings: pending.findings ?? m.selectedFindings, appsToQuit: (pending.findings?.isEmpty ?? false) ? [] : m.appsToQuit, extras: pending.extras) {
+            if pending.steps.isEmpty { m.clean() } else { m.removalQueue = pending.steps; m.runNextRemoval() }
         } }
         .sheet(item: $m.worktreeBatch) { worktreeSheet($0) }
         .environment(\.stewardTheme, theme)
@@ -279,7 +282,7 @@ struct MainView: View {
                 else if m.scanning { m.cancelScan() }
                 else if toolRunning { stopTool() }
                 // Like Smart Care: the big button runs the safe, ticked part; everything else stays in Review.
-                else if isSummary { if runCleanup, !summaryEligible.isEmpty { confirmRemoval(summaryEligible) } else { m.review(); m.section = "Overview"; overviewDetail = "Cleanup" } }
+                else if isSummary { runSummary() }
                 else if m.section == "Duplicates" { m.scanDuplicates() }
                 else if m.section == "My Clutter" { scanClutter() }
                 else if ["Applications", "Leftovers"].contains(m.section) { m.leftovers.scan() }
@@ -304,22 +307,20 @@ struct MainView: View {
     /// After an Overview scan, like Smart Care: one tile per module, one Run for the safe part.
     var summaryStage: some View {
         let findings = m.report?.findings ?? []
-        let eligible = findings.filter { $0.safety == .automatic && !Self.reviewOnlyGroups.contains($0.group) }
-        let junk = eligible.reduce(0) { $0 + $1.bytes }
         let cleanupFound = Self.found(findings)
         let duplicateBytes = m.duplicates.reduce(0) { $0 + $1.potentialBytes }
-        let leftoverBytes = m.leftovers.items?.reduce(0) { $0 + $1.bytes }
         return VStack(spacing: 10) { ScrollView { VStack(spacing: 20) {
             VStack(spacing: 6) {
                 Label("Scan complete", systemImage: "checkmark.seal.fill").stewardFont(.caption, weight: .medium).foregroundStyle(mint)
                 Text(cleanupFound > 0 ? "You can free up to \(formattedBytes(cleanupFound + duplicateBytes))." : "Your Mac looks tidy.").font(.system(size: 30 * textScale, weight: .light))
             }
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 250, maximum: 320), spacing: 14)], spacing: 14) {
-                careTile("Cleanup", value: formattedBytes(cleanupFound), detail: Self.readyLine(findings), selected: $runCleanup, review: { m.review(); m.section = "Overview"; overviewDetail = "Cleanup" })
-                careTile("My Clutter", value: m.duplicateChecked ? String(localized: "\(m.duplicates.count) duplicates") : String(localized: "Not checked"), detail: m.duplicateChecked ? String(localized: "\(formattedBytes(duplicateBytes)) in extra copies") : String(localized: "Choose a folder to compare"), review: { overviewDetail = "My Clutter" })
-                careTile("Applications", value: m.unusedApps.map { String(localized: "\($0) unused apps") } ?? String(localized: "Checking…"), detail: leftoverBytes.map { String(localized: "Unused 6+ months · \(formattedBytes($0)) leftovers") } ?? String(localized: "Finding leftovers…"), review: { overviewDetail = "Applications" })
-                careTile("Performance", value: m.memory.reading?.pressure.title ?? "–", detail: m.agentCount.map { String(localized: "Memory pressure · \($0) background agents") } ?? String(localized: "Memory pressure"), review: { overviewDetail = "Performance" })
-                careTile("Status", value: m.checks.isEmpty ? String(localized: "Not checked") : String(localized: "\(m.protections.on) of \(m.protections.total) on"), detail: String(localized: "Protection, updates and remote access"), review: { overviewDetail = "System" })
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 270), spacing: 14)], spacing: 14) {
+                cleanupCard
+                clutterCard
+                browsersCard
+                applicationsCard
+                performanceCard
+                toolCard("Status", value: m.checks.isEmpty ? String(localized: "Not checked") : String(localized: "\(m.protections.on) of \(m.protections.total) on"), detail: String(localized: "Protection, updates and remote access"), review: { overviewDetail = "System" })
             }.frame(maxWidth: 1000)
             if let note = m.report?.notices.first {
                 HStack(spacing: 8) {
@@ -330,7 +331,69 @@ struct MainView: View {
         }.frame(maxWidth: .infinity).padding(.horizontal, 30).padding(.top, 8).padding(.bottom, 12).overlayScrollers() }
         }
     }
-    private var summaryEligible: [Finding] { (m.report?.findings ?? []).filter { $0.safety == .automatic && !Self.reviewOnlyGroups.contains($0.group) } }
+    // What each card would remove. Each follows the ticks in its tool, so what Review unticks stays out of Run.
+    private var chosenFindings: [Finding] { (m.report?.findings ?? []).filter { m.selected.contains($0.id) && $0.userCleanable && $0.group != .worktrees } }
+    private var chosenWorktrees: [Finding] { m.reviewableWorktrees.filter { m.worktreeSelection.contains($0.id) } }
+    private var chosenDuplicates: [String] { DuplicateGroup.trashable(m.duplicateChoice, in: m.duplicates) }
+    private var chosenDuplicateBytes: UInt64 {
+        m.duplicates.reduce(0) { $0 + $1.size * UInt64(DuplicateGroup.trashable(m.duplicateChoice, in: [$1]).count) }
+    }
+    private var chosenBrowserCaches: [BrowserItem] { closedBrowserCaches.filter { m.browsers.selection.contains($0.id) } }
+    private var chosenLeftovers: [LeftoverItem] { (m.leftovers.items ?? []).filter { m.leftovers.selection.contains($0.id) } }
+    /// The same largest idle apps Performance suggests. Nothing is ticked until the person asks.
+    private var idleApps: [MemoryAppUsage] {
+        m.memory.reading.map { MemoryVerdict.suggestions($0.apps, recentlyUsed: m.memory.recentlyUsed, canQuit: m.memory.canQuit) } ?? []
+    }
+    /// Run: one confirmation for every ticked card. Large files are never part of it.
+    private func runSummary() {
+        let findings = runCleanup ? chosenFindings : [], worktrees = runCleanup ? chosenWorktrees : []
+        let duplicates = runDuplicates ? chosenDuplicates : [], browsers = runBrowsers ? chosenBrowserCaches : []
+        let leftovers = runLeftovers ? chosenLeftovers : [], apps = runQuitApps ? idleApps : []
+        if findings.isEmpty, worktrees.isEmpty, duplicates.isEmpty, browsers.isEmpty, leftovers.isEmpty, apps.isEmpty { m.review(); m.section = "Overview"; overviewDetail = "Cleanup"; return }
+        confirmRemoval(findings, worktrees: worktrees, browsers: browsers, duplicates: duplicates, leftovers: leftovers, quitting: apps)
+    }
+    /// On a card that can't be ticked, this line is the reason, so it never just looks broken.
+    private func runStatus(ticked: Bool, bytes: UInt64, found: UInt64) -> String {
+        if bytes == 0 { return found > 0 ? String(localized: "Choose in Review") : String(localized: "Nothing to clean") }
+        return ticked ? String(localized: "\(formattedBytes(bytes)) selected") : String(localized: "Not selected")
+    }
+    private var cleanupCard: some View {
+        let findings = m.report?.findings ?? []
+        let bytes = (chosenFindings + chosenWorktrees).reduce(UInt64(0)) { $0 + $1.bytes }
+        return toolCard("Cleanup", value: formattedBytes(Self.found(findings)), detail: Self.readyLine(findings), status: runStatus(ticked: runCleanup, bytes: bytes, found: Self.found(findings)), chosen: $runCleanup, canChoose: bytes > 0,
+                        review: { m.review(); m.section = "Overview"; overviewDetail = "Cleanup" })
+    }
+    private var clutterCard: some View {
+        let bytes = chosenDuplicateBytes
+        return toolCard("My Clutter", value: m.duplicateChecked ? String(localized: "\(m.duplicates.count) duplicates") : String(localized: "Not checked"),
+                        detail: m.duplicateChecked ? String(localized: "\(formattedBytes(m.duplicates.reduce(0) { $0 + $1.potentialBytes })) in extra copies") : String(localized: "Choose a folder to compare"),
+                        status: m.duplicateChecked ? runStatus(ticked: runDuplicates, bytes: bytes, found: m.duplicates.reduce(0) { $0 + $1.size }) : String(localized: "Not checked"), chosen: $runDuplicates, canChoose: bytes > 0, review: { overviewDetail = "My Clutter" })
+    }
+    private var browsersCard: some View {
+        let reports = m.browsers.reports
+        let found = (reports ?? []).flatMap(\.items).filter(\.recommended).reduce(UInt64(0)) { $0 + $1.bytes }
+        let bytes = chosenBrowserCaches.reduce(UInt64(0)) { $0 + $1.bytes }
+        let open = (reports ?? []).filter { report in BrowserData.isRunning(report.bundleID) && report.items.contains(where: \.recommended) }.map(\.name).joined(separator: ", ")
+        let status = reports == nil ? String(localized: "Checking…") : bytes == 0 && !open.isEmpty ? String(localized: "Quit \(open) to clean") : runStatus(ticked: runBrowsers, bytes: bytes, found: found)
+        return toolCard("Browsers", value: reports == nil ? String(localized: "Checking…") : formattedBytes(found), detail: String(localized: "Rebuilt as you browse. You stay signed in."), status: status, chosen: $runBrowsers, canChoose: bytes > 0, review: { overviewDetail = "Browsers" })
+    }
+    private var applicationsCard: some View {
+        let bytes = chosenLeftovers.reduce(UInt64(0)) { $0 + $1.bytes }
+        let leftovers = m.leftovers.items?.reduce(UInt64(0)) { $0 + $1.bytes }
+        return toolCard("Applications", value: m.unusedApps.map { String(localized: "\($0) unused apps") } ?? String(localized: "Checking…"),
+                        detail: leftovers.map { String(localized: "Unused 6+ months · \(formattedBytes($0)) leftovers") } ?? String(localized: "Finding leftovers…"),
+                        status: leftovers == nil ? String(localized: "Checking…") : runStatus(ticked: runLeftovers, bytes: bytes, found: leftovers ?? 0), chosen: $runLeftovers, canChoose: bytes > 0, review: { overviewDetail = "Applications" })
+    }
+    private var performanceCard: some View {
+        let apps = idleApps
+        return toolCard("Performance", value: m.memory.reading?.pressure.title ?? "–", detail: m.agentCount.map { String(localized: "Memory pressure · \($0) background agents") } ?? String(localized: "Memory pressure"),
+                        status: apps.isEmpty ? String(localized: "No idle apps") : runQuitApps ? String(localized: "\(apps.count) apps") : String(localized: "Not selected"), chosen: $runQuitApps, canChoose: !apps.isEmpty, review: { overviewDetail = "Performance" })
+    }
+    private func toolCard(_ module: String, value: String, detail: String, status: String? = nil, chosen: Binding<Bool>? = nil, canChoose: Bool = true, review: @escaping () -> Void) -> some View {
+        // A dimmed card can't go, so it never looks ticked, whatever Run remembers for it.
+        let shown = chosen.map { chosen in Binding(get: { chosen.wrappedValue && canChoose }, set: { chosen.wrappedValue = $0 }) }
+        return CategoryTile(amount: value, found: false, name: sectionTitle(module), tagline: detail, art: "", module: module, chooseLabel: "Include in Run", status: status, chosen: shown, canChoose: canChoose, review: review)
+    }
     /// A module opened from Overview: the shared back button, a breadcrumb, then the module itself.
     @ViewBuilder private func overviewDetailView(_ detail: String) -> some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -344,28 +407,6 @@ struct MainView: View {
             else { ScrollView { content(detail).padding(.bottom, 28).frame(maxWidth: .infinity, alignment: .leading) } }
         }.padding(.horizontal, 24).padding(.top, 16).padding(.bottom, 16).frame(maxWidth: .infinity, maxHeight: .infinity)
         .transition(.opacity)
-    }
-    /// A module tile: its 3D icon, a headline number, a status line and Review. Only Cleanup can join Run.
-    private func careTile(_ module: String, value: String, detail: String, selected: Binding<Bool>? = nil, review: @escaping () -> Void) -> some View {
-        // Same shape as the Cleanup tiles: the big number first, then the module, its art, and one short line.
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .top, spacing: 10) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(value).font(.system(size: 24 * textScale, weight: .semibold, design: .rounded)).monospacedDigit().foregroundStyle(mint).lineLimit(1).minimumScaleFactor(0.7)
-                    Text(sectionTitle(module)).font(.system(size: 15 * textScale, weight: .semibold))
-                }
-                Spacer(minLength: 4)
-                StewardNavigationArtwork(name: module, fallback: "sparkles", size: 50)
-            }
-            Text(detail).font(.system(size: 12.5 * textScale)).foregroundStyle(muted).lineLimit(2)
-            HStack(spacing: 8) {
-                if let selected { Toggle("Include in Run", isOn: selected).toggleStyle(.stewardCheckboxOnly).help("Include in Run") }
-                Spacer()
-                Button(action: review) { Text("Review", comment: "Button: open the details and choose what goes") }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
-            }
-        }.padding(16).frame(maxWidth: .infinity, alignment: .topLeading)
-        .background(LinearGradient(colors: [.white.opacity(0.09), .white.opacity(0.04)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay { RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(.white.opacity(0.08), lineWidth: 0.7) }
     }
     /// Whether Settings can fix a scan note. Notes are translated, so their wording can't decide this: the Git note is recognised
     /// by its whole key, an unreadable folder by the path only that note names, and a failed duplicate search (it only fails on access) by its key.
@@ -700,7 +741,8 @@ struct MainView: View {
     }
     var cleanupDetails: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Button { cleanupReviewing = false } label: { Label("Summary", systemImage: "chevron.backward").stewardFont(.callout) }.buttonStyle(.plain).foregroundStyle(muted)
+            // From Overview, the breadcrumb above already goes back.
+            if overviewDetail == nil { Button { cleanupReviewing = false } label: { Label("Summary", systemImage: "chevron.backward").stewardFont(.callout) }.buttonStyle(.plain).foregroundStyle(muted) }
             HStack(alignment: .top) {
                 title(String(localized: "Review your cleanup"), String(localized: "Choose what goes. Keep what matters."))
                 Spacer()
@@ -785,7 +827,7 @@ struct MainView: View {
             if isWorktrees {
                 Button("Delete \(count)…") { m.requestWorktreeRemoval(chosen) }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(count == 0 || m.busy)
             } else {
-                Button("Clean \(count)…") { pendingFindings = nil; pendingExtras = []; pendingSteps = []; confirmingClean = true }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(count == 0 || m.busy)
+                Button("Clean \(count)…") { pendingRemoval = PendingRemoval() }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(count == 0 || m.busy)
             }
         }
     }
@@ -1088,12 +1130,25 @@ struct MainView: View {
         .onAppear { if m.browsers.reports == nil { m.browsers.scan() }; if m.trashBins.report == nil { m.trashBins.inspect() } }
     }
     /// One confirmation for everything ticked, then each remover in turn. The Trash goes last, so it also takes whatever the others moved there.
-    private func confirmRemoval(_ items: [Finding], worktrees: [Finding] = [], browsers: [BrowserItem] = [], trash: Bool = false) {
+    private func confirmRemoval(_ items: [Finding], worktrees: [Finding] = [], browsers: [BrowserItem] = [], trash: Bool = false, duplicates: [String] = [], leftovers: [LeftoverItem] = [], quitting: [MemoryAppUsage] = []) {
         var extras = [CleanExtra](), steps = [() -> Void]()
-        if !items.isEmpty { m.review(); m.selected = Set(items.map(\.id)); steps.append { m.clean() } }
+        // Inside the step, so Cancel leaves the page and the ticks as they were.
+        if !items.isEmpty { steps.append { m.review(); m.selected = Set(items.map(\.id)); m.clean() } }
         if !worktrees.isEmpty {
             extras.append(CleanExtra(icon: CleanupGroup.worktrees.icon, title: CleanupGroup.worktrees.title, bytes: worktrees.reduce(0) { $0 + $1.bytes }, warning: String(localized: "Git rechecks each worktree next, and you confirm them one more time.")))
             steps.append { m.requestWorktreeRemoval(worktrees) }
+        }
+        if !duplicates.isEmpty {
+            extras.append(CleanExtra(icon: "square.on.square", title: sectionTitle("Duplicates"), bytes: chosenDuplicateBytes))
+            steps.append {
+                m.recheckDuplicates(duplicates) { safe in
+                    m.trashConfirmed(safe.map { URL(fileURLWithPath: $0) }, duplicateGroups: m.duplicates) { results in m.removeDuplicates(results.filter { $0.error == nil }.map(\.path)) }
+                }
+            }
+        }
+        if !leftovers.isEmpty {
+            extras.append(CleanExtra(icon: "shippingbox", title: sectionTitle("Leftovers"), bytes: leftovers.reduce(0) { $0 + $1.bytes }))
+            steps.append { m.trashConfirmed(leftovers.map(\.url), allowLeftovers: true) { _ in m.leftovers.scan(); m.disk = .read() } }
         }
         if !browsers.isEmpty {
             extras.append(CleanExtra(icon: "globe", title: String(localized: "Browser caches"), bytes: browsers.reduce(0) { $0 + $1.bytes }))
@@ -1103,7 +1158,12 @@ struct MainView: View {
             extras.append(CleanExtra(icon: "trash", title: String(localized: "Trash"), bytes: m.trashBins.report?.bytes, warning: String(localized: "Everything in the Trash is deleted permanently and cannot be put back.")))
             steps.append { trashTicked = false; m.trashBins.empty(on: m) { m.disk = .read() } }
         }
-        pendingFindings = items; pendingExtras = extras; pendingSteps = steps; confirmingClean = true
+        if !quitting.isEmpty {
+            let names = quitting.map(\.app.name.displaySafe).joined(separator: ", ")
+            extras.append(CleanExtra(icon: "memorychip", title: sectionTitle("Performance"), bytes: nil, warning: String(localized: "\(names) will be asked to quit. Save your work if they ask.")))
+            steps.append { quitting.forEach { m.memory.quit($0) }; runQuitApps = false; m.runNextRemoval() }
+        }
+        pendingRemoval = PendingRemoval(findings: items, extras: extras, steps: steps)
     }
     /// Recommended caches of closed browsers: the only ones that can go right now.
     private var closedBrowserCaches: [BrowserItem] {
@@ -1153,7 +1213,7 @@ struct MainView: View {
             if isWorktrees { if on { m.worktreeSelection.formUnion(ids) } else { m.worktreeSelection.subtract(ids) } }
             else if on { m.selected.formUnion(ids) } else { m.selected.subtract(items.map(\.id)) }
         })
-        let clean: (() -> Void)? = ticked.isEmpty ? nil : isWorktrees ? { m.requestWorktreeRemoval(ticked) } : { m.review(group); pendingFindings = nil; pendingExtras = []; pendingSteps = []; m.selected = Set(ticked.map(\.id)); confirmingClean = true }
+        let clean: (() -> Void)? = ticked.isEmpty ? nil : isWorktrees ? { m.requestWorktreeRemoval(ticked) } : { m.review(group); m.selected = Set(ticked.map(\.id)); pendingRemoval = PendingRemoval() }
         return CategoryTile(amount: foundBytes > 0 ? formattedBytes(foundBytes) : nil, name: group.title, tagline: CategoryArt.tagline(for: group),
                             art: CategoryArt.name(for: group), appIcons: icons, status: status, chosen: chosen, canChoose: !choosable.isEmpty,
                             review: { m.review(group); cleanupReviewing = true }, clean: clean)
@@ -1207,7 +1267,7 @@ struct MainView: View {
     @ViewBuilder private var footerAction: some View {
         if m.busy && !m.scanning { Text("Please wait…").stewardFont(.body) }
         else if m.section == "Cleanup" || overviewDetail == "Cleanup" {
-            Button { pendingFindings = nil; pendingExtras = []; pendingSteps = []; confirmingClean = true } label: {
+            Button { pendingRemoval = PendingRemoval() } label: {
                 Label(m.selectedFindings.isEmpty ? (m.scopeEligible.isEmpty ? "Tick what you want to clean" : "Select caches to clean") : "Clean \(m.selectedFindings.count) caches · \(formattedBytes(m.selectedBytes))", systemImage: "sparkles")
                     .fixedSize(horizontal: false, vertical: true)
             }.buttonStyle(CleanupGlassButtonStyle())

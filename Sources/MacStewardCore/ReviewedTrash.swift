@@ -79,6 +79,12 @@ public enum ReviewedTrash {
         }
         return result
     }
+    /// For a run with no per-file review: one bad item only keeps that item, and cloud files always wait for a person,
+    /// because deleting them can also delete them from the cloud.
+    public static func reviewUnattended(_ urls: [URL], home: URL = FileManager.default.homeDirectoryForCurrentUser, allowLeftovers: Bool = false) -> (ready: [TrashCandidate], kept: Int) {
+        let ready = urls.compactMap { try? review([$0], home: home, allowLeftovers: allowLeftovers).first }.filter { $0.cloud == .local }
+        return (ready, urls.count - ready.count)
+    }
     /// `progress` gets (items done, bytes moved so far, current item) after each item; `shouldStop` is asked before each one.
     /// Stopping returns the outcomes so far; items not reached stay where they are.
     public static func move(_ candidates: [TrashCandidate], home: URL = FileManager.default.homeDirectoryForCurrentUser, allowApplications: Bool = false, allowLeftovers: Bool = false, duplicateGroups: [DuplicateGroup] = [],
