@@ -8,7 +8,7 @@
 A native macOS app that finds what's safe to clean, explains it, and removes nothing until you choose.</p>
 
 <p align="center">
-  macOS 14+ · Apple Silicon and Intel · No third-party dependencies · <a href="#license">Free and open source</a>
+  macOS 14+ · Apple Silicon and Intel · No third-party dependencies · 25 languages · <a href="#license">Free and open source</a>
 </p>
 
 <p align="center">
@@ -50,6 +50,14 @@ So I built Artifloam. It started as a small tool for my own Mac, and it's still 
 | **Keep space free** | Optional automatic cleanup of things that rebuild themselves, off by default |
 
 There's also a command-line helper, `stewardctl`.
+
+## Languages
+
+Artifloam follows your Mac's language, and you can choose another in Settings. It's available in 25 languages and regional variants:
+
+العربية, Català, Deutsch, English (US, Australia, Canada, UK), Español (España, Latinoamérica), Français, Schwiizertüütsch, हिन्दी, Hrvatski, Italiano, 日本語, 한국어, Latviešu, Polski, Português, Shqip, Српски, Srpski, Svenska, Türkçe, 简体中文.
+
+These are machine translations, not yet reviewed by native speakers, so some wording may be off. Corrections and new languages are very welcome as pull requests. See [how to help](CONTRIBUTING.md#translations).
 
 ## Install
 

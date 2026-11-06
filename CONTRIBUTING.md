@@ -11,7 +11,26 @@ Thank you for helping. Issues and pull requests are both welcome.
 
 ## Translations
 
-English text in the source is the key. After adding or changing a string, run `scripts/sync-strings.sh`, then translate what it adds in `Localization/Localizable.xcstrings`. `swift test` fails until every language has it with matching placeholders. Translations are machine-made so far; corrections from native speakers are very welcome, above all for anything that says what gets deleted.
+All translations live in one file, `Localization/Localizable.xcstrings`, and the English text is the key. Opening it in Xcode gives you a table for each language. It's also plain JSON, so any editor works. The macOS permission prompts are in `Localization/InfoPlist.xcstrings`.
+
+The translations are machine-made so far, so corrections from native speakers are very welcome, above all for anything that says what gets deleted, kept or moved to the Trash.
+
+**To correct a translation:** change the text and open a pull request. Keep placeholders such as `%@` and `%lld`. To change their order, number them, for example `%2$@ %1$lld`.
+
+**To add a language:**
+
+1. Add its code and its name in that language to `AppLanguage.all` in `Sources/MacStewardCore/AppLanguage.swift`.
+2. Add the translations to both catalog files.
+3. If its plural forms differ from English, add them to `requiredPlurals` in `Tests/MacStewardCoreTests/LocalizationTests.swift`.
+
+**To add or change text in the app:** use `Text("…")` or `String(localized: "…")`, then run `scripts/sync-strings.sh` to add the new text to the catalog.
+
+**Before you open the pull request:** `swift test` lists anything missing in any language and any placeholder that doesn't match. To see a language in the app, build it and open it in that language, because `swift run` shows English only:
+
+```sh
+./scripts/package-app.sh
+open dist/Artifloam.app --args -AppleLanguages '(de)'
+```
 
 ## License
 
