@@ -47,7 +47,7 @@ struct MainView: View {
         case "Trash bins": return .trash
         case "System": return .system
         case "Duplicates", "My Clutter": return .files
-        case "Applications": return .system
+        case "Applications", "iPhone": return .system
         case "Browsers", "Browser data": return .browsers
         case "Worktrees": return .worktrees
         case "Space Map": return .space
@@ -70,6 +70,7 @@ struct MainView: View {
         case "Browsers": return m.browsers.reports == nil || m.browsers.busy
         // Nothing to show means the start screen's big artwork, saying so, rather than an empty results page.
         case "Trash bins": return m.trashBins.report == nil || m.trashBins.report?.items == 0 || m.trashBins.scanning
+        case "iPhone": return m.iphone.onStage
         default: return false
         }
     }
@@ -83,6 +84,7 @@ struct MainView: View {
         case "Browsers": return m.browsers.busy
         case "Trash bins": return m.trashBins.scanning
         case "My Clutter": return m.checking || m.largeFiles.task != nil
+        case "iPhone": return m.iphone.reading
         default: return m.checking
         }
     }
@@ -96,6 +98,7 @@ struct MainView: View {
         case "Browsers": m.browsers.stop()
         case "Trash bins": m.trashBins.stop()
         case "My Clutter": m.stopChecks(); m.largeFiles.cancel()
+        case "iPhone": m.iphone.stop()
         default: m.stopChecks()
         }
     }
@@ -107,6 +110,7 @@ struct MainView: View {
         case "Login & background items": return String(localized: "Reading what starts with your Mac…")
         case "Browsers": return String(localized: "Measuring caches and website data for each browser…")
         case "Trash bins": return String(localized: "Asking Finder what the Trash holds…")
+        case "iPhone": return String(localized: "Asking your iPhone for its apps. Keep it unlocked.")
         case "My Clutter" where m.largeFiles.task != nil && !m.checking: return String(localized: "Reading file sizes…")
         default: return m.progress
         }
@@ -181,7 +185,10 @@ struct MainView: View {
         .onChange(of: focusedScan) { _, _ in windowPointer = nil }
         .onChange(of: isStage) { _, _ in windowPointer = nil }
         .onChange(of: m.scanning) { _, scanning in if scanning { storageMap.cancel(); cleanupReviewing = false; runCleanup = true; runDuplicates = true; runBrowsers = false; runLeftovers = false; runQuitApps = false } }
-        .onChange(of: m.section) { _, section in if section != "Overview" { overviewDetail = nil } }
+        .onChange(of: m.section) { _, section in
+            if section != "Overview" { overviewDetail = nil }
+            if section == "iPhone" { m.iphone.watch() }
+        }
         .onChange(of: m.report == nil) { _, empty in if empty { overviewDetail = nil } }
         .animation(reduceMotion ? .easeOut(duration: 0.18) : .spring(response: 0.58, dampingFraction: 0.88), value: focusedScan)
         .animation(reduceMotion ? nil : .pagePush, value: theme)
@@ -249,6 +256,7 @@ struct MainView: View {
         case "Worktrees": return String(localized: "Inspect", comment: "Button: inspect Git worktrees")
         case "Duplicates": return String(localized: "Compare", comment: "Button: compare files to find duplicates")
         case "System": return String(localized: "Check", comment: "Button: check this Mac's settings")
+        case "iPhone": return String(localized: "Read", comment: "Button: read the list of apps from the chosen iPhone")
         default: return String(localized: "Scan", comment: "Button: start a scan")
         }
     }
@@ -269,21 +277,25 @@ struct MainView: View {
             if stageWorking || storageMap.busy {
                 Text(m.health.fixing != nil ? "Nothing is being removed." : stageWorking ? "Reading only. Nothing is being removed." : "Sizes only. Nothing is being removed.")
                     .stewardFont(.caption).foregroundStyle(.white.opacity(0.5))
+            } else if m.section == "iPhone" {
+                Text("Sizes come from the iPhone. Nothing is changed on it.").stewardFont(.caption).foregroundStyle(.white.opacity(0.5))
+                IPhoneDevicePicker(state: m.iphone).padding(.top, 6)
             } else if !isSummary { ScanInfoButton(section: m.section, accent: theme.accent) }
             if !toolRunning && (stageWorking || storageMap.busy || m.busy) { Text(stageProgressText).stewardFont(.caption).foregroundStyle(.white.opacity(0.65)).multilineTextAlignment(.center).help("Progress counts completed checks, not an estimate of time remaining.") }
             // On stage screens the banner sits under the progress line, never over the artwork.
             // Hidden while a scan runs, so it never pushes the progress labels into the artwork.
             if !(stageWorking || storageMap.busy || m.busy || isSummary) { FullDiskAccessBanner().frame(maxWidth: 760) }
             OrbAction(title: orbTitle,
-                      icon: isMapStage ? (storageMap.busy ? "stop.fill" : "magnifyingglass") : stageWorking ? "stop.fill" : isSummary ? "sparkles" : m.section == "System" ? "checkmark.shield" : m.section == "Duplicates" ? "square.on.square" : "magnifyingglass", accent: theme.vivid,
+                      icon: isMapStage ? (storageMap.busy ? "stop.fill" : "magnifyingglass") : stageWorking ? "stop.fill" : isSummary ? "sparkles" : m.section == "System" ? "checkmark.shield" : m.section == "Duplicates" ? "square.on.square" : m.section == "iPhone" ? "iphone" : "magnifyingglass", accent: theme.vivid,
                       // A running scan can always be stopped; only other busy work disables the orb.
-                      disabled: isMapStage ? (!storageMap.busy && !storageMap.canStart) : !stageWorking && (m.busy || m.waitingForCancelledScan), showingProgress: stageWorking || storageMap.busy || m.busy, progress: stageProgress) {
+                      disabled: isMapStage ? (!storageMap.busy && !storageMap.canStart) : !stageWorking && (m.busy || m.waitingForCancelledScan || (m.section == "iPhone" && !m.iphone.canRead)), showingProgress: stageWorking || storageMap.busy || m.busy, progress: stageProgress) {
                 if isMapStage { if storageMap.busy { storageMap.cancel() } else { m.withFullDisk { storageMap.map() } } }
                 else if m.scanning { m.cancelScan() }
                 else if toolRunning { stopTool() }
                 // Like Smart Care: the big button runs the safe, ticked part; everything else stays in Review.
                 else if isSummary { runSummary() }
                 else if m.section == "Duplicates" { m.scanDuplicates() }
+                else if m.section == "iPhone" { m.iphone.read() }
                 else if m.section == "My Clutter" { scanClutter() }
                 else if ["Applications", "Leftovers"].contains(m.section) { m.leftovers.scan() }
                 else if m.section == "Login & background items" { m.startup.scan() }
@@ -435,7 +447,7 @@ struct MainView: View {
             summaryPill(sectionTitle("System"), icon: "checkmark.shield", value: String(localized: "\(m.protections.on) of \(m.protections.total) protections on")) { m.section = "System" }
         }
     }
-    static let modules = [("Overview", "sparkles"), ("Cleanup", "externaldrive.fill"), ("My Clutter", "doc.on.doc"), ("Applications", "checkmark.shield"), ("Browsers", "globe"), ("Space Map", "circle.dotted")]
+    static let modules = [("Overview", "sparkles"), ("Cleanup", "externaldrive.fill"), ("My Clutter", "doc.on.doc"), ("Applications", "checkmark.shield"), ("Browsers", "globe"), ("Space Map", "circle.dotted"), ("iPhone", "iphone")]
     /// Live readings, not cleanup: small buttons in the window's top-right corner.
     static let corner = [("Performance", "gauge.with.dots.needle.67percent"), ("Status", "waveform.path.ecg")]
     // Automation and Activity live inside Settings as tabs.
@@ -621,6 +633,10 @@ struct MainView: View {
                 subtitle = String(localized: "Files in the Trash use space until it's emptied.")
                 points = [("trash", String(localized: "On your Mac and connected drives")), ("internaldrive", String(localized: "Space you can get back")), ("lock", String(localized: "Nothing goes until you confirm"))]
             }
+        case "iPhone":
+            title = m.iphone.stageLine
+            subtitle = title
+            points = [("iphone", String(localized: "Every app by size")), ("bubble.left.and.bubble.right", String(localized: "WhatsApp per chat, from a local backup")), ("lock", String(localized: "Nothing changes on your iPhone"))]
         default:
             title = String(localized: "More room. Less clutter.")
             subtitle = String(localized: "A simple check for the leftovers your Mac can leave behind.")
@@ -629,7 +645,7 @@ struct MainView: View {
         // After a cleanup the start screen says what was freed instead of the generic line.
         let lead = m.lastFreed.map { String(localized: "Last cleanup freed \(formattedBytes($0)). Scan again any time.") }
         return IntroStage(theme: themeFor(section), heading: trashEmpty || (section == "Leftovers" && m.leftovers.items?.isEmpty == true && !m.leftovers.busy) ? String(localized: "All clean.") : sectionTitle(section), title: title, subtitle: ["Overview", "Cleanup"].contains(section) ? (lead ?? subtitle) : subtitle, points: points, scanning: stageWorking, progress: m.scanning ? m.progress : toolProgressText,
-                          health: section == "Overview" ? m.health.health : nil, fix: { issue in m.health.performOnStage(issue.fix, prepare: { await m.startup.load() }) { m.section = $0 } }, workingTitle: m.health.fixing?.title, reportsFrames: section == "Overview" && m.welcoming, subtitleIsLastCleanup: ["Overview", "Cleanup"].contains(section) && lead != nil)
+                          health: section == "Overview" ? m.health.health : nil, fix: { issue in m.health.performOnStage(issue.fix, prepare: { await m.startup.load() }) { m.section = $0 } }, workingTitle: section == "iPhone" ? String(localized: "Reading your iPhone…") : m.health.fixing?.title, reportsFrames: section == "Overview" && m.welcoming, subtitleIsLastCleanup: ["Overview", "Cleanup"].contains(section) && lead != nil)
     }
     /// Header, pages, banner and footer to the right of the sidebar.
     private var mainColumn: some View {
@@ -642,7 +658,7 @@ struct MainView: View {
         }.frame(maxWidth: .infinity).padding(.bottom, isStage ? max(130 + (textScale - 1) * 50, stageControlsHeight - 60) : 0)
     }
     private var showsFooter: Bool {
-        !isStage && m.cleaning == nil && m.removal == nil && !["Space Map", "Memory", "Tools", "Settings", "Large & old files", "App removal", "Login & background items", "Performance", "Applications", "Trash bins", "Leftovers", "Browser data", "Status", "Browsers"].contains(m.section) && !(m.section == "My Clutter" && clutterTab != "Duplicates")
+        !isStage && m.cleaning == nil && m.removal == nil && !["Space Map", "Memory", "Tools", "Settings", "Large & old files", "App removal", "Login & background items", "Performance", "Applications", "Trash bins", "Leftovers", "Browser data", "Status", "Browsers", "iPhone"].contains(m.section) && !(m.section == "My Clutter" && clutterTab != "Duplicates")
     }
     /// A carousel driven by hand: during a change the leaving page and the current page are both ordinary,
     /// live pages moved by one `slide` value. SwiftUI's removal transitions only move a leaving page; they never blur or fade it.
@@ -705,6 +721,7 @@ struct MainView: View {
         case "Leftovers": LeftoversView(state: m.leftovers)
         case "Browser data": BrowserDataView(state: m.browsers)
         case "Browsers": BrowsersModuleView(state: m.browsers)
+        case "iPhone": IPhoneView(state: m.iphone)
         case "Status": StatusView(state: m.status, memory: m.memory)
         case "Memory": MemoryView(monitor: m.memory)
         case "My Clutter": module("My Clutter", String(localized: "Duplicates across your home folder and large, old files."), tabs: ["Duplicates", "Large & old files"], selection: $clutterTab, summary: clutterSummary, scanAll: scanClutter) {

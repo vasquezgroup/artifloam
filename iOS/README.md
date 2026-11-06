@@ -52,6 +52,37 @@ Artifloam can never delete inside another app. It points people to the right scr
 - **Commit messages:** short, imperative, one line, no AI co-author lines.
 - Mark deliberate shortcuts with a `ponytail:` comment naming the limit.
 
+## Continue here
+
+1. `git switch iphone-app` in `~/Documents/projects/artifloam`. Work is local only, with no remote branch.
+2. Run the tests above, and `swift test` for the Mac app.
+3. Work through the checklists below. The real-iPhone checks come first, because they can change the code.
+
+Private research, competitor notes and the feature list are in the private documents repository: `docs/IPHONE-RESEARCH.md` and `docs/IPHONE-FEATURES.md`. Don't copy them here.
+
+## The Mac side
+
+The Mac app's iPhone section is in `Sources/MacSteward/IPhoneView.swift`, `Sources/MacStewardCore/IPhoneDevices.swift` and `Sources/MacStewardCore/WhatsAppBackup.swift`, tested by `Tests/MacStewardCoreTests/IPhoneTests.swift`.
+
+- Nothing connects to an iPhone until the person picks it and presses Read. Never pick one automatically: a Mac can have other people's phones paired.
+- It only reads. It never pairs, installs, removes or restores anything.
+- WhatsApp queries read names, IDs, sizes and file paths, never message text. A test enforces this. A temporary database copy, which does hold messages, exists only during a read if a `-wal` file is present.
+- Encrypted backups aren't supported yet. It says so rather than asking for a password.
+- Artifloam can't delete inside WhatsApp, and must not edit or restore backups.
+
+### Mac: must check
+
+- [ ] The live app lookup over USB, and that `StaticDiskUsage` and `DynamicDiskUsage` are still returned. This has never run against a real iPhone.
+- [ ] The Trust flow and device name.
+- [ ] The WhatsApp schema on a real, current backup. Table names come from older sources, and special chats such as `status@broadcast` would show as a person.
+- [ ] The screen itself. It compiles, but nobody has seen it, because only one copy of Artifloam can run at a time. Quit the installed app first.
+- [ ] A Developer ID signed build. Loading the framework works with an ad-hoc hardened runtime signature.
+- [ ] Decide whether the backup list should show every device's backups by name when the chosen phone has none.
+
+### Mac: known failing test
+
+`LocalizationTests.testEveryLanguageHasEveryStringWithMatchingPlaceholders` fails on purpose until 46 new strings are translated into 24 languages. All other 210 tests pass.
+
 ## Seen working
 
 In the Simulator, on test media: scan on opening, Clean with iOS's confirmation (cancel and delete), compression (148.8 MB to 9 MB, and cancelling keeps both), similar and blurred detection, per-section look. Vision read a generated storage screen. Everything else is only unit-tested or untested, as listed below.

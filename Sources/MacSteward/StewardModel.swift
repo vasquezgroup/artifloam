@@ -25,13 +25,14 @@ final class StewardModel: ObservableObject {
     let leftovers = LeftoversState()
     let startup = StartupState()
     let browsers = BrowserDataState()
+    let iphone = IPhoneState()
     let status = StatusState()
     let updates = UpdateChecker()
     private var forwarding = [AnyCancellable]()
     /// Module summaries read these tool states, so their changes must refresh views observing the model.
     init() {
         health = MacHealthMonitor(dashboard: dashboard, memory: memory)
-        let tools: [AnyPublisher<Void, Never>] = [largeFiles.objectWillChange.map { _ in }.eraseToAnyPublisher(), trashBins.objectWillChange.map { _ in }.eraseToAnyPublisher(), leftovers.objectWillChange.map { _ in }.eraseToAnyPublisher(), startup.objectWillChange.map { _ in }.eraseToAnyPublisher(), updates.objectWillChange.map { _ in }.eraseToAnyPublisher(), browsers.objectWillChange.map { _ in }.eraseToAnyPublisher()]
+        let tools: [AnyPublisher<Void, Never>] = [largeFiles.objectWillChange.map { _ in }.eraseToAnyPublisher(), trashBins.objectWillChange.map { _ in }.eraseToAnyPublisher(), leftovers.objectWillChange.map { _ in }.eraseToAnyPublisher(), startup.objectWillChange.map { _ in }.eraseToAnyPublisher(), updates.objectWillChange.map { _ in }.eraseToAnyPublisher(), browsers.objectWillChange.map { _ in }.eraseToAnyPublisher(), iphone.objectWillChange.map { _ in }.eraseToAnyPublisher()]
         forwarding = tools.map { $0.receive(on: RunLoop.main).sink { [weak self] in self?.objectWillChange.send() } }
         // Memory refreshes every second or two; the summary only needs an occasional update.
         forwarding.append(health.objectWillChange.receive(on: RunLoop.main).sink { [weak self] _ in self?.objectWillChange.send() })

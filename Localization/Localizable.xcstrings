@@ -1,7 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "  " : {},
+    "  " : {
+
+    },
     "% CPU" : {
       "localizations" : {
         "ar" : {
@@ -150,7 +152,9 @@
         }
       }
     },
-    "%@ %@: %@" : {},
+    "%@ %@: %@" : {
+
+    },
     "%@ %@: on your keep list" : {
       "localizations" : {
         "ar" : {
@@ -5479,6 +5483,16 @@
         }
       }
     },
+    "%@ of media in %lld chats" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ of media in %2$lld chats"
+          }
+        }
+      }
+    },
     "%@ ready to clean" : {
       "localizations" : {
         "ar" : {
@@ -7255,7 +7269,9 @@
         }
       }
     },
-    "%@ · %@" : {},
+    "%@ · %@" : {
+
+    },
     "%@ · %@ · changed %@" : {
       "localizations" : {
         "ar" : {
@@ -8736,7 +8752,9 @@
         }
       }
     },
-    "%@. %@" : {},
+    "%@. %@" : {
+
+    },
     "%@. Many apps do this to sync or to find nearby devices." : {
       "localizations" : {
         "ar" : {
@@ -9329,9 +9347,15 @@
         }
       }
     },
-    "%@: %@" : {},
-    "%d" : {},
-    "%lld" : {},
+    "%@: %@" : {
+
+    },
+    "%d" : {
+
+    },
+    "%lld" : {
+
+    },
     "%lld added" : {
       "localizations" : {
         "ar" : {
@@ -12948,6 +12972,16 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld apps · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld apps · %2$@"
           }
         }
       }
@@ -44028,7 +44062,9 @@
         }
       }
     },
-    "%lld · %@" : {},
+    "%lld · %@" : {
+
+    },
     "%lld · %lld off" : {
       "localizations" : {
         "ar" : {
@@ -44325,7 +44361,9 @@
         }
       }
     },
-    "%lld%%" : {},
+    "%lld%%" : {
+
+    },
     "%lld%% health" : {
       "localizations" : {
         "ar" : {
@@ -45066,7 +45104,9 @@
         }
       }
     },
-    "+%lld" : {},
+    "+%lld" : {
+
+    },
     "+%lld more" : {
       "localizations" : {
         "ar" : {
@@ -46400,7 +46440,9 @@
         }
       }
     },
-    "<0.1%" : {},
+    "<0.1%" : {
+
+    },
     "A Claude Code or Codex session used it in the last 24 hours." : {
       "localizations" : {
         "ar" : {
@@ -54842,6 +54884,9 @@
         }
       }
     },
+    "App" : {
+
+    },
     "App caches" : {
       "comment" : "Kind of space freed",
       "localizations" : {
@@ -61652,6 +61697,9 @@
         }
       }
     },
+    "Artifloam needs Full Disk Access to read backups." : {
+
+    },
     "Artifloam needs to restart to change language." : {
       "localizations" : {
         "ar" : {
@@ -63131,6 +63179,9 @@
           }
         }
       }
+    },
+    "Asking your iPhone for its apps. Keep it unlocked." : {
+
     },
     "At least" : {
       "localizations" : {
@@ -81448,6 +81499,9 @@
         }
       }
     },
+    "Choose your iPhone. Only the one you choose is read." : {
+
+    },
     "Claude & Codex worktrees" : {
       "localizations" : {
         "ar" : {
@@ -90338,6 +90392,9 @@
         }
       }
     },
+    "Connect your iPhone with a cable and unlock it." : {
+
+    },
     "Connected devices" : {
       "localizations" : {
         "ar" : {
@@ -98934,6 +98991,9 @@
         }
       }
     },
+    "Documents & Data" : {
+
+    },
     "Don't ask again" : {
       "localizations" : {
         "ar" : {
@@ -102636,6 +102696,9 @@
         }
       }
     },
+    "Encrypted backups aren't supported yet. To check yours, select your iPhone in Finder and look at Encrypt local backup." : {
+
+    },
     "Enumeration escaped the cache root" : {
       "localizations" : {
         "ar" : {
@@ -105063,6 +105126,9 @@
           }
         }
       }
+    },
+    "Every app by size" : {
+
     },
     "Every app listed that can quit. Each one still asks to save your work." : {
       "localizations" : {
@@ -111723,6 +111789,9 @@
           }
         }
       }
+    },
+    "Find a backup" : {
+
     },
     "Find a project or path" : {
       "localizations" : {
@@ -119622,6 +119691,9 @@
           }
         }
       }
+    },
+    "From the backup of %@" : {
+
     },
     "Full Disk Access" : {
       "localizations" : {
@@ -158724,6 +158796,9 @@
         }
       }
     },
+    "No backup of this iPhone is on this Mac. You can pick another one." : {
+
+    },
     "No cleanup in this session." : {
       "localizations" : {
         "ar" : {
@@ -165681,6 +165756,9 @@
         }
       }
     },
+    "Nothing changes on your iPhone" : {
+
+    },
     "Nothing found" : {
       "localizations" : {
         "ar" : {
@@ -168493,6 +168571,15 @@
           }
         }
       }
+    },
+    "Offloading frees only the app part." : {
+
+    },
+    "Offloading helps: it removes the app and keeps its data." : {
+
+    },
+    "Offloading won't help because it keeps the data. Deleting and reinstalling clears it, along with anything not synced." : {
+
     },
     "Old Claude, Codex and Cursor leftovers" : {
       "localizations" : {
@@ -179256,7 +179343,7 @@
       }
     },
     "Other" : {
-      "comment" : "Kind of file: everything else\nKind of space freed",
+      "comment" : "Kind of file: everything else\nKind of space freed\nWhatsApp media that is not a photo, video, audio or document",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -179551,6 +179638,9 @@
           }
         }
       }
+    },
+    "Other backups" : {
+
     },
     "Other computers can open your shared folders." : {
       "localizations" : {
@@ -183252,6 +183342,9 @@
         }
       }
     },
+    "Person" : {
+
+    },
     "Personal files protected" : {
       "localizations" : {
         "ar" : {
@@ -183399,6 +183492,9 @@
           }
         }
       }
+    },
+    "Photos" : {
+
     },
     "Physical RAM" : {
       "localizations" : {
@@ -185028,6 +185124,9 @@
           }
         }
       }
+    },
+    "Press Read to list its apps by size." : {
+
     },
     "Pressure high · %lld min" : {
       "localizations" : {
@@ -190510,6 +190609,9 @@
         }
       }
     },
+    "Read" : {
+      "comment" : "Button: read the list of apps from the chosen iPhone"
+    },
     "Read / write %@/s · %@/s" : {
       "localizations" : {
         "ar" : {
@@ -190805,6 +190907,9 @@
           }
         }
       }
+    },
+    "Read from a backup on this Mac. Nothing is changed." : {
+
     },
     "Read-only readings. Click a card for details and the apps behind it." : {
       "localizations" : {
@@ -192138,6 +192243,9 @@
         }
       }
     },
+    "Reading the backup…" : {
+
+    },
     "Reading unavailable" : {
       "localizations" : {
         "ar" : {
@@ -192581,6 +192689,9 @@
           }
         }
       }
+    },
+    "Reading your iPhone…" : {
+
     },
     "Reading…" : {
       "localizations" : {
@@ -198110,6 +198221,9 @@
           }
         }
       }
+    },
+    "Removing media happens in WhatsApp: Settings, Storage and data, Manage storage. Clear chat removes the messages too. Artifloam can't delete from here." : {
+
     },
     "Reopen" : {
       "localizations" : {
@@ -219564,6 +219678,9 @@
         }
       }
     },
+    "Sizes come from the iPhone. Nothing is changed on it." : {
+
+    },
     "Sizes only, nothing removed" : {
       "localizations" : {
         "ar" : {
@@ -224600,6 +224717,9 @@
         }
       }
     },
+    "Storage per chat, from a local backup. Message text is never read." : {
+
+    },
     "Stored on this Mac" : {
       "localizations" : {
         "ar" : {
@@ -228746,6 +228866,9 @@
         }
       }
     },
+    "That iPhone is no longer connected." : {
+
+    },
     "That isn't a malware verdict. See the reason for each one." : {
       "localizations" : {
         "ar" : {
@@ -232350,6 +232473,9 @@
         }
       }
     },
+    "There's no iPhone backup on this Mac. To make one, select your iPhone in Finder, choose to back up all its data to this Mac, then click Back Up Now." : {
+
+    },
     "Thermal" : {
       "localizations" : {
         "ar" : {
@@ -233090,6 +233216,18 @@
         }
       }
     },
+    "This Mac is missing the Apple software that talks to iPhones. Connecting an iPhone in Finder once usually installs it." : {
+
+    },
+    "This WhatsApp version isn't supported yet." : {
+
+    },
+    "This backup couldn't be read." : {
+
+    },
+    "This backup has no WhatsApp data." : {
+
+    },
     "This build doesn't check for updates. Update it from where you got its source." : {
       "localizations" : {
         "ar" : {
@@ -233681,6 +233819,12 @@
           }
         }
       }
+    },
+    "This iPhone listed its apps but didn't report their sizes." : {
+
+    },
+    "This iPhone reported no apps." : {
+
     },
     "This item is no longer accessible. Refresh and review again." : {
       "localizations" : {
@@ -236495,6 +236639,9 @@
         }
       }
     },
+    "Total" : {
+
+    },
     "Totals count since this Mac started. Rates show current traffic, not your connection's top speed." : {
       "localizations" : {
         "ar" : {
@@ -237974,6 +238121,9 @@
           }
         }
       }
+    },
+    "Try again" : {
+
     },
     "Turn on" : {
       "comment" : "Button: turn on the firewall",
@@ -240939,6 +241089,12 @@
         }
       }
     },
+    "Unlock your iPhone and tap Trust. If nothing appears, select it in Finder once, then press Read again." : {
+
+    },
+    "Unnamed chat" : {
+
+    },
     "Untick every shown group" : {
       "localizations" : {
         "ar" : {
@@ -243308,6 +243464,9 @@
           }
         }
       }
+    },
+    "Use a backup on this Mac" : {
+
     },
     "Used" : {
       "comment" : "Disk space in use",
@@ -249283,6 +249442,12 @@
           }
         }
       }
+    },
+    "WhatsApp" : {
+
+    },
+    "WhatsApp per chat, from a local backup" : {
+
     },
     "When certain files change" : {
       "localizations" : {
@@ -255501,6 +255666,12 @@
         }
       }
     },
+    "Your iPhone couldn't list its apps (error %d). Unlock it and try again." : {
+
+    },
+    "Your iPhone didn't answer. Unlock it, check the cable and press Read again." : {
+
+    },
     "Your own files stay exactly where they are. This removes only what Artifloam created, and the Trash keeps it until you empty the Trash." : {
       "localizations" : {
         "ar" : {
@@ -258663,6 +258834,9 @@
           }
         }
       }
+    },
+    "iPhone" : {
+
     },
     "iPhone & iPad backups" : {
       "localizations" : {
@@ -265088,7 +265262,9 @@
         }
       }
     },
-    "·" : {},
+    "·" : {
+
+    },
     "‘Old’ means last modified before the chosen date; it does not prove a file is unused. File contents are never opened or downloaded. Hidden folders, Library and app bundles are excluded." : {
       "localizations" : {
         "ar" : {

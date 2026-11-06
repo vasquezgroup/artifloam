@@ -316,7 +316,7 @@ struct StewardNavigationArtwork: View {
         case "Worktrees": return "worktrees"
         case "Duplicates", "Large & old files", "My Clutter": return "files"
         case "Space Map": return "space-map"
-        case "System", "Applications": return "system"
+        case "System", "Applications", "iPhone": return "system"
         case "Tools", "App removal", "Leftovers": return "tools"
         case "Memory", "Performance": return "memory"
         case "Status": return "activity"
