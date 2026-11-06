@@ -19,7 +19,18 @@ public struct IPhoneAppRow: Identifiable, Equatable, Sendable {
     public var category: String? = nil
     /// When this app was first downloaded, per the App Store.
     public var firstDownloaded: Date? = nil
+    /// The App Store's number for this app. Without one it can't simply be downloaded again.
+    public var storeID: String? = nil
     public var id: String { bundleID }
+    public var storeURL: URL? { storeID.flatMap { URL(string: "https://apps.apple.com/app/id\($0)") } }
+    /// Apps whose data is often the only copy, and hard or impossible to get back.
+    public enum Risk: Equatable, Sendable { case chats, loginCodes }
+    public var risk: Risk? {
+        let id = bundleID.lowercased(), lower = name.lowercased()
+        if ["net.whatsapp.", "org.whispersystems.signal", "ch.threema."].contains(where: id.hasPrefix) || lower.contains("whatsapp") { return .chats }
+        if ["authenticator", "authy", "2fa", "otp auth"].contains(where: { lower.contains($0) || id.contains($0) }) { return .loginCodes }
+        return nil
+    }
     public var totalBytes: UInt64 { appBytes + dataBytes }
     /// Offloading removes the app and keeps its data, so what it frees is the app part only.
     public var advice: Advice {
@@ -55,12 +66,12 @@ extension String {
 }
 
 public enum IPhoneApps {
-    /// Only these two are taken. The same record holds the Apple ID, which is never read or kept.
-    static func storeDetails(_ metadata: Any?) -> (category: String?, firstDownloaded: Date?) {
-        guard let data = metadata as? Data, let store = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any] else { return (nil, nil) }
+    /// Only these are taken. The same record holds the Apple ID, which is never read or kept.
+    static func storeDetails(_ metadata: Any?) -> (category: String?, firstDownloaded: Date?, storeID: String?) {
+        guard let data = metadata as? Data, let store = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any] else { return (nil, nil, nil) }
         let genre = (store["genre"] as? String)?.cleanedName
         let date = ((store["com.apple.iTunesStore.downloadInfo"] as? [String: Any])?["purchaseDate"] as? String).flatMap { ISO8601DateFormatter().date(from: $0) }
-        return (genre?.isEmpty == false ? genre : nil, date)
+        return (genre?.isEmpty == false ? genre : nil, date, (store["itemId"] as? NSNumber).map { String($0.int64Value) })
     }
     /// iPhones report these as a date or as seconds since 2001, depending on the value.
     static func backupDate(_ value: Any?) -> Date? {
@@ -76,7 +87,7 @@ public enum IPhoneApps {
             let app = attributes["StaticDiskUsage"] as? NSNumber, data = attributes["DynamicDiskUsage"] as? NSNumber
             let name = (attributes["CFBundleDisplayName"] as? String).flatMap { $0.isEmpty ? nil : $0 } ?? bundleID
             let store = storeDetails(attributes["iTunesMetadata"])
-            return IPhoneAppRow(name: name.cleanedName, bundleID: bundleID.displaySafe, appBytes: UInt64(max(0, app?.int64Value ?? 0)), dataBytes: UInt64(max(0, data?.int64Value ?? 0)), measured: app != nil || data != nil, category: store.category, firstDownloaded: store.firstDownloaded)
+            return IPhoneAppRow(name: name.cleanedName, bundleID: bundleID.displaySafe, appBytes: UInt64(max(0, app?.int64Value ?? 0)), dataBytes: UInt64(max(0, data?.int64Value ?? 0)), measured: app != nil || data != nil, category: store.category, firstDownloaded: store.firstDownloaded, storeID: store.storeID)
         }.sorted { ($0.totalBytes, $1.name.lowercased()) > ($1.totalBytes, $0.name.lowercased()) }
     }
 }
@@ -104,6 +115,12 @@ private struct MobileDevice {
     let disconnect: @convention(c) (Device) -> Int32
     let lookup: @convention(c) (Device, CFDictionary, UnsafeMutablePointer<Unmanaged<CFDictionary>?>) -> Int32
 
+    /// Apart from `shared`, so a Mac missing only this can still read. The signature follows ios-deploy; Apple doesn't document it.
+    static let uninstall: (@convention(c) (Int32, Device, CFString, Int32, UnsafeRawPointer?, Int32) -> Int32)? = {
+        guard let handle = dlopen("/Library/Apple/System/Library/PrivateFrameworks/MobileDevice.framework/MobileDevice", RTLD_NOW),
+              let found = dlsym(handle, "AMDeviceSecureUninstallApplication") else { return nil }
+        return unsafeBitCast(found, to: (@convention(c) (Int32, Device, CFString, Int32, UnsafeRawPointer?, Int32) -> Int32).self)
+    }()
     static let shared: MobileDevice? = {
         guard let handle = dlopen("/Library/Apple/System/Library/PrivateFrameworks/MobileDevice.framework/MobileDevice", RTLD_NOW) else { return nil }
         func symbol<T>(_ name: String) -> T? { dlsym(handle, name).map { unsafeBitCast($0, to: T.self) } }
@@ -182,6 +199,26 @@ public final class IPhoneDeviceWatcher: @unchecked Sendable {
             catch let error as IPhoneReadError { failure = error }
         }
         throw failure
+    }
+
+    /// Permanently deletes one app and its data from this iPhone. Blocks, so call it off the main thread.
+    /// The person has confirmed this by then. Only the review sheet's confirm button reaches it. Callers must re-read to see what really happened.
+    public func uninstall(bundleID: String, deviceID: String) throws {
+        guard let framework = MobileDevice.shared else { throw IPhoneReadError.frameworkMissing }
+        guard let uninstall = MobileDevice.uninstall else { throw IPhoneReadError.frameworkMissing }
+        let devices: [UnsafeMutableRawPointer] = lock.withLock {
+            let devices = handles[deviceID] ?? []
+            devices.forEach { _ = framework.retain($0) }
+            return devices
+        }
+        defer { devices.forEach(framework.release) }
+        guard let device = devices.first else { throw IPhoneReadError.deviceGone }
+        guard framework.connect(device) == 0 else { throw IPhoneReadError.unreachable }
+        defer { _ = framework.disconnect(device) }
+        guard framework.isPaired(device) == 1, framework.validatePairing(device) == 0, framework.startSession(device) == 0 else { throw IPhoneReadError.needsTrust }
+        defer { _ = framework.stopSession(device) }
+        let code = uninstall(0, device, bundleID as CFString, 0, nil, 0)
+        guard code == 0 else { throw IPhoneReadError.failed(code) }
     }
 
     private func read(_ device: UnsafeMutableRawPointer, id: String, _ framework: MobileDevice) throws -> IPhoneAppsReport {

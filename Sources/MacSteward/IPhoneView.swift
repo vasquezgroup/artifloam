@@ -20,6 +20,11 @@ final class IPhoneState: ObservableObject {
     /// Bundle ID to the newest data change, from a backup. Empty until one is read.
     @Published private(set) var lastChanged = [String: Date]()
     @Published var group: IPhoneAppGroup?
+    @Published var selection = Set<String>()
+    @Published var removalPlan: IPhoneRemovalPlan?
+    @Published private(set) var removing: String?
+    @Published private(set) var removalResult: IPhoneRemovalResult?
+    @Published private(set) var removalProblem = false
     @Published private(set) var makingBackup = false
     @Published private(set) var backupFailed = false
     /// Made by this app for a phone that had no backup here, so it's the person's choice to remove it right after reading.
@@ -141,6 +146,32 @@ final class IPhoneState: ObservableObject {
             readWhatsApp(own)
         }
     }
+    func planRemoval(clearing: Bool) {
+        guard let report else { return }
+        removalPlan = IPhoneRemovalPlan(apps: report.apps.filter { selection.contains($0.id) }, clearing: clearing, backupIsOld: report.backupIsOld())
+    }
+    /// Removes exactly the reviewed apps, one at a time, then reads the iPhone again to see what really changed.
+    func remove(_ plan: IPhoneRemovalPlan) {
+        guard let report, removing == nil else { return }
+        let id = report.deviceID, usedBefore = report.usedBytes, watcher = watcher
+        removalPlan = nil; removalResult = nil; removalProblem = false
+        Task {
+            for app in plan.apps {
+                removing = app.name
+                let bundle = app.bundleID
+                _ = await Task.detached(priority: .userInitiated) { Result { try watcher.uninstall(bundleID: bundle, deviceID: id) } }.value
+            }
+            let after = await Task.detached(priority: .userInitiated) { Result { try watcher.read(deviceID: id) } }.value
+            removing = nil
+            selection = []
+            switch after {
+            case .success(let fresh):
+                self.report = fresh
+                removalResult = IPhoneRemovalResult(plan: plan, usedBefore: usedBefore, after: fresh)
+            case .failure: removalProblem = true
+            }
+        }
+    }
     func stopBackup() { backupHolder.process?.terminate() }
     func removeBackup() {
         guard let backup = removableBackup else { return }
@@ -156,6 +187,7 @@ final class IPhoneState: ObservableObject {
         generation += 1
         picked = nil; reading = false; problem = nil; report = nil; backupsOnly = false
         backups = nil; backupProblem = nil; readingBackup = false; whatsApp = nil; lastChanged = [:]; group = nil
+        selection = []; removalPlan = nil; removalResult = nil; removalProblem = false
     }
 }
 
@@ -208,6 +240,8 @@ struct IPhoneView: View {
             }
             if let report = state.report, let insights = state.insights {
                 IPhoneBackupStatus(report: report)
+                if let result = state.removalResult { IPhoneRemovalResultCard(result: result) }
+                if state.removalProblem { Text("Your iPhone stopped answering, so Artifloam can't confirm what was removed. Check it, then start over.").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true) }
                 IPhoneSpaceBar(apps: report.apps, total: report.totalBytes)
                 IPhoneGroupTiles(insights: insights, hasBackup: !state.lastChanged.isEmpty, selected: $state.group)
                 apps(report, insights)
@@ -301,6 +335,10 @@ struct IPhoneView: View {
     }
     private func appRow(_ app: IPhoneAppRow) -> some View {
         HStack(alignment: .top, spacing: 8) {
+            let picked = state.selection.contains(app.id)
+            Button { if picked { state.selection.remove(app.id) } else { state.selection.insert(app.id) } } label: {
+                Image(systemName: picked ? "checkmark.circle.fill" : "circle").font(.system(size: 17)).foregroundStyle(picked ? .white : .white.opacity(0.5)).frame(width: 22, height: 22).contentShape(Rectangle())
+            }.buttonStyle(.plain).disabled(state.removing != nil).accessibilityLabel(Text("Choose \(app.name)")).accessibilityAddTraits(picked ? .isSelected : [])
             VStack(alignment: .leading, spacing: 3) {
                 Text(app.name).stewardFont(.body, weight: .semibold).lineLimit(1).help(app.bundleID)
                 if app.measured && app.totalBytes > 0 { Text(advice(app.advice)).stewardFont(.caption).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true) }
@@ -554,5 +592,114 @@ private struct IPhoneBackupStatus: View {
         }
         .padding(14).background(old ? Color.orange.opacity(0.14) : Color.black.opacity(0.14), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .overlay { RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(old ? Color.orange.opacity(0.4) : .white.opacity(0.1), lineWidth: 0.8) }
+    }
+}
+
+/// Stays visible while scrolling, and only appears once something is chosen.
+struct IPhoneSelectionBar: View {
+    @ObservedObject var state: IPhoneState
+    var body: some View {
+        if let removing = state.removing {
+            StewardProgressBar(title: String(localized: "Removing \(removing) from your iPhone. Keep it unlocked and connected.")).padding(.horizontal, 30).padding(.vertical, 12).background(.ultraThinMaterial)
+        } else if let report = state.report, !state.selection.isEmpty {
+            let chosen = report.apps.filter { state.selection.contains($0.id) }
+            HStack(spacing: 10) {
+                Text("\(chosen.count) chosen · \(formattedBytes(chosen.reduce(0) { $0 + $1.totalBytes }))").stewardFont(.body, weight: .semibold)
+                Button("Clear choice") { state.selection = [] }.buttonStyle(.plain).foregroundStyle(.white.opacity(0.7)).stewardFont(.callout)
+                Spacer()
+                Button("Clear data…") { state.planRemoval(clearing: true) }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
+                Button("Delete…") { state.planRemoval(clearing: false) }.buttonStyle(CleanupGlassButtonStyle(compact: true))
+            }
+            .padding(.horizontal, 30).padding(.vertical, 12).background(.ultraThinMaterial)
+            .sheet(item: Binding(get: { state.removalPlan.map(IPhonePlanItem.init) }, set: { if $0 == nil { state.removalPlan = nil } })) { item in
+                IPhoneRemovalSheet(plan: item.plan, report: report) { state.remove(item.plan) }
+            }
+        }
+    }
+}
+private struct IPhonePlanItem: Identifiable {
+    let plan: IPhoneRemovalPlan
+    var id: String { plan.apps.map(\.id).joined() + String(plan.clearing) }
+}
+
+/// Everything someone needs to decide, before anything happens. Nothing here is chosen for them.
+private struct IPhoneRemovalSheet: View {
+    let plan: IPhoneRemovalPlan
+    let report: IPhoneAppsReport
+    let confirm: () -> Void
+    @Environment(\.dismiss) private var dismiss
+    @State private var understood = false
+    private var phone: String { report.deviceName ?? String(localized: "this iPhone") }
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text(plan.clearing ? "Clear the data of \(plan.apps.count) apps on \(phone)?" : "Delete \(plan.apps.count) apps from \(phone)?").stewardFont(.title2, weight: .semibold).fixedSize(horizontal: false, vertical: true)
+            Text("Frees about \(formattedBytes(plan.freedBytes))").font(.system(size: 22, weight: .semibold, design: .rounded)).monospacedDigit()
+            ScrollView {
+                VStack(spacing: 6) {
+                    ForEach(plan.apps) { app in
+                        HStack(spacing: 8) {
+                            Text(app.name).stewardFont(.body, weight: .medium).lineLimit(1)
+                            Spacer()
+                            Text("App \(formattedBytes(app.appBytes)) · Data \(formattedBytes(app.dataBytes))").stewardFont(.caption).foregroundStyle(.secondary).monospacedDigit()
+                        }.padding(.horizontal, 12).padding(.vertical, 7).background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 9))
+                    }
+                }
+            }.frame(maxHeight: 170)
+            info("trash", "What goes", plan.clearing
+                 ? String(localized: "iOS can't clear an app's data on its own, so this deletes the app. Then you install it again from the App Store and sign in. Its downloads, settings and anything not synced are gone.")
+                 : String(localized: "The app and everything stored in it on this iPhone: downloads, settings and anything not synced. This can't be undone from Artifloam."))
+            info("person.crop.circle", "What usually stays", String(localized: "Your account, and whatever the app keeps online or in iCloud. Purchases can be restored. Not every app works this way, so check if it matters to you."))
+            info(report.backupIsOld() ? "exclamationmark.triangle.fill" : "checkmark.shield", "Your backup", report.newestBackup.map { String(localized: "Newest backup: \($0.formatted(date: .abbreviated, time: .omitted)).") + (report.backupIsOld() ? " " + String(localized: "That's over a month ago, so it may not hold what you'd lose.") : "") } ?? String(localized: "This iPhone has no backup."), warning: report.backupIsOld())
+            ForEach(plan.risky) { app in
+                info("exclamationmark.triangle.fill", app.name, app.risk == .chats
+                     ? String(localized: "Deleting this removes its chats from this iPhone. They only come back if they're in the app's own backup. To free space and keep chats, remove media in the app instead.")
+                     : String(localized: "This may hold your login codes. Without them or a recovery option, you can get locked out of your accounts."), warning: true)
+            }
+            if plan.clearing && !plan.notOnStore.isEmpty {
+                info("exclamationmark.triangle.fill", "Can't simply be installed again", String(localized: "Not from the App Store, so you may not get these back: \(plan.notOnStore.map(\.name).joined(separator: ", "))."), warning: true)
+            }
+            if plan.needsAcknowledgement { Toggle("I understand and still want to do this", isOn: $understood).toggleStyle(.checkbox).stewardFont(.body) }
+            HStack {
+                Spacer()
+                Button("Cancel", role: .cancel) { dismiss() }.keyboardShortcut(.cancelAction)
+                Button(plan.clearing ? "Delete and clear data" : "Delete from iPhone", role: .destructive) { dismiss(); confirm() }
+                    .disabled(plan.needsAcknowledgement && !understood)
+            }
+        }.padding(24).frame(width: 540)
+    }
+    private func info(_ symbol: String, _ title: String, _ text: String, warning: Bool = false) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: symbol).foregroundStyle(warning ? .orange : .secondary).frame(width: 20).accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).stewardFont(.callout, weight: .semibold)
+                Text(text).stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+}
+
+/// Reports what the iPhone itself now says, including anything that wasn't removed.
+private struct IPhoneRemovalResultCard: View {
+    let result: IPhoneRemovalResult
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if !result.removed.isEmpty {
+                Label(result.freedBytes.map { "Removed \(result.removed.count) apps. Your iPhone now uses \(formattedBytes($0)) less." } ?? "Removed \(result.removed.count) apps.", systemImage: "checkmark.circle.fill").stewardFont(.body, weight: .semibold)
+            }
+            if result.clearing {
+                ForEach(result.removed) { app in
+                    HStack {
+                        Text(app.name).stewardFont(.callout)
+                        Spacer()
+                        if let url = app.storeURL { Link("Open in App Store", destination: url).stewardFont(.callout) } else { Text("Not from the App Store").stewardFont(.caption).foregroundStyle(.secondary) }
+                    }
+                }
+                if !result.removed.isEmpty { Text("To get them back, install them on your iPhone from the App Store, then sign in.").stewardFont(.caption).foregroundStyle(.secondary) }
+            }
+            if !result.stillThere.isEmpty {
+                Label("Still on your iPhone: \(result.stillThere.map(\.name).joined(separator: ", ")). Unlock it and try again, or delete them on the iPhone.", systemImage: "exclamationmark.triangle.fill").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(16).frame(maxWidth: .infinity, alignment: .leading).background(.black.opacity(0.18), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 }

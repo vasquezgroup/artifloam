@@ -86,6 +86,38 @@ final class IPhoneAppsTests: XCTestCase {
         XCTAssertEqual(IPhoneInsights(apps: [a, b, c]).categories.map(\.id), ["Music", "Games", ""])
     }
 
+    func testRemovalPlanSaysWhatGoesAndWhatNeedsAnAcknowledgement() {
+        var game = IPhoneAppRow(name: "Game", bundleID: "game", appBytes: 100, dataBytes: 40, measured: true); game.storeID = "1"
+        var chat = IPhoneAppRow(name: "WA Business", bundleID: "net.whatsapp.WhatsAppSMB", appBytes: 10, dataBytes: 90, measured: true); chat.storeID = "2"
+        let beta = IPhoneAppRow(name: "Beta", bundleID: "beta", appBytes: 5, dataBytes: 5, measured: true)
+        XCTAssertEqual(IPhoneRemovalPlan(apps: [game], clearing: false, backupIsOld: false).freedBytes, 140)
+        XCTAssertEqual(IPhoneRemovalPlan(apps: [game], clearing: true, backupIsOld: false).freedBytes, 40)
+        XCTAssertFalse(IPhoneRemovalPlan(apps: [game], clearing: false, backupIsOld: false).needsAcknowledgement)
+        XCTAssertTrue(IPhoneRemovalPlan(apps: [game], clearing: false, backupIsOld: true).needsAcknowledgement)
+        XCTAssertTrue(IPhoneRemovalPlan(apps: [chat], clearing: false, backupIsOld: false).needsAcknowledgement)
+        XCTAssertTrue(IPhoneRemovalPlan(apps: [beta], clearing: true, backupIsOld: false).needsAcknowledgement)
+        XCTAssertFalse(IPhoneRemovalPlan(apps: [beta], clearing: false, backupIsOld: false).needsAcknowledgement)
+        XCTAssertEqual(chat.storeURL?.absoluteString, "https://apps.apple.com/app/id2")
+    }
+
+    func testRisksAreRecognised() {
+        func risk(_ name: String, _ id: String) -> IPhoneAppRow.Risk? { IPhoneAppRow(name: name, bundleID: id, appBytes: 1, dataBytes: 1, measured: true).risk }
+        XCTAssertEqual(risk("WhatsApp", "net.whatsapp.WhatsApp"), .chats)
+        XCTAssertEqual(risk("Signal", "org.whispersystems.signal"), .chats)
+        XCTAssertEqual(risk("Google Authenticator", "com.google.Authenticator"), .loginCodes)
+        XCTAssertNil(risk("Netflix", "com.netflix.Netflix"))
+    }
+
+    func testResultTrustsTheNewListNotTheCall() {
+        let gone = IPhoneAppRow(name: "Gone", bundleID: "gone", appBytes: 100, dataBytes: 0, measured: true)
+        let stuck = IPhoneAppRow(name: "Stuck", bundleID: "stuck", appBytes: 100, dataBytes: 0, measured: true)
+        let plan = IPhoneRemovalPlan(apps: [gone, stuck], clearing: false, backupIsOld: false)
+        let result = IPhoneRemovalResult(plan: plan, usedBefore: 1_000, after: IPhoneAppsReport(deviceID: "x", deviceName: nil, apps: [stuck], usedBytes: 900))
+        XCTAssertEqual(result.removed.map(\.bundleID), ["gone"])
+        XCTAssertEqual(result.stillThere.map(\.bundleID), ["stuck"])
+        XCTAssertEqual(result.freedBytes, 100)
+    }
+
     func testAppsWithNoSizesAreMarked() {
         let rows = IPhoneApps.rows(from: ["a": ["CFBundleIdentifier": "a", "CFBundleDisplayName": "A"]])
         XCTAssertFalse(rows[0].measured)

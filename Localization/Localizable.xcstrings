@@ -14432,6 +14432,16 @@
         }
       }
     },
+    "%lld chosen · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld chosen · %2$@"
+          }
+        }
+      }
+    },
     "%lld cloud-backed files" : {
       "localizations" : {
         "ar" : {
@@ -54906,6 +54916,16 @@
     "App" : {
 
     },
+    "App %@ · Data %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "App %1$@ · Data %2$@"
+          }
+        }
+      }
+    },
     "App caches" : {
       "comment" : "Kind of space freed",
       "localizations" : {
@@ -78871,6 +78891,9 @@
         }
       }
     },
+    "Choose %@" : {
+
+    },
     "Choose Claude configuration folder" : {
       "localizations" : {
         "ar" : {
@@ -86284,6 +86307,12 @@
         }
       }
     },
+    "Clear choice" : {
+
+    },
+    "Clear data…" : {
+
+    },
     "Clear filter" : {
       "localizations" : {
         "ar" : {
@@ -86576,6 +86605,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "清除搜索"
+          }
+        }
+      }
+    },
+    "Clear the data of %lld apps on %@?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Clear the data of %1$lld apps on %2$@?"
           }
         }
       }
@@ -93841,6 +93880,16 @@
         }
       }
     },
+    "Delete %lld apps from %@?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Delete %1$lld apps from %2$@?"
+          }
+        }
+      }
+    },
     "Delete %lld items · %@" : {
       "localizations" : {
         "ar" : {
@@ -95129,7 +95178,13 @@
         }
       }
     },
+    "Delete and clear data" : {
+
+    },
     "Delete backup of %@" : {
+
+    },
+    "Delete from iPhone" : {
 
     },
     "Delete merged worktrees" : {
@@ -96170,6 +96225,9 @@
           }
         }
       }
+    },
+    "Deleting this removes its chats from this iPhone. They only come back if they're in the app's own backup. To free space and keep chats, remove media in the app instead." : {
+
     },
     "Dependencies" : {
       "comment" : "Kind of space freed",
@@ -119596,6 +119654,9 @@
         }
       }
     },
+    "Frees about %@" : {
+
+    },
     "Fresh process, Git and filesystem checks each run" : {
       "localizations" : {
         "ar" : {
@@ -127864,6 +127925,9 @@
           }
         }
       }
+    },
+    "I understand and still want to do this" : {
+
     },
     "Idle" : {
       "localizations" : {
@@ -157410,6 +157474,9 @@
         }
       }
     },
+    "Newest backup: %@." : {
+
+    },
     "Nginx web server" : {
       "localizations" : {
         "ar" : {
@@ -163635,6 +163702,12 @@
           }
         }
       }
+    },
+    "Not from the App Store" : {
+
+    },
+    "Not from the App Store, so you may not get these back: %@." : {
+
     },
     "Not in the list? Drag this icon into it." : {
       "localizations" : {
@@ -178263,6 +178336,9 @@
           }
         }
       }
+    },
+    "Open in App Store" : {
+
     },
     "Open local receipts" : {
       "localizations" : {
@@ -198186,6 +198262,19 @@
     "Remove the backup from this Mac" : {
 
     },
+    "Removed %lld apps." : {
+
+    },
+    "Removed %lld apps. Your iPhone now uses %@ less." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Removed %1$lld apps. Your iPhone now uses %2$@ less."
+          }
+        }
+      }
+    },
     "Removed, but something of them stayed." : {
       "localizations" : {
         "ar" : {
@@ -198333,6 +198422,9 @@
           }
         }
       }
+    },
+    "Removing %@ from your iPhone. Keep it unlocked and connected." : {
+
     },
     "Removing media happens in WhatsApp: Settings, Storage and data, Manage storage. Clear chat removes the messages too. Artifloam can't delete from here." : {
 
@@ -223504,6 +223596,9 @@
         }
       }
     },
+    "Still on your iPhone: %@. Unlock it and try again, or delete them on the iPhone." : {
+
+    },
     "Stop" : {
       "comment" : "Button: stop mapping the disk\nButton: stop the running scan",
       "localizations" : {
@@ -229138,6 +229233,12 @@
         }
       }
     },
+    "That's over a month ago, so it may not hold what you'd lose." : {
+
+    },
+    "The app and everything stored in it on this iPhone: downloads, settings and anything not synced. This can't be undone from Artifloam." : {
+
+    },
     "The app, its data, its daily cleanup and its settings" : {
       "localizations" : {
         "ar" : {
@@ -233966,6 +234067,9 @@
     "This iPhone has a recent backup" : {
 
     },
+    "This iPhone has no backup." : {
+
+    },
     "This iPhone listed its apps but didn't report their sizes." : {
 
     },
@@ -234119,6 +234223,9 @@
           }
         }
       }
+    },
+    "This may hold your login codes. Without them or a recovery option, you can get locked out of your accounts." : {
+
     },
     "This month" : {
       "localizations" : {
@@ -236043,6 +236150,9 @@
           }
         }
       }
+    },
+    "To get them back, install them on your iPhone from the App Store, then sign in." : {
+
     },
     "To make or read a backup, Artifloam needs your permission to use the Mac's protected backup folder. Turn on Artifloam under Full Disk Access, then reopen it if macOS asks." : {
 
@@ -254341,6 +254451,9 @@
         }
       }
     },
+    "Your account, and whatever the app keeps online or in iCloud. Purchases can be restored. Not every app works this way, so check if it matters to you." : {
+
+    },
     "Your agents" : {
       "localizations" : {
         "ar" : {
@@ -255825,6 +255938,9 @@
 
     },
     "Your iPhone didn't answer. Unlock it, check the cable and press Read again." : {
+
+    },
+    "Your iPhone stopped answering, so Artifloam can't confirm what was removed. Check it, then start over." : {
 
     },
     "Your own files stay exactly where they are. This removes only what Artifloam created, and the Trash keeps it until you empty the Trash." : {
@@ -258999,6 +259115,9 @@
           }
         }
       }
+    },
+    "iOS can't clear an app's data on its own, so this deletes the app. Then you install it again from the App Store and sign in. Its downloads, settings and anything not synced are gone." : {
+
     },
     "iOS doesn't tell a computer when an app was last opened, so this groups apps by how much data they hold. It's only a clue: apps like email keep their data online. A backup shows when each app last changed anything." : {
 
@@ -264637,6 +264756,9 @@
           }
         }
       }
+    },
+    "this iPhone" : {
+
     },
     "uncommitted changes" : {
       "localizations" : {
