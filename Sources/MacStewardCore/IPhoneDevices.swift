@@ -201,6 +201,22 @@ public final class IPhoneDeviceWatcher: @unchecked Sendable {
         throw failure
     }
 
+    /// Whether this iPhone wants its passcode right now, or nil if it can't be asked. Blocks, so call it off the main thread.
+    public func isLocked(deviceID: String) -> Bool? {
+        guard let framework = MobileDevice.shared else { return nil }
+        let devices: [UnsafeMutableRawPointer] = lock.withLock {
+            let devices = handles[deviceID] ?? []
+            devices.forEach { _ = framework.retain($0) }
+            return devices
+        }
+        defer { devices.forEach(framework.release) }
+        guard let device = devices.first, framework.connect(device) == 0 else { return nil }
+        defer { _ = framework.disconnect(device) }
+        guard framework.isPaired(device) == 1, framework.validatePairing(device) == 0, framework.startSession(device) == 0 else { return nil }
+        defer { _ = framework.stopSession(device) }
+        return (framework.copyValue(device, nil, "PasswordProtected" as CFString)?.takeRetainedValue() as? NSNumber)?.boolValue
+    }
+
     /// Permanently deletes one app and its data from this iPhone. Blocks, so call it off the main thread.
     /// The person has confirmed this by then. Only the review sheet's confirm button reaches it. Callers must re-read to see what really happened.
     public func uninstall(bundleID: String, deviceID: String) throws {

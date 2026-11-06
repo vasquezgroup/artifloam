@@ -76618,6 +76618,9 @@
         }
       }
     },
+    "Chat and login-code apps can only be chosen one at a time" : {
+
+    },
     "Check" : {
       "comment" : "Button: check this Mac's settings\nButton: check with this tool",
       "localizations" : {
@@ -78890,9 +78893,6 @@
           }
         }
       }
-    },
-    "Choose %@" : {
-
     },
     "Choose Claude configuration folder" : {
       "localizations" : {
@@ -102806,6 +102806,9 @@
     "Encrypted backups aren't supported yet. To check yours, select your iPhone in Finder and look at Encrypt local backup." : {
 
     },
+    "Enter your passcode on the iPhone. Artifloam continues by itself as soon as it's unlocked." : {
+
+    },
     "Enumeration escaped the cache root" : {
       "localizations" : {
         "ar" : {
@@ -119654,7 +119657,7 @@
         }
       }
     },
-    "Frees about %@" : {
+    "Frees up to %@" : {
 
     },
     "Fresh process, Git and filesystem checks each run" : {
@@ -134885,6 +134888,9 @@
           }
         }
       }
+    },
+    "It's unlocked" : {
+
     },
     "Item changed since review. Refresh and review again." : {
       "localizations" : {
@@ -198265,16 +198271,6 @@
     "Removed ^[%lld app](inflect: true)." : {
 
     },
-    "Removed ^[%lld app](inflect: true). Your iPhone now uses %@ less." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Removed ^[%1$lld app](inflect: true). Your iPhone now uses %2$@ less."
-          }
-        }
-      }
-    },
     "Removed, but something of them stayed." : {
       "localizations" : {
         "ar" : {
@@ -220783,6 +220779,9 @@
         }
       }
     },
+    "So far your iPhone uses %@ less. iOS can take a while to release more." : {
+
+    },
     "Some checks couldn't be read." : {
       "localizations" : {
         "ar" : {
@@ -234076,6 +234075,9 @@
     "This iPhone reported no apps." : {
 
     },
+    "This is what iOS reports for these apps. The real amount can be lower. You'll see what actually changed afterwards." : {
+
+    },
     "This item is no longer accessible. Refresh and review again." : {
       "localizations" : {
         "ar" : {
@@ -241347,6 +241349,9 @@
           }
         }
       }
+    },
+    "Unlock your iPhone" : {
+
     },
     "Unlock your iPhone and tap Trust. If nothing appears, select it in Finder once, then press Read again." : {
 
@@ -259120,6 +259125,9 @@
 
     },
     "iOS doesn't tell a computer when an app was last opened, so this groups apps by how much data they hold. It's only a clue: apps like email keep their data online. A backup shows when each app last changed anything." : {
+
+    },
+    "iOS hasn't released the space yet. It can take a while, so check again later." : {
 
     },
     "iPhone" : {

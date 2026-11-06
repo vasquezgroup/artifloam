@@ -19,6 +19,11 @@ public enum IPhoneAppUse: Int, CaseIterable, Identifiable, Sendable {
     public var id: Int { rawValue }
 }
 
+public extension Sequence where Element == IPhoneAppRow {
+    /// What Select all may tick. Chats and login codes can only be chosen one at a time, on purpose.
+    var bulkSelectable: [IPhoneAppRow] { filter { $0.risk == nil } }
+}
+
 public struct IPhoneAppSection: Identifiable, Equatable, Sendable {
     public let id: String
     public let apps: [IPhoneAppRow]

@@ -25,6 +25,25 @@ final class IPhoneState: ObservableObject {
     @Published private(set) var removing: String?
     @Published private(set) var removalResult: IPhoneRemovalResult?
     @Published private(set) var removalProblem = false
+    /// Waiting for the person to unlock before something that needs it. Shown as a large overlay.
+    @Published private(set) var waitingForUnlock = false
+    private var unlockOverride = false
+    private var unlockCancelled = false
+    /// Waits until the iPhone is unlocked. False if the person cancelled. If it can't be asked, carries on: the result is checked afterwards anyway.
+    private func waitForUnlock(_ id: String) async -> Bool {
+        let watcher = watcher
+        unlockOverride = false; unlockCancelled = false
+        while !unlockOverride && !unlockCancelled {
+            let locked = await Task.detached(priority: .userInitiated) { watcher.isLocked(deviceID: id) }.value
+            guard locked == true else { break }
+            waitingForUnlock = true
+            try? await Task.sleep(for: .seconds(1.5))
+        }
+        waitingForUnlock = false
+        return !unlockCancelled
+    }
+    func continueAnyway() { unlockOverride = true }
+    func cancelUnlock() { unlockCancelled = true }
     @Published private(set) var makingBackup = false
     @Published private(set) var backupFailed = false
     /// Made by this app for a phone that had no backup here, so it's the person's choice to remove it right after reading.
@@ -133,6 +152,7 @@ final class IPhoneState: ObservableObject {
             do { existing = try await Task.detached { try WhatsAppBackup.backups() }.value }
             catch { backupProblem = error as? WhatsAppBackupError ?? .noAccess; return }
             let hadOne = existing.contains { $0.belongs(toDevice: id) }
+            guard await waitForUnlock(id) else { return }
             makingBackup = true
             let holder = backupHolder
             let finished = await Task.detached(priority: .utility) { IPhoneBackupMaker.run(deviceID: id) { holder.process = $0 } }.value
@@ -157,6 +177,7 @@ final class IPhoneState: ObservableObject {
         removalPlan = nil; removalResult = nil; removalProblem = false
         Task {
             for app in plan.apps {
+                guard await waitForUnlock(id) else { break }
                 removing = app.name
                 let bundle = app.bundleID
                 _ = await Task.detached(priority: .userInitiated) { Result { try watcher.uninstall(bundleID: bundle, deviceID: id) } }.value
@@ -261,6 +282,7 @@ struct IPhoneView: View {
                     Button("Show all") { state.group = nil }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
                     Spacer()
                 }
+                bulkBar(insights.apps(in: group))
                 columnTitles
                 rows(insights.apps(in: group))
             } else {
@@ -273,6 +295,7 @@ struct IPhoneView: View {
                         Text(state.lastChanged.isEmpty ? "Data" : "Use").tag(ListMode.use)
                     }.pickerStyle(.segmented).labelsHidden().frame(width: 270)
                 }
+                bulkBar(report.apps)
                 switch mode {
                 case .size:
                     columnTitles
@@ -291,6 +314,17 @@ struct IPhoneView: View {
                 }
             }
         }
+    }
+    private func selectAll(_ apps: [IPhoneAppRow]) -> Binding<Bool> {
+        let ids = apps.bulkSelectable.map(\.id)
+        return Binding(get: { !ids.isEmpty && state.selection.isSuperset(of: ids) }, set: { if $0 { state.selection.formUnion(ids) } else { state.selection.subtract(ids) } })
+    }
+    private func bulkBar(_ apps: [IPhoneAppRow]) -> some View {
+        let chosen = apps.filter { state.selection.contains($0.id) }
+        let skipped = apps.count - apps.bulkSelectable.count
+        return BulkBar(title: String(localized: "Select all", comment: "Checkbox: select every item in the list"), isOn: selectAll(apps), enabled: state.removing == nil,
+                       help: skipped > 0 ? String(localized: "Chat and login-code apps can only be chosen one at a time") : String(localized: "Select or deselect everything listed"),
+                       summary: String(localized: "\(chosen.count) selected · \(formattedBytes(chosen.reduce(0) { $0 + $1.totalBytes }))")) { EmptyView() }
     }
     private var columnTitles: some View {
         HStack(spacing: 8) {
@@ -313,32 +347,38 @@ struct IPhoneView: View {
     @ViewBuilder private func section(_ id: String, title: String, _ apps: [IPhoneAppRow]) -> some View {
         if !apps.isEmpty {
             let open = expanded.contains(id), total = apps.reduce(UInt64(0)) { $0 + $1.totalBytes }
+            let chosen = apps.filter { state.selection.contains($0.id) }
             VStack(spacing: 8) {
-                Button {
-                    if open { expanded.remove(id) } else { expanded.insert(id) }
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: "chevron.right").font(.system(size: 11, weight: .bold)).rotationEffect(.degrees(open ? 90 : 0)).accessibilityHidden(true)
-                        Text(title).stewardFont(.body, weight: .semibold).lineLimit(1)
-                        Text("\(apps.count) apps").stewardFont(.caption).foregroundStyle(.white.opacity(0.65))
-                        Spacer()
-                        Text(apps.prefix(3).map(\.name).joined(separator: ", ")).stewardFont(.caption).foregroundStyle(.white.opacity(0.55)).lineLimit(1).frame(maxWidth: 300, alignment: .trailing)
-                        Text(formattedBytes(total)).stewardFont(.callout, weight: .semibold).monospacedDigit().frame(minWidth: 76, alignment: .trailing)
-                    }
-                    .padding(.horizontal, 14).padding(.vertical, 12)
-                    .background(.white.opacity(open ? 0.12 : 0.06), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                    .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                }.buttonStyle(.plain).accessibilityValue(open ? String(localized: "Open") : String(localized: "Closed"))
+                HStack(spacing: 10) {
+                    Toggle(String(localized: "Select all \(title)"), isOn: selectAll(apps)).toggleStyle(.stewardCheckboxOnly).disabled(state.removing != nil).padding(.leading, 14)
+                    Button {
+                        if open { expanded.remove(id) } else { expanded.insert(id) }
+                    } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: "chevron.right").font(.system(size: 11, weight: .bold)).rotationEffect(.degrees(open ? 90 : 0)).accessibilityHidden(true)
+                            Text(title).stewardFont(.body, weight: .semibold).lineLimit(1)
+                            Text("\(apps.count) apps").stewardFont(.caption).foregroundStyle(.white.opacity(0.65))
+                            Spacer()
+                            // Shows what's ticked even while closed, so nothing chosen is out of sight.
+                            if chosen.isEmpty {
+                                Text(apps.prefix(3).map(\.name).joined(separator: ", ")).stewardFont(.caption).foregroundStyle(.white.opacity(0.55)).lineLimit(1).frame(maxWidth: 300, alignment: .trailing)
+                            } else {
+                                Text("\(chosen.count) selected · \(formattedBytes(chosen.reduce(0) { $0 + $1.totalBytes }))").stewardFont(.caption, weight: .semibold).monospacedDigit().padding(.horizontal, 8).padding(.vertical, 3).background(.white.opacity(0.16), in: Capsule())
+                            }
+                            Text(formattedBytes(total)).stewardFont(.callout, weight: .semibold).monospacedDigit().frame(minWidth: 76, alignment: .trailing)
+                        }
+                        .padding(.trailing, 14).padding(.vertical, 12).contentShape(Rectangle())
+                    }.buttonStyle(.plain).accessibilityValue(open ? String(localized: "Open") : String(localized: "Closed"))
+                }
+                .background(.white.opacity(open ? 0.12 : 0.06), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                 if open { columnTitles; rows(apps) }
             }
         }
     }
     private func appRow(_ app: IPhoneAppRow) -> some View {
         HStack(alignment: .top, spacing: 8) {
-            let picked = state.selection.contains(app.id)
-            Button { if picked { state.selection.remove(app.id) } else { state.selection.insert(app.id) } } label: {
-                Image(systemName: picked ? "checkmark.circle.fill" : "circle").font(.system(size: 17)).foregroundStyle(picked ? .white : .white.opacity(0.5)).frame(width: 22, height: 22).contentShape(Rectangle())
-            }.buttonStyle(.plain).disabled(state.removing != nil).accessibilityLabel(Text("Choose \(app.name)")).accessibilityAddTraits(picked ? .isSelected : [])
+            Toggle(String(localized: "Select \(app.name)"), isOn: Binding(get: { state.selection.contains(app.id) }, set: { if $0 { state.selection.insert(app.id) } else { state.selection.remove(app.id) } }))
+                .toggleStyle(.stewardCheckboxOnly).disabled(state.removing != nil)
             VStack(alignment: .leading, spacing: 3) {
                 Text(app.name).stewardFont(.body, weight: .semibold).lineLimit(1).help(app.bundleID)
                 if app.measured && app.totalBytes > 0 { Text(advice(app.advice)).stewardFont(.caption).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true) }
@@ -539,10 +579,10 @@ private struct IPhoneGroupTiles: View {
     }
     private func symbol(_ group: IPhoneAppGroup) -> String {
         switch group {
-        case .quiet: return "moon.zzz.fill"
-        case .barelyUsed: return "questionmark.app.fill"
-        case .heavyData: return "tray.full.fill"
-        case .offloadable: return "icloud.and.arrow.down.fill"
+        case .quiet: return "moon"
+        case .barelyUsed: return "roomy"
+        case .heavyData: return "full"
+        case .offloadable: return "offload"
         }
     }
     var body: some View {
@@ -554,9 +594,7 @@ private struct IPhoneGroupTiles: View {
         let apps = insights.apps(in: group), active = selected == group, unavailable = group == .quiet && !hasBackup
         return Button { selected = active ? nil : group } label: {
             HStack(alignment: .top, spacing: 13) {
-                Image(systemName: symbol(group)).font(.system(size: 19, weight: .semibold)).foregroundStyle(.white).frame(width: 42, height: 42)
-                    .background(LinearGradient(colors: [theme.accent.opacity(0.75), theme.vivid], startPoint: .top, endPoint: .bottom), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
-                    .overlay { RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(.white.opacity(0.28), lineWidth: 0.7) }.accessibilityHidden(true)
+                if let art = CategoryArt.images[symbol(group)] { Image(nsImage: art).resizable().interpolation(.high).frame(width: 58, height: 58).accessibilityHidden(true) }
                 VStack(alignment: .leading, spacing: 3) {
                     Text(Self.title(group)).stewardFont(.body, weight: .semibold)
                     if !unavailable { Text("\(formattedBytes(insights.bytes(in: group))) · \(apps.count) apps").font(.system(size: 18, weight: .semibold, design: .rounded)).foregroundStyle(.white).monospacedDigit() }
@@ -633,7 +671,7 @@ private struct IPhoneRemovalSheet: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text(plan.clearing ? "Clear the data of ^[\(plan.apps.count) app](inflect: true) on \(phone)?" : "Delete ^[\(plan.apps.count) app](inflect: true) from \(phone)?").stewardFont(.title2, weight: .semibold).fixedSize(horizontal: false, vertical: true)
-            Text("Frees about \(formattedBytes(plan.freedBytes))").font(.system(size: 22, weight: .semibold, design: .rounded)).monospacedDigit()
+            Text("Frees up to \(formattedBytes(plan.freedBytes))").font(.system(size: 22, weight: .semibold, design: .rounded)).monospacedDigit()
             ScrollView {
                 VStack(spacing: 6) {
                     ForEach(plan.apps) { app in
@@ -645,6 +683,7 @@ private struct IPhoneRemovalSheet: View {
                     }
                 }
             }.frame(maxHeight: 170)
+            Text("This is what iOS reports for these apps. The real amount can be lower. You'll see what actually changed afterwards.").stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             info("trash", "What goes", plan.clearing
                  ? String(localized: "iOS can't clear an app's data on its own, so this deletes the app. Then you install it again from the App Store and sign in. Its downloads, settings and anything not synced are gone.")
                  : String(localized: "The app and everything stored in it on this iPhone: downloads, settings and anything not synced. This can't be undone from Artifloam."))
@@ -658,7 +697,7 @@ private struct IPhoneRemovalSheet: View {
             if plan.clearing && !plan.notOnStore.isEmpty {
                 info("exclamationmark.triangle.fill", "Can't simply be installed again", String(localized: "Not from the App Store, so you may not get these back: \(plan.notOnStore.map(\.name).joined(separator: ", "))."), warning: true)
             }
-            if plan.needsAcknowledgement { Toggle("I understand and still want to do this", isOn: $understood).toggleStyle(.checkbox).stewardFont(.body) }
+            if plan.needsAcknowledgement { Toggle("I understand and still want to do this", isOn: $understood).toggleStyle(.stewardCheckbox).stewardFont(.body) }
             HStack {
                 Spacer()
                 Button("Cancel", role: .cancel) { dismiss() }.keyboardShortcut(.cancelAction)
@@ -684,7 +723,9 @@ private struct IPhoneRemovalResultCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if !result.removed.isEmpty {
-                Label(result.freedBytes.map { "Removed ^[\(result.removed.count) app](inflect: true). Your iPhone now uses \(formattedBytes($0)) less." } ?? "Removed ^[\(result.removed.count) app](inflect: true).", systemImage: "checkmark.circle.fill").stewardFont(.body, weight: .semibold)
+                Label("Removed ^[\(result.removed.count) app](inflect: true).", systemImage: "checkmark.circle.fill").stewardFont(.body, weight: .semibold)
+                // iOS can take a while to release the space, and what it reports per app can be more than comes back.
+                if let freed = result.freedBytes { Text(freed > 0 ? "So far your iPhone uses \(formattedBytes(freed)) less. iOS can take a while to release more." : "iOS hasn't released the space yet. It can take a while, so check again later.").stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true) }
             }
             if result.clearing {
                 ForEach(result.removed) { app in
@@ -701,5 +742,29 @@ private struct IPhoneRemovalResultCard: View {
             }
         }
         .padding(16).frame(maxWidth: .infinity, alignment: .leading).background(.black.opacity(0.18), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+}
+
+/// Large on purpose: the action can't go on until the iPhone is unlocked, and it carries on by itself once it is.
+struct IPhoneUnlockOverlay: View {
+    @ObservedObject var state: IPhoneState
+    var body: some View {
+        ZStack {
+            Rectangle().fill(.ultraThinMaterial).overlay(StewardTheme.iphone.backdrop.deep.opacity(0.72)).ignoresSafeArea()
+            VStack(spacing: 18) {
+                ZStack(alignment: .bottomTrailing) {
+                    ScanMovieArtwork(animated: true, asset: "sculpture-motion-iphone", interactive: false).frame(width: 220, height: 220)
+                    Image(systemName: "lock.fill").font(.system(size: 26, weight: .semibold)).foregroundStyle(.white).frame(width: 62, height: 62)
+                        .background(StewardTheme.iphone.vivid, in: Circle()).overlay { Circle().stroke(.white.opacity(0.75), lineWidth: 1.5) }
+                        .shadow(color: .black.opacity(0.35), radius: 8, y: 4).offset(x: -6, y: -6).accessibilityHidden(true)
+                }
+                Text("Unlock your iPhone").font(.system(size: 34, weight: .light)).accessibilityAddTraits(.isHeader)
+                Text("Enter your passcode on the iPhone. Artifloam continues by itself as soon as it's unlocked.").stewardFont(.body).foregroundStyle(.white.opacity(0.8)).multilineTextAlignment(.center).frame(maxWidth: 420)
+                HStack(spacing: 10) {
+                    Button("Cancel") { state.cancelUnlock() }.buttonStyle(CleanupGlassButtonStyle(secondary: true)).keyboardShortcut(.cancelAction)
+                    Button("It's unlocked") { state.continueAnyway() }.buttonStyle(CleanupGlassButtonStyle())
+                }.padding(.top, 6)
+            }.padding(30)
+        }
     }
 }

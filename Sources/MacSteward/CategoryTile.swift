@@ -6,7 +6,7 @@ import MacStewardCore
 enum CategoryArt {
     static let images: [String: NSImage] = {
         var images = [String: NSImage]()
-        for name in ["cache", "hammer", "document", "trash", "stack", "drive", "sparkles", "branch", "globe", "done"] {
+        for name in ["cache", "hammer", "document", "trash", "stack", "drive", "sparkles", "branch", "globe", "done", "moon", "roomy", "full", "offload"] {
             if let url = StewardResources.bundle.url(forResource: "category-" + name, withExtension: "heic"), let image = NSImage(contentsOf: url) { images[name] = image }
         }
         for name in ["symbol-system", "symbol-automation", "symbol-tools"] {

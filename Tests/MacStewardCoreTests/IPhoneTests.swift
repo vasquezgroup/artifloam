@@ -100,6 +100,11 @@ final class IPhoneAppsTests: XCTestCase {
         XCTAssertEqual(chat.storeURL?.absoluteString, "https://apps.apple.com/app/id2")
     }
 
+    func testSelectAllLeavesOutChatsAndLoginCodes() {
+        let apps = [("Game", "game"), ("WA Business", "net.whatsapp.WhatsAppSMB"), ("Google Authenticator", "com.google.Authenticator")].map { IPhoneAppRow(name: $0.0, bundleID: $0.1, appBytes: 1, dataBytes: 1, measured: true) }
+        XCTAssertEqual(apps.bulkSelectable.map(\.bundleID), ["game"])
+    }
+
     func testRisksAreRecognised() {
         func risk(_ name: String, _ id: String) -> IPhoneAppRow.Risk? { IPhoneAppRow(name: name, bundleID: id, appBytes: 1, dataBytes: 1, measured: true).risk }
         XCTAssertEqual(risk("WhatsApp", "net.whatsapp.WhatsApp"), .chats)

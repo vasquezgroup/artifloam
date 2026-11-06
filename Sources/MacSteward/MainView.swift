@@ -703,6 +703,7 @@ struct MainView: View {
         } else {
             ScrollView { content(section).padding(.horizontal, 30).padding(.top, 22).padding(.bottom, 28).frame(maxWidth: .infinity, alignment: .leading) }
                 .safeAreaInset(edge: .bottom, spacing: 0) { if section == "iPhone" { IPhoneSelectionBar(state: m.iphone) } }
+                .overlay { if section == "iPhone" && m.iphone.waitingForUnlock { IPhoneUnlockOverlay(state: m.iphone) } }
         }
     }
     @ViewBuilder var content: some View { content(m.section) }
