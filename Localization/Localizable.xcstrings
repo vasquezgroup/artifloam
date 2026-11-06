@@ -7420,6 +7420,16 @@
         }
       }
     },
+    "%@ · %lld apps" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$lld apps"
+          }
+        }
+      }
+    },
     "%@ · Stored on this Mac: %@ · Cloud-backed files: %@" : {
       "localizations" : {
         "ar" : {
@@ -34942,6 +34952,9 @@
         }
       }
     },
+    "%lld other apps" : {
+
+    },
     "%lld percent" : {
       "localizations" : {
         "ar" : {
@@ -50887,6 +50900,9 @@
         }
       }
     },
+    "All apps" : {
+
+    },
     "All apps & details" : {
       "localizations" : {
         "ar" : {
@@ -53107,6 +53123,9 @@
           }
         }
       }
+    },
+    "Almost no data of their own. Offloading frees nearly all of it." : {
+
     },
     "Already turned it on? macOS may need Artifloam to reopen first." : {
       "localizations" : {
@@ -67477,6 +67496,9 @@
           }
         }
       }
+    },
+    "Big, but barely used?" : {
+
     },
     "Bigger Text" : {
       "localizations" : {
@@ -101510,6 +101532,9 @@
         }
       }
     },
+    "Easy to offload" : {
+
+    },
     "Edit" : {
       "localizations" : {
         "ar" : {
@@ -120634,6 +120659,9 @@
           }
         }
       }
+    },
+    "Full of data" : {
+
     },
     "Full rescan" : {
       "localizations" : {
@@ -142353,6 +142381,9 @@
         }
       }
     },
+    "Last data change: %@" : {
+
+    },
     "Last run: %@ · freed %@" : {
       "localizations" : {
         "ar" : {
@@ -153424,6 +153455,9 @@
     "Mostly the app. Offloading frees this and keeps your data." : {
 
     },
+    "Mostly the app. Offloading keeps your data." : {
+
+    },
     "Move %lld items to Trash" : {
       "localizations" : {
         "ar" : {
@@ -156436,6 +156470,9 @@
         }
       }
     },
+    "Needs a backup, which shows when each app last changed anything." : {
+
+    },
     "Needs attention" : {
       "localizations" : {
         "ar" : {
@@ -157768,6 +157805,9 @@
           }
         }
       }
+    },
+    "No activity in 6 months" : {
+
     },
     "No additional known projects. Standard caches and logs are still inspected automatically; add a folder only if it is missing." : {
       "localizations" : {
@@ -166360,6 +166400,9 @@
         }
       }
     },
+    "Nothing in them has changed for over 6 months. Good ones to delete." : {
+
+    },
     "Nothing is being removed." : {
       "localizations" : {
         "ar" : {
@@ -168582,6 +168625,9 @@
       }
     },
     "Offloading frees only the app part." : {
+
+    },
+    "Offloading won't help. Check inside the app, or delete it." : {
 
     },
     "Old Claude, Codex and Cursor leftovers" : {
@@ -218311,6 +218357,9 @@
           }
         }
       }
+    },
+    "Show all" : {
+
     },
     "Show all %lld apps" : {
       "localizations" : {

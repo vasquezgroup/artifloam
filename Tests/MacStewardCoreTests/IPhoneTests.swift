@@ -25,6 +25,19 @@ final class IPhoneAppsTests: XCTestCase {
         XCTAssertEqual("👨‍👩‍👧 Family\u{202E}".cleanedName, "👨‍👩‍👧 Family")
     }
 
+    func testGroupsHelpDecideAndNeverSuggestWhatsApp() {
+        func app(_ id: String, _ a: UInt64, _ d: UInt64) -> IPhoneAppRow { IPhoneAppRow(name: id, bundleID: id, appBytes: a, dataBytes: d, measured: true) }
+        let now = Date(timeIntervalSince1970: 1_800_000_000), old = now.addingTimeInterval(-300 * 86_400), recent = now.addingTimeInterval(-3 * 86_400)
+        let apps = [app("game", 900_000_000, 1_000), app("video", 50_000_000, 900_000_000), app("net.whatsapp.WhatsApp", 100_000_000, 4_000_000_000), app("tiny", 1_000, 1_000), app("used", 300_000_000, 100_000_000)]
+        let insights = IPhoneInsights(apps: apps, lastChanged: ["game": old, "used": recent, "net.whatsapp.WhatsApp": old, "tiny": old], now: now)
+        XCTAssertEqual(insights.apps(in: .quiet).map(\.bundleID), ["game"])
+        XCTAssertEqual(insights.apps(in: .barelyUsed).map(\.bundleID), ["game"])
+        XCTAssertEqual(insights.apps(in: .heavyData).map(\.bundleID), ["video"])
+        XCTAssertEqual(insights.apps(in: .offloadable).map(\.bundleID), ["game", "used"])
+        XCTAssertEqual(insights.bytes(in: .barelyUsed), 900_000_000)
+        XCTAssertEqual(IPhoneInsights(apps: apps).apps(in: .quiet), [])
+    }
+
     func testAppsWithNoSizesAreMarked() {
         let rows = IPhoneApps.rows(from: ["a": ["CFBundleIdentifier": "a", "CFBundleDisplayName": "A"]])
         XCTAssertFalse(rows[0].measured)
@@ -118,6 +131,13 @@ final class WhatsAppBackupTests: XCTestCase {
         XCTAssertEqual(report.chats.count, 6)
         XCTAssertEqual(Set(report.chats.map(\.id)).count, 6)
         XCTAssertEqual(report.totalBytes, 2542 * 2)
+    }
+
+    func testReadsLastModifiedFromAFileRecord() throws {
+        let record: [String: Any] = ["$objects": ["$null", ["LastModified": 1_700_000_000, "Size": 5], "name"], "$archiver": "NSKeyedArchiver"]
+        let data = try PropertyListSerialization.data(fromPropertyList: record, format: .binary, options: 0)
+        XCTAssertEqual(WhatsAppBackup.modified(fromFileRecord: data), 1_700_000_000)
+        XCTAssertNil(WhatsAppBackup.modified(fromFileRecord: Data("nope".utf8)))
     }
 
     func testMessageTextCanNotReachTheResults() throws {

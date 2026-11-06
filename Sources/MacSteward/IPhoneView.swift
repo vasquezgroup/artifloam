@@ -17,6 +17,10 @@ final class IPhoneState: ObservableObject {
     @Published private(set) var backupProblem: WhatsAppBackupError?
     @Published private(set) var readingBackup = false
     @Published private(set) var whatsApp: (backup: IPhoneBackup, report: WhatsAppReport)?
+    /// Bundle ID to the newest data change, from a backup. Empty until one is read.
+    @Published private(set) var lastChanged = [String: Date]()
+    @Published var group: IPhoneAppGroup?
+    var insights: IPhoneInsights? { report.map { IPhoneInsights(apps: $0.apps, lastChanged: lastChanged) } }
     private let watcher = IPhoneDeviceWatcher()
     /// A read can't be cancelled once it is talking to the iPhone, so a stopped one must finish before the next starts.
     @Published private var readInFlight = false
@@ -94,9 +98,12 @@ final class IPhoneState: ObservableObject {
         let current = generation
         backupProblem = nil; readingBackup = true
         Task {
+            async let changes = Task.detached(priority: .userInitiated) { WhatsAppBackup.lastChanged(backup) }.value
             let result = await Task.detached(priority: .userInitiated) { Result { try WhatsAppBackup.read(backup) } }.value
+            let changed = await changes
             guard current == generation else { return }
             readingBackup = false
+            lastChanged = changed
             switch result {
             case .success(let report): whatsApp = (backup, report)
             case .failure(let error): backupProblem = error as? WhatsAppBackupError ?? .unreadable
@@ -108,7 +115,7 @@ final class IPhoneState: ObservableObject {
     func reset() {
         generation += 1
         picked = nil; reading = false; problem = nil; report = nil; backupsOnly = false
-        backups = nil; backupProblem = nil; readingBackup = false; whatsApp = nil
+        backups = nil; backupProblem = nil; readingBackup = false; whatsApp = nil; lastChanged = [:]; group = nil
     }
 }
 
@@ -152,11 +159,15 @@ struct IPhoneView: View {
                 Spacer()
                 Button("Start over") { state.reset() }.buttonStyle(CleanupGlassButtonStyle(secondary: true))
             }
-            if let report = state.report { apps(report) }
+            if let report = state.report, let insights = state.insights {
+                IPhoneSpaceBar(apps: report.apps, total: report.totalBytes)
+                IPhoneGroupTiles(insights: insights, hasBackup: !state.lastChanged.isEmpty, selected: $state.group)
+                apps(report, insights)
+            }
             whatsApp
         }
     }
-    @ViewBuilder private func apps(_ report: IPhoneAppsReport) -> some View {
+    @ViewBuilder private func apps(_ report: IPhoneAppsReport, _ insights: IPhoneInsights) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             if report.sizesMissing {
                 Text("This iPhone listed its apps but didn't report their sizes.").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
@@ -164,13 +175,15 @@ struct IPhoneView: View {
             if report.apps.isEmpty { Text("This iPhone reported no apps.").stewardFont(.body).foregroundStyle(.secondary) }
             else {
                 HStack(spacing: 8) {
+                    Text(state.group.map(IPhoneGroupTiles.title) ?? String(localized: "All apps")).stewardFont(.title3, weight: .semibold)
+                    if state.group != nil { Button("Show all") { state.group = nil }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)) }
                     Spacer()
                     Text("App").frame(width: columnWidth, alignment: .trailing)
                     Text("Documents & Data").frame(width: columnWidth + 20, alignment: .trailing)
                     Text("Total").frame(width: columnWidth, alignment: .trailing)
                 }.stewardFont(.caption, weight: .semibold).foregroundStyle(.secondary).padding(.horizontal, 14)
             }
-            LazyVStack(spacing: 6) { ForEach(report.apps) { appRow($0) } }
+            LazyVStack(spacing: 6) { ForEach(state.group.map(insights.apps(in:)) ?? report.apps) { appRow($0) } }
         }
     }
     private func appRow(_ app: IPhoneAppRow) -> some View {
@@ -178,6 +191,7 @@ struct IPhoneView: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(app.name).stewardFont(.body, weight: .semibold).lineLimit(1).help(app.bundleID)
                 if app.measured && app.totalBytes > 0 { Text(advice(app.advice)).stewardFont(.caption).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true) }
+                if let changed = state.lastChanged[app.bundleID] { Text("Last data change: \(changed.formatted(date: .abbreviated, time: .omitted))").stewardFont(.caption).foregroundStyle(.secondary) }
             }
             Spacer(minLength: 8)
             Group {
@@ -275,5 +289,103 @@ struct IPhoneView: View {
         case .documents: return String(localized: "Documents")
         case .other: return String(localized: "Other", comment: "WhatsApp media that is not a photo, video, audio or document")
         }
+    }
+}
+
+/// Where the space goes, at a glance: the biggest apps as one bar.
+private struct IPhoneSpaceBar: View {
+    let apps: [IPhoneAppRow]
+    let total: UInt64
+    @Environment(\.stewardTheme) private var theme
+    private static let colors: [StewardTheme] = [.iphone, .care, .browsers, .files, .space, .cleanup, .worktrees]
+    private var top: [IPhoneAppRow] { Array(apps.prefix(Self.colors.count)) }
+    private var others: UInt64 { total - top.reduce(0) { $0 + $1.totalBytes } }
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            GeometryReader { geometry in
+                HStack(spacing: 2) {
+                    ForEach(Array(top.enumerated()), id: \.element.id) { index, app in
+                        LinearGradient(colors: [Self.colors[index].accent, Self.colors[index].vivid], startPoint: .top, endPoint: .bottom)
+                            .frame(width: width(app.totalBytes, in: geometry.size.width))
+                    }
+                    Color.white.opacity(0.14)
+                }
+            }.frame(height: 26).clipShape(Capsule()).overlay { Capsule().stroke(.white.opacity(0.18), lineWidth: 0.7) }
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 190), alignment: .leading)], alignment: .leading, spacing: 8) {
+                ForEach(Array(top.enumerated()), id: \.element.id) { index, app in legend(app.name, app.totalBytes, Self.colors[index].accent) }
+                legend(String(localized: "\(max(apps.count - top.count, 0)) other apps"), others, .white.opacity(0.3))
+            }
+        }
+        .padding(18).background(.black.opacity(0.14), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay { RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(.white.opacity(0.1), lineWidth: 0.8) }
+        .accessibilityElement(children: .contain)
+    }
+    private func width(_ bytes: UInt64, in full: CGFloat) -> CGFloat { total == 0 ? 0 : max(full * CGFloat(bytes) / CGFloat(total) - 2, 2) }
+    private func legend(_ name: String, _ bytes: UInt64, _ color: Color) -> some View {
+        HStack(spacing: 7) {
+            Circle().fill(color).frame(width: 9, height: 9).accessibilityHidden(true)
+            Text(name).stewardFont(.caption, weight: .medium).lineLimit(1)
+            Text(formattedBytes(bytes)).stewardFont(.caption).foregroundStyle(.secondary).monospacedDigit().layoutPriority(1)
+        }
+    }
+}
+
+/// Apps grouped by the decision they need. Tapping one filters the list below.
+private struct IPhoneGroupTiles: View {
+    let insights: IPhoneInsights
+    let hasBackup: Bool
+    @Binding var selected: IPhoneAppGroup?
+    @Environment(\.stewardTheme) private var theme
+    static func title(_ group: IPhoneAppGroup) -> String {
+        switch group {
+        case .quiet: return String(localized: "No activity in 6 months")
+        case .barelyUsed: return String(localized: "Big, but barely used?")
+        case .heavyData: return String(localized: "Full of data")
+        case .offloadable: return String(localized: "Easy to offload")
+        }
+    }
+    private func tagline(_ group: IPhoneAppGroup) -> String {
+        switch group {
+        case .quiet: return hasBackup ? String(localized: "Nothing in them has changed for over 6 months. Good ones to delete.") : String(localized: "Needs a backup, which shows when each app last changed anything.")
+        case .barelyUsed: return String(localized: "Almost no data of their own. Offloading frees nearly all of it.")
+        case .heavyData: return String(localized: "Offloading won't help. Check inside the app, or delete it.")
+        case .offloadable: return String(localized: "Mostly the app. Offloading keeps your data.")
+        }
+    }
+    private func symbol(_ group: IPhoneAppGroup) -> String {
+        switch group {
+        case .quiet: return "moon.zzz.fill"
+        case .barelyUsed: return "questionmark.app.fill"
+        case .heavyData: return "tray.full.fill"
+        case .offloadable: return "icloud.and.arrow.down.fill"
+        }
+    }
+    var body: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 300), spacing: 10)], spacing: 10) {
+            ForEach(IPhoneAppGroup.allCases) { tile($0) }
+        }
+    }
+    private func tile(_ group: IPhoneAppGroup) -> some View {
+        let apps = insights.apps(in: group), active = selected == group, unavailable = group == .quiet && !hasBackup
+        return Button { selected = active ? nil : group } label: {
+            HStack(alignment: .top, spacing: 13) {
+                Image(systemName: symbol(group)).font(.system(size: 19, weight: .semibold)).foregroundStyle(.white).frame(width: 42, height: 42)
+                    .background(LinearGradient(colors: [theme.accent.opacity(0.75), theme.vivid], startPoint: .top, endPoint: .bottom), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+                    .overlay { RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(.white.opacity(0.28), lineWidth: 0.7) }.accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(Self.title(group)).stewardFont(.body, weight: .semibold)
+                    if !unavailable { Text("\(formattedBytes(insights.bytes(in: group))) · \(apps.count) apps").font(.system(size: 18, weight: .semibold, design: .rounded)).foregroundStyle(.white).monospacedDigit() }
+                    Text(tagline(group)).stewardFont(.caption).foregroundStyle(.white.opacity(0.7)).fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(14).frame(maxWidth: .infinity, minHeight: 104, alignment: .topLeading)
+            .background(.white.opacity(active ? 0.17 : 0.07), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            // Keeps the text readable where the page's gradient is brightest.
+            .background(.black.opacity(0.22), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay { RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(.white.opacity(active ? 0.4 : 0.1), lineWidth: 0.8) }
+            .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        }
+        .buttonStyle(.plain).disabled(unavailable || apps.isEmpty).accessibilityAddTraits(active ? .isSelected : [])
     }
 }

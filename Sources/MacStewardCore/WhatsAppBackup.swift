@@ -72,6 +72,29 @@ public enum WhatsAppBackup {
         }.sorted { ($0.date ?? .distantPast) > ($1.date ?? .distantPast) }
     }
 
+    /// The newest change to each app's data in this backup, by bundle ID. Empty if it can't be read: this only adds a hint.
+    /// It's not when an app was last opened, which iOS doesn't tell a computer, and background activity also counts.
+    public static func lastChanged(_ backup: IPhoneBackup) -> [String: Date] {
+        guard !backup.encrypted, let manifest = try? Database(backup.url.appendingPathComponent("Manifest.db"), immutable: true) else { return [:] }
+        var newest = [String: TimeInterval]()
+        try? manifest.rows("SELECT domain, file FROM Files WHERE domain LIKE 'AppDomain-%' AND flags = 1") { row in
+            guard let domain = row.text(0), let data = row.data(1), let seconds = modified(fromFileRecord: data) else { return }
+            let bundle = String(domain.dropFirst("AppDomain-".count))
+            newest[bundle] = max(newest[bundle] ?? 0, seconds)
+        }
+        return newest.mapValues { Date(timeIntervalSince1970: $0) }
+    }
+
+    /// A file's record in Manifest.db is an archived object holding LastModified in seconds since 1970.
+    static func modified(fromFileRecord data: Data) -> TimeInterval? {
+        guard let archive = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any],
+              let objects = archive["$objects"] as? [Any] else { return nil }
+        for case let object as [String: Any] in objects {
+            if let value = object["LastModified"] as? NSNumber { return value.doubleValue }
+        }
+        return nil
+    }
+
     /// WhatsApp storage per chat, from this one backup. A copy is made only when the database has unmerged changes beside it, and it is deleted before this returns.
     public static func read(_ backup: IPhoneBackup, temporaryDirectory: URL = FileManager.default.temporaryDirectory) throws -> WhatsAppReport {
         let folder = backup.url
@@ -155,6 +178,7 @@ private final class Database {
         let statement: OpaquePointer
         func text(_ column: Int32) -> String? { sqlite3_column_text(statement, column).map { String(cString: $0) } }
         func integer(_ column: Int32) -> Int64 { sqlite3_column_int64(statement, column) }
+        func data(_ column: Int32) -> Data? { sqlite3_column_blob(statement, column).map { Data(bytes: $0, count: Int(sqlite3_column_bytes(statement, column))) } }
     }
     private var handle: OpaquePointer?
     init(_ file: URL, immutable: Bool) throws {
