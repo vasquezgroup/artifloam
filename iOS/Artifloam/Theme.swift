@@ -1,0 +1,245 @@
+import AVFoundation
+import SwiftUI
+
+/// The Mac app's section colours and artwork (Sources/MacSteward/VisualLanguage.swift), for the sections the iPhone has.
+enum StewardTheme: String {
+    case care, cleanup, files, system, space
+
+    var accent: Color {
+        switch self {
+        case .care: Color(red: 0.79, green: 0.59, blue: 1)
+        case .cleanup: Color(red: 0.49, green: 0.91, blue: 0.65)
+        case .files: Color(red: 1, green: 0.73, blue: 0.42)
+        case .system: Color(red: 0.45, green: 0.78, blue: 1)
+        case .space: Color(red: 1, green: 0.86, blue: 0.42)
+        }
+    }
+    var vivid: Color {
+        switch self {
+        case .care: Color(red: 0.74, green: 0.22, blue: 0.95)
+        case .cleanup: Color(red: 0.10, green: 0.72, blue: 0.42)
+        case .files: Color(red: 0.96, green: 0.52, blue: 0.10)
+        case .system: Color(red: 0.16, green: 0.48, blue: 0.96)
+        case .space: Color(red: 0.92, green: 0.70, blue: 0.06)
+        }
+    }
+    var backdrop: (deep: Color, mid: Color, bright: Color) {
+        switch self {
+        case .care: (Color(red: 0.10, green: 0.04, blue: 0.22), Color(red: 0.36, green: 0.11, blue: 0.62), Color(red: 0.84, green: 0.32, blue: 0.80))
+        case .cleanup: (Color(red: 0.03, green: 0.14, blue: 0.07), Color(red: 0.10, green: 0.40, blue: 0.15), Color(red: 0.44, green: 0.74, blue: 0.16))
+        case .files: (Color(red: 0.20, green: 0.06, blue: 0.03), Color(red: 0.58, green: 0.22, blue: 0.05), Color(red: 0.98, green: 0.64, blue: 0.20))
+        case .system: (Color(red: 0.02, green: 0.08, blue: 0.22), Color(red: 0.07, green: 0.28, blue: 0.66), Color(red: 0.22, green: 0.70, blue: 0.96))
+        case .space: (Color(red: 0.17, green: 0.12, blue: 0.02), Color(red: 0.54, green: 0.40, blue: 0.04), Color(red: 0.98, green: 0.86, blue: 0.30))
+        }
+    }
+    var sculpture: String { self == .space ? "space-map-sculpture" : "sculpture-motion-\(rawValue)" }
+}
+
+/// The Mac's HEIC files, loaded as they are. `Image(name)` only finds files in an asset catalog.
+enum Artwork {
+    static func image(_ name: String) -> Image {
+        let image = Bundle.main.path(forResource: name, ofType: "heic").flatMap(UIImage.init(contentsOfFile:))
+        return image.map(Image.init(uiImage:)) ?? Image(systemName: "sparkles")
+    }
+}
+
+private struct ThemeKey: EnvironmentKey { static let defaultValue = StewardTheme.care }
+extension EnvironmentValues {
+    var stewardTheme: StewardTheme {
+        get { self[ThemeKey.self] }
+        set { self[ThemeKey.self] = newValue }
+    }
+}
+
+struct AtmosphereView: View {
+    let theme: StewardTheme
+    var body: some View {
+        let ramp = theme.backdrop
+        ZStack {
+            LinearGradient(stops: [.init(color: ramp.deep, location: 0), .init(color: ramp.mid, location: 0.55), .init(color: ramp.bright, location: 1)],
+                           startPoint: .topLeading, endPoint: .bottomTrailing)
+            RadialGradient(colors: [ramp.bright.opacity(0.6), ramp.bright.opacity(0.12), .clear], center: UnitPoint(x: 0.8, y: 0.92), startRadius: 0, endRadius: 420)
+            LinearGradient(colors: [.black.opacity(0.22), .clear], startPoint: .top, endPoint: .center)
+            // Keeps white text readable where the ramp is brightest.
+            LinearGradient(colors: [.clear, .black.opacity(0.28)], startPoint: .center, endPoint: .bottom)
+        }
+        .ignoresSafeArea()
+        .accessibilityHidden(true)
+    }
+}
+
+/// The section's glass sculpture. Plays the Mac's scan movie while working, and shows its still otherwise or with Reduce Motion.
+struct Sculpture: View {
+    let theme: StewardTheme
+    var moving = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
+
+    var body: some View {
+        ZStack {
+            Circle().fill(RadialGradient(colors: [theme.vivid.opacity(0.55), .clear], center: .center, startRadius: 10, endRadius: 130)).blur(radius: 20).scaleEffect(1.3)
+            // The Space Map art is rendered purple. The Mac turns it gold the same way.
+            Group {
+                if moving && !reduceMotion && scenePhase == .active {
+                    LoopingMovie(name: theme.sculpture + "-scan")
+                } else {
+                    Artwork.image(theme.sculpture + "-look-poster").resizable().scaledToFit()
+                }
+            }
+            .hueRotation(.degrees(theme == .space ? 155 : 0))
+        }
+        .shadow(color: theme.vivid.opacity(0.45), radius: 26, y: 10)
+        .accessibilityHidden(true)
+    }
+}
+
+private struct LoopingMovie: UIViewRepresentable {
+    let name: String
+
+    final class PlayerView: UIView {
+        override class var layerClass: AnyClass { AVPlayerLayer.self }
+        var looper: AVPlayerLooper?
+    }
+
+    func makeUIView(context: Context) -> PlayerView {
+        let view = PlayerView()
+        view.backgroundColor = .clear
+        guard let url = Bundle.main.url(forResource: name, withExtension: "mov") else { return view }
+        let player = AVQueuePlayer()
+        player.isMuted = true
+        player.preventsDisplaySleepDuringVideoPlayback = false
+        view.looper = AVPlayerLooper(player: player, templateItem: AVPlayerItem(url: url))
+        let layer = view.layer as! AVPlayerLayer
+        layer.player = player
+        layer.videoGravity = .resizeAspect
+        layer.pixelBufferAttributes = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
+        player.play()
+        return view
+    }
+
+    func updateUIView(_ view: PlayerView, context: Context) {}
+}
+
+/// The Mac's glowing round action button.
+struct OrbAction: View {
+    let title: LocalizedStringKey
+    let icon: String
+    let accent: Color
+    var disabled = false
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            ZStack {
+                Circle().fill(accent.opacity(0.55)).blur(radius: 20)
+                Circle().fill(accent)
+                Circle().fill(LinearGradient(colors: [.white.opacity(0.28), .clear, .black.opacity(0.35)], startPoint: .top, endPoint: .bottom))
+                Circle().fill(RadialGradient(colors: [.white.opacity(0.18), .clear], center: UnitPoint(x: 0.5, y: 0.2), startRadius: 2, endRadius: 50))
+                Circle().stroke(LinearGradient(colors: [.white.opacity(0.95), accent.opacity(0.5), .white.opacity(0.75)], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1.8)
+                VStack(spacing: 3) {
+                    Image(systemName: icon).font(.system(size: 26, weight: .medium)).shadow(color: .black.opacity(0.45), radius: 1, x: 1, y: 3)
+                    Text(title).font(.subheadline.weight(.medium)).shadow(color: .black.opacity(0.3), radius: 2, y: 1)
+                }
+                .foregroundStyle(.white)
+            }
+            .frame(width: 104, height: 104)
+            .contentShape(Circle())
+            .shadow(color: .black.opacity(0.3), radius: 9, y: 7)
+        }
+        .buttonStyle(.plain)
+        .disabled(disabled)
+        .opacity(disabled ? 0.45 : 1)
+    }
+}
+
+struct GlassCard<Content: View>: View {
+    @ViewBuilder let content: Content
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) { content }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            // Darker than the Mac's cards, because a phone's gradient runs brighter behind the text.
+            .background(.black.opacity(0.24), in: .rect(cornerRadius: 20))
+            .background(LinearGradient(colors: [.white.opacity(0.09), .white.opacity(0.04)], startPoint: .topLeading, endPoint: .bottomTrailing), in: .rect(cornerRadius: 20))
+            .overlay { RoundedRectangle(cornerRadius: 20).stroke(.white.opacity(0.14), lineWidth: 0.5) }
+    }
+}
+
+/// One of the Mac's glass category icons.
+struct CategoryIcon: View {
+    let name: String
+    var body: some View {
+        Artwork.image(name).resizable().scaledToFit().frame(width: 44, height: 44).accessibilityHidden(true)
+    }
+}
+
+/// Full-bleed page: atmosphere behind, sculpture and title on top, then the content. Same stage as the Mac sections.
+struct StagePage<Content: View>: View {
+    let theme: StewardTheme
+    let title: LocalizedStringKey
+    let subtitle: LocalizedStringKey
+    var moving = false
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        ZStack {
+            AtmosphereView(theme: theme)
+            ScrollView {
+                VStack(spacing: 18) {
+                    Sculpture(theme: theme, moving: moving).frame(width: 170, height: 170).padding(.top, 8)
+                    VStack(spacing: 4) {
+                        Text(title).font(.largeTitle.weight(.light)).accessibilityAddTraits(.isHeader)
+                        Text(subtitle).font(.subheadline).foregroundStyle(.white.opacity(0.75)).multilineTextAlignment(.center)
+                    }
+                    content
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 28)
+            }
+        }
+        .environment(\.stewardTheme, theme)
+        .tint(theme.accent)
+    }
+}
+
+/// A plain page in the section's colours, for detail screens.
+struct DetailPage<Content: View>: View {
+    let theme: StewardTheme
+    let title: LocalizedStringKey
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        ZStack {
+            AtmosphereView(theme: theme)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 14) { content }.padding(16)
+            }
+        }
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+        .environment(\.stewardTheme, theme)
+        .tint(theme.accent)
+    }
+}
+
+/// A navigation row with the Mac's glass chip, used on every section.
+struct FeatureRow: View {
+    let icon: String
+    let title: LocalizedStringKey
+    var detail: Text? = nil
+    var value: String? = nil
+
+    var body: some View {
+        HStack(spacing: 12) {
+            CategoryIcon(name: icon)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.body.weight(.medium))
+                if let detail { detail.font(.footnote).foregroundStyle(.white.opacity(0.7)) }
+            }
+            Spacer(minLength: 8)
+            if let value { Text(value).font(.subheadline.monospacedDigit()).foregroundStyle(.white.opacity(0.85)) }
+            Image(systemName: "chevron.forward").font(.footnote.weight(.semibold)).foregroundStyle(.white.opacity(0.4))
+        }
+        .contentShape(Rectangle())
+    }
+}
