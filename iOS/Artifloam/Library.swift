@@ -97,9 +97,10 @@ final class Library {
         return items.filter { seen.insert($0.id).inserted }
     }
 
+    /// Only ever from the person pressing Scan. Photos access is asked for at that moment too, so the reason is clear.
     func start() async {
         if status == .notDetermined { status = await PHPhotoLibrary.requestAuthorization(for: .readWrite) }
-        if phase == .idle { await scan() }
+        await scan()
     }
 
     func scan() async {

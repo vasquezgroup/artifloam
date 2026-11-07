@@ -18,7 +18,6 @@ struct ArtifloamApp: App {
             .tint(.white)
             .environment(library)
             .preferredColorScheme(.dark)
-            .task { await library.start() }
         }
     }
 }
@@ -98,7 +97,7 @@ struct OverviewView: View {
                 // Ticked in advance because they're recommended. Nothing goes until the person has seen them and pressed Delete.
                 PhotoReviewView(title: "Recommended", note: "Exact copies, and screenshots over 90 days old. Untick anything you want to keep.", theme: .care, groups: library.recommendedGroups, preselected: true)
             }
-        } else if library.phase == .done {
+        } else if library.phase == .done || library.phase == .idle {
             ScanOrb(theme: .care)
             GlassCard { Label(library.everything > 0 ? "Nothing is safe to remove without a look. Check Photos and Videos for the rest." : "Nothing to clean right now.", systemImage: "checkmark.seal.fill") }
         }

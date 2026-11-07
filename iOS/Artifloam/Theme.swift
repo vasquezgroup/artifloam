@@ -261,7 +261,7 @@ struct ScanOrb: View {
             OrbAction(title: "Stop", icon: "stop.fill", accent: theme.vivid, progress: Double(library.checked) / Double(max(library.total, 1))) { library.stop() }
                 .padding(.vertical, 10)
         } else {
-            OrbAction(title: "Scan", icon: "magnifyingglass", accent: theme.vivid) { Task { await library.scan() } }
+            OrbAction(title: "Scan", icon: "magnifyingglass", accent: theme.vivid) { Task { await library.start() } }
                 .padding(.vertical, 6)
         }
     }

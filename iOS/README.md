@@ -48,6 +48,7 @@ Artifloam can never delete inside another app. It points people to the right scr
 
 - **Same look as the Mac.** Each section has one `StewardTheme`: its gradient, its sculpture, glass cards, the orb for the main action. Colours in `Theme.swift` must match `Sources/MacSteward/VisualLanguage.swift`. Use `StagePage` for sections and `DetailPage` below them.
 - **Automatic or not at all.** The owner rejected a screenshot reader because people had to take screenshots. Don't add features that make people do the work.
+- **Scanning starts from the Scan button**, never on opening. Photos access is asked for at that moment.
 - **Nothing is removed without a choice.** All photo deletes go through `Library.delete`, which shows iOS's confirmation. Items go to Recently Deleted.
 - **Originals are safe until the copy exists.** `MediaChanges` creates the new file first, checks it, and only then asks to delete the original.
 - **Favourites and protected items are never suggested.**
