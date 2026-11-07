@@ -57,7 +57,7 @@ enum PhotoCategory: CaseIterable, Identifiable {
 
 @MainActor @Observable
 final class Library {
-    enum Phase { case idle, reading, analysing, done }
+    enum Phase { case idle, reading, analysing, done, stopped }
     var status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
     var phase = Phase.idle
     var checked = 0
@@ -67,6 +67,10 @@ final class Library {
     var videoBytes: Int64 = 0
     var notice: LocalizedStringKey?
     var failure: String?
+
+    private var stopFlag = StopFlag()
+    /// Gone this session, so a scan still running can't offer them again.
+    private var deleted = Set<String>()
 
     var protected: Set<String> = Set(UserDefaults.standard.stringArray(forKey: "protected") ?? [])
 
@@ -79,6 +83,13 @@ final class Library {
         let cutoff = Date(timeIntervalSinceNow: -90 * 86_400)
         let old = items(.screenshots).filter { ($0.asset.creationDate ?? .now) < cutoff }
         return unique(items(.duplicates) + old)
+    }
+    /// The same items for review. Copies show the one that stays next to them.
+    var recommendedGroups: [CleanupGroup] {
+        let copies = results[.duplicates] ?? []
+        let copyIDs = Set(copies.flatMap(\.items).map(\.id))
+        let rest = recommended.filter { !copyIDs.contains($0.id) }
+        return copies + (rest.isEmpty ? [] : [CleanupGroup(items: rest)])
     }
     var everything: Int64 { unique(PhotoCategory.allCases.filter { $0 != .livePhotos }.flatMap(items)).reduce(0) { $0 + $1.bytes } }
     private func unique(_ items: [PhotoItem]) -> [PhotoItem] {
@@ -93,30 +104,54 @@ final class Library {
 
     func scan() async {
         guard status == .authorized || status == .limited, !working else { return }
+        let stop = StopFlag()
+        stopFlag = stop
         phase = .reading
         checked = 0
         let hidden = protected
-        let first = await Task.detached(priority: .userInitiated) { LibraryScan.read(excluding: hidden) { n, t in Task { @MainActor in self.checked = n; self.total = t } } }.value
-        results = first.results
-        photoBytes = first.photoBytes
-        videoBytes = first.videoBytes
+        let first = await Task.detached(priority: .userInitiated) { LibraryScan.read(excluding: hidden, stop: stop) { n, t in Task { @MainActor in self.checked = n; self.total = t } } }.value
+        if stop.value {
+            // A part-read library would understate everything, so anything shown before stays. A first scan shows what it reached.
+            if results.isEmpty { apply(first) }
+            phase = .stopped
+            return
+        }
+        apply(first)
         phase = .analysing
         total = first.photos.count
         checked = 0
-        let found = await Task.detached(priority: .utility) { LibraryScan.analyse(first.photos) { n in Task { @MainActor in self.checked = n } } }.value
+        let found = await Task.detached(priority: .utility) { LibraryScan.analyse(first.photos, stop: stop) { n in Task { @MainActor in self.checked = n } } }.value
         results[.similar] = found.similar
         results[.blurred] = found.blurred.isEmpty ? [] : [CleanupGroup(items: found.blurred)]
-        phase = .done
+        removeDeleted()
+        phase = stop.value ? .stopped : .done
+    }
+
+    func stop() { stopFlag.value = true }
+
+    private func apply(_ first: LibraryScan.First) {
+        results = first.results
+        photoBytes = first.photoBytes
+        videoBytes = first.videoBytes
+        removeDeleted()
+    }
+
+    private func removeDeleted() {
+        for (key, groups) in results {
+            results[key] = groups.map { CleanupGroup(keep: $0.keep, items: $0.items.filter { !deleted.contains($0.id) }) }.filter { !$0.items.isEmpty }
+        }
     }
 
     /// iOS asks for confirmation. Cancelling there leaves everything in place.
+    /// Only takes what was deleted off the lists: rescanning a large library after every delete would take minutes.
     @discardableResult
     func delete(_ ids: Set<String>) async -> Bool {
         let assets = PHAsset.fetchAssets(withLocalIdentifiers: Array(ids), options: nil)
         do {
             try await PHPhotoLibrary.shared().performChanges { PHAssetChangeRequest.deleteAssets(assets) }
             notice = "Moved to Recently Deleted. The space comes back when iOS empties it after about 30 days, or when you empty it in Photos."
-            await scan()
+            deleted.formUnion(ids)
+            removeDeleted()
             return true
         } catch {
             if (error as NSError).code != PHPhotosError.userCancelled.rawValue { failure = error.localizedDescription }
@@ -139,6 +174,10 @@ final class Library {
     }
 }
 
+final class StopFlag: @unchecked Sendable {
+    var value = false
+}
+
 enum LibraryScan {
     struct First { var results: [PhotoCategory: [CleanupGroup]]; var photoBytes: Int64; var videoBytes: Int64; var photos: [PhotoItem] }
     private struct Identity: Hashable { let width, height: Int; let bytes: Int64; let name: String }
@@ -148,7 +187,7 @@ enum LibraryScan {
     /// ponytail: "fileSize" is undocumented, and the only way to get sizes without reading every file. Replace if App Review objects.
     static func size(of resource: PHAssetResource) -> Int64 { (resource.value(forKey: "fileSize") as? NSNumber)?.int64Value ?? 0 }
 
-    nonisolated static func read(excluding protected: Set<String>, progress: @escaping @Sendable (Int, Int) -> Void) -> First {
+    nonisolated static func read(excluding protected: Set<String>, stop: StopFlag, progress: @escaping @Sendable (Int, Int) -> Void) -> First {
         var out: [PhotoCategory: [PhotoItem]] = [:]
         var copies: [(item: PhotoItem, identity: Identity)] = []
         var photos: [PhotoItem] = []
@@ -157,7 +196,8 @@ enum LibraryScan {
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         let all = PHAsset.fetchAssets(with: options)
         let oldCutoff = Date(timeIntervalSinceNow: -2 * 365 * 86_400)
-        all.enumerateObjects { asset, index, _ in
+        all.enumerateObjects { asset, index, finished in
+            if stop.value { finished.pointee = true; return }
             if index % 200 == 0 { progress(index, all.count) }
             let resources = PHAssetResource.assetResources(for: asset)
             let bytes = resources.reduce(Int64(0)) { $0 + size(of: $1) }
@@ -193,7 +233,7 @@ enum LibraryScan {
         return First(results: results, photoBytes: photoBytes, videoBytes: videoBytes, photos: photos)
     }
 
-    nonisolated static func analyse(_ photos: [PhotoItem], progress: @escaping @Sendable (Int) -> Void) -> (similar: [CleanupGroup], blurred: [PhotoItem]) {
+    nonisolated static func analyse(_ photos: [PhotoItem], stop: StopFlag, progress: @escaping @Sendable (Int) -> Void) -> (similar: [CleanupGroup], blurred: [PhotoItem]) {
         var sharpness: [String: Double] = [:]
         var blurred: [PhotoItem] = []
         var hashes: [String: UInt64] = [:]
@@ -201,6 +241,7 @@ enum LibraryScan {
         let clusters = timeClusters(dated.map(\.1), gap: 30)
         let clustered = Set(clusters.joined())
         for (index, item) in photos.enumerated() {
+            if stop.value { break }
             autoreleasepool {
                 if index % 20 == 0 { progress(index) }
                 guard let image = thumbnail(item.asset) else { return }

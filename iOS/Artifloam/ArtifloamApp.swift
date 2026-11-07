@@ -29,14 +29,19 @@ struct OverviewView: View {
     @Environment(Library.self) private var library
     @Environment(\.scenePhase) private var scenePhase
     @State private var space = DiskSpace.current
-    @State private var confirming = false
+    @State private var reviewing = false
 
     var body: some View {
         StagePage(theme: .care, title: "Artifloam", subtitle: "More room. Less clutter.", moving: library.working) {
             GlassCard {
                 Text("\(formatted(space.free)) free").font(.title.weight(.semibold))
-                StorageSplit(photos: library.photoBytes, videos: library.videoBytes, used: max(space.total - space.free, 0), total: space.total)
+                ProgressView(value: Double(max(space.total - space.free, 0)), total: Double(max(space.total, 1))).tint(StewardTheme.care.accent)
+                    .accessibilityLabel("Storage used")
                 Text("of \(formatted(space.total)) on this iPhone").font(.footnote).foregroundStyle(.white.opacity(0.7))
+                // Originals can live in iCloud, so these can add up to more than the iPhone holds. They're not part of the bar above.
+                if library.photoBytes + library.videoBytes > 0 {
+                    Text("Your library at full size, including iCloud: photos \(formatted(library.photoBytes)), videos \(formatted(library.videoBytes))").font(.footnote).foregroundStyle(.white.opacity(0.7))
+                }
             }
             content
             Text("iOS doesn't let any app look inside another app or clear its data. Artifloam only shows what it can really see, and removes nothing until you choose.")
@@ -59,7 +64,17 @@ struct OverviewView: View {
                 GlassCard {
                     Text(library.phase == .reading ? "Reading your library" : "Looking for similar and blurred photos").font(.headline)
                     ProgressView(value: Double(library.checked), total: Double(max(library.total, 1)))
-                    Text("\(library.checked) of \(library.total) checked").font(.footnote).foregroundStyle(.white.opacity(0.7))
+                    HStack {
+                        Text("\(library.checked) of \(library.total) checked").font(.footnote).foregroundStyle(.white.opacity(0.7))
+                        Spacer()
+                        Button("Stop") { library.stop() }.buttonStyle(.bordered).tint(.white)
+                    }
+                }
+            } else if library.phase == .stopped {
+                GlassCard {
+                    Text("Scan stopped").font(.headline)
+                    Text("Results may be incomplete.").font(.footnote).foregroundStyle(.white.opacity(0.7))
+                    Button("Scan again") { Task { await library.scan() } }.buttonStyle(.bordered).tint(.white)
                 }
             }
             summary
@@ -70,21 +85,18 @@ struct OverviewView: View {
         let picks = library.recommended
         let bytes = picks.reduce(Int64(0)) { $0 + $1.bytes }
         if library.everything > 0 {
-            Text("\(formatted(library.everything)) of photos and videos to review").font(.subheadline).foregroundStyle(.white.opacity(0.85))
+            Text("\(formatted(library.everything)) of full-size originals to review. Much of this may be in iCloud, so deleting can free less on this iPhone.").font(.footnote).foregroundStyle(.white.opacity(0.8)).multilineTextAlignment(.center)
         }
         if !picks.isEmpty {
             VStack(spacing: 10) {
                 Text("Recommended: ^[\(picks.count) item](inflect: true), up to \(formatted(bytes))").font(.headline).multilineTextAlignment(.center)
-                Text("Exact copies, and screenshots over 90 days old. You can review them first.").font(.footnote).foregroundStyle(.white.opacity(0.75)).multilineTextAlignment(.center)
-                OrbAction(title: "Clean", icon: "sparkles", accent: StewardTheme.care.vivid, disabled: library.working) {
-                    Task { await library.delete(Set(picks.map(\.id))) }
-                }
-                .padding(.top, 6)
-                NavigationLink("Review first") {
-                    PhotoReviewView(title: "Recommended", note: "Exact copies, and screenshots over 90 days old.", theme: .care, groups: [CleanupGroup(items: picks)])
-                }
-                .font(.subheadline.weight(.medium))
-                .foregroundStyle(.white)
+                Text("Exact copies, and screenshots over 90 days old. You'll see each one first, and can untick any you want to keep.").font(.footnote).foregroundStyle(.white.opacity(0.75)).multilineTextAlignment(.center)
+                OrbAction(title: "Review", icon: "sparkles", accent: StewardTheme.care.vivid, disabled: library.phase == .reading) { reviewing = true }
+                    .padding(.top, 6)
+            }
+            .navigationDestination(isPresented: $reviewing) {
+                // Ticked in advance because they're recommended. Nothing goes until the person has seen them and pressed Delete.
+                PhotoReviewView(title: "Recommended", note: "Exact copies, and screenshots over 90 days old. Untick anything you want to keep.", theme: .care, groups: library.recommendedGroups, preselected: true)
             }
         } else if library.phase == .done {
             GlassCard { Label(library.everything > 0 ? "Nothing is safe to remove without a look. Check Photos and Videos for the rest." : "Nothing to clean right now.", systemImage: "checkmark.seal.fill") }
@@ -105,52 +117,6 @@ struct DiskSpace {
     static var current: DiskSpace {
         let values = try? URL.homeDirectory.resourceValues(forKeys: [.volumeTotalCapacityKey, .volumeAvailableCapacityForImportantUsageKey])
         return DiskSpace(total: Int64(values?.volumeTotalCapacity ?? 0), free: values?.volumeAvailableCapacityForImportantUsage ?? 0)
-    }
-}
-
-/// Share of the whole disk: photos, videos, everything else, then free space.
-private struct StorageSplit: View {
-    let photos: Int64
-    let videos: Int64
-    let used: Int64
-    let total: Int64
-    private var other: Int64 { max(used - photos - videos, 0) }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            GeometryReader { geometry in
-                HStack(spacing: 2) {
-                    segment(photos, StewardTheme.cleanup.accent, geometry.size.width)
-                    segment(videos, StewardTheme.files.accent, geometry.size.width)
-                    segment(other, StewardTheme.system.accent, geometry.size.width)
-                    Spacer(minLength: 0)
-                }
-            }
-            .frame(height: 10)
-            .background(.white.opacity(0.12), in: .capsule)
-            .clipShape(.capsule)
-            HStack(spacing: 12) {
-                legend("Photos", photos, StewardTheme.cleanup.accent)
-                legend("Videos", videos, StewardTheme.files.accent)
-                legend("Other", other, StewardTheme.system.accent)
-            }
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Photos \(formatted(photos)), videos \(formatted(videos)), other \(formatted(other))")
-    }
-
-    private func segment(_ bytes: Int64, _ color: Color, _ width: CGFloat) -> some View {
-        color.frame(width: total > 0 ? max(width * CGFloat(bytes) / CGFloat(total), bytes > 0 ? 3 : 0) : 0)
-    }
-
-    private func legend(_ title: LocalizedStringKey, _ bytes: Int64, _ color: Color) -> some View {
-        HStack(spacing: 4) {
-            Circle().fill(color).frame(width: 7, height: 7)
-            Text(title).font(.caption2)
-            Text(formatted(bytes)).font(.caption2).foregroundStyle(.white.opacity(0.7))
-        }
-        .lineLimit(1)
-        .minimumScaleFactor(0.8)
     }
 }
 

@@ -40,6 +40,12 @@ Artifloam can never delete inside another app. It points people to the right scr
 | `Art/` | Copies from `Sources/MacSteward/Resources`. Replace them when the Mac artwork changes |
 | `../ArtifloamWidget/` | Free space widget |
 
+## Lessons from a real iPhone
+
+- Library sizes are full originals, often in iCloud: a real phone showed 321 GB of videos on 256 GB of storage. Never add them to the storage bar.
+- Nothing is deleted from one tap. Recommended opens a review with everything ticked, and the copy that stays is shown.
+- A real library had over 24,000 items, so scans can be stopped, and deleting takes items off the lists instead of rescanning.
+
 ## Rules to keep
 
 - **Same look as the Mac.** Each section has one `StewardTheme`: its gradient, its sculpture, glass cards, the orb for the main action. Colours in `Theme.swift` must match `Sources/MacSteward/VisualLanguage.swift`. Use `StagePage` for sections and `DetailPage` below them.

@@ -59,10 +59,13 @@ struct PhotoReviewView: View {
     let theme: StewardTheme
     let groups: [CleanupGroup]
     var category: PhotoCategory? = nil
+    /// Starts with everything ticked, for the Recommended review.
+    var preselected = false
     @Environment(Library.self) private var library
     @Environment(\.dismiss) private var dismiss
     @State private var selection: Set<String> = []
     @State private var dropped: Set<String> = []
+    @State private var didPreselect = false
 
     private var liveGroups: [CleanupGroup] {
         (category.flatMap { library.results[$0] } ?? groups).map { CleanupGroup(keep: $0.keep, items: $0.items.filter { !dropped.contains($0.id) }) }.filter { !$0.items.isEmpty }
@@ -92,6 +95,7 @@ struct PhotoReviewView: View {
                 }
             }
         }
+        .onAppear { if preselected && !didPreselect { selection = Set(items.map(\.id)); didPreselect = true } }
         .toolbar {
             Button(selection.count == items.count ? "Select None" : "Select All") {
                 selection = selection.count == items.count ? [] : Set(items.map(\.id))
