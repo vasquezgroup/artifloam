@@ -55,6 +55,21 @@ enum PhotoCategory: CaseIterable, Identifiable {
     }
 }
 
+/// What's in the library, from Photos' own index. Instant, so no scan is needed.
+struct LibraryCounts {
+    var photos, videos, screenshots, livePhotos: Int
+
+    nonisolated static func read() -> LibraryCounts {
+        func count(_ subtype: PHAssetMediaSubtype) -> Int {
+            let options = PHFetchOptions()
+            options.predicate = NSPredicate(format: "(mediaSubtypes & %d) != 0", subtype.rawValue)
+            return PHAsset.fetchAssets(with: .image, options: options).count
+        }
+        let screenshots = count(.photoScreenshot)
+        return LibraryCounts(photos: PHAsset.fetchAssets(with: .image, options: nil).count - screenshots, videos: PHAsset.fetchAssets(with: .video, options: nil).count, screenshots: screenshots, livePhotos: count(.photoLive))
+    }
+}
+
 @MainActor @Observable
 final class Library {
     enum Phase { case idle, reading, analysing, done, stopped }
@@ -72,6 +87,8 @@ final class Library {
     var biggest: [PhotoItem] = []
     /// Filled by the scan only if Contacts access was already given. The scan never asks for it.
     var duplicateContactGroups: Int?
+    /// Nil until Photos access has been given. Asking for it stays with the Scan button.
+    var counts: LibraryCounts?
     var notice: LocalizedStringKey?
     var failure: String?
 
@@ -117,10 +134,18 @@ final class Library {
         phase = .reading
         checked = 0
         let hidden = protected
-        let first = await Task.detached(priority: .userInitiated) { LibraryScan.read(excluding: hidden, stop: stop) { n, t in Task { @MainActor in self.checked = n; self.total = t } } }.value
+        let cache = ScanCache()
+        // Videos are a sixth of the items and most of the bytes, so the big numbers show within seconds.
+        // A rescan keeps what's on screen until it has the whole picture.
+        let showPartial = results.isEmpty
+        let first = await Task.detached(priority: .userInitiated) {
+            LibraryScan.read(excluding: hidden, cache: cache, stop: stop) { partial in
+                if showPartial { Task { @MainActor in self.apply(partial) } }
+            } progress: { n, t in Task { @MainActor in self.checked = n; self.total = t } }
+        }.value
         if stop.value {
             // A part-read library would understate everything, so anything shown before stays. A first scan shows what it reached.
-            if results.isEmpty { apply(first) }
+            if showPartial { apply(first) }
             phase = .stopped
             return
         }
@@ -128,7 +153,7 @@ final class Library {
         phase = .analysing
         total = first.photos.count
         checked = 0
-        let found = await Task.detached(priority: .utility) { LibraryScan.analyse(first.photos, stop: stop) { n in Task { @MainActor in self.checked = n } } }.value
+        let found = await Task.detached(priority: .userInitiated) { LibraryScan.analyse(first.photos, cache: cache, stop: stop) { n in Task { @MainActor in self.checked = n } } }.value
         results[.similar] = found.similar
         results[.blurred] = found.blurred.isEmpty ? [] : [CleanupGroup(items: found.blurred)]
         removeDeleted()
@@ -137,6 +162,12 @@ final class Library {
     }
 
     func stop() { stopFlag.value = true }
+
+    func loadCounts() async {
+        status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        guard status == .authorized || status == .limited else { return }
+        counts = await Task.detached(priority: .userInitiated) { LibraryCounts.read() }.value
+    }
 
     private func apply(_ first: LibraryScan.First) {
         results = first.results
@@ -191,6 +222,63 @@ final class StopFlag: @unchecked Sendable {
     var value = false
 }
 
+/// What a scan learned about one asset.
+struct ScanFacts: Codable, Equatable {
+    var modified: Date?
+    var bytes: Int64
+    var local: Int64?
+    var pairedVideo: Int64
+    var name: String?
+    var sharpness: Double?
+    var hash: UInt64?
+}
+
+/// Remembers facts between scans, so only new or edited items cost anything. Lives in Caches: iOS may clear it, and it's never backed up.
+final class ScanCache: @unchecked Sendable {
+    private let file: URL
+    private let lock = NSLock()
+    private var entries: [String: ScanFacts]
+    private var changed = false
+
+    init(file: URL = URL.cachesDirectory.appending(path: "scan-cache.plist")) {
+        self.file = file
+        entries = (try? Data(contentsOf: file)).flatMap { try? PropertyListDecoder().decode([String: ScanFacts].self, from: $0) } ?? [:]
+    }
+
+    /// Nil once the item has been edited since.
+    private func fresh(_ id: String, modified: Date?) -> ScanFacts? {
+        lock.lock(); defer { lock.unlock() }
+        guard let entry = entries[id], entry.modified == modified else { return nil }
+        return entry
+    }
+    func facts(id: String, modified: Date?) -> ScanFacts? { fresh(id, modified: modified) }
+    func facts(for asset: PHAsset) -> ScanFacts? { fresh(asset.localIdentifier, modified: asset.modificationDate) }
+    func look(for asset: PHAsset) -> (sharpness: Double, hash: UInt64)? {
+        guard let entry = fresh(asset.localIdentifier, modified: asset.modificationDate), let sharpness = entry.sharpness, let hash = entry.hash else { return nil }
+        return (sharpness, hash)
+    }
+    func store(_ facts: ScanFacts, id: String) {
+        lock.lock(); defer { lock.unlock() }
+        entries[id] = facts
+        changed = true
+    }
+    func store(_ facts: ScanFacts, for asset: PHAsset) { store(facts, id: asset.localIdentifier) }
+    func store(look: (sharpness: Double, hash: UInt64), for asset: PHAsset) {
+        lock.lock(); defer { lock.unlock() }
+        entries[asset.localIdentifier]?.sharpness = look.sharpness
+        entries[asset.localIdentifier]?.hash = look.hash
+        changed = true
+    }
+    func save() {
+        lock.lock(); defer { lock.unlock() }
+        guard changed else { return }
+        let encoder = PropertyListEncoder()
+        encoder.outputFormat = .binary
+        try? encoder.encode(entries).write(to: file, options: .atomic)
+        changed = false
+    }
+}
+
 enum LibraryScan {
     struct First {
         var results: [PhotoCategory: [CleanupGroup]]
@@ -202,9 +290,7 @@ enum LibraryScan {
         var bytesByYear: [Int: Int64]
         var biggest: [PhotoItem]
     }
-    private struct Identity: Hashable { let width, height: Int; let bytes: Int64; let name: String }
-    /// ponytail: newest photos only keeps a scan to a couple of minutes. Raise it, or analyse in the background, if people ask.
-    private static let analysisLimit = 5000
+    struct Identity: Hashable { let width, height: Int; let bytes: Int64; let name: String }
 
     /// ponytail: "fileSize" is undocumented, and the only way to get sizes without reading every file. Replace if App Review objects.
     static func size(of resource: PHAssetResource) -> Int64 { (resource.value(forKey: "fileSize") as? NSNumber)?.int64Value ?? 0 }
@@ -215,7 +301,62 @@ enum LibraryScan {
         return (resource.value(forKey: "locallyAvailable") as? NSNumber)?.boolValue
     }
 
-    nonisolated static func read(excluding protected: Set<String>, stop: StopFlag, progress: @escaping @Sendable (Int, Int) -> Void) -> First {
+    /// Runs `body` for every index on several threads. Stops early with `stop`.
+    nonisolated static func parallel(_ count: Int, stop: StopFlag, body: @escaping (Int) -> Void) {
+        let threads = max(2, ProcessInfo.processInfo.activeProcessorCount - 2)
+        DispatchQueue.concurrentPerform(iterations: threads) { thread in
+            for index in stride(from: thread, to: count, by: threads) {
+                if stop.value { return }
+                autoreleasepool { body(index) }
+            }
+        }
+    }
+
+    /// What one asset's resources say. iOS takes about 3 ms per item to answer, so this is what the cache keeps.
+    nonisolated static func facts(of asset: PHAsset) -> ScanFacts {
+        let resources = PHAssetResource.assetResources(for: asset)
+        var local: Int64? = 0
+        for resource in resources {
+            guard let here = isOnThisIPhone(resource) else { local = nil; continue }
+            if here { local = local.map { $0 + size(of: resource) } }
+        }
+        return ScanFacts(modified: asset.modificationDate, bytes: resources.reduce(0) { $0 + size(of: $1) }, local: local,
+                         pairedVideo: resources.filter { $0.type == .pairedVideo }.reduce(0) { $0 + size(of: $1) }, name: resources.first?.originalFilename)
+    }
+
+    /// `partial` gets the videos as soon as they're read, before the much longer photo pass.
+    nonisolated static func read(excluding protected: Set<String>, cache: ScanCache, stop: StopFlag, partial: (First) -> Void = { _ in }, progress: @escaping @Sendable (Int, Int) -> Void) -> First {
+        let options = PHFetchOptions()
+        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        let all = PHAsset.fetchAssets(with: options)
+        let assets = all.objects(at: IndexSet(integersIn: 0..<all.count))
+        let videos = assets.indices.filter { assets[$0].mediaType == .video }
+        let others = assets.indices.filter { assets[$0].mediaType != .video }
+        var found = [ScanFacts?](repeating: nil, count: assets.count)
+        let lock = NSLock()
+        var done = 0
+        func readFacts(_ indexes: [Int]) {
+            parallel(indexes.count, stop: stop) { position in
+                let index = indexes[position], asset = assets[index]
+                let known = cache.facts(for: asset)
+                let facts = known ?? Self.facts(of: asset)
+                if known == nil { cache.store(facts, for: asset) }
+                lock.lock()
+                found[index] = facts
+                done += 1
+                if done % 200 == 0 { progress(done, assets.count) }
+                lock.unlock()
+            }
+        }
+        readFacts(videos)
+        if !stop.value { partial(assemble(assets, found, excluding: protected)) }
+        readFacts(others)
+        cache.save()
+        return assemble(assets, found, excluding: protected)
+    }
+
+    /// Everything the scan reports, from facts already read. Newest first, like `assets`.
+    nonisolated static func assemble(_ assets: [PHAsset], _ found: [ScanFacts?], excluding protected: Set<String>) -> First {
         var out: [PhotoCategory: [PhotoItem]] = [:]
         var copies: [(item: PhotoItem, identity: Identity)] = []
         var photos: [PhotoItem] = []
@@ -223,23 +364,17 @@ enum LibraryScan {
         var localPhotos: Int64 = 0, localVideos: Int64 = 0, localKnown = true
         var years: [Int: Int64] = [:]
         var biggest: [PhotoItem] = []
-        let options = PHFetchOptions()
-        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        let all = PHAsset.fetchAssets(with: options)
         let oldCutoff = Date(timeIntervalSinceNow: -2 * 365 * 86_400)
-        all.enumerateObjects { asset, index, finished in
-            if stop.value { finished.pointee = true; return }
-            if index % 200 == 0 { progress(index, all.count) }
-            let resources = PHAssetResource.assetResources(for: asset)
-            let bytes = resources.reduce(Int64(0)) { $0 + size(of: $1) }
+        for (asset, facts) in zip(assets, found) {
+            guard let facts else { continue }
+            let bytes = facts.bytes
             if asset.mediaType == .video { videoBytes += bytes } else { photoBytes += bytes }
-            for resource in resources {
-                guard let local = isOnThisIPhone(resource) else { localKnown = false; continue }
-                if local { if asset.mediaType == .video { localVideos += size(of: resource) } else { localPhotos += size(of: resource) } }
-            }
+            if let local = facts.local {
+                if asset.mediaType == .video { localVideos += local } else { localPhotos += local }
+            } else { localKnown = false }
             if let date = asset.creationDate { years[Calendar.current.component(.year, from: date), default: 0] += bytes }
             // Favourites and protected items are counted but never suggested.
-            guard !asset.isFavorite, !protected.contains(asset.localIdentifier) else { return }
+            guard !asset.isFavorite, !protected.contains(asset.localIdentifier) else { continue }
             let item = PhotoItem(asset: asset, bytes: bytes)
             if biggest.count < 12 || bytes > (biggest.last?.bytes ?? 0) {
                 biggest.append(item)
@@ -254,14 +389,13 @@ enum LibraryScan {
                 if asset.mediaSubtypes.contains(.videoScreenRecording) { out[.screenRecordings, default: []].append(item) }
             } else if asset.mediaSubtypes.contains(.photoScreenshot) {
                 out[.screenshots, default: []].append(item)
-            } else if photos.count < analysisLimit {
+            } else {
                 photos.append(item)
             }
-            if asset.mediaSubtypes.contains(.photoLive) {
-                let video = resources.filter { $0.type == .pairedVideo }.reduce(Int64(0)) { $0 + size(of: $1) }
-                if video > 0 { out[.livePhotos, default: []].append(PhotoItem(asset: asset, bytes: bytes, saves: video)) }
+            if asset.mediaSubtypes.contains(.photoLive), facts.pairedVideo > 0 {
+                out[.livePhotos, default: []].append(PhotoItem(asset: asset, bytes: bytes, saves: facts.pairedVideo))
             }
-            if bytes > 0, let name = resources.first?.originalFilename {
+            if bytes > 0, let name = facts.name {
                 copies.append((item, Identity(width: asset.pixelWidth, height: asset.pixelHeight, bytes: bytes, name: name)))
             }
         }
@@ -274,24 +408,29 @@ enum LibraryScan {
         return First(results: results, photoBytes: photoBytes, videoBytes: videoBytes, photos: photos, localPhotoBytes: localKnown ? localPhotos : nil, localVideoBytes: localKnown ? localVideos : nil, bytesByYear: years, biggest: biggest)
     }
 
-    nonisolated static func analyse(_ photos: [PhotoItem], stop: StopFlag, progress: @escaping @Sendable (Int) -> Void) -> (similar: [CleanupGroup], blurred: [PhotoItem]) {
+    nonisolated static func analyse(_ photos: [PhotoItem], cache: ScanCache, stop: StopFlag, progress: @escaping @Sendable (Int) -> Void) -> (similar: [CleanupGroup], blurred: [PhotoItem]) {
+        let ids = photos.map(\.id)
         var sharpness: [String: Double] = [:]
-        var blurred: [PhotoItem] = []
         var hashes: [String: UInt64] = [:]
+        let lock = NSLock()
+        var done = 0
+        parallel(photos.count, stop: stop) { index in
+            let asset = photos[index].asset
+            var look = cache.look(for: asset)
+            if look == nil, let image = thumbnail(asset) {
+                look = (sharpnessOf(image), differenceHash(of: image))
+                cache.store(look: look!, for: asset)
+            }
+            lock.lock()
+            if let look { sharpness[ids[index]] = look.sharpness; hashes[ids[index]] = look.hash }
+            done += 1
+            if done % 20 == 0 { progress(done) }
+            lock.unlock()
+        }
+        cache.save()
+        let blurred = photos.indices.filter { (sharpness[ids[$0]] ?? .infinity) < blurThreshold }.map { photos[$0] }
         let dated = photos.compactMap { p in p.asset.creationDate.map { (p, $0) } }
         let clusters = timeClusters(dated.map(\.1), gap: 30)
-        let clustered = Set(clusters.joined())
-        for (index, item) in photos.enumerated() {
-            if stop.value { break }
-            autoreleasepool {
-                if index % 20 == 0 { progress(index) }
-                guard let image = thumbnail(item.asset) else { return }
-                let score = sharpnessOf(image)
-                sharpness[item.id] = score
-                if score < blurThreshold { blurred.append(item) }
-                if let at = dated.firstIndex(where: { $0.0.id == item.id }), clustered.contains(at) { hashes[item.id] = differenceHash(of: image) }
-            }
-        }
         var similar: [CleanupGroup] = []
         for cluster in clusters {
             let members = cluster.map { dated[$0].0 }

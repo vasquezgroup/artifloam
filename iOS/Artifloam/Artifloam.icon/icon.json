@@ -1,27 +1,20 @@
 {
-  "fill": "system-light",
+  "fill": { "linear-gradient": ["srgb:0.13,0.11,0.34,1.0", "srgb:0.02,0.03,0.10,1.0"], "orientation": { "start": { "x": 0.5, "y": 0 }, "stop": { "x": 0.5, "y": 1 } } },
   "groups": [
     {
       "name": "Artifloam emblem",
       "layers": [
         {
           "name": "Document and terracotta sprout",
-          "image-name": "artifloam-emblem.png"
+          "image-name": "artifloam-emblem.png",
+          "glass": true,
+          "position": { "scale": 0.86, "translation-in-points": [0, 0] }
         }
       ],
-      "shadow": {
-        "kind": "neutral",
-        "opacity": 0.08
-      },
-      "translucency": {
-        "enabled": false,
-        "value": 0
-      }
+      "specular": true,
+      "shadow": { "kind": "neutral", "opacity": 0.5 },
+      "translucency": { "enabled": true, "value": 0.25 }
     }
   ],
-  "supported-platforms": {
-    "squares": [
-      "macOS"
-    ]
-  }
+  "supported-platforms": { "squares": "shared" }
 }

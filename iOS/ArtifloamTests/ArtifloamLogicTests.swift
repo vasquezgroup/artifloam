@@ -153,4 +153,17 @@ final class ArtifloamLogicTests: XCTestCase {
         XCTAssertEqual(StorageAdvice.lookup("WhatsApp").scheme, "whatsapp://")
     }
 
+    func testScanCacheForgetsEditedItems() {
+        let file = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: file) }
+        let date = Date(timeIntervalSince1970: 1000)
+        let facts = ScanFacts(modified: date, bytes: 5, local: nil, pairedVideo: 0, name: "a")
+        let cache = ScanCache(file: file)
+        cache.store(facts, id: "x")
+        cache.save()
+        let reopened = ScanCache(file: file)
+        XCTAssertEqual(reopened.facts(id: "x", modified: date), facts)
+        XCTAssertNil(reopened.facts(id: "x", modified: date.addingTimeInterval(1)))
+        XCTAssertNil(reopened.facts(id: "y", modified: date))
+    }
 }

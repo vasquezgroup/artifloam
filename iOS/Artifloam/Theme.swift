@@ -215,11 +215,13 @@ struct CategoryIcon: View {
 /// Full-bleed page: atmosphere behind, sculpture and title on top, then the content. Same stage as the Mac sections.
 struct StagePage<Content: View>: View {
     let theme: StewardTheme
-    let title: LocalizedStringKey
-    let subtitle: LocalizedStringKey
+    var title: LocalizedStringKey? = nil
+    var subtitle: LocalizedStringKey? = nil
     var moving = false
     /// A picture of its own instead of the section's sculpture, for when the art itself has something to say.
     var artwork: String? = nil
+    /// A thin ring around the sculpture, 0 to 1.
+    var ring: Double? = nil
     @ViewBuilder let content: Content
 
     var body: some View {
@@ -230,11 +232,24 @@ struct StagePage<Content: View>: View {
                     if let artwork {
                         Artwork.image(artwork).resizable().scaledToFit().frame(width: 240, height: 240).shadow(color: theme.vivid.opacity(0.45), radius: 26, y: 10).padding(.top, 8).accessibilityHidden(true)
                     } else {
-                        Sculpture(theme: theme, moving: moving).frame(width: 170, height: 170).padding(.top, 8)
+                        Sculpture(theme: theme, moving: moving).frame(width: ring == nil ? 170 : 220, height: ring == nil ? 170 : 220)
+                            .overlay {
+                                if let ring {
+                                    ZStack {
+                                        Circle().stroke(.white.opacity(0.14), lineWidth: 4)
+                                        Circle().trim(from: 0, to: min(1, max(0, ring))).stroke(LinearGradient(colors: [theme.accent, .white], startPoint: .bottomLeading, endPoint: .topTrailing), style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                                            .rotationEffect(.degrees(-90)).animation(.smooth, value: ring)
+                                    }
+                                    .padding(-16)
+                                }
+                            }
+                            .padding(.vertical, ring == nil ? 0 : 16).padding(.top, ring == nil ? 8 : 44)
                     }
-                    VStack(spacing: 4) {
-                        Text(title).font(.largeTitle.weight(.light)).accessibilityAddTraits(.isHeader)
-                        Text(subtitle).font(.subheadline).foregroundStyle(.white.opacity(0.75)).multilineTextAlignment(.center)
+                    if let title, let subtitle {
+                        VStack(spacing: 4) {
+                            Text(title).font(.largeTitle.weight(.light)).accessibilityAddTraits(.isHeader)
+                            Text(subtitle).font(.subheadline).foregroundStyle(.white.opacity(0.75)).multilineTextAlignment(.center)
+                        }
                     }
                     content
                 }

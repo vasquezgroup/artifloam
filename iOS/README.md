@@ -52,6 +52,16 @@ The Scan button runs photos and videos, the health check, and duplicate contacts
 
 `PhotoPage` and `PhotoGrid` are shared by every photo list. The pictures follow the pinch exactly: `zoomStep` swaps the column count at the same visual size with no animation, and the scale settles when fingers lift. At two columns or fewer the title, text and bars fade out. The main action is always `orbFooter`, fixed above the tab bar.
 
+## Scan speed
+
+Measured on an iPhone 12 with 24,254 items, Release build. A first scan reads every item's size and analyses every photo. Later scans only touch new or edited items, using `ScanCache` in Caches.
+
+- Before the rework: 134 s, covering only the newest 5,000 photos.
+- First scan of 20,020 photos: about 88 s, added up from two runs. Sizes take 64 s, and more threads don't help them. Videos come first, at 12 s.
+- Repeat scan: about 1 s.
+
+Measure with a Release build. Debug is far slower.
+
 ## Rules to keep
 
 - **Same look as the Mac.** Each section has one `StewardTheme`: its gradient, its sculpture, glass cards, the orb for the main action. Colours in `Theme.swift` must match `Sources/MacSteward/VisualLanguage.swift`. Use `StagePage` for sections and `DetailPage` below them.
@@ -120,7 +130,6 @@ Anything not ticked hasn't been seen working.
 
 - [ ] Sharpness and similar thresholds in `LibraryScan` (`blurThreshold`, `similarBits`). They're starting values, checked only on Simulator sample and generated images.
 - [ ] Library categories. `VNClassifyImageRequest` puts everything in Other in the Simulator, so sorting has never been seen working.
-- [ ] Scan speed on a large library. Analysis covers the newest 5,000 photos.
 - [ ] Live Photo conversion. No Live Photo exists in the Simulator, so it has never run.
 - [ ] Compression on real iPhone video, including HDR and iCloud-only videos. Slow-motion may lose its effect, because the code doesn't handle it specially.
 - [ ] Menu paths in `StorageAdvice`. Most come from secondary guides.
