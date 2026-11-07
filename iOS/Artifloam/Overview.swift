@@ -25,11 +25,11 @@ struct OverviewView: View {
                 if let days = SpaceHistory.daysUntilFull(SpaceHistory.load()) {
                     Text("Full in about ^[\(days) day](inflect: true)").font(.footnote).foregroundStyle(.white.opacity(0.75))
                 }
-                if library.status != .denied && library.status != .restricted { contents }
             }
             switch library.status {
             case .denied, .restricted: NoPhotoAccess()
             default:
+                contents
                 if let notice = library.notice { GlassCard { Label(notice, systemImage: "info.circle").font(.footnote) } }
             }
         }
@@ -63,31 +63,32 @@ struct OverviewView: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// What's on the iPhone, or once a scan has found something, what could go. Part of the storage card, because it explains the bar.
+    /// What's on the iPhone, or once a scan has found something, what could go.
     @ViewBuilder private var contents: some View {
         if !found.isEmpty {
-            Divider().overlay(.white.opacity(0.14))
-            ForEach(found) { category in
-                NavigationLink {
-                    if category == .livePhotos { LivePhotosView() } else {
-                        PhotoReviewView(title: category.title, note: category.note, theme: .care, groups: library.results[category] ?? [], category: category)
+            GlassCard {
+                ForEach(found) { category in
+                    NavigationLink {
+                        if category == .livePhotos { LivePhotosView() } else {
+                            PhotoReviewView(title: category.title, note: category.note, theme: .care, groups: library.results[category] ?? [], category: category)
+                        }
+                    } label: {
+                        FeatureRow(icon: category.icon, title: category.title, value: formatted(library.saving(category)))
                     }
-                } label: {
-                    FeatureRow(icon: category.icon, title: category.title, value: formatted(library.saving(category)))
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
         } else if library.phase == .done {
-            Divider().overlay(.white.opacity(0.14))
-            Label("Nothing to clean", systemImage: "checkmark.seal.fill").font(.headline)
+            GlassCard { Label("Nothing to clean", systemImage: "checkmark.seal.fill").font(.headline) }
         } else if let counts = library.counts {
-            Divider().overlay(.white.opacity(0.14))
-            row("category-sparkles", "Photos", counts.photos, counts.photoBytes)
-            row("category-drive", "Videos", counts.videos, counts.videoBytes)
-            row("category-document", "Screenshots", counts.screenshots, counts.screenshotBytes)
-            row("category-branch", "Live Photos", counts.livePhotos, counts.livePhotoBytes)
-            if counts.photoBytes != nil || counts.videoBytes != nil {
-                Text("Full size, including iCloud.").font(.footnote).foregroundStyle(.white.opacity(0.65))
+            GlassCard {
+                row("category-sparkles", "Photos", counts.photos, counts.photoBytes)
+                row("category-drive", "Videos", counts.videos, counts.videoBytes)
+                row("category-document", "Screenshots", counts.screenshots, counts.screenshotBytes)
+                row("category-branch", "Live Photos", counts.livePhotos, counts.livePhotoBytes)
+                if counts.photoBytes != nil || counts.videoBytes != nil {
+                    Text("Full size, including iCloud.").font(.footnote).foregroundStyle(.white.opacity(0.65))
+                }
             }
         }
     }
