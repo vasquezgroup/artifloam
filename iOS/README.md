@@ -66,7 +66,7 @@ Measure with a Release build. Debug is far slower.
 
 `Artifloam/Shared` holds the photo scan, cache and media changes. It's also the `PhotoEngine` target in the root `Package.swift`, which the Mac's Photos section uses, so a change there affects both apps. Everything used by the Mac must be `public`.
 
-After reading an iPhone, the Mac writes `Documents/mac-app-list.json` into this app over the cable, and the Apps tab shows it. `UIFileSharingEnabled` allows that in App Store builds.
+The Apps tab can show every app from `Documents/mac-app-list.json`. The Mac is meant to write that file over the cable, but `IPhoneDeviceWatcher.send` doesn't work yet and nothing calls it, so the tab shows its usual content for now.
 
 ## Translations
 

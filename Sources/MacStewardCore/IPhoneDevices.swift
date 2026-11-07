@@ -292,6 +292,7 @@ public final class IPhoneDeviceWatcher: @unchecked Sendable {
         return (framework.copyValue(device, nil, "PasswordProtected" as CFString)?.takeRetainedValue() as? NSNumber)?.boolValue
     }
 
+    /// Not called yet: on a locked iPhone 12 the file step failed or hung, depending on the variant tried. Don't call it until it's been seen working.
     /// Hands the app list to Artifloam on this iPhone, which can't read it by itself. Blocks, so call it off the main thread.
     /// Only reaches that one app's Documents folder. Throws if the app isn't installed.
     public func send(_ list: IPhoneAppList, deviceID: String) throws {
