@@ -358,6 +358,7 @@ struct PhotoGrid: View {
                         }
                         ForEach(group.items) { item in
                             PhotoCell(item: item, state: selection.contains(item.id) ? .selected : .available, side: side, whole: columnCount == 1, showsSize: columnCount <= 4) {
+                                guard !Fingers.multiTouch else { return }
                                 if !selection.insert(item.id).inserted { selection.remove(item.id) }
                             } protect: { protect?(item) }
                             .equatable()
@@ -368,6 +369,7 @@ struct PhotoGrid: View {
                 }
             }
             .coordinateSpace(.named("photoGrid"))
+            .background(FingerWatcherInstaller())
             .onAppear { layout.use(groups) }
             .onChange(of: groups.count) { _, _ in layout.use(groups) }
             .onGeometryChange(for: CGFloat.self) { $0.frame(in: .global).minY } action: {
@@ -388,7 +390,10 @@ struct PhotoGrid: View {
         DragGesture(minimumDistance: 14, coordinateSpace: .named("photoGrid"))
             .onChanged { drag in
                 // A pinch is two fingers, and either one alone looks like a swipe. It must never select anything.
-                guard !zoom.active else { return }
+                guard !zoom.active, !Fingers.multiTouch else {
+                    cancelSwipe()
+                    return
+                }
                 if swipe == nil {
                     layout.use(groups)
                     guard abs(drag.translation.width) > abs(drag.translation.height), let anchor = layout.index(at: drag.startLocation) else { return }
@@ -437,15 +442,12 @@ struct PhotoGrid: View {
         MagnifyGesture(minimumScaleDelta: 0)
             .onChanged { value in
                 if !zoom.active {
-                    // A swipe may have started in the moment before the second finger landed. Undo what it selected.
-                    if let swipe { selection = swipe.base }
-                    swipe = nil
-                    locked = false
-                    edgeScroll?.cancel()
+                    let before = swipe?.base ?? selection
+                    cancelSwipe()
                     let point = value.startLocation
                     guard let hit = layout.frames.first(where: { $0.value.contains(point) }) ?? layout.frames.min(by: { distance($0.value, point) < distance($1.value, point) }) else { return }
                     let global = hit.value.offsetBy(dx: 0, dy: gridTop)
-                    zoom.begin(groups: groups, columns: columnCount, finger: CGPoint(x: point.x, y: point.y + gridTop), anchorID: hit.key, anchorFrame: global, width: zoom.viewport.width, selection: selection)
+                    zoom.begin(groups: groups, columns: columnCount, finger: CGPoint(x: point.x, y: point.y + gridTop), anchorID: hit.key, anchorFrame: global, width: zoom.viewport.width, selection: before)
                 }
                 var quiet = Transaction()
                 quiet.disablesAnimations = true
@@ -462,6 +464,14 @@ struct PhotoGrid: View {
                     withAnimation(.spring(response: 0.34, dampingFraction: 0.86)) { zoom.side = settled } completion: { takeOver(target, proxy) }
                 }
             }
+    }
+
+    /// A swipe may have started in the moment before the second finger landed. This undoes what it selected.
+    private func cancelSwipe() {
+        if let swipe { selection = swipe.base }
+        swipe = nil
+        locked = false
+        edgeScroll?.cancel()
     }
 
     private func distance(_ frame: CGRect, _ point: CGPoint) -> CGFloat {

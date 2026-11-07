@@ -222,4 +222,21 @@ final class ArtifloamLogicTests: XCTestCase {
         // A short list stays at the top.
         XCTAssertEqual(ZoomLevels.offset(wanted: -50, contentHeight: 300, top: 100, bottom: 800), 100)
     }
+
+    func testTwoFingersBlockSelectionUntilAllHaveLifted() {
+        var fingers = FingerCount()
+        fingers.began(1)
+        XCTAssertFalse(fingers.sawTwo)
+        fingers.began(1)
+        XCTAssertTrue(fingers.sawTwo)
+        // One finger left, still moving on the screen: that's the case that selected photos.
+        fingers.ended(1)
+        XCTAssertEqual(fingers.down, 1)
+        XCTAssertTrue(fingers.sawTwo)
+        fingers.ended(1)
+        XCTAssertEqual(fingers.down, 0)
+        // The next touch starts fresh.
+        fingers.began(1)
+        XCTAssertFalse(fingers.sawTwo)
+    }
 }

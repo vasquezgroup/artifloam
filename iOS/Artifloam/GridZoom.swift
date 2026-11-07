@@ -1,3 +1,4 @@
+import UIKit
 import Photos
 import SwiftUI
 
@@ -194,4 +195,72 @@ struct ZoomCanvas: View, Animatable {
             index += 1
         }
     }
+}
+
+/// Counts the fingers really on the screen. A pinch ends when one finger lifts, but the other can still be down, moving,
+/// and to everything else it then looks like a swipe or a tap. So once two fingers have touched, nothing selects until all have left.
+struct FingerCount: Equatable {
+    private(set) var down = 0
+    private(set) var sawTwo = false
+
+    mutating func began(_ count: Int) {
+        if down == 0 { sawTwo = false }
+        down += count
+        if down >= 2 { sawTwo = true }
+    }
+    mutating func ended(_ count: Int) { down = max(0, down - count) }
+}
+
+/// Watches every touch in the window without taking any away from the views underneath.
+private final class FingerWatcher: UIGestureRecognizer, UIGestureRecognizerDelegate {
+    @MainActor static var isMultiTouch = false
+    private var count = FingerCount()
+
+    override init(target: Any?, action: Selector?) {
+        super.init(target: target, action: action)
+        cancelsTouchesInView = false
+        delaysTouchesBegan = false
+        delaysTouchesEnded = false
+        delegate = self
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        count.began(touches.count)
+        // Set from the count on every touch, so it can never stay stuck and stop selecting for good.
+        Self.isMultiTouch = count.sawTwo
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) { lift(touches.count) }
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) { lift(touches.count) }
+    override func reset() { count = FingerCount() }
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool { true }
+
+    private func lift(_ number: Int) {
+        count.ended(number)
+        guard count.down == 0 else { return }
+        let hadTwo = count.sawTwo
+        state = .failed
+        // A button acts as the finger lifts, in this same moment, so this stays set just long enough to stop it.
+        if hadTwo { DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { Self.isMultiTouch = false } }
+    }
+}
+
+enum Fingers {
+    @MainActor static var multiTouch: Bool { FingerWatcher.isMultiTouch }
+}
+
+/// Puts the watcher on the window while a photo grid is on screen.
+struct FingerWatcherInstaller: UIViewRepresentable {
+    final class Host: UIView {
+        private let watcher = FingerWatcher()
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            watcher.view?.removeGestureRecognizer(watcher)
+            window?.addGestureRecognizer(watcher)
+        }
+    }
+    func makeUIView(context: Context) -> Host {
+        let host = Host()
+        host.isUserInteractionEnabled = false
+        return host
+    }
+    func updateUIView(_ view: Host, context: Context) {}
 }
