@@ -5,9 +5,9 @@ struct AppsStorageView: View {
     private static let common = ["WhatsApp", "Netflix", "YouTube", "Roblox", "TikTok", "Instagram", "Facebook", "Spotify", "Telegram", "Prime Video", "Messages", "Games and other apps"]
 
     var body: some View {
-        StagePage(theme: .system, title: "Apps", subtitle: "How to clean the apps that use the most.") {
+        StagePage(theme: .iphone, title: "Apps", subtitle: "Connect to your Mac to see and delete every app.", artwork: "iphone-connect") {
             GlassCard {
-                Label("See every app, by size", systemImage: "laptopcomputer.and.iphone").font(.headline)
+                Text("See every app, by size").font(.headline)
                 Text("iOS doesn't show other apps' sizes to an iPhone app. Connect this iPhone to Artifloam on your Mac to list every app, delete the ones you don't need, and see WhatsApp by person or group.").font(.subheadline)
             }
             GlassCard {
@@ -70,7 +70,7 @@ struct AdviceView: View {
     @State private var couldNotOpen = false
 
     var body: some View {
-        DetailPage(theme: .system, title: LocalizedStringKey(name)) {
+        DetailPage(theme: .iphone, title: LocalizedStringKey(name)) {
             GlassCard {
                 Text("What you can do").font(.headline)
                 ForEach(advice.steps.indices, id: \.self) { Text(advice.steps[$0]) }

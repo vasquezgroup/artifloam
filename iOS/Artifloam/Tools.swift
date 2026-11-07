@@ -1,7 +1,5 @@
 import BackgroundTasks
 import Charts
-import Contacts
-import LocalAuthentication
 import Photos
 import SwiftUI
 import UniformTypeIdentifiers
@@ -15,12 +13,13 @@ struct ToolsView: View {
     var body: some View {
         StagePage(theme: .space, title: "Tools", subtitle: "Everything else that frees up room.") {
             GlassCard {
+                row(StorageSummaryView(), "category-drive", "Storage summary", "What's on this iPhone, and what could go.")
                 row(SpaceHistoryView(), "category-sparkles", "Space history")
                 row(AlbumsView(), "category-stack", "Albums by size", "Includes albums apps create when saving media.")
                 row(CategoriesView(), "category-globe", "Library categories", "Food, pets, documents and more.")
                 row(LargeFilesView(), "category-document", "Large files", "Choose a folder from Files.")
-                row(ContactsView(), "category-branch", "Duplicate contacts")
-                row(DeviceCheckView(), "category-done", "Device check")
+                row(ContactsCleanupView(), "category-branch", "Merge contacts", "Same name and a shared number or email.")
+                row(HealthView(), "category-done", "Device health")
             }
             GlassCard {
                 Toggle("Remind me when space runs low", isOn: $reminder)
@@ -59,6 +58,13 @@ enum SpaceHistory {
         UserDefaults.standard.set(try? JSONEncoder().encode(updated), forKey: key)
     }
     /// One point a day, the latest reading winning, for about a year.
+    /// Days until free space runs out at the recent rate. Nil without a week of readings, or if space isn't shrinking.
+    static func daysUntilFull(_ points: [SpacePoint]) -> Int? {
+        guard let first = points.first, let last = points.last else { return nil }
+        let days = last.date.timeIntervalSince(first.date) / 86_400
+        guard days >= 7, last.free < first.free else { return nil }
+        return Int(Double(last.free) / (Double(first.free - last.free) / days))
+    }
     static func adding(_ point: SpacePoint, to points: [SpacePoint], calendar: Calendar = .current) -> [SpacePoint] {
         var result = points
         if let last = result.last, calendar.isDate(last.date, inSameDayAs: point.date) { result.removeLast() }
@@ -327,141 +333,5 @@ private struct LargeFilesView: View {
         } catch {
             failure = error.localizedDescription
         }
-    }
-}
-
-// MARK: - Duplicate contacts
-
-struct ContactKey {
-    let id: String
-    let name: String
-    let phones: Set<String>
-    let emails: Set<String>
-}
-
-/// Same full name plus a shared phone or email. A shared name alone isn't enough: two people can have one.
-func duplicateContactGroups(_ contacts: [ContactKey]) -> [[String]] {
-    Dictionary(grouping: contacts.filter { !$0.name.isEmpty }) { $0.name.lowercased() }.values.flatMap { sameName -> [[String]] in
-        var left = sameName
-        var groups: [[String]] = []
-        while let seed = left.popLast() {
-            var group = [seed]
-            var phones = seed.phones, emails = seed.emails
-            var grew = true
-            while grew {
-                grew = false
-                for (index, other) in left.enumerated().reversed() where !other.phones.isDisjoint(with: phones) || !other.emails.isDisjoint(with: emails) {
-                    group.append(left.remove(at: index))
-                    phones.formUnion(other.phones)
-                    emails.formUnion(other.emails)
-                    grew = true
-                }
-            }
-            if group.count > 1 { groups.append(group.map(\.id)) }
-        }
-        return groups
-    }
-}
-
-/// Keeps the last 9 digits, so +41 79 123 45 67 and 079 123 45 67 match.
-func normalizedPhone(_ phone: String) -> String { String(phone.filter(\.isNumber).suffix(9)) }
-
-private struct ContactsView: View {
-    struct Group: Identifiable {
-        let contacts: [CNContact]
-        var id: String { contacts[0].identifier }
-    }
-    @State private var groups: [Group]?
-    @State private var denied = false
-    @State private var pending: Group?
-    @State private var failure: String?
-    private let store = CNContactStore()
-    private var keys: [CNKeyDescriptor] {
-        [CNContactFormatter.descriptorForRequiredKeys(for: .fullName), CNContactPhoneNumbersKey as CNKeyDescriptor, CNContactEmailAddressesKey as CNKeyDescriptor, CNContactIdentifierKey as CNKeyDescriptor]
-    }
-
-    var body: some View {
-        DetailPage(theme: .space, title: "Duplicate contacts") {
-            Text("Contacts with the same name and a shared phone number or email. Merging keeps one card and adds any missing numbers and emails to it.").font(.subheadline)
-            if denied {
-                GlassCard { Text("Allow Contacts access in Settings to check for duplicates.") }
-            } else if let groups {
-                if groups.isEmpty { GlassCard { Label("No duplicates found.", systemImage: "checkmark.seal.fill") } }
-                ForEach(groups) { group in
-                    GlassCard {
-                        Text(CNContactFormatter.string(from: group.contacts[0], style: .fullName) ?? "").font(.headline)
-                        Text("\(group.contacts.count) cards").font(.footnote).foregroundStyle(.white.opacity(0.7))
-                        Button("Merge") { pending = group }.buttonStyle(.borderedProminent)
-                    }
-                }
-            } else {
-                ProgressView()
-            }
-        }
-        .task { await load() }
-        .confirmationDialog("Merge these cards?", isPresented: Binding(get: { pending != nil }, set: { if !$0 { pending = nil } }), titleVisibility: .visible, presenting: pending) { group in
-            Button("Merge \(group.contacts.count) cards", role: .destructive) { merge(group) }
-        } message: { _ in
-            Text("The extra cards are deleted. Artifloam can't undo this. Notes, addresses and birthdays on them aren't copied, so check them first in Contacts.")
-        }
-        .alert("Couldn't merge", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) { Button("OK", role: .cancel) {} } message: { Text(failure ?? "") }
-    }
-
-    private func load() async {
-        guard (try? await store.requestAccess(for: .contacts)) == true else { denied = true; return }
-        var all: [String: CNContact] = [:]
-        try? store.enumerateContacts(with: CNContactFetchRequest(keysToFetch: keys)) { contact, _ in all[contact.identifier] = contact }
-        let keyed = all.values.map { contact in
-            ContactKey(id: contact.identifier, name: CNContactFormatter.string(from: contact, style: .fullName) ?? "",
-                       phones: Set(contact.phoneNumbers.map { normalizedPhone($0.value.stringValue) }.filter { !$0.isEmpty }),
-                       emails: Set(contact.emailAddresses.map { ($0.value as String).lowercased() }))
-        }
-        groups = duplicateContactGroups(keyed).map { ids in Group(contacts: ids.compactMap { all[$0] }) }
-    }
-
-    private func merge(_ group: Group) {
-        guard let keep = group.contacts.max(by: { $0.phoneNumbers.count + $0.emailAddresses.count < $1.phoneNumbers.count + $1.emailAddresses.count })?.mutableCopy() as? CNMutableContact else { return }
-        let save = CNSaveRequest()
-        for other in group.contacts where other.identifier != keep.identifier {
-            for phone in other.phoneNumbers where !keep.phoneNumbers.contains(where: { normalizedPhone($0.value.stringValue) == normalizedPhone(phone.value.stringValue) }) { keep.phoneNumbers.append(phone) }
-            for email in other.emailAddresses where !keep.emailAddresses.contains(where: { ($0.value as String).lowercased() == (email.value as String).lowercased() }) { keep.emailAddresses.append(email) }
-            if let copy = other.mutableCopy() as? CNMutableContact { save.delete(copy) }
-        }
-        save.update(keep)
-        do {
-            try store.execute(save)
-            groups?.removeAll { $0.id == group.id }
-        } catch {
-            failure = error.localizedDescription
-        }
-    }
-}
-
-// MARK: - Device check
-
-private struct DeviceCheckView: View {
-    private let space = DiskSpace.current
-    private let passcode = LAContext().canEvaluatePolicy(.deviceOwnerAuthentication, error: nil)
-
-    var body: some View {
-        DetailPage(theme: .space, title: "Device check") {
-            GlassCard {
-                row("Storage", SpaceReminder.isLow(free: space.free, total: space.total) ? String(localized: "Low, \(formatted(space.free)) free") : String(localized: "OK, \(formatted(space.free)) free"), ok: !SpaceReminder.isLow(free: space.free, total: space.total))
-                row("Passcode", passcode ? String(localized: "Set") : String(localized: "Not set"), ok: passcode)
-                row("iOS version", UIDevice.current.systemVersion, ok: true)
-                row("Low Power Mode", ProcessInfo.processInfo.isLowPowerModeEnabled ? String(localized: "On") : String(localized: "Off"), ok: true)
-            }
-            Text("This shows only what iOS tells apps. To check for updates, open Settings, General, Software Update.").font(.footnote).foregroundStyle(.white.opacity(0.7))
-        }
-    }
-
-    private func row(_ title: LocalizedStringKey, _ value: String, ok: Bool) -> some View {
-        HStack {
-            Image(systemName: ok ? "checkmark.circle.fill" : "exclamationmark.triangle.fill").foregroundStyle(ok ? StewardTheme.cleanup.accent : StewardTheme.files.accent).accessibilityHidden(true)
-            Text(title)
-            Spacer()
-            Text(value).foregroundStyle(.white.opacity(0.8))
-        }
-        .accessibilityElement(children: .combine)
     }
 }

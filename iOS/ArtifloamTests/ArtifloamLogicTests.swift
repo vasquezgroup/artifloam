@@ -1,3 +1,4 @@
+import Contacts
 import XCTest
 @testable import Artifloam
 
@@ -51,6 +52,58 @@ final class ArtifloamLogicTests: XCTestCase {
         let same = SpaceHistory.adding(SpacePoint(date: day.addingTimeInterval(60), free: 2), to: one)
         XCTAssertEqual(same.map(\.free), [2])
         XCTAssertEqual(SpaceHistory.adding(SpacePoint(date: day.addingTimeInterval(200_000), free: 3), to: same).map(\.free), [2, 3])
+    }
+
+    private func contact(_ given: String, phones: [String] = [], emails: [String] = [], org: String = "") -> CNContact {
+        let c = CNMutableContact()
+        c.givenName = given
+        c.phoneNumbers = phones.map { CNLabeledValue(label: CNLabelPhoneNumberMobile, value: CNPhoneNumber(stringValue: $0)) }
+        c.emailAddresses = emails.map { CNLabeledValue(label: CNLabelHome, value: $0 as NSString) }
+        c.organizationName = org
+        return c
+    }
+
+    func testMergeKeepsEverythingWithoutRepeats() throws {
+        let full = contact("Ana", phones: ["+41 79 123 45 67", "044 111 22 33", "044 222 33 44"], emails: ["a@b.ch"])
+        let extra = contact("Ana", phones: ["079 123 45 67"], emails: ["A@B.CH", "work@b.ch"], org: "Acme")
+        let merged = try XCTUnwrap(ContactsCleanup.merged([extra, full]))
+        XCTAssertEqual(merged.identifier, full.identifier)
+        XCTAssertEqual(merged.phoneNumbers.count, 3)
+        XCTAssertEqual(merged.emailAddresses.map { $0.value as String }, ["a@b.ch", "work@b.ch"])
+        XCTAssertEqual(merged.organizationName, "Acme")
+    }
+
+    func testHealthScoreFallsOnlyForRealIssues() {
+        var reading = DeviceReading(free: 50, total: 100, purgeable: 0, passcode: true, biometrics: "Face ID", iosVersion: "27", model: "x", lowPower: true, heat: .nominal, battery: 0.9, charging: false, memory: 1, cores: 1, uptime: 90_000_000)
+        XCTAssertEqual(HealthReport(reading: reading).score, 100)
+        reading.free = 8
+        XCTAssertEqual(HealthReport(reading: reading).score, 90)
+        reading.free = 3
+        reading.passcode = false
+        XCTAssertEqual(HealthReport(reading: reading).score, 40)
+    }
+
+    func testDaysUntilFullNeedsAWeekAndShrinkingSpace() {
+        let start = Date(timeIntervalSince1970: 1_000_000)
+        func point(_ day: Double, _ free: Int64) -> SpacePoint { SpacePoint(date: start.addingTimeInterval(day * 86_400), free: free) }
+        XCTAssertEqual(SpaceHistory.daysUntilFull([point(0, 100), point(10, 90)]), 90)
+        XCTAssertNil(SpaceHistory.daysUntilFull([point(0, 100), point(3, 90)]))
+        XCTAssertNil(SpaceHistory.daysUntilFull([point(0, 90), point(10, 100)]))
+    }
+
+    func testSwipeSelectsTheRangeAndLeavesTheRestAlone() {
+        let ids = ["a", "b", "c", "d", "e"]
+        XCTAssertEqual(swipeSelection(base: ["e"], ids: ids, anchor: 1, current: 3, selecting: true), ["b", "c", "d", "e"])
+        XCTAssertEqual(swipeSelection(base: ["e"], ids: ids, anchor: 3, current: 1, selecting: true), ["b", "c", "d", "e"])
+        XCTAssertEqual(swipeSelection(base: ["a", "b", "c"], ids: ids, anchor: 1, current: 2, selecting: false), ["a"])
+    }
+
+    func testPinchMovesOneColumnAtATimeAndStaysInRange() {
+        XCTAssertEqual(columns(from: 3, pinch: 1.5), 2)
+        XCTAssertEqual(columns(from: 3, pinch: 0.6), 4)
+        XCTAssertEqual(columns(from: 3, pinch: 1.05), 3)
+        XCTAssertEqual(columns(from: 1, pinch: 3), 1)
+        XCTAssertEqual(columns(from: 7, pinch: 0.2), 7)
     }
 
     func testLowSpaceIsUnderTenPercent() {

@@ -44,6 +44,10 @@ Artifloam can never delete inside another app. It points people to the right scr
 - Nothing is deleted from one tap. Recommended opens a review with everything ticked, and the copy that stays is shown.
 - A real library had over 24,000 items, so scans can be stopped, and deleting takes items off the lists instead of rescanning.
 
+## What the main scan covers
+
+The Scan button runs photos and videos, the health check, and duplicate contacts only if Contacts access was already given. It never asks for access by itself. Library categories and albums stay in Tools because they don't free space by themselves, and large files stay there because iOS needs a folder chosen. Compressing starts from a choice.
+
 ## Rules to keep
 
 - **Same look as the Mac.** Each section has one `StewardTheme`: its gradient, its sculpture, glass cards, the orb for the main action. Colours in `Theme.swift` must match `Sources/MacSteward/VisualLanguage.swift`. Use `StagePage` for sections and `DetailPage` below them.
@@ -118,7 +122,9 @@ Anything not ticked hasn't been seen working.
 - [ ] Menu paths in `StorageAdvice`. Most come from secondary guides.
 - [ ] Whether `nflx://`, `whatsapp://` and the other URL schemes open their apps.
 - [ ] The low-space reminder. iOS decides when it runs.
-- [ ] Duplicate contacts merge on a real address book.
+- [x] Contact merge on test cards in the Simulator, with backup. Not yet on a real address book. Notes can't be copied without an Apple entitlement.
+- [ ] "On this iPhone vs only in iCloud" in Storage summary. It reads an undocumented value that the Simulator doesn't report.
+- [ ] Photo grid gestures on a real iPhone: swipe, pinch and hold worked in the Simulator. Swiping doesn't scroll by itself at the screen edge yet.
 
 ### Before release
 

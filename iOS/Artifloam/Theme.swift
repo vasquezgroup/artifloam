@@ -3,7 +3,7 @@ import SwiftUI
 
 /// The Mac app's section colours and artwork (Sources/MacSteward/VisualLanguage.swift), for the sections the iPhone has.
 enum StewardTheme: String {
-    case care, cleanup, files, system, space
+    case care, cleanup, files, system, space, iphone
 
     var accent: Color {
         switch self {
@@ -12,6 +12,7 @@ enum StewardTheme: String {
         case .files: Color(red: 1, green: 0.73, blue: 0.42)
         case .system: Color(red: 0.45, green: 0.78, blue: 1)
         case .space: Color(red: 1, green: 0.86, blue: 0.42)
+        case .iphone: Color(red: 0.68, green: 0.67, blue: 1)
         }
     }
     var vivid: Color {
@@ -21,6 +22,7 @@ enum StewardTheme: String {
         case .files: Color(red: 0.96, green: 0.52, blue: 0.10)
         case .system: Color(red: 0.16, green: 0.48, blue: 0.96)
         case .space: Color(red: 0.92, green: 0.70, blue: 0.06)
+        case .iphone: Color(red: 0.34, green: 0.27, blue: 0.96)
         }
     }
     var backdrop: (deep: Color, mid: Color, bright: Color) {
@@ -30,6 +32,7 @@ enum StewardTheme: String {
         case .files: (Color(red: 0.20, green: 0.06, blue: 0.03), Color(red: 0.58, green: 0.22, blue: 0.05), Color(red: 0.98, green: 0.64, blue: 0.20))
         case .system: (Color(red: 0.02, green: 0.08, blue: 0.22), Color(red: 0.07, green: 0.28, blue: 0.66), Color(red: 0.22, green: 0.70, blue: 0.96))
         case .space: (Color(red: 0.17, green: 0.12, blue: 0.02), Color(red: 0.54, green: 0.40, blue: 0.04), Color(red: 0.98, green: 0.86, blue: 0.30))
+        case .iphone: (Color(red: 0.05, green: 0.03, blue: 0.26), Color(red: 0.19, green: 0.14, blue: 0.70), Color(red: 0.50, green: 0.46, blue: 1))
         }
     }
     var sculpture: String { self == .space ? "space-map-sculpture" : "sculpture-motion-\(rawValue)" }
@@ -187,6 +190,8 @@ struct StagePage<Content: View>: View {
     let title: LocalizedStringKey
     let subtitle: LocalizedStringKey
     var moving = false
+    /// A picture of its own instead of the section's sculpture, for when the art itself has something to say.
+    var artwork: String? = nil
     @ViewBuilder let content: Content
 
     var body: some View {
@@ -194,7 +199,11 @@ struct StagePage<Content: View>: View {
             AtmosphereView(theme: theme)
             ScrollView {
                 VStack(spacing: 18) {
-                    Sculpture(theme: theme, moving: moving).frame(width: 170, height: 170).padding(.top, 8)
+                    if let artwork {
+                        Artwork.image(artwork).resizable().scaledToFit().frame(width: 240, height: 240).shadow(color: theme.vivid.opacity(0.45), radius: 26, y: 10).padding(.top, 8).accessibilityHidden(true)
+                    } else {
+                        Sculpture(theme: theme, moving: moving).frame(width: 170, height: 170).padding(.top, 8)
+                    }
                     VStack(spacing: 4) {
                         Text(title).font(.largeTitle.weight(.light)).accessibilityAddTraits(.isHeader)
                         Text(subtitle).font(.subheadline).foregroundStyle(.white.opacity(0.75)).multilineTextAlignment(.center)

@@ -1,3 +1,4 @@
+import AVKit
 import Photos
 import SwiftUI
 
@@ -81,19 +82,10 @@ struct PhotoReviewView: View {
             NavigationLink { SwipeReviewView(items: items, theme: theme) } label: {
                 Label("Swipe through them", systemImage: "hand.draw").fontWeight(.medium)
             }
-            ForEach(liveGroups) { group in
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 104), spacing: 3)], spacing: 3) {
-                    if let keep = group.keep { PhotoCell(item: keep, state: .keeps) }
-                    ForEach(group.items) { item in
-                        PhotoCell(item: item, state: selection.contains(item.id) ? .selected : .available) {
-                            if !selection.insert(item.id).inserted { selection.remove(item.id) }
-                        } protect: {
-                            library.protect(item)
-                            dropped.insert(item.id)
-                            selection.remove(item.id)
-                        }
-                    }
-                }
+            PhotoGrid(groups: liveGroups, selection: $selection) { item in
+                library.protect(item)
+                dropped.insert(item.id)
+                selection.remove(item.id)
             }
         }
         .onAppear { if preselected && !didPreselect { selection = Set(items.map(\.id)); didPreselect = true } }
@@ -126,9 +118,13 @@ struct PhotoCell: View {
     enum CellState { case available, selected, keeps, picture }
     let item: PhotoItem
     let state: CellState
+    var side: CGFloat = 320
     var toggle: () -> Void = {}
     var protect: (() -> Void)? = nil
     @State private var image: UIImage?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private var selected: Bool { state == .selected }
 
     var body: some View {
         Button(action: toggle) {
@@ -136,33 +132,188 @@ struct PhotoCell: View {
                 .aspectRatio(1, contentMode: .fit)
                 .overlay { if let image { Image(uiImage: image).resizable().scaledToFill() } }
                 .clipShape(.rect(cornerRadius: 8))
+                .overlay { if selected { RoundedRectangle(cornerRadius: 8).fill(.black.opacity(0.22)).overlay { RoundedRectangle(cornerRadius: 8).stroke(.white, lineWidth: 2) } } }
+                .scaleEffect(selected && !reduceMotion ? 0.93 : 1)
                 .overlay(alignment: .bottomLeading) {
-                    if state != .picture { Text(state == .keeps ? String(localized: "Stays") : formatted(item.saving)).font(.caption2.bold()).foregroundStyle(.white).padding(4)
+                    if state != .picture && side >= 200 { Text(state == .keeps ? String(localized: "Stays") : formatted(item.saving)).font(.caption2.bold()).foregroundStyle(.white).padding(4)
                         .background(state == .keeps ? AnyShapeStyle(StewardTheme.cleanup.vivid) : AnyShapeStyle(.black.opacity(0.6)), in: .rect(cornerRadius: 4)).padding(4) }
                 }
                 .overlay(alignment: .topTrailing) {
                     if state == .available || state == .selected {
-                        Image(systemName: state == .selected ? "checkmark.circle.fill" : "circle").font(.title3).foregroundStyle(state == .selected ? Color.accentColor : .white).shadow(radius: 2).padding(4)
+                        Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+                            .contentTransition(.symbolEffect(.replace))
+                            .symbolEffect(.bounce, value: selected)
+                            .font(.title3).foregroundStyle(selected ? StewardTheme.care.vivid : .white).background { if selected { Circle().fill(.white).padding(3) } }
+                            .shadow(radius: 2).padding(4)
                     }
                 }
+                .animation(reduceMotion ? nil : .spring(response: 0.28, dampingFraction: 0.58), value: selected)
         }
         .buttonStyle(.plain)
         .allowsHitTesting(state == .available || state == .selected)
+        .sensoryFeedback(.selection, trigger: selected)
         .accessibilityLabel(label)
-        .accessibilityAddTraits(state == .selected ? .isSelected : [])
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityHint("Hold to see it larger")
         .contextMenu {
             Text(item.asset.creationDate?.formatted(date: .long, time: .shortened) ?? "")
+            Text(formatted(item.saving))
             if let protect { Button("Never suggest this", systemImage: "lock", action: protect) }
         } preview: {
-            if let image { Image(uiImage: image).resizable().scaledToFit().frame(width: 320) }
+            PhotoPreview(asset: item.asset, placeholder: image)
         }
-        .task(id: item.id) { image = await Thumbnails.load(item.asset, side: 320) }
+        .task(id: "\(item.id)-\(Int(side))") { image = await Thumbnails.load(item.asset, side: side) }
     }
 
     private var label: Text {
         let kind = item.asset.mediaType == .video ? String(localized: "Video") : String(localized: "Photo")
         let date = item.asset.creationDate?.formatted(date: .abbreviated, time: .omitted) ?? ""
         return state == .keeps ? Text("\(kind), \(date), stays") : Text("\(kind), \(formatted(item.saving)), \(date)")
+    }
+}
+
+/// Shown while holding a photo: the whole picture, large, or the video playing without sound.
+private struct PhotoPreview: View {
+    let asset: PHAsset
+    let placeholder: UIImage?
+    @State private var image: UIImage?
+    @State private var player: AVPlayer?
+
+    private var ratio: CGFloat { asset.pixelHeight > 0 ? CGFloat(asset.pixelWidth) / CGFloat(asset.pixelHeight) : 1 }
+    /// Exactly the picture's shape, so there are no empty bars around it.
+    private var previewSize: CGSize {
+        let maxWidth: CGFloat = 370, maxHeight: CGFloat = 600
+        return ratio >= maxWidth / maxHeight ? CGSize(width: maxWidth, height: maxWidth / ratio) : CGSize(width: maxHeight * ratio, height: maxHeight)
+    }
+
+    var body: some View {
+        ZStack {
+            Color.black
+            if let picture = image ?? placeholder { Image(uiImage: picture).resizable().scaledToFit() }
+            if let player { VideoPlayer(player: player).disabled(true) }
+        }
+        .frame(width: previewSize.width, height: previewSize.height)
+        .task {
+            image = await Thumbnails.load(asset, side: 1200)
+            guard asset.mediaType == .video else { return }
+            let options = PHVideoRequestOptions()
+            options.isNetworkAccessAllowed = true
+            options.deliveryMode = .fastFormat
+            let playerItem: AVPlayerItem? = await withCheckedContinuation { continuation in
+                PHImageManager.default().requestPlayerItem(forVideo: asset, options: options) { result, _ in continuation.resume(returning: result) }
+            }
+            guard let playerItem else { return }
+            let video = AVPlayer(playerItem: playerItem)
+            video.isMuted = true
+            video.play()
+            player = video
+        }
+        .onDisappear { player?.pause() }
+    }
+}
+
+/// What a swipe leaves selected: the range it crossed is set, everything outside stays as it was before the swipe.
+func swipeSelection(base: Set<String>, ids: [String], anchor: Int, current: Int, selecting: Bool) -> Set<String> {
+    let low: Int = Swift.min(anchor, current), high: Int = Swift.max(anchor, current)
+    let range = Set(ids[low...high])
+    return selecting ? base.union(range) : base.subtracting(range)
+}
+
+/// Pinching out makes pictures bigger, so fewer columns. One step per gesture stage, so it never jumps.
+func columns(from current: Int, pinch: CGFloat) -> Int {
+    if pinch > 1.25 { return max(current - 1, PhotoGrid.columnRange.lowerBound) }
+    if pinch < 0.8 { return min(current + 1, PhotoGrid.columnRange.upperBound) }
+    return current
+}
+
+private struct CellFrames: PreferenceKey {
+    static let defaultValue: [String: CGRect] = [:]
+    static func reduce(value: inout [String: CGRect], nextValue: () -> [String: CGRect]) { value.merge(nextValue()) { $1 } }
+}
+
+private struct CellFrameReader: View {
+    let id: String
+    var body: some View {
+        GeometryReader { geometry in
+            let frame: CGRect = geometry.frame(in: .named("photoGrid"))
+            Color.clear.preference(key: CellFrames.self, value: [id: frame])
+        }
+    }
+}
+
+/// Selection that behaves like Photos: tap to select, swipe across to select many, pinch to change size, hold to see it large.
+struct PhotoGrid: View {
+    static let columnRange = 1...7
+    let groups: [CleanupGroup]
+    @Binding var selection: Set<String>
+    var protect: ((PhotoItem) -> Void)? = nil
+    @AppStorage("photoColumns") private var columnCount = 3
+    @State private var frames: [String: CGRect] = [:]
+    @State private var pinchBase: CGFloat = 1
+    @State private var swipe: (anchor: Int, selecting: Bool, base: Set<String>)?
+    @State private var locked = false
+    @State private var width: CGFloat = 390
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private var ids: [String] { groups.flatMap(\.items).map(\.id) }
+    private var side: CGFloat {
+        let pixels: CGFloat = width / CGFloat(columnCount) * UIScreen.main.scale
+        return Swift.max(CGFloat(160), Swift.min(CGFloat(1200), pixels))
+    }
+
+    var body: some View {
+        VStack(spacing: 12) {
+            ForEach(groups) { group in
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 3), count: columnCount), spacing: 3) {
+                    if let keep = group.keep { PhotoCell(item: keep, state: .keeps, side: side) }
+                    ForEach(group.items) { item in
+                        PhotoCell(item: item, state: selection.contains(item.id) ? .selected : .available, side: side) {
+                            if !selection.insert(item.id).inserted { selection.remove(item.id) }
+                        } protect: { protect?(item) }
+                        .background(CellFrameReader(id: item.id))
+                    }
+                }
+            }
+        }
+        .coordinateSpace(.named("photoGrid"))
+        .background { GeometryReader { geometry in Color.clear.onAppear { width = geometry.size.width }.onChange(of: geometry.size.width) { _, new in width = new } } }
+        .onPreferenceChange(CellFrames.self) { frames = $0 }
+        .simultaneousGesture(swipeGesture)
+        .simultaneousGesture(pinchGesture)
+        .scrollDisabled(locked)
+        .accessibilityAction(named: "Bigger pictures") { columnCount = max(columnCount - 1, Self.columnRange.lowerBound) }
+        .accessibilityAction(named: "Smaller pictures") { columnCount = min(columnCount + 1, Self.columnRange.upperBound) }
+    }
+
+    /// A swipe that starts sideways selects. One that starts up or down is left to scroll, as in Photos.
+    private var swipeGesture: some Gesture {
+        DragGesture(minimumDistance: 14, coordinateSpace: .named("photoGrid"))
+            .onChanged { drag in
+                if swipe == nil {
+                    guard abs(drag.translation.width) > abs(drag.translation.height), let anchor = index(at: drag.startLocation) else { return }
+                    swipe = (anchor, !selection.contains(ids[anchor]), selection)
+                    locked = true
+                }
+                guard let swipe, let current = index(at: drag.location) else { return }
+                selection = swipeSelection(base: swipe.base, ids: ids, anchor: swipe.anchor, current: current, selecting: swipe.selecting)
+            }
+            .onEnded { _ in swipe = nil; locked = false }
+    }
+
+    private var pinchGesture: some Gesture {
+        MagnifyGesture()
+            .onChanged { value in
+                let next = columns(from: columnCount, pinch: value.magnification / pinchBase)
+                guard next != columnCount else { return }
+                pinchBase = value.magnification
+                if reduceMotion { columnCount = next } else { withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) { columnCount = next } }
+            }
+            .onEnded { _ in pinchBase = 1 }
+    }
+
+    private func index(at point: CGPoint) -> Int? {
+        guard let hit = frames.first(where: { $0.value.contains(point) })?.key else { return nil }
+        return ids.firstIndex(of: hit)
     }
 }
 
@@ -340,13 +491,7 @@ struct LivePhotosView: View {
     var body: some View {
         DetailPage(theme: .cleanup, title: "Live Photos") {
             Text("Keeps the photo with its date and place, and removes the short video. Sizes show what you'd save.").font(.subheadline)
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 104), spacing: 3)], spacing: 3) {
-                ForEach(items) { item in
-                    PhotoCell(item: item, state: selection.contains(item.id) ? .selected : .available) {
-                        if !selection.insert(item.id).inserted { selection.remove(item.id) }
-                    }
-                }
-            }
+            PhotoGrid(groups: items.isEmpty ? [] : [CleanupGroup(items: items)], selection: $selection)
             if let result { GlassCard { Text(result) } }
         }
         .toolbar { Button(selection.count == items.count ? "Select None" : "Select All") { selection = selection.count == items.count ? [] : Set(items.map(\.id)) } }

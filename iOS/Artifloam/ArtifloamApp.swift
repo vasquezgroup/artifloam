@@ -101,6 +101,7 @@ struct OverviewView: View {
             ScanOrb(theme: .care)
 if library.phase == .done { GlassCard { Label(library.everything > 0 ? "Nothing is safe to remove without a look. Check Photos and Videos for the rest." : "Nothing to clean right now.", systemImage: "checkmark.seal.fill") } }
         }
+        if library.phase == .done || library.phase == .stopped { ScanResults() }
         if let notice = library.notice {
             GlassCard { Label(notice, systemImage: "info.circle") }
         }
@@ -111,12 +112,44 @@ if library.phase == .done { GlassCard { Label(library.everything > 0 ? "Nothing 
     }
 }
 
+/// Everything the main scan found, in one place, each leading to its own review.
+private struct ScanResults: View {
+    @Environment(Library.self) private var library
+    private var health: HealthReport { HealthReport(reading: .current()) }
+    var body: some View {
+        GlassCard {
+            Text("What the scan found").font(.headline)
+            ForEach(PhotoCategory.allCases.filter { !library.items($0).isEmpty }) { category in
+                NavigationLink {
+                    if category == .livePhotos { LivePhotosView() } else {
+                        PhotoReviewView(title: category.title, note: category.note, theme: .care, groups: library.results[category] ?? [], category: category)
+                    }
+                } label: {
+                    FeatureRow(icon: category.icon, title: category.title, detail: Text("^[\(library.items(category).count) item](inflect: true)"), value: formatted(library.saving(category)))
+                }.buttonStyle(.plain)
+            }
+            NavigationLink { ContactsCleanupView() } label: {
+                FeatureRow(icon: "category-branch", title: "Duplicate contacts", detail: library.duplicateContactGroups.map { $0 == 0 ? Text("None found") : Text("^[\($0) group](inflect: true) to merge") } ?? Text("Tap to check. Needs Contacts access."))
+            }.buttonStyle(.plain)
+            NavigationLink { HealthView() } label: {
+                FeatureRow(icon: "category-done", title: "Device health", detail: Text("Score \(health.score) of 100"))
+            }.buttonStyle(.plain)
+            NavigationLink { StorageSummaryView() } label: {
+                FeatureRow(icon: "category-drive", title: "Storage summary", detail: Text("What's on this iPhone, and what could go."))
+            }.buttonStyle(.plain)
+        }
+    }
+}
+
 struct DiskSpace {
     var total: Int64
     var free: Int64
+    /// What iOS could clear by itself, such as caches of apps not in use.
+    var purgeable: Int64 = 0
     static var current: DiskSpace {
-        let values = try? URL.homeDirectory.resourceValues(forKeys: [.volumeTotalCapacityKey, .volumeAvailableCapacityForImportantUsageKey])
-        return DiskSpace(total: Int64(values?.volumeTotalCapacity ?? 0), free: values?.volumeAvailableCapacityForImportantUsage ?? 0)
+        let values = try? URL.homeDirectory.resourceValues(forKeys: [.volumeTotalCapacityKey, .volumeAvailableCapacityForImportantUsageKey, .volumeAvailableCapacityForOpportunisticUsageKey])
+        let important = values?.volumeAvailableCapacityForImportantUsage ?? 0, opportunistic = values?.volumeAvailableCapacityForOpportunisticUsage ?? 0
+        return DiskSpace(total: Int64(values?.volumeTotalCapacity ?? 0), free: important, purgeable: max(important - opportunistic, 0))
     }
 }
 

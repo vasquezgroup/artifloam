@@ -65,6 +65,13 @@ final class Library {
     var results: [PhotoCategory: [CleanupGroup]] = [:]
     var photoBytes: Int64 = 0
     var videoBytes: Int64 = 0
+    /// What's really on this iPhone rather than only in iCloud. Nil if iOS doesn't say.
+    var localPhotoBytes: Int64?
+    var localVideoBytes: Int64?
+    var bytesByYear: [Int: Int64] = [:]
+    var biggest: [PhotoItem] = []
+    /// Filled by the scan only if Contacts access was already given. The scan never asks for it.
+    var duplicateContactGroups: Int?
     var notice: LocalizedStringKey?
     var failure: String?
 
@@ -125,6 +132,7 @@ final class Library {
         results[.similar] = found.similar
         results[.blurred] = found.blurred.isEmpty ? [] : [CleanupGroup(items: found.blurred)]
         removeDeleted()
+        duplicateContactGroups = await Task.detached(priority: .utility) { ContactsCleanup.groupCountIfAllowed() }.value
         phase = stop.value ? .stopped : .done
     }
 
@@ -134,6 +142,10 @@ final class Library {
         results = first.results
         photoBytes = first.photoBytes
         videoBytes = first.videoBytes
+        localPhotoBytes = first.localPhotoBytes
+        localVideoBytes = first.localVideoBytes
+        bytesByYear = first.bytesByYear
+        biggest = first.biggest
         removeDeleted()
     }
 
@@ -180,7 +192,16 @@ final class StopFlag: @unchecked Sendable {
 }
 
 enum LibraryScan {
-    struct First { var results: [PhotoCategory: [CleanupGroup]]; var photoBytes: Int64; var videoBytes: Int64; var photos: [PhotoItem] }
+    struct First {
+        var results: [PhotoCategory: [CleanupGroup]]
+        var photoBytes: Int64
+        var videoBytes: Int64
+        var photos: [PhotoItem]
+        var localPhotoBytes: Int64?
+        var localVideoBytes: Int64?
+        var bytesByYear: [Int: Int64]
+        var biggest: [PhotoItem]
+    }
     private struct Identity: Hashable { let width, height: Int; let bytes: Int64; let name: String }
     /// ponytail: newest photos only keeps a scan to a couple of minutes. Raise it, or analyse in the background, if people ask.
     private static let analysisLimit = 5000
@@ -188,11 +209,20 @@ enum LibraryScan {
     /// ponytail: "fileSize" is undocumented, and the only way to get sizes without reading every file. Replace if App Review objects.
     static func size(of resource: PHAssetResource) -> Int64 { (resource.value(forKey: "fileSize") as? NSNumber)?.int64Value ?? 0 }
 
+    /// Undocumented, like "fileSize", so it's checked before asking. Nil means unknown, never a guess.
+    static func isOnThisIPhone(_ resource: PHAssetResource) -> Bool? {
+        guard resource.responds(to: NSSelectorFromString("locallyAvailable")) else { return nil }
+        return (resource.value(forKey: "locallyAvailable") as? NSNumber)?.boolValue
+    }
+
     nonisolated static func read(excluding protected: Set<String>, stop: StopFlag, progress: @escaping @Sendable (Int, Int) -> Void) -> First {
         var out: [PhotoCategory: [PhotoItem]] = [:]
         var copies: [(item: PhotoItem, identity: Identity)] = []
         var photos: [PhotoItem] = []
         var photoBytes: Int64 = 0, videoBytes: Int64 = 0
+        var localPhotos: Int64 = 0, localVideos: Int64 = 0, localKnown = true
+        var years: [Int: Int64] = [:]
+        var biggest: [PhotoItem] = []
         let options = PHFetchOptions()
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         let all = PHAsset.fetchAssets(with: options)
@@ -203,9 +233,19 @@ enum LibraryScan {
             let resources = PHAssetResource.assetResources(for: asset)
             let bytes = resources.reduce(Int64(0)) { $0 + size(of: $1) }
             if asset.mediaType == .video { videoBytes += bytes } else { photoBytes += bytes }
+            for resource in resources {
+                guard let local = isOnThisIPhone(resource) else { localKnown = false; continue }
+                if local { if asset.mediaType == .video { localVideos += size(of: resource) } else { localPhotos += size(of: resource) } }
+            }
+            if let date = asset.creationDate { years[Calendar.current.component(.year, from: date), default: 0] += bytes }
             // Favourites and protected items are counted but never suggested.
             guard !asset.isFavorite, !protected.contains(asset.localIdentifier) else { return }
             let item = PhotoItem(asset: asset, bytes: bytes)
+            if biggest.count < 12 || bytes > (biggest.last?.bytes ?? 0) {
+                biggest.append(item)
+                biggest.sort { $0.bytes > $1.bytes }
+                if biggest.count > 12 { biggest.removeLast() }
+            }
             if asset.mediaType == .video {
                 if bytes >= 100_000_000 {
                     out[.largeVideos, default: []].append(item)
@@ -231,7 +271,7 @@ enum LibraryScan {
             guard sorted.count > 1 else { return nil }
             return CleanupGroup(keep: sorted[0], items: Array(sorted.dropFirst()))
         }.sorted { $0.items.count > $1.items.count }
-        return First(results: results, photoBytes: photoBytes, videoBytes: videoBytes, photos: photos)
+        return First(results: results, photoBytes: photoBytes, videoBytes: videoBytes, photos: photos, localPhotoBytes: localKnown ? localPhotos : nil, localVideoBytes: localKnown ? localVideos : nil, bytesByYear: years, biggest: biggest)
     }
 
     nonisolated static func analyse(_ photos: [PhotoItem], stop: StopFlag, progress: @escaping @Sendable (Int) -> Void) -> (similar: [CleanupGroup], blurred: [PhotoItem]) {
