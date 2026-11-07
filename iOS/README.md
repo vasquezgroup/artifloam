@@ -66,7 +66,7 @@ Measure with a Release build. Debug is far slower.
 
 `Artifloam/Shared` holds the photo scan, cache and media changes. It's also the `PhotoEngine` target in the root `Package.swift`, which the Mac's Photos section uses, so a change there affects both apps. Everything used by the Mac must be `public`.
 
-The Apps tab can show every app from `Documents/mac-app-list.json`. The Mac is meant to write that file over the cable, but `IPhoneDeviceWatcher.send` doesn't work yet and nothing calls it, so the tab shows its usual content for now.
+The Apps tab shows every app if `Documents/mac-app-list.json` exists, in the format of `IPhoneAppList` on the Mac. Nothing writes that file yet. Writing it over the cable through MobileDevice's house arrest service failed on a real iPhone 12, locked and unlocked: the new service gave AFC error 11, and the older one hung at opening the file. A different route is needed.
 
 ## Translations
 
