@@ -50,6 +50,7 @@ enum PhotoCategory: CaseIterable, Identifiable {
         case .similar: "Shots taken moments apart that look alike. The sharpest one stays."
         case .blurred: "Photos that look out of focus. Calm scenes like a clear sky can appear here, so check them."
         case .livePhotos: "Turning a Live Photo into a still removes its short video."
+        case .largeVideos, .oldVideos: "Largest first. Videos in iCloud may free less on this iPhone."
         default: "Largest first."
         }
     }

@@ -270,6 +270,12 @@ func swipeSelection(base: Set<String>, ids: [String], anchor: Int, current: Int,
     return selecting ? base.union(range) : base.subtracting(range)
 }
 
+/// Which way to scroll while a swipe holds near the top or bottom of the screen: -1 up, 1 down, 0 not at all.
+/// The bottom zone is taller because the footer and tab bar cover that part.
+func edgeDirection(y: CGFloat, height: CGFloat) -> Int {
+    y < 130 ? -1 : y > height - 210 ? 1 : 0
+}
+
 /// Keeps a picture the same size on screen while the grid swaps to the column count closest to it,
 /// so a pinch feels continuous. Returns the columns to show and the scale still left to apply.
 func zoomStep(columns: Int, scale: CGFloat) -> (columns: Int, scale: CGFloat) {
@@ -308,6 +314,10 @@ struct PhotoGrid: View {
     @State private var anchorID: String?
     @State private var swipe: (anchor: Int, selecting: Bool, base: Set<String>)?
     @State private var locked = false
+    @State private var swipeCurrent = 0
+    @State private var fingerY: CGFloat = 0
+    @State private var gridTop: CGFloat = 0
+    @State private var edgeScroll: Task<Void, Never>?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var ids: [String] { groups.flatMap(\.items).map(\.id) }
@@ -333,7 +343,8 @@ struct PhotoGrid: View {
             .coordinateSpace(.named("photoGrid"))
             .onPreferenceChange(CellFrames.self) { frames = $0 }
             .scaleEffect(liveScale, anchor: zoomAnchor)
-            .simultaneousGesture(swipeGesture)
+            .onGeometryChange(for: CGFloat.self) { $0.frame(in: .global).minY } action: { gridTop = $0 }
+            .simultaneousGesture(swipeGesture(proxy))
             .simultaneousGesture(pinchGesture(proxy))
             .scrollDisabled(locked)
             .accessibilityAction(named: "Bigger pictures") { columnCount = Swift.max(columnCount - 1, Self.columnRange.lowerBound) }
@@ -342,18 +353,48 @@ struct PhotoGrid: View {
     }
 
     /// A swipe that starts sideways selects. One that starts up or down is left to scroll, as in Photos.
-    private var swipeGesture: some Gesture {
+    private func swipeGesture(_ proxy: ScrollViewProxy) -> some Gesture {
         DragGesture(minimumDistance: 14, coordinateSpace: .named("photoGrid"))
             .onChanged { drag in
                 if swipe == nil {
                     guard abs(drag.translation.width) > abs(drag.translation.height), let anchor = index(at: drag.startLocation) else { return }
                     swipe = (anchor, !selection.contains(ids[anchor]), selection)
+                    swipeCurrent = anchor
                     locked = true
+                    startEdgeScroll(proxy)
                 }
+                fingerY = gridTop + drag.location.y
                 guard let swipe, let current = index(at: drag.location) else { return }
+                swipeCurrent = current
                 selection = swipeSelection(base: swipe.base, ids: ids, anchor: swipe.anchor, current: current, selecting: swipe.selecting)
             }
-            .onEnded { _ in swipe = nil; locked = false }
+            .onEnded { _ in
+                swipe = nil
+                locked = false
+                edgeScroll?.cancel()
+            }
+    }
+
+    /// While a swipe holds at the screen's edge, moves a row at a time and keeps selecting, because the finger has nowhere further to go.
+    private func startEdgeScroll(_ proxy: ScrollViewProxy) {
+        edgeScroll?.cancel()
+        edgeScroll = Task { @MainActor in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .milliseconds(140))
+                guard let swipe, !Task.isCancelled else { return }
+                let direction = edgeDirection(y: fingerY, height: UIScreen.main.bounds.height)
+                let all = ids
+                let next = Swift.min(Swift.max(swipeCurrent + direction * columnCount, 0), all.count - 1)
+                guard direction != 0, next != swipeCurrent else { continue }
+                swipeCurrent = next
+                selection = swipeSelection(base: swipe.base, ids: all, anchor: swipe.anchor, current: next, selecting: swipe.selecting)
+                if reduceMotion {
+                    proxy.scrollTo(all[next], anchor: direction > 0 ? .bottom : .top)
+                } else {
+                    withAnimation(.linear(duration: 0.14)) { proxy.scrollTo(all[next], anchor: direction > 0 ? .bottom : .top) }
+                }
+            }
+        }
     }
 
     /// The pictures follow the fingers exactly. When they get close to another column count the grid changes

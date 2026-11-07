@@ -166,4 +166,10 @@ final class ArtifloamLogicTests: XCTestCase {
         XCTAssertNil(reopened.facts(id: "x", modified: date.addingTimeInterval(1)))
         XCTAssertNil(reopened.facts(id: "y", modified: date))
     }
+
+    func testEdgeDirectionOnlyScrollsAtTheEdges() {
+        XCTAssertEqual(edgeDirection(y: 50, height: 800), -1)
+        XCTAssertEqual(edgeDirection(y: 400, height: 800), 0)
+        XCTAssertEqual(edgeDirection(y: 700, height: 800), 1)
+    }
 }

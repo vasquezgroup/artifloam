@@ -62,6 +62,10 @@ Measured on an iPhone 12 with 24,254 items, Release build. A first scan reads ev
 
 Measure with a Release build. Debug is far slower.
 
+## Translations
+
+The app has the Mac app's 25 languages, in `Localizable.xcstrings`, `InfoPlist.xcstrings` and the widget's `Localizable.xcstrings`. New text needs adding to the catalogs. Text with `^[…](inflect: true)` needs plain plural forms in every language except English. They're machine translated, so have a native speaker check them before release.
+
 ## Rules to keep
 
 - **Same look as the Mac.** Each section has one `StewardTheme`: its gradient, its sculpture, glass cards, the orb for the main action. Colours in `Theme.swift` must match `Sources/MacSteward/VisualLanguage.swift`. Use `StagePage` for sections and `DetailPage` below them.
@@ -112,10 +116,6 @@ The Mac app's iPhone section is in `Sources/MacSteward/IPhoneView.swift`, `Sourc
 - [ ] A Developer ID signed build. Loading the framework works with an ad-hoc hardened runtime signature.
 - [ ] Decide whether the backup list should show every device's backups by name when the chosen phone has none.
 
-### Mac: known failing test
-
-`LocalizationTests.testEveryLanguageHasEveryStringWithMatchingPlaceholders` fails on purpose until 58 new strings are translated into 24 languages. All other Mac tests pass.
-
 ## Seen working
 
 In the Simulator, on test media: scan on opening, Clean with iOS's confirmation (cancel and delete), compression (148.8 MB to 9 MB, and cancelling keeps both), similar and blurred detection, per-section look. Vision read a generated storage screen. Everything else is only unit-tested or untested, as listed below.
@@ -137,11 +137,10 @@ Anything not ticked hasn't been seen working.
 - [ ] The low-space reminder. iOS decides when it runs.
 - [x] Contact merge on test cards in the Simulator, with backup. Not yet on a real address book. Notes can't be copied without an Apple entitlement.
 - [ ] "On this iPhone vs only in iCloud" in Storage summary. It reads an undocumented value that the Simulator doesn't report.
-- [ ] Photo grid gestures on a real iPhone: swipe, pinch and hold worked in the Simulator. Swiping doesn't scroll by itself at the screen edge yet.
+- [ ] Photo grid gestures on a real iPhone: swipe, pinch, hold and scrolling at the screen edge worked in the Simulator.
 
 ### Before release
 
-- [ ] Translations. Only English exists, and the Mac app has 25 languages. Add a string catalog here.
 - [ ] Apple team, signing and App Store record.
 - [ ] App Review risk: `LibraryScan.size(of:)` reads an undocumented `fileSize` key. Find a public alternative if it's rejected.
 - [ ] Privacy policy, including the Photos and Contacts access.

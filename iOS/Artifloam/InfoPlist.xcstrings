@@ -1,0 +1,316 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSContactsUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يعثر Artifloam على جهات الاتصال المكررة لتختار أيها تدمج. تبقى جهات اتصالك على الـ iPhone."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam troba contactes duplicats perquè triïs quins combinar. Els teus contactes es queden a l’iPhone."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam findet doppelte Kontakte, damit du wählen kannst, welche du zusammenführst. Deine Kontakte bleiben auf deinem iPhone."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam finds duplicate contacts so you can choose which to merge. Your contacts stay on your iPhone."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam finds duplicate contacts so you can choose which to merge. Your contacts stay on your iPhone."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam finds duplicate contacts so you can choose which to merge. Your contacts stay on your iPhone."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam finds duplicate contacts so you can choose which to merge. Your contacts stay on your iPhone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam encuentra contactos duplicados para que elijas cuáles fusionar. Tus contactos se quedan en tu iPhone."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam encuentra contactos duplicados para que elijas cuáles fusionar. Tus contactos se quedan en tu iPhone."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam repère les contacts en double pour que vous choisissiez lesquels fusionner. Vos contacts restent sur votre iPhone."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam findet doppleti Kontakt, damit du chasch wähle, welli du zämefüehrsch. Dini Kontakt blibed uf dim iPhone."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam डुप्लिकेट संपर्क खोजता है ताकि आप चुन सकें कि कौन से मर्ज करने हैं। आपके संपर्क आपके iPhone पर ही रहते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pronalazi duplicirane kontakte da možeš odabrati koje spojiti. Tvoji kontakti ostaju na iPhoneu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam trova i contatti duplicati così puoi scegliere quali unire. I tuoi contatti restano sul tuo iPhone."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloamは重複した連絡先を見つけ、統合するものを選べるようにします。連絡先はiPhoneに残ります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam이 중복된 연락처를 찾아 병합할 항목을 선택할 수 있게 합니다. 연락처는 iPhone에 그대로 남습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam atrod dublētus kontaktus, lai varētu izvēlēties, kurus apvienot. Tavi kontakti paliek tavā iPhone."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam znajduje zduplikowane kontakty, aby można było wybrać, które scalić. Twoje kontakty zostają na iPhonie."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Artifloam encontra contactos duplicados para que escolha quais unir. Os seus contactos ficam no iPhone."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam gjen kontakte të dyfishuara që të zgjedhësh cilat do të bashkosh. Kontaktet e tua mbeten në iPhone tënd."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam проналази дуплиране контакте да бисте могли да изаберете које да спојите. Ваши контакти остају на iPhone-у."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pronalazi duplirane kontakte da biste mogli da izaberete koje da spojite. Vaši kontakti ostaju na iPhone-u."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam hittar dubbletter av kontakter så att du kan välja vilka som ska slås ihop. Dina kontakter stannar på din iPhone."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam, hangilerini birleştireceğinizi seçebilmeniz için kopya kişileri bulur. Kişileriniz iPhone’unuzda kalır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam 会查找重复的联系人，让你选择要合并哪些。你的联系人会保留在 iPhone 上。"
+          }
+        }
+      }
+    },
+    "NSPhotoLibraryUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يعثر Artifloam على مقاطع الفيديو الكبيرة ولقطات الشاشة والنسخ المكررة لتختار ما تحذفه. تبقى صورك على الـ iPhone."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam troba vídeos grans, captures de pantalla i duplicats perquè triïs què esborrar. Les teves fotos es queden a l’iPhone."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam findet große Videos, Screenshots und Duplikate, damit du wählen kannst, was du löschst. Deine Fotos bleiben auf deinem iPhone."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam finds large videos, screenshots and duplicates so you can choose what to delete. Your photos stay on your iPhone."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam finds large videos, screenshots and duplicates so you can choose what to delete. Your photos stay on your iPhone."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam finds large videos, screenshots and duplicates so you can choose what to delete. Your photos stay on your iPhone."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam finds large videos, screenshots and duplicates so you can choose what to delete. Your photos stay on your iPhone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam encuentra vídeos grandes, capturas de pantalla y duplicados para que elijas qué borrar. Tus fotos se quedan en tu iPhone."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam encuentra videos grandes, capturas de pantalla y duplicados para que elijas qué borrar. Tus fotos se quedan en tu iPhone."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam repère les vidéos volumineuses, les captures d’écran et les doublons pour que vous choisissiez quoi supprimer. Vos photos restent sur votre iPhone."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam findet grossi Videos, Screenshots und Duplikat, damit du chasch wähle, was du lösche wotsch. Dini Foti blibed uf dim iPhone."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam बड़े वीडियो, स्क्रीनशॉट और डुप्लिकेट खोजता है ताकि आप चुन सकें कि क्या डिलीट करना है। आपकी फ़ोटो आपके iPhone पर ही रहती हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pronalazi velike videozapise, snimke zaslona i duplikate da možeš odabrati što izbrisati. Tvoje fotografije ostaju na iPhoneu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam trova video grandi, screenshot e duplicati così puoi scegliere cosa eliminare. Le tue foto restano sul tuo iPhone."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloamは大きなビデオ、スクリーンショット、重複を見つけ、削除するものを選べるようにします。写真はiPhoneに残ります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam이 용량이 큰 비디오, 스크린샷, 중복 항목을 찾아 삭제할 항목을 선택할 수 있게 합니다. 사진은 iPhone에 그대로 남습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam atrod lielus video, ekrānuzņēmumus un dublikātus, lai varētu izvēlēties, ko dzēst. Tavi foto paliek tavā iPhone."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam znajduje duże filmy, zrzuty ekranu i duplikaty, aby można było wybrać, co usunąć. Twoje zdjęcia zostają na iPhonie."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Artifloam encontra vídeos grandes, capturas de ecrã e duplicados para que escolha o que eliminar. As suas fotos ficam no iPhone."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam gjen video të mëdha, pamje ekrani dhe dublikata që të zgjedhësh çfarë të fshish. Fotot e tua mbeten në iPhone tënd."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam проналази велике видео снимке, снимке екрана и дупликате да бисте могли да изаберете шта да обришете. Ваше фотографије остају на iPhone-у."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pronalazi velike video snimke, snimke ekrana i duplikate da biste mogli da izaberete šta da obrišete. Vaše fotografije ostaju na iPhone-u."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam hittar stora videor, skärmbilder och dubbletter så att du kan välja vad som ska raderas. Dina foton stannar på din iPhone."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam, neyi sileceğinizi seçebilmeniz için büyük videoları, ekran görüntülerini ve kopyaları bulur. Fotoğraflarınız iPhone’unuzda kalır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam 会查找大视频、截屏和重复项，让你选择要删除什么。你的照片会保留在 iPhone 上。"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

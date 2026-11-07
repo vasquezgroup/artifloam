@@ -122,6 +122,7 @@
 			buildConfigurationList = A10000000000000000000057;
 			buildPhases = (
 				A10000000000000000000058 /* Sources */,
+				A100000000000000000000A9 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -155,6 +156,30 @@
 			knownRegions = (
 				en,
 				Base,
+				"en-AU",
+				"en-CA",
+				"en-GB",
+				"sr-Cyrl",
+				ar,
+				ca,
+				de,
+				es,
+				"es-419",
+				fr,
+				gsw,
+				hi,
+				hr,
+				it,
+				ja,
+				ko,
+				lv,
+				pl,
+				pt,
+				sq,
+				"sr-Latn",
+				sv,
+				tr,
+				"zh-Hans",
 			);
 			mainGroup = A10000000000000000000006;
 			minimizedProjectReferenceProxies = 1;
@@ -172,6 +197,13 @@
 
 /* Begin PBXResourcesBuildPhase section */
 		A10000000000000000000012 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A100000000000000000000A9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
