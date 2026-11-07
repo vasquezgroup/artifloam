@@ -18,10 +18,9 @@ The project uses synchronized folders, so new files in `Artifloam/`, `ArtifloamT
 
 An iPhone app can't read another app's data or sizes, or clear its cache. Don't add a feature that claims otherwise, and don't use private APIs here: App Review guidelines 2.5.1 and 2.5.2 rule them out.
 
-So other apps' sizes come from two places:
+So other apps' sizes come from one place:
 
 - **Artifloam on the Mac** (`Sources/MacStewardCore`, iPhone section): reads every app's size over the cable, and WhatsApp per chat from a local backup. This uses a private Apple framework, so it stays out of any App Store build.
-- **The screenshot reader** (`AppsStorage.swift`): an optional fallback that reads iPhone Storage or WhatsApp's Manage storage screenshots on the device.
 
 Artifloam can never delete inside another app. It points people to the right screen.
 
@@ -34,8 +33,7 @@ Artifloam can never delete inside another app. It points people to the right scr
 | `Library.swift` | Photo scan, similar and blurred analysis, deleting, protected items |
 | `MediaChanges.swift` | Video compression, Live Photo to still |
 | `PhotosCleanup.swift` | Photos and Videos sections, review grid, swipe mode, compress and Live Photo screens |
-| `AppsStorage.swift` | Apps section, screenshot reading, per-app advice |
-| `StorageScreenshot.swift` | Pure parsing of screenshot text |
+| `AppsStorage.swift` | Apps section, per-app advice |
 | `Tools.swift` | History, reminder, albums, categories, large files, contacts, device check |
 | `Art/` | Copies from `Sources/MacSteward/Resources`. Replace them when the Mac artwork changes |
 | `../ArtifloamWidget/` | Free space widget |
@@ -49,7 +47,7 @@ Artifloam can never delete inside another app. It points people to the right scr
 ## Rules to keep
 
 - **Same look as the Mac.** Each section has one `StewardTheme`: its gradient, its sculpture, glass cards, the orb for the main action. Colours in `Theme.swift` must match `Sources/MacSteward/VisualLanguage.swift`. Use `StagePage` for sections and `DetailPage` below them.
-- **Automatic first.** The scan starts when the app opens. Only ask people to act when iOS requires it.
+- **Automatic or not at all.** The owner rejected a screenshot reader because people had to take screenshots. Don't add features that make people do the work.
 - **Nothing is removed without a choice.** All photo deletes go through `Library.delete`, which shows iOS's confirmation. Items go to Recently Deleted.
 - **Originals are safe until the copy exists.** `MediaChanges` creates the new file first, checks it, and only then asks to delete the original.
 - **Favourites and protected items are never suggested.**
@@ -115,7 +113,6 @@ Anything not ticked hasn't been seen working.
 - [ ] Scan speed on a large library. Analysis covers the newest 5,000 photos.
 - [ ] Live Photo conversion. No Live Photo exists in the Simulator, so it has never run.
 - [ ] Compression on real iPhone video, including HDR and iCloud-only videos. Slow-motion may lose its effect, because the code doesn't handle it specially.
-- [ ] iPhone Storage and WhatsApp screenshots. Parsing has only seen generated images.
 - [ ] Menu paths in `StorageAdvice`. Most come from secondary guides.
 - [ ] Whether `nflx://`, `whatsapp://` and the other URL schemes open their apps.
 - [ ] The low-space reminder. iOS decides when it runs.
