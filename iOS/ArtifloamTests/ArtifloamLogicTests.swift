@@ -98,18 +98,6 @@ final class ArtifloamLogicTests: XCTestCase {
         XCTAssertEqual(swipeSelection(base: ["a", "b", "c"], ids: ids, anchor: 1, current: 2, selecting: false), ["a"])
     }
 
-    func testZoomKeepsThePictureTheSameSizeWhenColumnsChange() {
-        // Three columns scaled to 1.4 looks like about two columns.
-        let bigger = zoomStep(columns: 3, scale: 1.4)
-        XCTAssertEqual(bigger.columns, 2)
-        XCTAssertEqual(bigger.scale, 1.4 / 3 * 2, accuracy: 0.001)
-        XCTAssertEqual(zoomStep(columns: 3, scale: 1).columns, 3)
-        XCTAssertEqual(zoomStep(columns: 3, scale: 0.6).columns, 5)
-        // Stops at the ends instead of growing without limit.
-        XCTAssertEqual(zoomStep(columns: 1, scale: 3).columns, 1)
-        XCTAssertEqual(zoomStep(columns: 1, scale: 3).scale, 1.3, accuracy: 0.001)
-        XCTAssertEqual(zoomStep(columns: 7, scale: 0.2).columns, 7)
-    }
 
     func testLowSpaceIsUnderTenPercent() {
         XCTAssertTrue(SpaceReminder.isLow(free: 9, total: 100))
@@ -195,5 +183,43 @@ final class ArtifloamLogicTests: XCTestCase {
     func testRoomCheckNeedsTwiceTheSize() {
         XCTAssertTrue(MediaChanges.hasRoom(for: 100, free: 200))
         XCTAssertFalse(MediaChanges.hasRoom(for: 100, free: 199))
+    }
+
+
+    func testZoomLevelsCrossFadeBetweenNeighbours() {
+        let width: CGFloat = 400
+        let three = ZoomLevels.side(columns: 3, width: width), two = ZoomLevels.side(columns: 2, width: width)
+        XCTAssertEqual(ZoomLevels.between(side: three, width: width).from, 5)
+        XCTAssertEqual(ZoomLevels.between(side: three, width: width).to, 3)
+        XCTAssertEqual(ZoomLevels.between(side: three, width: width).progress, 1, accuracy: 0.001)
+        let middle = ZoomLevels.between(side: (three + two) / 2, width: width)
+        XCTAssertEqual(middle.from, 3)
+        XCTAssertEqual(middle.to, 2)
+        XCTAssertEqual(ZoomLevels.nearest(side: three * 1.05, width: width), 3)
+        XCTAssertLessThan(ZoomLevels.resisted(side: width * 2, width: width), width * 2)
+        XCTAssertGreaterThan(ZoomLevels.resisted(side: width * 2, width: width), width)
+    }
+
+    func testZoomRectsMatchTheRealGridSpacing() {
+        let rects = ZoomLevels.rects(groups: [4, 1], ratios: [1, 1, 1, 1, 1], columns: 3, width: 304)
+        XCTAssertEqual(rects[0], CGRect(x: 0, y: 0, width: 100, height: 100))
+        XCTAssertEqual(rects[2], CGRect(x: 204, y: 0, width: 100, height: 100))
+        XCTAssertEqual(rects[3], CGRect(x: 0, y: 102, width: 100, height: 100))
+        // The next group starts after both rows.
+        XCTAssertEqual(rects[4].minY, 204)
+        let whole = ZoomLevels.rects(groups: [2], ratios: [2, 1], columns: 1, width: 100)
+        XCTAssertEqual(whole[0].height, 50)
+        XCTAssertEqual(whole[1].minY, 52)
+    }
+
+    func testZoomStopsAtTheEndsOfTheList() {
+        // Free to move in the middle of a long list.
+        XCTAssertEqual(ZoomLevels.offset(wanted: -500, contentHeight: 5000, top: 100, bottom: 800), -500)
+        // Not past the top, which would leave a gap above it.
+        XCTAssertEqual(ZoomLevels.offset(wanted: 300, contentHeight: 5000, top: 100, bottom: 800), 100)
+        // Not past the bottom either.
+        XCTAssertEqual(ZoomLevels.offset(wanted: -9000, contentHeight: 5000, top: 100, bottom: 800), -4200)
+        // A short list stays at the top.
+        XCTAssertEqual(ZoomLevels.offset(wanted: -50, contentHeight: 300, top: 100, bottom: 800), 100)
     }
 }

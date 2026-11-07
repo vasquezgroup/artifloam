@@ -136,13 +136,22 @@ struct PhotoPage<Header: View, Grid: View>: View {
     @ViewBuilder let grid: Grid
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var zoom = GridZoom()
 
-    private var fullScreen: Bool { columns <= 2 }
+    /// While pinching this follows the fingers, so the bars come and go during the gesture rather than after it.
+    private var fullScreen: Bool { zoom.active ? darkness > 0.5 : columns <= 2 }
+    /// How far the background has gone dark while pinching towards large pictures.
+    private var darkness: Double {
+        guard zoom.active, zoom.width > 0 else { return fullScreen ? 1 : 0 }
+        let (from, to, progress) = ZoomLevels.between(side: zoom.side, width: zoom.width)
+        if to > 2 { return 0 }
+        return from <= 2 ? 1 : Double(progress)
+    }
 
     var body: some View {
         ZStack(alignment: .topLeading) {
             AtmosphereView(theme: theme)
-            if fullScreen { Color.black.ignoresSafeArea().transition(.opacity) }
+            Color.black.ignoresSafeArea().opacity(darkness)
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     if !fullScreen { header.padding(.horizontal, 16).transition(.opacity) }
@@ -151,6 +160,10 @@ struct PhotoPage<Header: View, Grid: View>: View {
                 }
             }
             .ignoresSafeArea(.container, edges: fullScreen ? [.top, .horizontal] : .horizontal)
+            .opacity(zoom.active ? 0 : 1)
+            .scrollDisabled(zoom.active)
+            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { zoom.viewport = $0 }
+            if zoom.active { ZoomCanvas(zoom: zoom, side: zoom.side).ignoresSafeArea() }
             if fullScreen {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.backward").font(.body.weight(.semibold)).foregroundStyle(.white).frame(width: 40, height: 40).background(.ultraThinMaterial, in: .circle)
@@ -158,6 +171,7 @@ struct PhotoPage<Header: View, Grid: View>: View {
                 .accessibilityLabel("Back").padding(.leading, 14).padding(.top, 6).transition(.opacity)
             }
         }
+        .environment(zoom)
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.28), value: fullScreen)
         .navigationTitle(fullScreen ? "" : title)
         .navigationBarTitleDisplayMode(.inline)
@@ -193,7 +207,11 @@ struct PhotoCell: View, Equatable {
         Button(action: toggle) {
             Color.white.opacity(0.08)
                 .aspectRatio(whole && item.asset.pixelHeight > 0 ? CGFloat(item.asset.pixelWidth) / CGFloat(item.asset.pixelHeight) : 1, contentMode: .fit)
-                .overlay { if let picture = image ?? Thumbnails.cached(item.id) { Image(uiImage: picture).resizable().scaledToFill() } }
+                .overlay {
+                    // Pictures fade in as they arrive, instead of popping.
+                    if let picture = image ?? Thumbnails.cached(item.id) { Image(uiImage: picture).resizable().scaledToFill().transition(.opacity) }
+                }
+                .animation(reduceMotion ? nil : .easeOut(duration: 0.18), value: image == nil)
                 .clipped()
                 .overlay { if selected { Rectangle().fill(.black.opacity(0.22)).overlay { Rectangle().stroke(.white, lineWidth: 2) } } }
                 // Smaller inset on large pictures, or it would leave wide borders.
@@ -292,15 +310,6 @@ func edgeDirection(y: CGFloat, height: CGFloat) -> Int {
     y < 130 ? -1 : y > height - 210 ? 1 : 0
 }
 
-/// Keeps a picture the same size on screen while the grid swaps to the column count closest to it,
-/// so a pinch feels continuous. Returns the columns to show and the scale still left to apply.
-func zoomStep(columns: Int, scale: CGFloat) -> (columns: Int, scale: CGFloat) {
-    let share = scale / CGFloat(columns)
-    let ideal = Int((1 / share).rounded())
-    let next = Swift.min(Swift.max(ideal, PhotoGrid.columnRange.lowerBound), PhotoGrid.columnRange.upperBound)
-    return (next, Swift.min(Swift.max(share * CGFloat(next), 0.78), 1.3))
-}
-
 /// Where cells are, for finding what's under a finger. Not SwiftUI state: updating state from every cell redid the whole grid constantly.
 private final class GridLayout {
     var frames: [String: CGRect] = [:]
@@ -320,16 +329,12 @@ private final class GridLayout {
 
 /// Selection that behaves like Photos: tap to select, swipe across to select many, pinch to resize smoothly, hold to see it large.
 struct PhotoGrid: View {
-    static let columnRange = 1...7
     let groups: [CleanupGroup]
     @Binding var selection: Set<String>
     @Binding var columnCount: Int
     var protect: ((PhotoItem) -> Void)? = nil
     @State private var layout = GridLayout()
-    @State private var liveScale: CGFloat = 1
-    @State private var lastMagnification: CGFloat = 1
-    @State private var zoomAnchor = UnitPoint.center
-    @State private var anchorID: String?
+    @Environment(GridZoom.self) private var zoom
     @State private var swipe: (anchor: Int, selecting: Bool, base: Set<String>)?
     @State private var locked = false
     @State private var swipeCurrent = 0
@@ -347,7 +352,10 @@ struct PhotoGrid: View {
             LazyVStack(spacing: 2) {
                 ForEach(groups) { group in
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 2), count: columnCount), spacing: 2) {
-                        if let keep = group.keep { PhotoCell(item: keep, state: .keeps, side: side, whole: columnCount == 1).equatable().id(keep.id) }
+                        if let keep = group.keep {
+                            PhotoCell(item: keep, state: .keeps, side: side, whole: columnCount == 1).equatable().id(keep.id)
+                                .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("photoGrid")) } action: { layout.frames[keep.id] = $0 }
+                        }
                         ForEach(group.items) { item in
                             PhotoCell(item: item, state: selection.contains(item.id) ? .selected : .available, side: side, whole: columnCount == 1, showsSize: columnCount <= 4) {
                                 if !selection.insert(item.id).inserted { selection.remove(item.id) }
@@ -362,13 +370,16 @@ struct PhotoGrid: View {
             .coordinateSpace(.named("photoGrid"))
             .onAppear { layout.use(groups) }
             .onChange(of: groups.count) { _, _ in layout.use(groups) }
-            .scaleEffect(liveScale, anchor: zoomAnchor)
-            .onGeometryChange(for: CGFloat.self) { $0.frame(in: .global).minY } action: { gridTop = $0 }
+            .onGeometryChange(for: CGFloat.self) { $0.frame(in: .global).minY } action: {
+                gridTop = $0
+                // The page opens scrolled to the top, so the first reading is where the grid rests.
+                if zoom.restTop == nil, columnCount > 2 { zoom.restTop = $0 }
+            }
             .simultaneousGesture(swipeGesture(proxy))
             .simultaneousGesture(pinchGesture(proxy))
             .scrollDisabled(locked)
-            .accessibilityAction(named: "Bigger pictures") { columnCount = Swift.max(columnCount - 1, Self.columnRange.lowerBound) }
-            .accessibilityAction(named: "Smaller pictures") { columnCount = Swift.min(columnCount + 1, Self.columnRange.upperBound) }
+            .accessibilityAction(named: "Bigger pictures") { columnCount = ZoomLevels.columns.last { $0 < columnCount } ?? columnCount }
+            .accessibilityAction(named: "Smaller pictures") { columnCount = ZoomLevels.columns.first { $0 > columnCount } ?? columnCount }
         }
     }
 
@@ -376,6 +387,8 @@ struct PhotoGrid: View {
     private func swipeGesture(_ proxy: ScrollViewProxy) -> some Gesture {
         DragGesture(minimumDistance: 14, coordinateSpace: .named("photoGrid"))
             .onChanged { drag in
+                // A pinch is two fingers, and either one alone looks like a swipe. It must never select anything.
+                guard !zoom.active else { return }
                 if swipe == nil {
                     layout.use(groups)
                     guard abs(drag.translation.width) > abs(drag.translation.height), let anchor = layout.index(at: drag.startLocation) else { return }
@@ -418,32 +431,66 @@ struct PhotoGrid: View {
         }
     }
 
-    /// The pictures follow the fingers exactly. When they get close to another column count the grid changes
-    /// underneath at the same visual size, with no animation, so nothing jumps. Letting go settles it.
+    /// The pictures follow the fingers exactly, on a drawing over the grid. Letting go settles it on the nearest size,
+    /// and the real grid takes over underneath at the same place, so nothing jumps.
     private func pinchGesture(_ proxy: ScrollViewProxy) -> some Gesture {
         MagnifyGesture(minimumScaleDelta: 0)
             .onChanged { value in
-                if lastMagnification == 1 && liveScale == 1 {
-                    zoomAnchor = value.startAnchor
-                    anchorID = layout.frames.first { $0.value.contains(value.startLocation) }?.key
+                if !zoom.active {
+                    // A swipe may have started in the moment before the second finger landed. Undo what it selected.
+                    if let swipe { selection = swipe.base }
+                    swipe = nil
+                    locked = false
+                    edgeScroll?.cancel()
+                    let point = value.startLocation
+                    guard let hit = layout.frames.first(where: { $0.value.contains(point) }) ?? layout.frames.min(by: { distance($0.value, point) < distance($1.value, point) }) else { return }
+                    let global = hit.value.offsetBy(dx: 0, dy: gridTop)
+                    zoom.begin(groups: groups, columns: columnCount, finger: CGPoint(x: point.x, y: point.y + gridTop), anchorID: hit.key, anchorFrame: global, width: zoom.viewport.width, selection: selection)
                 }
-                let total = liveScale * value.magnification / lastMagnification
-                lastMagnification = value.magnification
-                let step = zoomStep(columns: columnCount, scale: total)
                 var quiet = Transaction()
                 quiet.disablesAnimations = true
-                withTransaction(quiet) {
-                    if step.columns != columnCount {
-                        columnCount = step.columns
-                        if let anchorID { proxy.scrollTo(anchorID, anchor: zoomAnchor) }
-                    }
-                    liveScale = step.scale
-                }
+                withTransaction(quiet) { zoom.side = ZoomLevels.resisted(side: zoom.startSide * value.magnification, width: zoom.width) }
             }
             .onEnded { _ in
-                lastMagnification = 1
-                if reduceMotion { liveScale = 1 } else { withAnimation(.spring(response: 0.34, dampingFraction: 0.86)) { liveScale = 1 } }
+                guard zoom.active else { return }
+                let target = ZoomLevels.nearest(side: zoom.side, width: zoom.width)
+                let settled = target == 1 ? zoom.width : ZoomLevels.side(columns: target, width: zoom.width)
+                if reduceMotion {
+                    zoom.side = settled
+                    takeOver(target, proxy)
+                } else {
+                    withAnimation(.spring(response: 0.34, dampingFraction: 0.86)) { zoom.side = settled } completion: { takeOver(target, proxy) }
+                }
             }
+    }
+
+    private func distance(_ frame: CGRect, _ point: CGPoint) -> CGFloat {
+        hypot(frame.midX - point.x, frame.midY - point.y)
+    }
+
+    /// Puts the real grid exactly under the drawing, then removes the drawing.
+    private func takeOver(_ columns: Int, _ proxy: ScrollViewProxy) {
+        guard let anchor = zoom.anchorID else { selection = zoom.selection; zoom.end(); return }
+        let place = zoom.settledTop(columns)
+        var quiet = Transaction()
+        quiet.disablesAnimations = true
+        withTransaction(quiet) { columnCount = columns }
+        Task { @MainActor in
+            // Once for the new columns, and again for the page's bars, which come and go with large pictures.
+            try? await Task.sleep(for: .milliseconds(30))
+            @MainActor func align() {
+                let room = zoom.viewport.height - place.height
+                let share = room != 0 ? (place.top - zoom.viewport.minY) / room : 0
+                withTransaction(quiet) { proxy.scrollTo(anchor, anchor: UnitPoint(x: 0.5, y: share)) }
+            }
+            align()
+            try? await Task.sleep(for: .milliseconds(60))
+            align()
+            try? await Task.sleep(for: .milliseconds(30))
+            // Lifting a finger can count as a tap on the picture under it. A pinch never changes what's selected.
+            selection = zoom.selection
+            withTransaction(quiet) { zoom.end() }
+        }
     }
 }
 
