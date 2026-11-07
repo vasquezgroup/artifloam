@@ -172,4 +172,15 @@ final class ArtifloamLogicTests: XCTestCase {
         XCTAssertEqual(edgeDirection(y: 400, height: 800), 0)
         XCTAssertEqual(edgeDirection(y: 700, height: 800), 1)
     }
+
+    func testLibrarySizesLandInTheRightRows() {
+        var counts = LibraryCounts()
+        counts.add(ScanFacts(modified: nil, bytes: 10, local: nil, pairedVideo: 3, name: nil), video: false, screenshot: false)
+        counts.add(ScanFacts(modified: nil, bytes: 20, local: nil, pairedVideo: 0, name: nil), video: true, screenshot: false)
+        counts.add(ScanFacts(modified: nil, bytes: 5, local: nil, pairedVideo: 0, name: nil), video: false, screenshot: true)
+        XCTAssertEqual(counts.photoBytes, 10)
+        XCTAssertEqual(counts.videoBytes, 20)
+        XCTAssertEqual(counts.screenshotBytes, 5)
+        XCTAssertEqual(counts.livePhotoBytes, 3)
+    }
 }

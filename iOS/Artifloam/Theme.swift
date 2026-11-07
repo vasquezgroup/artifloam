@@ -288,6 +288,7 @@ struct FeatureRow: View {
     let title: LocalizedStringKey
     var detail: Text? = nil
     var value: String? = nil
+    var chevron = true
 
     var body: some View {
         HStack(spacing: 12) {
@@ -298,7 +299,7 @@ struct FeatureRow: View {
             }
             Spacer(minLength: 8)
             if let value { Text(value).font(.subheadline.monospacedDigit()).foregroundStyle(.white.opacity(0.85)) }
-            Image(systemName: "chevron.forward").font(.footnote.weight(.semibold)).foregroundStyle(.white.opacity(0.4))
+            if chevron { Image(systemName: "chevron.forward").font(.footnote.weight(.semibold)).foregroundStyle(.white.opacity(0.4)) }
         }
         .contentShape(Rectangle())
     }

@@ -56,9 +56,13 @@ enum PhotoCategory: CaseIterable, Identifiable {
     }
 }
 
-/// What's in the library, from Photos' own index. Instant, so no scan is needed.
-struct LibraryCounts {
-    var photos, videos, screenshots, livePhotos: Int
+/// What's in the library. Counts come from Photos' own index and are instant. Sizes only come from what an earlier scan remembered.
+struct LibraryCounts: Equatable {
+    var photos = 0, videos = 0, screenshots = 0, livePhotos = 0
+    var photoBytes: Int64?, videoBytes: Int64?, screenshotBytes: Int64?, livePhotoBytes: Int64?
+
+    /// Up to this many new items are measured on the spot. At about 3 ms each, it stays unnoticeable.
+    static let newItemsToMeasure = 200
 
     nonisolated static func read() -> LibraryCounts {
         func count(_ subtype: PHAssetMediaSubtype) -> Int {
@@ -68,6 +72,36 @@ struct LibraryCounts {
         }
         let screenshots = count(.photoScreenshot)
         return LibraryCounts(photos: PHAsset.fetchAssets(with: .image, options: nil).count - screenshots, videos: PHAsset.fetchAssets(with: .video, options: nil).count, screenshots: screenshots, livePhotos: count(.photoLive))
+    }
+
+    mutating func add(_ facts: ScanFacts, video: Bool, screenshot: Bool) {
+        if video { videoBytes = (videoBytes ?? 0) + facts.bytes }
+        else if screenshot { screenshotBytes = (screenshotBytes ?? 0) + facts.bytes }
+        else { photoBytes = (photoBytes ?? 0) + facts.bytes }
+        // What removing them frees is the video part, which is also why this doesn't double count with photos above.
+        if facts.pairedVideo > 0 { livePhotoBytes = (livePhotoBytes ?? 0) + facts.pairedVideo }
+    }
+
+    /// Adds sizes if an earlier scan knows nearly everything. Otherwise leaves them empty rather than understating them.
+    nonisolated func withSizes(from cache: ScanCache) -> LibraryCounts {
+        guard !cache.isEmpty else { return self }
+        var result = self
+        var unknown = 0
+        let all = PHAsset.fetchAssets(with: nil)
+        all.enumerateObjects { asset, _, stop in
+            autoreleasepool {
+                var facts = cache.facts(for: asset)
+                if facts == nil {
+                    unknown += 1
+                    if unknown > Self.newItemsToMeasure { stop.pointee = true; return }
+                    facts = LibraryScan.facts(of: asset)
+                    cache.store(facts!, for: asset)
+                }
+                result.add(facts!, video: asset.mediaType == .video, screenshot: asset.mediaSubtypes.contains(.photoScreenshot))
+            }
+        }
+        cache.save()
+        return unknown > Self.newItemsToMeasure ? self : result
     }
 }
 
@@ -167,7 +201,10 @@ final class Library {
     func loadCounts() async {
         status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         guard status == .authorized || status == .limited else { return }
-        counts = await Task.detached(priority: .userInitiated) { LibraryCounts.read() }.value
+        let quick = await Task.detached(priority: .userInitiated) { LibraryCounts.read() }.value
+        counts = quick
+        guard !working else { return }
+        counts = await Task.detached(priority: .userInitiated) { quick.withSizes(from: ScanCache()) }.value
     }
 
     private func apply(_ first: LibraryScan.First) {
@@ -245,6 +282,8 @@ final class ScanCache: @unchecked Sendable {
         self.file = file
         entries = (try? Data(contentsOf: file)).flatMap { try? PropertyListDecoder().decode([String: ScanFacts].self, from: $0) } ?? [:]
     }
+
+    var isEmpty: Bool { lock.lock(); defer { lock.unlock() }; return entries.isEmpty }
 
     /// Nil once the item has been edited since.
     private func fresh(_ id: String, modified: Date?) -> ScanFacts? {

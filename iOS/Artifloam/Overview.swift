@@ -42,11 +42,14 @@ struct OverviewView: View {
                 } else if library.phase == .done {
                     Label("Nothing to clean", systemImage: "checkmark.seal.fill").font(.headline)
                 } else if let counts = library.counts {
-                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
-                        tile("category-sparkles", "Photos", counts.photos)
-                        tile("category-drive", "Videos", counts.videos)
-                        tile("category-document", "Screenshots", counts.screenshots)
-                        tile("category-branch", "Live Photos", counts.livePhotos)
+                    GlassCard {
+                        row("category-sparkles", "Photos", counts.photos, counts.photoBytes)
+                        row("category-drive", "Videos", counts.videos, counts.videoBytes)
+                        row("category-document", "Screenshots", counts.screenshots, counts.screenshotBytes)
+                        row("category-branch", "Live Photos", counts.livePhotos, counts.livePhotoBytes)
+                    }
+                    if counts.photoBytes != nil || counts.videoBytes != nil {
+                        Text("Full size, including iCloud.").font(.footnote).foregroundStyle(.white.opacity(0.65))
                     }
                 }
                 if let notice = library.notice { GlassCard { Label(notice, systemImage: "info.circle").font(.footnote) } }
@@ -74,15 +77,11 @@ struct OverviewView: View {
         .alert("Couldn't delete", isPresented: failureBinding) { Button("OK", role: .cancel) {} } message: { Text(library.failure ?? "") }
     }
 
-    private func tile(_ icon: String, _ title: LocalizedStringKey, _ count: Int) -> some View {
-        GlassCard {
-            CategoryIcon(name: icon)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(count, format: .number).font(.title2.weight(.semibold)).monospacedDigit()
-                Text(title).font(.footnote).foregroundStyle(.white.opacity(0.75))
-            }
+    @ViewBuilder private func row(_ icon: String, _ title: LocalizedStringKey, _ count: Int, _ bytes: Int64?) -> some View {
+        if count > 0 {
+            FeatureRow(icon: icon, title: title, detail: Text(count, format: .number), value: bytes.map(formatted), chevron: false)
+                .accessibilityElement(children: .combine)
         }
-        .accessibilityElement(children: .combine)
     }
 
     private var failureBinding: Binding<Bool> {
