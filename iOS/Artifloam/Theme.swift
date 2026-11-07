@@ -220,8 +220,7 @@ struct StagePage<Content: View>: View {
     var moving = false
     /// A picture of its own instead of the section's sculpture, for when the art itself has something to say.
     var artwork: String? = nil
-    /// A thin ring around the sculpture, 0 to 1.
-    var ring: Double? = nil
+    var sculptureSize: CGFloat = 170
     @ViewBuilder let content: Content
 
     var body: some View {
@@ -232,18 +231,7 @@ struct StagePage<Content: View>: View {
                     if let artwork {
                         Artwork.image(artwork).resizable().scaledToFit().frame(width: 240, height: 240).shadow(color: theme.vivid.opacity(0.45), radius: 26, y: 10).padding(.top, 8).accessibilityHidden(true)
                     } else {
-                        Sculpture(theme: theme, moving: moving).frame(width: ring == nil ? 170 : 220, height: ring == nil ? 170 : 220)
-                            .overlay {
-                                if let ring {
-                                    ZStack {
-                                        Circle().stroke(.white.opacity(0.14), lineWidth: 4)
-                                        Circle().trim(from: 0, to: min(1, max(0, ring))).stroke(LinearGradient(colors: [theme.accent, .white], startPoint: .bottomLeading, endPoint: .topTrailing), style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                                            .rotationEffect(.degrees(-90)).animation(.smooth, value: ring)
-                                    }
-                                    .padding(-16)
-                                }
-                            }
-                            .padding(.vertical, ring == nil ? 0 : 16).padding(.top, ring == nil ? 8 : 44)
+                        Sculpture(theme: theme, moving: moving).frame(width: sculptureSize, height: sculptureSize).padding(.top, 8)
                     }
                     if let title, let subtitle {
                         VStack(spacing: 4) {
@@ -259,6 +247,32 @@ struct StagePage<Content: View>: View {
         }
         .environment(\.stewardTheme, theme)
         .tint(theme.accent)
+    }
+}
+
+/// How full something is: a glowing, glass-topped bar in the section's colours.
+struct GlassMeter: View {
+    let fraction: Double
+    let theme: StewardTheme
+
+    var body: some View {
+        GeometryReader { box in
+            let width = Swift.max(box.size.height, box.size.width * Swift.min(1, Swift.max(0, fraction)))
+            ZStack(alignment: .leading) {
+                Capsule().fill(.black.opacity(0.28))
+                    .overlay { Capsule().stroke(.white.opacity(0.16), lineWidth: 0.5) }
+                Capsule().fill(LinearGradient(colors: [theme.vivid, theme.accent, .white], startPoint: .leading, endPoint: .trailing))
+                    .frame(width: width)
+                    .overlay(alignment: .top) {
+                        // The highlight along the top is what makes it read as glass.
+                        Capsule().fill(.white.opacity(0.45)).frame(height: box.size.height * 0.28).padding(.horizontal, box.size.height * 0.4).padding(.top, 1.5)
+                    }
+                    .shadow(color: theme.accent.opacity(0.8), radius: 8)
+                    .animation(.smooth(duration: 0.6), value: fraction)
+            }
+        }
+        .frame(height: 14)
+        .accessibilityHidden(true)
     }
 }
 

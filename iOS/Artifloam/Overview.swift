@@ -7,18 +7,17 @@ struct OverviewView: View {
     @State private var space = DiskSpace.current
     @State private var reviewing = false
 
-    private var ring: Double {
-        library.working ? Double(library.checked) / Double(max(library.total, 1)) : Double(max(space.total - space.free, 0)) / Double(max(space.total, 1))
-    }
+    private var used: Double { Double(max(space.total - space.free, 0)) / Double(max(space.total, 1)) }
     private var found: [PhotoCategory] {
         PhotoCategory.allCases.filter { !library.items($0).isEmpty }.sorted { library.saving($0) > library.saving($1) }
     }
 
     var body: some View {
         let picks = library.recommended
-        StagePage(theme: .care, moving: library.working, ring: ring) {
+        StagePage(theme: .care, moving: library.working, sculptureSize: 220) {
             VStack(spacing: 2) {
                 Text("\(formatted(space.free)) free").font(.system(size: 34, weight: .semibold)).monospacedDigit().contentTransition(.numericText()).accessibilityAddTraits(.isHeader)
+                GlassMeter(fraction: used, theme: .care).padding(.top, 8).padding(.bottom, 4)
                 if let days = SpaceHistory.daysUntilFull(SpaceHistory.load()) {
                     Text("Full in about ^[\(days) day](inflect: true)").font(.subheadline).foregroundStyle(.white.opacity(0.75))
                 }
