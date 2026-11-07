@@ -99,7 +99,7 @@ struct OverviewView: View {
             }
         } else if library.phase == .done || library.phase == .idle {
             ScanOrb(theme: .care)
-            GlassCard { Label(library.everything > 0 ? "Nothing is safe to remove without a look. Check Photos and Videos for the rest." : "Nothing to clean right now.", systemImage: "checkmark.seal.fill") }
+if library.phase == .done { GlassCard { Label(library.everything > 0 ? "Nothing is safe to remove without a look. Check Photos and Videos for the rest." : "Nothing to clean right now.", systemImage: "checkmark.seal.fill") } }
         }
         if let notice = library.notice {
             GlassCard { Label(notice, systemImage: "info.circle") }
