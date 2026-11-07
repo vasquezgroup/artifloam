@@ -75,11 +75,14 @@ struct PhotoReviewView: View {
     @State private var dropped: Set<String> = []
     @State private var didPreselect = false
     @State private var columns = 3
+    /// Rebuilt only when the lists change. Doing it on every update made zooming and selecting slow on long lists.
+    @State private var liveGroups: [CleanupGroup] = []
+    @State private var items: [PhotoItem] = []
 
-    private var liveGroups: [CleanupGroup] {
-        (category.flatMap { library.results[$0] } ?? groups).map { CleanupGroup(keep: $0.keep, items: $0.items.filter { !dropped.contains($0.id) }) }.filter { !$0.items.isEmpty }
+    private func rebuild() {
+        liveGroups = (category.flatMap { library.results[$0] } ?? groups).map { CleanupGroup(keep: $0.keep, items: $0.items.filter { !dropped.contains($0.id) }) }.filter { !$0.items.isEmpty }
+        items = liveGroups.flatMap(\.items)
     }
-    private var items: [PhotoItem] { liveGroups.flatMap(\.items) }
     private var selectedBytes: Int64 { items.filter { selection.contains($0.id) }.reduce(0) { $0 + $1.bytes } }
 
     var body: some View {
@@ -98,7 +101,12 @@ struct PhotoReviewView: View {
                 selection.remove(item.id)
             }
         }
-        .onAppear { if preselected && !didPreselect { selection = Set(items.map(\.id)); didPreselect = true } }
+        .onAppear {
+            rebuild()
+            if preselected && !didPreselect { selection = Set(items.map(\.id)); didPreselect = true }
+        }
+        .onChange(of: library.resultsVersion) { _, _ in rebuild() }
+        .onChange(of: dropped) { _, _ in rebuild() }
         .toolbar {
             Button(selection.count == items.count ? "Select None" : "Select All") {
                 selection = selection.count == items.count ? [] : Set(items.map(\.id))
@@ -138,7 +146,8 @@ struct PhotoPage<Header: View, Grid: View>: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     if !fullScreen { header.padding(.horizontal, 16).transition(.opacity) }
-                    grid
+                    // The page's fade is for what's around the pictures. Animating the grid's layout too made cells overlap mid-zoom.
+                    grid.animation(nil, value: fullScreen)
                 }
             }
             .ignoresSafeArea(.container, edges: fullScreen ? [.top, .horizontal] : .horizontal)
@@ -161,7 +170,11 @@ struct PhotoPage<Header: View, Grid: View>: View {
     }
 }
 
-struct PhotoCell: View {
+struct PhotoCell: View, Equatable {
+    /// Only what's drawn. So selecting one picture doesn't redo every other one on screen.
+    static func == (a: PhotoCell, b: PhotoCell) -> Bool {
+        a.item.id == b.item.id && a.state == b.state && a.side == b.side && a.whole == b.whole && a.showsSize == b.showsSize && (a.protect == nil) == (b.protect == nil)
+    }
     enum CellState { case available, selected, keeps, picture }
     let item: PhotoItem
     let state: CellState
@@ -180,7 +193,7 @@ struct PhotoCell: View {
         Button(action: toggle) {
             Color.white.opacity(0.08)
                 .aspectRatio(whole && item.asset.pixelHeight > 0 ? CGFloat(item.asset.pixelWidth) / CGFloat(item.asset.pixelHeight) : 1, contentMode: .fit)
-                .overlay { if let image { Image(uiImage: image).resizable().scaledToFill() } }
+                .overlay { if let picture = image ?? Thumbnails.cached(item.id) { Image(uiImage: picture).resizable().scaledToFill() } }
                 .clipped()
                 .overlay { if selected { Rectangle().fill(.black.opacity(0.22)).overlay { Rectangle().stroke(.white, lineWidth: 2) } } }
                 // Smaller inset on large pictures, or it would leave wide borders.
@@ -194,8 +207,9 @@ struct PhotoCell: View {
                         Image(systemName: selected ? "checkmark.circle.fill" : "circle")
                             .contentTransition(.symbolEffect(.replace))
                             .symbolEffect(.bounce, value: selected)
-                            .font(.title3).foregroundStyle(selected ? StewardTheme.care.vivid : .white).background { if selected { Circle().fill(.white).padding(3) } }
-                            .shadow(radius: 2).padding(4)
+                            // A dark disc instead of a shadow, which costs an extra drawing pass for every picture on screen.
+                            .font(.title3).foregroundStyle(selected ? StewardTheme.care.vivid : .white).background { Circle().fill(selected ? AnyShapeStyle(.white) : AnyShapeStyle(.black.opacity(0.22))).padding(selected ? 3 : 1) }
+                            .padding(4)
                     }
                 }
                 .animation(reduceMotion ? nil : .spring(response: 0.28, dampingFraction: 0.58), value: selected)
@@ -213,7 +227,9 @@ struct PhotoCell: View {
         } preview: {
             PhotoPreview(asset: item.asset, placeholder: image)
         }
-        .task(id: "\(item.id)-\(Int(side))") { image = await Thumbnails.load(item.asset, side: side) }
+        .task(id: "\(item.id)-\(Int(side))") {
+            await Thumbnails.load(item.asset, id: item.id, side: side) { image = $0 }
+        }
     }
 
     private var label: Text {
@@ -245,7 +261,7 @@ private struct PhotoPreview: View {
         }
         .frame(width: previewSize.width, height: previewSize.height)
         .task {
-            image = await Thumbnails.load(asset, side: 1200)
+            await Thumbnails.load(asset, id: asset.localIdentifier, side: 1200) { image = $0 }
             guard asset.mediaType == .video else { return }
             let options = PHVideoRequestOptions()
             options.isNetworkAccessAllowed = true
@@ -285,18 +301,20 @@ func zoomStep(columns: Int, scale: CGFloat) -> (columns: Int, scale: CGFloat) {
     return (next, Swift.min(Swift.max(share * CGFloat(next), 0.78), 1.3))
 }
 
-private struct CellFrames: PreferenceKey {
-    static let defaultValue: [String: CGRect] = [:]
-    static func reduce(value: inout [String: CGRect], nextValue: () -> [String: CGRect]) { value.merge(nextValue()) { $1 } }
-}
+/// Where cells are, for finding what's under a finger. Not SwiftUI state: updating state from every cell redid the whole grid constantly.
+private final class GridLayout {
+    var frames: [String: CGRect] = [:]
+    private(set) var ids: [String] = []
+    private var positions: [String: Int] = [:]
 
-private struct CellFrameReader: View {
-    let id: String
-    var body: some View {
-        GeometryReader { geometry in
-            let frame: CGRect = geometry.frame(in: .named("photoGrid"))
-            Color.clear.preference(key: CellFrames.self, value: [id: frame])
-        }
+    func use(_ groups: [CleanupGroup]) {
+        let all = groups.flatMap(\.items).map(\.id)
+        guard all != ids else { return }
+        ids = all
+        positions = Dictionary(all.enumerated().map { ($1, $0) }) { first, _ in first }
+    }
+    func index(at point: CGPoint) -> Int? {
+        frames.first { $0.value.contains(point) }.flatMap { positions[$0.key] }
     }
 }
 
@@ -307,7 +325,7 @@ struct PhotoGrid: View {
     @Binding var selection: Set<String>
     @Binding var columnCount: Int
     var protect: ((PhotoItem) -> Void)? = nil
-    @State private var frames: [String: CGRect] = [:]
+    @State private var layout = GridLayout()
     @State private var liveScale: CGFloat = 1
     @State private var lastMagnification: CGFloat = 1
     @State private var zoomAnchor = UnitPoint.center
@@ -320,28 +338,30 @@ struct PhotoGrid: View {
     @State private var edgeScroll: Task<Void, Never>?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    private var ids: [String] { groups.flatMap(\.items).map(\.id) }
     /// In steps, so resizing doesn't reload every picture at each column.
-    private var side: CGFloat { columnCount == 1 ? 1400 : columnCount == 2 ? 800 : 360 }
+    private var side: CGFloat { columnCount == 1 ? 1400 : columnCount == 2 ? 800 : columnCount <= 4 ? 360 : 200 }
 
     var body: some View {
         ScrollViewReader { proxy in
-            VStack(spacing: 2) {
+            // Lazy here as well: one list of similar photos can hold over a thousand small groups.
+            LazyVStack(spacing: 2) {
                 ForEach(groups) { group in
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 2), count: columnCount), spacing: 2) {
-                        if let keep = group.keep { PhotoCell(item: keep, state: .keeps, side: side, whole: columnCount == 1).id(keep.id) }
+                        if let keep = group.keep { PhotoCell(item: keep, state: .keeps, side: side, whole: columnCount == 1).equatable().id(keep.id) }
                         ForEach(group.items) { item in
                             PhotoCell(item: item, state: selection.contains(item.id) ? .selected : .available, side: side, whole: columnCount == 1, showsSize: columnCount <= 4) {
                                 if !selection.insert(item.id).inserted { selection.remove(item.id) }
                             } protect: { protect?(item) }
+                            .equatable()
                             .id(item.id)
-                            .background(CellFrameReader(id: item.id))
+                            .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("photoGrid")) } action: { layout.frames[item.id] = $0 }
                         }
                     }
                 }
             }
             .coordinateSpace(.named("photoGrid"))
-            .onPreferenceChange(CellFrames.self) { frames = $0 }
+            .onAppear { layout.use(groups) }
+            .onChange(of: groups.count) { _, _ in layout.use(groups) }
             .scaleEffect(liveScale, anchor: zoomAnchor)
             .onGeometryChange(for: CGFloat.self) { $0.frame(in: .global).minY } action: { gridTop = $0 }
             .simultaneousGesture(swipeGesture(proxy))
@@ -357,16 +377,17 @@ struct PhotoGrid: View {
         DragGesture(minimumDistance: 14, coordinateSpace: .named("photoGrid"))
             .onChanged { drag in
                 if swipe == nil {
-                    guard abs(drag.translation.width) > abs(drag.translation.height), let anchor = index(at: drag.startLocation) else { return }
-                    swipe = (anchor, !selection.contains(ids[anchor]), selection)
+                    layout.use(groups)
+                    guard abs(drag.translation.width) > abs(drag.translation.height), let anchor = layout.index(at: drag.startLocation) else { return }
+                    swipe = (anchor, !selection.contains(layout.ids[anchor]), selection)
                     swipeCurrent = anchor
                     locked = true
                     startEdgeScroll(proxy)
                 }
                 fingerY = gridTop + drag.location.y
-                guard let swipe, let current = index(at: drag.location) else { return }
+                guard let swipe, let current = layout.index(at: drag.location), current != swipeCurrent else { return }
                 swipeCurrent = current
-                selection = swipeSelection(base: swipe.base, ids: ids, anchor: swipe.anchor, current: current, selecting: swipe.selecting)
+                selection = swipeSelection(base: swipe.base, ids: layout.ids, anchor: swipe.anchor, current: current, selecting: swipe.selecting)
             }
             .onEnded { _ in
                 swipe = nil
@@ -383,7 +404,7 @@ struct PhotoGrid: View {
                 try? await Task.sleep(for: .milliseconds(140))
                 guard let swipe, !Task.isCancelled else { return }
                 let direction = edgeDirection(y: fingerY, height: UIScreen.main.bounds.height)
-                let all = ids
+                let all = layout.ids
                 let next = Swift.min(Swift.max(swipeCurrent + direction * columnCount, 0), all.count - 1)
                 guard direction != 0, next != swipeCurrent else { continue }
                 swipeCurrent = next
@@ -404,7 +425,7 @@ struct PhotoGrid: View {
             .onChanged { value in
                 if lastMagnification == 1 && liveScale == 1 {
                     zoomAnchor = value.startAnchor
-                    anchorID = frames.first { $0.value.contains(value.startLocation) }?.key
+                    anchorID = layout.frames.first { $0.value.contains(value.startLocation) }?.key
                 }
                 let total = liveScale * value.magnification / lastMagnification
                 lastMagnification = value.magnification
@@ -424,23 +445,75 @@ struct PhotoGrid: View {
                 if reduceMotion { liveScale = 1 } else { withAnimation(.spring(response: 0.34, dampingFraction: 0.86)) { liveScale = 1 } }
             }
     }
-
-    private func index(at point: CGPoint) -> Int? {
-        guard let hit = frames.first(where: { $0.value.contains(point) })?.key else { return nil }
-        return ids.firstIndex(of: hit)
-    }
 }
 
+/// Shows what Photos has at hand straight away, then the sharper version. Stops asking when a picture leaves the screen.
 enum Thumbnails {
-    static func load(_ asset: PHAsset, side: CGFloat) async -> UIImage? {
+    /// The sharpest seen so far of each picture, so nothing goes blank while zooming or scrolling back.
+    private static let memory: NSCache<NSString, UIImage> = {
+        let cache = NSCache<NSString, UIImage>()
+        cache.totalCostLimit = 150_000_000
+        return cache
+    }()
+    private static let manager = PHCachingImageManager()
+
+    static func cached(_ id: String) -> UIImage? { memory.object(forKey: id as NSString) }
+
+    static func load(_ asset: PHAsset, id: String, side: CGFloat, onImage: @escaping @MainActor (UIImage) -> Void) async {
+        if let known = cached(id), max(known.size.width, known.size.height) * known.scale >= side { await onImage(known); return }
         let options = PHImageRequestOptions()
-        options.deliveryMode = .highQualityFormat
+        options.deliveryMode = .opportunistic
         options.resizeMode = .fast
-        options.isNetworkAccessAllowed = true
-        return await withCheckedContinuation { continuation in
-            PHImageManager.default().requestImage(for: asset, targetSize: CGSize(width: side, height: side), contentMode: .aspectFill, options: options) { image, _ in
-                continuation.resume(returning: image)
+        // Only a picture shown large is worth a download. Small ones use what's on the iPhone.
+        options.isNetworkAccessAllowed = side >= 800
+        let request = RequestBox()
+        await withTaskCancellationHandler {
+            await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+                request.begin(continuation) {
+                    manager.requestImage(for: asset, targetSize: CGSize(width: side, height: side), contentMode: .aspectFill, options: options) { image, info in
+                        let degraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
+                        if let image {
+                            if !degraded { memory.setObject(image, forKey: id as NSString, cost: Int(image.size.width * image.size.height * image.scale * image.scale * 4)) }
+                            Task { @MainActor in onImage(image) }
+                        }
+                        if !degraded { request.finish() }
+                    }
+                }
             }
+        } onCancel: {
+            request.cancel(manager)
+        }
+    }
+
+    /// Photos calls back more than once and may not call back after a cancel, but the waiting code must resume exactly once.
+    private final class RequestBox: @unchecked Sendable {
+        private var id: PHImageRequestID?
+        private var continuation: CheckedContinuation<Void, Never>?
+        private var cancelled = false
+        private let lock = NSLock()
+
+        func begin(_ waiting: CheckedContinuation<Void, Never>, request: () -> PHImageRequestID) {
+            lock.lock()
+            if cancelled { lock.unlock(); waiting.resume(); return }
+            continuation = waiting
+            lock.unlock()
+            let started = request()
+            lock.lock(); id = started; lock.unlock()
+        }
+        func finish() {
+            lock.lock()
+            let waiting = continuation
+            continuation = nil
+            lock.unlock()
+            waiting?.resume()
+        }
+        func cancel(_ manager: PHImageManager) {
+            lock.lock()
+            cancelled = true
+            let started = id
+            lock.unlock()
+            if let started { manager.cancelImageRequest(started) }
+            finish()
         }
     }
 }
@@ -478,7 +551,7 @@ struct SwipeReviewView: View {
                     Button { decide(delete: false) } label: { Label("Keep", systemImage: "checkmark").frame(maxWidth: .infinity) }.buttonStyle(.borderedProminent)
                 }
                 .controlSize(.large)
-                .task(id: item.id) { image = nil; image = await Thumbnails.load(item.asset, side: 900) }
+                .task(id: item.id) { image = nil; await Thumbnails.load(item.asset, id: item.id, side: 900) { image = $0 } }
             } else {
                 Text("All done").font(.title2.weight(.semibold))
                 Text("\(marked.count) marked to delete.")

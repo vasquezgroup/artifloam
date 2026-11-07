@@ -6,8 +6,16 @@ public struct PhotoItem: Identifiable {
     public let bytes: Int64
     /// What removing it would free. Live Photos only give back their video part.
     public var saving: Int64 { saves ?? bytes }
-    public var saves: Int64? = nil
-    public var id: String { asset.localIdentifier }
+    public var saves: Int64?
+    /// Kept, because asking Photos for it each time is what made long lists slow.
+    public let id: String
+
+    public init(asset: PHAsset, bytes: Int64, saves: Int64? = nil) {
+        self.asset = asset
+        self.bytes = bytes
+        self.saves = saves
+        id = asset.localIdentifier
+    }
 }
 
 /// Items to review. `keep`, when present, is the copy that stays and isn't offered for deletion.
@@ -112,7 +120,9 @@ public final class Library {
     public var phase = Phase.idle
     public var checked = 0
     public var total = 0
-    public var results: [PhotoCategory: [CleanupGroup]] = [:]
+    public var results: [PhotoCategory: [CleanupGroup]] = [:] { didSet { resultsVersion += 1 } }
+    /// Tells a screen the lists changed, without it having to compare them.
+    public private(set) var resultsVersion = 0
     public var photoBytes: Int64 = 0
     public var videoBytes: Int64 = 0
     /// What's really on this iPhone rather than only in iCloud. Nil if iOS doesn't say.
