@@ -68,7 +68,7 @@ Private research, competitor notes and the feature list are in the private docum
 
 The Mac app's iPhone section is in `Sources/MacSteward/IPhoneView.swift`, `Sources/MacStewardCore/IPhoneDevices.swift` and `Sources/MacStewardCore/WhatsAppBackup.swift`, tested by `Tests/MacStewardCoreTests/IPhoneTests.swift`.
 
-- Nothing connects to an iPhone until the person picks it and presses Read. Never pick one automatically: a Mac can have other people's phones paired.
+- Exactly one iPhone on a USB cable is read by itself, once per plug-in. Anything else, including a paired phone on Wi-Fi that may be someone else's, needs picking first. Never read those automatically.
 - Reading never changes the phone. Deleting an app is the one action that does: it needs a tick, a review sheet that says what goes, and an extra acknowledgement for chat or login-code apps, old backups, or clearing an app that isn't on the App Store. The result comes from reading the phone again.
 - iOS can't clear an app's data on its own. "Clear data" deletes the app, and the person installs it again.
 - `AMDeviceSecureUninstallApplication` works: it removed a real app from a real iPhone, confirmed by reading the phone again.

@@ -2,7 +2,7 @@ import SwiftUI
 import AppKit
 import MacStewardCore
 
-/// What the iPhone page knows. It connects to an iPhone only after the person picks it and presses Read.
+/// What the iPhone page knows. It connects to an iPhone on a cable by itself, and to any other only after it's picked.
 @MainActor
 final class IPhoneState: ObservableObject {
     @Published private(set) var devices = [IPhoneDevice]()
@@ -50,6 +50,7 @@ final class IPhoneState: ObservableObject {
     @Published private(set) var removableBackup: IPhoneBackup?
     var insights: IPhoneInsights? { report.map { IPhoneInsights(apps: $0.apps, lastChanged: lastChanged) } }
     private let watcher = IPhoneDeviceWatcher()
+    private var autoRead: String?
     /// A read can't be cancelled once it is talking to the iPhone, so a stopped one must finish before the next starts.
     @Published private var readInFlight = false
     private final class ProcessHolder: @unchecked Sendable { var process: Process? }
@@ -91,6 +92,13 @@ final class IPhoneState: ObservableObject {
     private func update(_ devices: [IPhoneDevice]) {
         self.devices = devices
         if let picked, !devices.contains(picked) { self.picked = nil; if problem != nil { problem = nil } }
+        if !devices.contains(where: { $0.id == autoRead }) { autoRead = nil }
+        // Once per plug-in, so Start over or an error doesn't start it again by itself.
+        if picked == nil, report == nil, !reading, !backupsOnly, let phone = IPhoneDevice.automatic(from: devices), phone.id != autoRead {
+            autoRead = phone.id
+            pick(phone)
+            read()
+        }
     }
     func pick(_ device: IPhoneDevice) { picked = device; problem = nil }
     func read() {
@@ -212,7 +220,7 @@ final class IPhoneState: ObservableObject {
     }
 }
 
-/// Connected iPhones on the start screen. None is ever picked for the person, even when there's only one.
+/// Connected iPhones on the start screen, when it isn't clear which one is meant. See IPhoneDevice.automatic.
 struct IPhoneDevicePicker: View {
     @ObservedObject var state: IPhoneState
     @EnvironmentObject private var m: StewardModel

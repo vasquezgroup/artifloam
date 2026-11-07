@@ -38,6 +38,14 @@ final class IPhoneAppsTests: XCTestCase {
         XCTAssertEqual(IPhoneInsights(apps: apps).apps(in: .quiet), [])
     }
 
+    func testOnlyOneIPhoneOnACableIsReadByItself() {
+        let cabled = IPhoneDevice(id: "a", cabled: true), other = IPhoneDevice(id: "b", cabled: true), wireless = IPhoneDevice(id: "c")
+        XCTAssertEqual(IPhoneDevice.automatic(from: [cabled, wireless]), cabled)
+        XCTAssertNil(IPhoneDevice.automatic(from: [wireless]))
+        XCTAssertNil(IPhoneDevice.automatic(from: [cabled, other]))
+        XCTAssertNil(IPhoneDevice.automatic(from: []))
+    }
+
     func testBackupNeedsRoomForTheIPhonePlusAMargin() {
         XCTAssertTrue(IPhoneBackupMaker.hasRoom(free: 70_000_000_000, phoneUses: 65_000_000_000))
         XCTAssertFalse(IPhoneBackupMaker.hasRoom(free: 69_000_000_000, phoneUses: 65_000_000_000))

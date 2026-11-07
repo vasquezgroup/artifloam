@@ -61,21 +61,17 @@ struct OverviewView: View {
             NoPhotoAccess()
         default:
             if library.working {
-                GlassCard {
+                VStack(spacing: 4) {
                     Text(library.phase == .reading ? "Reading your library" : "Looking for similar and blurred photos").font(.headline)
-                    ProgressView(value: Double(library.checked), total: Double(max(library.total, 1)))
-                    HStack {
-                        Text("\(library.checked) of \(library.total) checked").font(.footnote).foregroundStyle(.white.opacity(0.7))
-                        Spacer()
-                        Button("Stop") { library.stop() }.buttonStyle(.bordered).tint(.white)
-                    }
+                    Text("\(library.checked) of \(library.total) checked").font(.footnote).foregroundStyle(.white.opacity(0.7)).monospacedDigit()
                 }
+                ScanOrb(theme: .care)
             } else if library.phase == .stopped {
-                GlassCard {
+                VStack(spacing: 4) {
                     Text("Scan stopped").font(.headline)
                     Text("Results may be incomplete.").font(.footnote).foregroundStyle(.white.opacity(0.7))
-                    Button("Scan again") { Task { await library.scan() } }.buttonStyle(.bordered).tint(.white)
                 }
+                ScanOrb(theme: .care)
             }
             summary
         }
@@ -91,14 +87,19 @@ struct OverviewView: View {
             VStack(spacing: 10) {
                 Text("Recommended: ^[\(picks.count) item](inflect: true), up to \(formatted(bytes))").font(.headline).multilineTextAlignment(.center)
                 Text("Exact copies, and screenshots over 90 days old. You'll see each one first, and can untick any you want to keep.").font(.footnote).foregroundStyle(.white.opacity(0.75)).multilineTextAlignment(.center)
-                OrbAction(title: "Review", icon: "sparkles", accent: StewardTheme.care.vivid, disabled: library.phase == .reading) { reviewing = true }
-                    .padding(.top, 6)
+                if library.phase == .done {
+                    OrbAction(title: "Review", icon: "sparkles", accent: StewardTheme.care.vivid) { reviewing = true }.padding(.top, 6)
+                    Button("Scan again") { Task { await library.scan() } }.font(.subheadline.weight(.medium)).foregroundStyle(.white).padding(.top, 8)
+                } else {
+                    Button("Review these") { reviewing = true }.font(.subheadline.weight(.semibold)).foregroundStyle(.white).disabled(library.phase == .reading)
+                }
             }
             .navigationDestination(isPresented: $reviewing) {
                 // Ticked in advance because they're recommended. Nothing goes until the person has seen them and pressed Delete.
                 PhotoReviewView(title: "Recommended", note: "Exact copies, and screenshots over 90 days old. Untick anything you want to keep.", theme: .care, groups: library.recommendedGroups, preselected: true)
             }
         } else if library.phase == .done {
+            ScanOrb(theme: .care)
             GlassCard { Label(library.everything > 0 ? "Nothing is safe to remove without a look. Check Photos and Videos for the rest." : "Nothing to clean right now.", systemImage: "checkmark.seal.fill") }
         }
         if let notice = library.notice {

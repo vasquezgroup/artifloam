@@ -1,10 +1,24 @@
 import Foundation
 
-/// A connected iPhone, known only by its identifier until the person picks it. Getting its name means connecting.
+/// A connected iPhone, known only by its identifier until it's read. Getting its name means connecting.
 public struct IPhoneDevice: Identifiable, Hashable, Sendable {
     public let id: String
-    public init(id: String) { self.id = id }
+    /// On a USB cable, not only reachable over Wi-Fi.
+    public let cabled: Bool
+    public init(id: String, cabled: Bool = false) {
+        self.id = id
+        self.cabled = cabled
+    }
     public var label: String { "iPhone " + id.suffix(4) }
+    public static func == (a: IPhoneDevice, b: IPhoneDevice) -> Bool { a.id == b.id }
+    public func hash(into hasher: inout Hasher) { hasher.combine(id) }
+
+    /// The iPhone to read without asking. Plugging one in says which is meant. A paired iPhone on Wi-Fi may be
+    /// someone else's, so it's never read by itself, and neither is one of several on cables.
+    public static func automatic(from devices: [IPhoneDevice]) -> IPhoneDevice? {
+        let cabled = devices.filter(\.cabled)
+        return cabled.count == 1 ? cabled[0] : nil
+    }
 }
 
 public struct IPhoneAppRow: Identifiable, Equatable, Sendable {
@@ -115,6 +129,12 @@ private struct MobileDevice {
     let disconnect: @convention(c) (Device) -> Int32
     let lookup: @convention(c) (Device, CFDictionary, UnsafeMutablePointer<Unmanaged<CFDictionary>?>) -> Int32
 
+    /// 1 is USB. Without this function nothing counts as cabled, so nothing is read by itself.
+    static let interfaceType: (@convention(c) (Device) -> Int32)? = {
+        guard let handle = dlopen("/Library/Apple/System/Library/PrivateFrameworks/MobileDevice.framework/MobileDevice", RTLD_NOW),
+              let found = dlsym(handle, "AMDeviceGetInterfaceType") else { return nil }
+        return unsafeBitCast(found, to: (@convention(c) (Device) -> Int32).self)
+    }()
     /// Apart from `shared`, so a Mac missing only this can still read. The signature follows ios-deploy; Apple doesn't document it.
     static let uninstall: (@convention(c) (Int32, Device, CFString, Int32, UnsafeRawPointer?, Int32) -> Int32)? = {
         guard let handle = dlopen("/Library/Apple/System/Library/PrivateFrameworks/MobileDevice.framework/MobileDevice", RTLD_NOW),
@@ -177,7 +197,7 @@ public final class IPhoneDeviceWatcher: @unchecked Sendable {
                 if handles[id]?.isEmpty == true { handles[id] = nil }
             default: break
             }
-            return (handles.keys.sorted().map(IPhoneDevice.init), onChange)
+            return (handles.keys.sorted().map { id in IPhoneDevice(id: id, cabled: handles[id]?.contains { MobileDevice.interfaceType?($0) == 1 } ?? false) }, onChange)
         }
         report?(list)
     }

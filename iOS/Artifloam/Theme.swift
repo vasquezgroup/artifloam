@@ -126,12 +126,19 @@ struct OrbAction: View {
     let icon: String
     let accent: Color
     var disabled = false
+    /// Shows a ring around the button, as on the Mac, while something is running.
+    var progress: Double? = nil
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
             ZStack {
                 Circle().fill(accent.opacity(0.55)).blur(radius: 20)
+                if let progress {
+                    Circle().stroke(.white.opacity(0.16), lineWidth: 7).padding(-8)
+                    Circle().trim(from: 0, to: min(1, max(0, progress))).stroke(LinearGradient(colors: [accent, .white], startPoint: .bottomLeading, endPoint: .topTrailing), style: StrokeStyle(lineWidth: 7, lineCap: .round))
+                        .rotationEffect(.degrees(-90)).padding(-8)
+                }
                 Circle().fill(accent)
                 Circle().fill(LinearGradient(colors: [.white.opacity(0.28), .clear, .black.opacity(0.35)], startPoint: .top, endPoint: .bottom))
                 Circle().fill(RadialGradient(colors: [.white.opacity(0.18), .clear], center: UnitPoint(x: 0.5, y: 0.2), startRadius: 2, endRadius: 50))
@@ -149,6 +156,7 @@ struct OrbAction: View {
         .buttonStyle(.plain)
         .disabled(disabled)
         .opacity(disabled ? 0.45 : 1)
+        .accessibilityValue(progress.map { Text("\(Int($0 * 100)) percent complete") } ?? Text(""))
     }
 }
 
@@ -241,5 +249,20 @@ struct FeatureRow: View {
             Image(systemName: "chevron.forward").font(.footnote.weight(.semibold)).foregroundStyle(.white.opacity(0.4))
         }
         .contentShape(Rectangle())
+    }
+}
+
+/// The one round button for starting and stopping a scan, on every section.
+struct ScanOrb: View {
+    let theme: StewardTheme
+    @Environment(Library.self) private var library
+    var body: some View {
+        if library.working {
+            OrbAction(title: "Stop", icon: "stop.fill", accent: theme.vivid, progress: Double(library.checked) / Double(max(library.total, 1))) { library.stop() }
+                .padding(.vertical, 10)
+        } else {
+            OrbAction(title: "Scan", icon: "magnifyingglass", accent: theme.vivid) { Task { await library.scan() } }
+                .padding(.vertical, 6)
+        }
     }
 }

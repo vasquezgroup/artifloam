@@ -45,6 +45,7 @@ struct MediaSectionView: View {
                         .opacity(items.isEmpty ? 0.5 : 1)
                     }
                 }
+                if library.phase != .idle { ScanOrb(theme: section.theme) }
                 Text("Sizes are the full originals. If you use Optimize iPhone Storage, deleting may free less on this iPhone. Favourites are never listed.")
                     .font(.footnote).foregroundStyle(.white.opacity(0.65)).multilineTextAlignment(.center)
             }
