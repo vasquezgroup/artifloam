@@ -47,6 +47,7 @@ So I built Artifloam. It started as a small tool for my own Mac, and it's still 
 | **Browsers** | Rebuildable browser caches, kept separate from sign-ins and history |
 | **Space Map** | A visual map of what's using your disk |
 | **System Check** | A plain-language look at your Mac's security settings |
+| **iPhone** | Connect an iPhone by cable to see every app by size, remove apps and find what WhatsApp holds per chat |
 | **Keep space free** | Optional automatic cleanup of things that rebuild themselves, off by default |
 
 There's also a command-line helper, `stewardctl`.
@@ -92,6 +93,8 @@ swift run MacSteward        # run the app
 swift run stewardctl scan   # read-only scan from the command line
 ./scripts/package-app.sh    # build dist/Artifloam.app, signed for this Mac only
 ```
+
+The iPhone app lives in `iOS/`. See [iOS/README.md](iOS/README.md) to build it and continue working on it.
 
 ## Forks
 

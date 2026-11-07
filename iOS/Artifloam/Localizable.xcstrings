@@ -2817,6 +2817,160 @@
         }
       }
     },
+    "App %@ · Data %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "التطبيق %@ · البيانات %@"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %@ · Dades %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %@ · Daten %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "App %1$@ · Data %2$@"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %1$@ · Data %2$@"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %1$@ · Data %2$@"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %1$@ · Data %2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %@ · Datos %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %@ · Datos %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %@ · Données %@"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %@ · Date %@"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ऐप %@ · डेटा %@"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacija %@ · Podaci %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %@ · Dati %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリ%1$@ · データ%2$@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱 %1$@ · 데이터 %2$@"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lietotne %1$@ · Dati %2$@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacja %@ · Dane %@"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %@ · Dados %@"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacioni %1$@ · Të dhënat %2$@"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Апликација %@ · Подаци %@"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacija %@ · Podaci %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %@ · Data %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulama %@ · Veriler %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App %1$@ · 数据 %2$@"
+          }
+        }
+      }
+    },
     "Apps" : {
       "localizations" : {
         "ar" : {
@@ -11103,150 +11257,150 @@
         }
       }
     },
-    "Exact copies, and screenshots over 90 days old. Untick anything to keep. Items in iCloud may free less on this iPhone." : {
+    "Exact copies, and screenshots over 90 days old. Untick anything to keep. Items in iCloud may free less on this device." : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "نسخ مطابقة، ولقطات شاشة مضى عليها أكثر من 90 يومًا. ألغِ تحديد أي عنصر لإبقائه. قد تحرّر العناصر الموجودة في iCloud مساحة أقل على هذا الـ iPhone."
+            "value" : "نسخ مطابقة، ولقطات شاشة مضى عليها أكثر من 90 يومًا. ألغِ تحديد أي عنصر للإبقاء عليه. قد تحرّر العناصر في iCloud مساحة أقل على هذا الجهاز."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Còpies exactes i captures de pantalla de més de 90 dies. Desmarca el que vulguis conservar. Els elements a l’iCloud poden alliberar menys espai en aquest iPhone."
+            "value" : "Còpies exactes i captures de pantalla de més de 90 dies. Desmarca el que vulguis conservar. Els elements de l’iCloud poden alliberar menys espai en aquest dispositiu."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exakte Kopien und Screenshots, die älter als 90 Tage sind. Entferne den Haken bei allem, was du behalten willst. Objekte in iCloud schaffen auf diesem iPhone eventuell weniger Platz."
+            "value" : "Exakte Kopien und Screenshots, die älter als 90 Tage sind. Entferne das Häkchen bei allem, was du behalten möchtest. Objekte in iCloud geben auf diesem Gerät eventuell weniger Platz frei."
           }
         },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exact copies, and screenshots over 90 days old. Untick anything to keep. Items in iCloud may free less on this iPhone."
+            "value" : "Exact copies, and screenshots over 90 days old. Untick anything to keep. Items in iCloud may free less on this device."
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exact copies, and screenshots over 90 days old. Untick anything to keep. Items in iCloud may free less on this iPhone."
+            "value" : "Exact copies, and screenshots over 90 days old. Untick anything to keep. Items in iCloud may free less on this device."
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exact copies, and screenshots over 90 days old. Untick anything to keep. Items in iCloud may free less on this iPhone."
+            "value" : "Exact copies, and screenshots over 90 days old. Untick anything to keep. Items in iCloud may free less on this device."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copias exactas y capturas de pantalla de más de 90 días. Desmarca lo que quieras conservar. Los elementos de iCloud pueden liberar menos en este iPhone."
+            "value" : "Copias exactas y capturas de pantalla de más de 90 días. Desmarca lo que quieras conservar. Los elementos de iCloud pueden liberar menos espacio en este dispositivo."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copias exactas y capturas de pantalla de más de 90 días. Desmarca lo que quieras conservar. Los elementos de iCloud pueden liberar menos en este iPhone."
+            "value" : "Copias exactas y capturas de pantalla de más de 90 días. Desmarca lo que quieras conservar. Los elementos de iCloud pueden liberar menos espacio en este dispositivo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copies exactes et captures d’écran de plus de 90 jours. Décochez ce que vous voulez garder. Les éléments dans iCloud peuvent libérer moins d’espace sur cet iPhone."
+            "value" : "Copies exactes et captures d’écran de plus de 90 jours. Décochez ce que vous voulez conserver. Les éléments dans iCloud peuvent libérer moins d’espace sur cet appareil."
           }
         },
         "gsw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exakti Kopie und Screenshots, wo über 90 Täg alt sind. Nimm s Häckli bi allem weg, was du wotsch behalte. Elemente i iCloud schaffed uf dem iPhone allefalls weniger Platz."
+            "value" : "Genau Kopie und Screenshots, wo über 90 Täg alt sind. Nimm s Häkli use bi allem, wo du bhalte wotsch. Objekt i iCloud gäbed uf dem Gerät eventuell weniger Platz frei."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "हूबहू प्रतियाँ, और 90 दिन से पुराने स्क्रीनशॉट। जिसे रखना है उसका निशान हटा दें। iCloud की चीज़ों से इस iPhone पर कम जगह खाली हो सकती है।"
+            "value" : "हू-ब-हू कॉपी और 90 दिन से पुराने स्क्रीनशॉट। जिसे रखना हो उसका चयन हटा दें। iCloud में मौजूद आइटम इस डिवाइस पर कम जगह खाली कर सकते हैं।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Točne kopije i snimke zaslona starije od 90 dana. Poništi odabir svega što želiš zadržati. Stavke u iCloudu mogu osloboditi manje na ovom iPhoneu."
+            "value" : "Točne kopije i snimke zaslona starije od 90 dana. Poništi odabir svega što želiš zadržati. Stavke na iCloudu mogu osloboditi manje prostora na ovom uređaju."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copie esatte e screenshot di oltre 90 giorni. Deseleziona ciò che vuoi tenere. Gli elementi su iCloud potrebbero liberare meno spazio su questo iPhone."
+            "value" : "Copie esatte e screenshot più vecchi di 90 giorni. Deseleziona ciò che vuoi conservare. Gli elementi in iCloud potrebbero liberare meno spazio su questo dispositivo."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "完全に同じコピーと、90日より古いスクリーンショットです。残したいものはチェックを外してください。iCloudにある項目は、このiPhoneで空く容量が少なくなる場合があります。"
+            "value" : "完全に同じコピーと、90日以上前のスクリーンショット。残したい項目はチェックを外してください。iCloud上の項目は、このデバイスで解放できる容量が少ない場合があります。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "완전히 같은 사본과 90일이 지난 스크린샷입니다. 유지할 항목은 선택을 해제하세요. iCloud에 있는 항목은 이 iPhone에서 확보되는 공간이 더 적을 수 있습니다."
+            "value" : "완전히 동일한 사본과 90일이 지난 스크린샷입니다. 보관할 항목은 선택을 해제하세요. iCloud에 있는 항목은 이 기기에서 확보되는 공간이 더 적을 수 있습니다."
           }
         },
         "lv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Precīzas kopijas un ekrānuzņēmumi, kas vecāki par 90 dienām. Noņem atzīmi no tā, ko vēlies paturēt. Vienumi iCloud var atbrīvot mazāk vietas šajā iPhone."
+            "value" : "Precīzas kopijas un ekrānuzņēmumi, kas vecāki par 90 dienām. Noņemiet atzīmi pie visa, ko vēlaties paturēt. Vienumi iCloud var atbrīvot mazāk vietas šajā ierīcē."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dokładne kopie oraz zrzuty ekranu starsze niż 90 dni. Odznacz wszystko, co chcesz zachować. Elementy w iCloud mogą zwolnić mniej miejsca na tym iPhonie."
+            "value" : "Dokładne kopie oraz zrzuty ekranu starsze niż 90 dni. Odznacz wszystko, co chcesz zachować. Elementy w iCloud mogą zwolnić mniej miejsca na tym urządzeniu."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cópias exatas e capturas de ecrã com mais de 90 dias. Desmarque o que quiser manter. Os itens no iCloud podem libertar menos neste iPhone."
+            "value" : "Cópias exatas e capturas de ecrã com mais de 90 dias. Desmarque o que quiser manter. Os itens no iCloud podem libertar menos espaço neste dispositivo."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kopje të sakta dhe pamje ekrani më të vjetra se 90 ditë. Hiq shenjën nga ajo që do të mbash. Elementët në iCloud mund të çlirojnë më pak në këtë iPhone."
+            "value" : "Kopje të sakta dhe pamje ekrani më të vjetra se 90 ditë. Hiq zgjedhjen e çdo gjëje që do të mbash. Artikujt në iCloud mund të çlirojnë më pak hapësirë në këtë pajisje."
           }
         },
         "sr-Cyrl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Тачне копије и снимци екрана старији од 90 дана. Поништите избор свега што желите да задржите. Ставке у iCloud-у могу ослободити мање на овом iPhone-у."
+            "value" : "Тачне копије и снимци екрана старији од 90 дана. Уклони ознаку са свега што желиш да задржиш. Ставке на iCloudу могу ослободити мање простора на овом уређају."
           }
         },
         "sr-Latn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tačne kopije i snimci ekrana stariji od 90 dana. Poništite izbor svega što želite da zadržite. Stavke u iCloud-u mogu osloboditi manje na ovom iPhone-u."
+            "value" : "Tačne kopije i snimci ekrana stariji od 90 dana. Ukloni oznaku sa svega što želiš da zadržiš. Stavke na iCloudu mogu osloboditi manje prostora na ovom uređaju."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exakta kopior och skärmbilder som är över 90 dagar gamla. Avmarkera allt du vill behålla. Objekt i iCloud kan frigöra mindre på den här iPhonen."
+            "value" : "Exakta kopior och skärmbilder som är äldre än 90 dagar. Avmarkera allt du vill behålla. Objekt i iCloud kan frigöra mindre utrymme på den här enheten."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Birebir kopyalar ve 90 günden eski ekran görüntüleri. Korumak istediğinizin işaretini kaldırın. iCloud’daki öğeler bu iPhone’da daha az yer açabilir."
+            "value" : "Birebir kopyalar ve 90 günden eski ekran resimleri. Saklamak istediklerinin işaretini kaldır. iCloud’daki öğeler bu aygıtta daha az yer açabilir."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "完全相同的副本，以及超过 90 天的截屏。取消勾选要保留的项目。位于 iCloud 的项目在这台 iPhone 上释放的空间可能较少。"
+            "value" : "完全相同的副本，以及超过 90 天的屏幕截图。取消勾选想保留的项目。iCloud 中的项目在此设备上可能释放的空间较少。"
           }
         }
       }
@@ -15985,150 +16139,150 @@
         }
       }
     },
-    "Largest first. Videos in iCloud may free less on this iPhone." : {
+    "Largest first. Videos in iCloud may free less on this device." : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "الأكبر أولًا. قد تحرّر مقاطع الفيديو الموجودة في iCloud مساحة أقل على هذا الـ iPhone."
+            "value" : "الأكبر أولًا. قد تحرّر مقاطع الفيديو في iCloud مساحة أقل على هذا الجهاز."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Els més grans primer. Els vídeos a l’iCloud poden alliberar menys espai en aquest iPhone."
+            "value" : "Primer els més grans. Els vídeos de l’iCloud poden alliberar menys espai en aquest dispositiu."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Größte zuerst. Videos in iCloud schaffen auf diesem iPhone eventuell weniger Platz."
+            "value" : "Die größten zuerst. Videos in iCloud geben auf diesem Gerät eventuell weniger Platz frei."
           }
         },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Largest first. Videos in iCloud may free less on this iPhone."
+            "value" : "Largest first. Videos in iCloud may free less on this device."
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Largest first. Videos in iCloud may free less on this iPhone."
+            "value" : "Largest first. Videos in iCloud may free less on this device."
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Largest first. Videos in iCloud may free less on this iPhone."
+            "value" : "Largest first. Videos in iCloud may free less on this device."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Primero los más grandes. Los vídeos en iCloud pueden liberar menos en este iPhone."
+            "value" : "Primero los más grandes. Los vídeos de iCloud pueden liberar menos espacio en este dispositivo."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Primero los más grandes. Los videos en iCloud pueden liberar menos en este iPhone."
+            "value" : "Primero los más grandes. Los videos de iCloud pueden liberar menos espacio en este dispositivo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les plus volumineuses d’abord. Les vidéos dans iCloud peuvent libérer moins d’espace sur cet iPhone."
+            "value" : "Les plus volumineuses d’abord. Les vidéos dans iCloud peuvent libérer moins d’espace sur cet appareil."
           }
         },
         "gsw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Grössti zersch. Videos i iCloud schaffed uf dem iPhone allefalls weniger Platz."
+            "value" : "Di gröschte zersch. Videos i iCloud gäbed uf dem Gerät eventuell weniger Platz frei."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "सबसे बड़े पहले। iCloud के वीडियो से इस iPhone पर कम जगह खाली हो सकती है।"
+            "value" : "सबसे बड़े पहले। iCloud में मौजूद वीडियो इस डिवाइस पर कम जगह खाली कर सकते हैं।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Najveće prvo. Videozapisi u iCloudu mogu osloboditi manje na ovom iPhoneu."
+            "value" : "Najveće prvo. Videozapisi na iCloudu mogu osloboditi manje prostora na ovom uređaju."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prima i più grandi. I video su iCloud potrebbero liberare meno spazio su questo iPhone."
+            "value" : "Prima i più grandi. I video in iCloud potrebbero liberare meno spazio su questo dispositivo."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "大きい順。iCloudにあるビデオは、このiPhoneで空く容量が少なくなる場合があります。"
+            "value" : "大きい順。iCloud上のビデオは、このデバイスで解放できる容量が少ない場合があります。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "큰 것부터. iCloud에 있는 비디오는 이 iPhone에서 확보되는 공간이 더 적을 수 있습니다."
+            "value" : "큰 항목 순. iCloud에 있는 비디오는 이 기기에서 확보되는 공간이 더 적을 수 있습니다."
           }
         },
         "lv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vispirms lielākie. Video iCloud var atbrīvot mazāk vietas šajā iPhone."
+            "value" : "Vispirms lielākie. Video iCloud var atbrīvot mazāk vietas šajā ierīcē."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Najpierw największe. Filmy w iCloud mogą zwolnić mniej miejsca na tym iPhonie."
+            "value" : "Najpierw największe. Filmy w iCloud mogą zwolnić mniej miejsca na tym urządzeniu."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Maiores primeiro. Os vídeos no iCloud podem libertar menos neste iPhone."
+            "value" : "Os maiores primeiro. Os vídeos no iCloud podem libertar menos espaço neste dispositivo."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Më të mëdhenjtë fillimisht. Videot në iCloud mund të çlirojnë më pak në këtë iPhone."
+            "value" : "Fillimisht më të mëdhatë. Videot në iCloud mund të çlirojnë më pak hapësirë në këtë pajisje."
           }
         },
         "sr-Cyrl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Највећи прво. Видео снимци у iCloud-у могу ослободити мање на овом iPhone-у."
+            "value" : "Највеће прво. Видео записи на iCloudу могу ослободити мање простора на овом уређају."
           }
         },
         "sr-Latn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Najveći prvo. Video snimci u iCloud-u mogu osloboditi manje na ovom iPhone-u."
+            "value" : "Najveće prvo. Video zapisi na iCloudu mogu osloboditi manje prostora na ovom uređaju."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Största först. Videor i iCloud kan frigöra mindre på den här iPhonen."
+            "value" : "Störst först. Videor i iCloud kan frigöra mindre utrymme på den här enheten."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Önce en büyük. iCloud’daki videolar bu iPhone’da daha az yer açabilir."
+            "value" : "Önce en büyükler. iCloud’daki videolar bu aygıtta daha az yer açabilir."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "最大的优先。位于 iCloud 的视频在这台 iPhone 上释放的空间可能较少。"
+            "value" : "最大的排在前面。iCloud 中的视频在此设备上可能释放的空间较少。"
           }
         }
       }
@@ -25895,6 +26049,154 @@
         }
       }
     },
+    "Read by your Mac on %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قرأها Mac لديك في %@"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Llegit pel Mac el %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Von deinem Mac am %@ gelesen"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read by your Mac on %@"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read by your Mac on %@"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read by your Mac on %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leído por tu Mac el %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leído por tu Mac el %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lu par votre Mac le %@"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vo dim Mac am %@ gläse"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आपके Mac ने %@ को पढ़ा"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pročitao tvoj Mac dana %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letto dal tuo Mac il %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@にMacが読み込みました"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@에 Mac에서 읽음"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac izlasīja %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odczytano na Macu: %@"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lido pelo seu Mac em %@"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "U lexua nga Mac-u yt më %@"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прочитао твој Mac: %@"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pročitao tvoj Mac: %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lästes av din Mac den %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac’in tarafından %@ tarihinde okundu"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "由你的 Mac 于 %@ 读取"
+          }
+        }
+      }
+    },
     "Recommended" : {
       "localizations" : {
         "ar" : {
@@ -31663,6 +31965,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "可节省的空间太小，因此未作任何更改。"
+          }
+        }
+      }
+    },
+    "There isn't enough free space to do this safely. It needs about twice the item's size." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا توجد مساحة خالية كافية لتنفيذ ذلك بأمان. يلزم ما يقارب ضعف حجم العنصر."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hi ha prou espai lliure per fer-ho de manera segura. Cal aproximadament el doble de la mida de l’element."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es ist nicht genug freier Speicherplatz vorhanden, um das sicher auszuführen. Es wird etwa die doppelte Größe des Objekts benötigt."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There isn't enough free space to do this safely. It needs about twice the item's size."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There isn't enough free space to do this safely. It needs about twice the item's size."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There isn't enough free space to do this safely. It needs about twice the item's size."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay suficiente espacio libre para hacerlo de forma segura. Se necesita aproximadamente el doble del tamaño del elemento."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay suficiente espacio libre para hacerlo de forma segura. Se necesita aproximadamente el doble del tamaño del elemento."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’espace libre est insuffisant pour le faire en toute sécurité. Il faut environ le double de la taille de l’élément."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es isch nöd gnueg freie Spicherplatz da, zum das sicher uszfüehre. Es bruucht öppe di doppleti Grössi vom Objekt."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "इसे सुरक्षित रूप से करने के लिए पर्याप्त खाली जगह नहीं है। इसके लिए आइटम के आकार से लगभग दोगुनी जगह चाहिए।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nema dovoljno slobodnog prostora za sigurno izvršavanje. Potrebno je otprilike dvostruko više od veličine stavke."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non c’è abbastanza spazio libero per farlo in sicurezza. Serve circa il doppio delle dimensioni dell’elemento."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安全に実行するための空き容量が足りません。項目のサイズの約2倍が必要です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "안전하게 수행하기에 여유 공간이 부족합니다. 항목 크기의 약 두 배가 필요합니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nav pietiekami daudz brīvas vietas, lai to izdarītu droši. Nepieciešams aptuveni divreiz vairāk, nekā aizņem vienums."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brakuje wolnego miejsca, aby zrobić to bezpiecznie. Potrzeba około dwukrotności rozmiaru elementu."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não há espaço livre suficiente para o fazer em segurança. É necessário cerca do dobro do tamanho do item."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuk ka hapësirë të lirë të mjaftueshme për ta bërë këtë me siguri. Duhet afërsisht dyfishi i madhësisë së artikullit."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нема довољно слободног простора да се ово уради безбедно. Потребно је отприлике двоструко више од величине ставке."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nema dovoljno slobodnog prostora da se ovo uradi bezbedno. Potrebno je otprilike dvostruko više od veličine stavke."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Det finns inte tillräckligt med ledigt utrymme för att göra detta säkert. Det behövs ungefär dubbelt så mycket som objektets storlek."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bunu güvenle yapmak için yeterli boş alan yok. Öğenin boyutunun yaklaşık iki katı gerekiyor."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用空间不足，无法安全地执行此操作。大约需要项目大小两倍的空间。"
           }
         }
       }

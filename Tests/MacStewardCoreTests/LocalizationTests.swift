@@ -64,7 +64,7 @@ final class LocalizationTests: XCTestCase {
     }
     func testInfoPlistStringsExistInEveryLanguage() throws {
         let strings = try catalog("InfoPlist")
-        XCTAssertEqual(Set(strings.keys), ["NSDesktopFolderUsageDescription", "NSDocumentsFolderUsageDescription", "NSDownloadsFolderUsageDescription", "NSAppleEventsUsageDescription"])
+        XCTAssertEqual(Set(strings.keys), ["NSDesktopFolderUsageDescription", "NSDocumentsFolderUsageDescription", "NSDownloadsFolderUsageDescription", "NSAppleEventsUsageDescription", "NSPhotoLibraryUsageDescription"])
         for (key, entry) in strings {
             let localizations = entry["localizations"] as? [String: [String: Any]] ?? [:]
             for language in AppLanguage.all.map(\.code) { XCTAssertNotNil(forms(localizations[language]).text, "\(language) is missing \(key)") }

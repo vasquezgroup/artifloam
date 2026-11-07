@@ -616,6 +616,161 @@
           }
         }
       }
+    },
+    "NSPhotoLibraryUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يعثر Artifloam على مقاطع الفيديو الكبيرة ولقطات الشاشة والنسخ المكررة لتختار ما تريد حذفه. تبقى صورك على Mac وفي iCloud."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’Artifloam troba vídeos grans, captures de pantalla i duplicats perquè triïs què vols esborrar. Les fotos es queden al Mac i a l’iCloud."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam findet große Videos, Screenshots und Duplikate, damit du auswählen kannst, was gelöscht wird. Deine Fotos bleiben auf deinem Mac und in deiner iCloud."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam finds large videos, screenshots and duplicates so you can choose what to delete. Your photos stay on your Mac and in your iCloud."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam finds large videos, screenshots and duplicates so you can choose what to delete. Your photos stay on your Mac and in your iCloud."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam finds large videos, screenshots and duplicates so you can choose what to delete. Your photos stay on your Mac and in your iCloud."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam finds large videos, screenshots and duplicates so you can choose what to delete. Your photos stay on your Mac and in your iCloud."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam encuentra vídeos grandes, capturas de pantalla y duplicados para que elijas qué borrar. Tus fotos permanecen en tu Mac y en tu iCloud."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam encuentra videos grandes, capturas de pantalla y duplicados para que elijas qué borrar. Tus fotos permanecen en tu Mac y en tu iCloud."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam trouve les vidéos volumineuses, les captures d’écran et les doublons pour que vous choisissiez ce qu’il faut supprimer. Vos photos restent sur votre Mac et dans votre iCloud."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam findet grossi Videos, Screenshots und Duplikat, damit du useläse chasch, was glöscht wird. Dini Fotos blibed uf dim Mac und i diner iCloud."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam बड़े वीडियो, स्क्रीनशॉट और डुप्लिकेट ढूँढता है ताकि आप चुन सकें कि क्या डिलीट करना है। आपकी फ़ोटो आपके Mac और आपके iCloud में ही रहती हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pronalazi velike videozapise, snimke zaslona i duplikate kako bi odabrao što želiš izbrisati. Tvoje fotografije ostaju na tvom Macu i na tvom iCloudu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam trova video grandi, screenshot e duplicati così puoi scegliere cosa eliminare. Le tue foto restano sul tuo Mac e nel tuo iCloud."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloamは大きなビデオ、スクリーンショット、重複を見つけ、削除するものを選べるようにします。写真はMacとiCloudに残ります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam은 큰 비디오, 스크린샷 및 중복 항목을 찾아 삭제할 항목을 직접 선택할 수 있게 해줍니다. 사진은 Mac과 iCloud에 그대로 유지됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam atrod lielus video, ekrānuzņēmumus un dublikātus, lai jūs varētu izvēlēties, ko dzēst. Jūsu fotoattēli paliek Mac datorā un iCloud."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam znajduje duże filmy, zrzuty ekranu i duplikaty, abyś mógł wybrać, co usunąć. Twoje zdjęcia pozostają na Macu i w iCloud."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Artifloam encontra vídeos grandes, capturas de ecrã e duplicados para que escolha o que eliminar. As suas fotografias ficam no seu Mac e no seu iCloud."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam gjen video të mëdha, pamje ekrani dhe dublikata që të zgjedhësh çfarë të fshish. Fotot e tua mbeten në Mac-un tënd dhe në iCloud-in tënd."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam проналази велике видео записе, снимке екрана и дупликате да би изабрао шта желиш да обришеш. Твоје фотографије остају на твом Macу и на твом iCloudу."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pronalazi velike video zapise, snimke ekrana i duplikate da bi izabrao šta želiš da obrišeš. Tvoje fotografije ostaju na tvom Macu i na tvom iCloudu."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam hittar stora videor, skärmbilder och dubbletter så att du kan välja vad som ska raderas. Dina bilder finns kvar på din Mac och i iCloud."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam, neyi sileceğini seçebilmen için büyük videoları, ekran resimlerini ve kopyaları bulur. Fotoğrafların Mac’inde ve iCloud’unda kalır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam 会找出大视频、屏幕截图和重复项，由你选择要删除的内容。你的照片会保留在 Mac 和 iCloud 中。"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

@@ -55,6 +55,32 @@ public struct IPhoneAppRow: Identifiable, Equatable, Sendable {
     }
 }
 
+/// What the iPhone app gets to show: only what it can't find out by itself. The iPhone app decodes the same JSON.
+public struct IPhoneAppList: Codable, Equatable, Sendable {
+    public static let bundleID = "com.vasquezgroup.artifloam.iphone"
+    public static let fileName = "mac-app-list.json"
+    public struct App: Codable, Equatable, Sendable {
+        public let name: String
+        public let appBytes: UInt64
+        public let dataBytes: UInt64
+    }
+    public let readAt: Date
+    public let apps: [App]
+    public init(rows: [IPhoneAppRow], readAt: Date = Date()) {
+        self.readAt = readAt
+        apps = rows.filter(\.measured).sorted { $0.totalBytes > $1.totalBytes }.map { App(name: $0.name, appBytes: $0.appBytes, dataBytes: $0.dataBytes) }
+    }
+    /// Nil when Artifloam isn't on that iPhone, or there's nothing to send.
+    public init?(report: IPhoneAppsReport, readAt: Date = Date()) {
+        guard report.apps.contains(where: { $0.bundleID == Self.bundleID }) else { return nil }
+        self.init(rows: report.apps, readAt: readAt)
+    }
+}
+
+extension JSONEncoder {
+    static var appList: JSONEncoder { let encoder = JSONEncoder(); encoder.dateEncodingStrategy = .iso8601; return encoder }
+}
+
 public struct IPhoneAppsReport: Equatable, Sendable {
     public let deviceID: String
     public let deviceName: String?
@@ -140,6 +166,35 @@ private struct MobileDevice {
         guard let handle = dlopen("/Library/Apple/System/Library/PrivateFrameworks/MobileDevice.framework/MobileDevice", RTLD_NOW),
               let found = dlsym(handle, "AMDeviceSecureUninstallApplication") else { return nil }
         return unsafeBitCast(found, to: (@convention(c) (Int32, Device, CFString, Int32, UnsafeRawPointer?, Int32) -> Int32).self)
+    }()
+    /// Writes into one app's own Documents folder, which is all this service can reach. Signatures follow ios-deploy; Apple doesn't document them.
+    struct AppFolder {
+        let open: @convention(c) (Device, CFString, CFDictionary?, UnsafeMutablePointer<UnsafeMutableRawPointer?>) -> Int32
+        let socket: @convention(c) (UnsafeMutableRawPointer) -> Int32
+        let secureContext: @convention(c) (UnsafeMutableRawPointer) -> UnsafeMutableRawPointer?
+        let invalidate: @convention(c) (UnsafeMutableRawPointer) -> Int32
+        let connect: @convention(c) (Int32, UInt32, UnsafeMutablePointer<UnsafeMutableRawPointer?>) -> Int32
+        let setSecureContext: @convention(c) (UnsafeMutableRawPointer, UnsafeMutableRawPointer) -> Int32
+        let close: @convention(c) (UnsafeMutableRawPointer) -> Int32
+        let openFile: @convention(c) (UnsafeMutableRawPointer, UnsafePointer<CChar>, UInt64, UnsafeMutablePointer<UInt64>) -> Int32
+        let write: @convention(c) (UnsafeMutableRawPointer, UInt64, UnsafeRawPointer, UInt32) -> Int32
+        let closeFile: @convention(c) (UnsafeMutableRawPointer, UInt64) -> Int32
+    }
+    static let appFolder: AppFolder? = {
+        guard let handle = dlopen("/Library/Apple/System/Library/PrivateFrameworks/MobileDevice.framework/MobileDevice", RTLD_NOW) else { return nil }
+        func symbol<T>(_ name: String) -> T? { dlsym(handle, name).map { unsafeBitCast($0, to: T.self) } }
+        guard let open: @convention(c) (Device, CFString, CFDictionary?, UnsafeMutablePointer<UnsafeMutableRawPointer?>) -> Int32 = symbol("AMDeviceCreateHouseArrestService"),
+              let socket: @convention(c) (UnsafeMutableRawPointer) -> Int32 = symbol("AMDServiceConnectionGetSocket"),
+              let secureContext: @convention(c) (UnsafeMutableRawPointer) -> UnsafeMutableRawPointer? = symbol("AMDServiceConnectionGetSecureIOContext"),
+              let invalidate: @convention(c) (UnsafeMutableRawPointer) -> Int32 = symbol("AMDServiceConnectionInvalidate"),
+              let connect: @convention(c) (Int32, UInt32, UnsafeMutablePointer<UnsafeMutableRawPointer?>) -> Int32 = symbol("AFCConnectionOpen"),
+              let setSecureContext: @convention(c) (UnsafeMutableRawPointer, UnsafeMutableRawPointer) -> Int32 = symbol("AFCConnectionSetSecureContext"),
+              let close: @convention(c) (UnsafeMutableRawPointer) -> Int32 = symbol("AFCConnectionClose"),
+              let openFile: @convention(c) (UnsafeMutableRawPointer, UnsafePointer<CChar>, UInt64, UnsafeMutablePointer<UInt64>) -> Int32 = symbol("AFCFileRefOpen"),
+              let write: @convention(c) (UnsafeMutableRawPointer, UInt64, UnsafeRawPointer, UInt32) -> Int32 = symbol("AFCFileRefWrite"),
+              let closeFile: @convention(c) (UnsafeMutableRawPointer, UInt64) -> Int32 = symbol("AFCFileRefClose")
+        else { return nil }
+        return AppFolder(open: open, socket: socket, secureContext: secureContext, invalidate: invalidate, connect: connect, setSecureContext: setSecureContext, close: close, openFile: openFile, write: write, closeFile: closeFile)
     }()
     static let shared: MobileDevice? = {
         guard let handle = dlopen("/Library/Apple/System/Library/PrivateFrameworks/MobileDevice.framework/MobileDevice", RTLD_NOW) else { return nil }
@@ -235,6 +290,40 @@ public final class IPhoneDeviceWatcher: @unchecked Sendable {
         guard framework.isPaired(device) == 1, framework.validatePairing(device) == 0, framework.startSession(device) == 0 else { return nil }
         defer { _ = framework.stopSession(device) }
         return (framework.copyValue(device, nil, "PasswordProtected" as CFString)?.takeRetainedValue() as? NSNumber)?.boolValue
+    }
+
+    /// Hands the app list to Artifloam on this iPhone, which can't read it by itself. Blocks, so call it off the main thread.
+    /// Only reaches that one app's Documents folder. Throws if the app isn't installed.
+    public func send(_ list: IPhoneAppList, deviceID: String) throws {
+        guard let framework = MobileDevice.shared, let folder = MobileDevice.appFolder else { throw IPhoneReadError.frameworkMissing }
+        let data = try JSONEncoder.appList.encode(list)
+        let devices: [UnsafeMutableRawPointer] = lock.withLock {
+            let devices = handles[deviceID] ?? []
+            devices.forEach { _ = framework.retain($0) }
+            return devices
+        }
+        defer { devices.forEach(framework.release) }
+        guard let device = devices.first else { throw IPhoneReadError.deviceGone }
+        guard framework.connect(device) == 0 else { throw IPhoneReadError.unreachable }
+        defer { _ = framework.disconnect(device) }
+        guard framework.isPaired(device) == 1, framework.validatePairing(device) == 0, framework.startSession(device) == 0 else { throw IPhoneReadError.unreachable }
+        defer { _ = framework.stopSession(device) }
+        var service: UnsafeMutableRawPointer?
+        var code = folder.open(device, IPhoneAppList.bundleID as CFString, nil, &service)
+        guard code == 0, let service else { throw IPhoneReadError.failed(code) }
+        defer { _ = folder.invalidate(service) }
+        var connection: UnsafeMutableRawPointer?
+        code = folder.connect(folder.socket(service), 0, &connection)
+        guard code == 0, let connection else { throw IPhoneReadError.failed(code) }
+        defer { _ = folder.close(connection) }
+        if let context = folder.secureContext(service) { _ = folder.setSecureContext(connection, context) }
+        var file: UInt64 = 0
+        // 3 opens for writing and replaces what's there.
+        code = folder.openFile(connection, "/Documents/" + IPhoneAppList.fileName, 3, &file)
+        guard code == 0 else { throw IPhoneReadError.failed(code) }
+        defer { _ = folder.closeFile(connection, file) }
+        code = data.withUnsafeBytes { folder.write(connection, file, $0.baseAddress!, UInt32($0.count)) }
+        guard code == 0 else { throw IPhoneReadError.failed(code) }
     }
 
     /// Permanently deletes one app and its data from this iPhone. Blocks, so call it off the main thread.

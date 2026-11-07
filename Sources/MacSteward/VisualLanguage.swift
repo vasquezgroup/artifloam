@@ -323,6 +323,7 @@ struct StewardNavigationArtwork: View {
         case "Space Map": return "space-map"
         case "System", "Applications": return "system"
         case "iPhone": return "iphone"
+        case "Photos": return "files"
         case "Tools", "App removal", "Leftovers": return "tools"
         case "Memory", "Performance": return "memory"
         case "Status": return "activity"

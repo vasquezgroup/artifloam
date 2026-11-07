@@ -2,19 +2,29 @@ import AVFoundation
 import Photos
 
 /// Makes the smaller copy first. The original is only removed afterwards, with iOS's confirmation, so a failure can't lose anything.
-enum MediaChanges {
-    struct Failure: LocalizedError {
-        let errorDescription: String?
+public enum MediaChanges {
+    public struct Failure: LocalizedError {
+        public let errorDescription: String?
     }
 
     /// Below this, a re-encode isn't worth losing the original for.
-    static let minimumSaving = 0.1
+    public static let minimumSaving = 0.1
 
-    static func isWorthKeeping(original: Int64, compressed: Int64) -> Bool {
+    public static func isWorthKeeping(original: Int64, compressed: Int64) -> Bool {
         compressed > 0 && Double(compressed) <= Double(original) * (1 - minimumSaving)
     }
 
-    static func exportSession(for asset: PHAsset) async throws -> (AVAssetExportSession, AVAsset) {
+    /// The original may have to download from iCloud first, and the copy needs room too. Twice the size covers both.
+    public static func hasRoom(for bytes: Int64, free: Int64) -> Bool { free >= bytes * 2 }
+
+    private static func checkRoom(for item: PhotoItem) throws {
+        let free = (try? URL.homeDirectory.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey]).volumeAvailableCapacityForImportantUsage) ?? 0
+        guard hasRoom(for: item.bytes, free: free) else {
+            throw Failure(errorDescription: String(localized: "There isn't enough free space to do this safely. It needs about twice the item's size."))
+        }
+    }
+
+    public static func exportSession(for asset: PHAsset) async throws -> (AVAssetExportSession, AVAsset) {
         let options = PHVideoRequestOptions()
         options.version = .original
         options.isNetworkAccessAllowed = true
@@ -29,7 +39,8 @@ enum MediaChanges {
     }
 
     /// Returns the new copy's size, or nil if the saving was too small and nothing was added.
-    static func compress(_ item: PhotoItem) async throws -> Int64? {
+    public static func compress(_ item: PhotoItem) async throws -> Int64? {
+        try checkRoom(for: item)
         let (session, original) = try await exportSession(for: item.asset)
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
         defer { try? FileManager.default.removeItem(at: url) }
@@ -56,7 +67,8 @@ enum MediaChanges {
     }
 
     /// Adds a still copy of a Live Photo, with its date and place.
-    static func makeStill(_ item: PhotoItem) async throws {
+    public static func makeStill(_ item: PhotoItem) async throws {
+        try checkRoom(for: item)
         let resources = PHAssetResource.assetResources(for: item.asset)
         guard let photo = resources.first(where: { $0.type == .fullSizePhoto }) ?? resources.first(where: { $0.type == .photo }) else {
             throw Failure(errorDescription: String(localized: "This Live Photo can't be converted."))

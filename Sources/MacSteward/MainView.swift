@@ -49,6 +49,7 @@ struct MainView: View {
         case "Duplicates", "My Clutter": return .files
         case "Applications": return .system
         case "iPhone": return .iphone
+        case "Photos": return .files
         case "Browsers", "Browser data": return .browsers
         case "Worktrees": return .worktrees
         case "Space Map": return .space
@@ -72,6 +73,7 @@ struct MainView: View {
         // Nothing to show means the start screen's big artwork, saying so, rather than an empty results page.
         case "Trash bins": return m.trashBins.report == nil || m.trashBins.report?.items == 0 || m.trashBins.scanning
         case "iPhone": return m.iphone.onStage
+        case "Photos": return PhotosModule.onStage
         default: return false
         }
     }
@@ -86,6 +88,7 @@ struct MainView: View {
         case "Trash bins": return m.trashBins.scanning
         case "My Clutter": return m.checking || m.largeFiles.task != nil
         case "iPhone": return m.iphone.reading
+        case "Photos": return PhotosModule.working
         default: return m.checking
         }
     }
@@ -100,6 +103,7 @@ struct MainView: View {
         case "Trash bins": m.trashBins.stop()
         case "My Clutter": m.stopChecks(); m.largeFiles.cancel()
         case "iPhone": m.iphone.stop()
+        case "Photos": PhotosModule.stop()
         default: m.stopChecks()
         }
     }
@@ -112,6 +116,7 @@ struct MainView: View {
         case "Browsers": return String(localized: "Measuring caches and website data for each browser…")
         case "Trash bins": return String(localized: "Asking Finder what the Trash holds…")
         case "iPhone": return String(localized: "Asking your iPhone for its apps. Keep it unlocked.")
+        case "Photos": return PhotosModule.progress
         case "My Clutter" where m.largeFiles.task != nil && !m.checking: return String(localized: "Reading file sizes…")
         default: return m.progress
         }
@@ -296,6 +301,7 @@ struct MainView: View {
                 else if isSummary { runSummary() }
                 else if m.section == "Duplicates" { m.scanDuplicates() }
                 else if m.section == "iPhone" { m.iphone.read() }
+                else if m.section == "Photos" { PhotosModule.start() }
                 else if m.section == "My Clutter" { scanClutter() }
                 else if ["Applications", "Leftovers"].contains(m.section) { m.leftovers.scan() }
                 else if m.section == "Login & background items" { m.startup.scan() }
@@ -447,7 +453,7 @@ struct MainView: View {
             summaryPill(sectionTitle("System"), icon: "checkmark.shield", value: String(localized: "\(m.protections.on) of \(m.protections.total) protections on")) { m.section = "System" }
         }
     }
-    static let modules = [("Overview", "sparkles"), ("Cleanup", "externaldrive.fill"), ("My Clutter", "doc.on.doc"), ("Applications", "checkmark.shield"), ("Browsers", "globe"), ("Space Map", "circle.dotted"), ("iPhone", "iphone")]
+    static let modules = [("Overview", "sparkles"), ("Cleanup", "externaldrive.fill"), ("My Clutter", "doc.on.doc"), ("Applications", "checkmark.shield"), ("Browsers", "globe"), ("Space Map", "circle.dotted"), ("Photos", "photo.on.rectangle"), ("iPhone", "iphone")]
     /// Live readings, not cleanup: small buttons in the window's top-right corner.
     static let corner = [("Performance", "gauge.with.dots.needle.67percent"), ("Status", "waveform.path.ecg")]
     // Automation and Activity live inside Settings as tabs.
@@ -633,6 +639,10 @@ struct MainView: View {
                 subtitle = String(localized: "Files in the Trash use space until it's emptied.")
                 points = [("trash", String(localized: "On your Mac and connected drives")), ("internaldrive", String(localized: "Space you can get back")), ("lock", String(localized: "Nothing goes until you confirm"))]
             }
+        case "Photos":
+            title = String(localized: "Find what's taking room in Photos.")
+            subtitle = title
+            points = [("photo.on.rectangle", String(localized: "Duplicates, similar and blurred photos")), ("video", String(localized: "Compress large videos")), ("livephoto", String(localized: "Turn off Live Photos"))]
         case "iPhone":
             title = m.iphone.stageLine
             subtitle = title
@@ -724,6 +734,7 @@ struct MainView: View {
         case "Browser data": BrowserDataView(state: m.browsers)
         case "Browsers": BrowsersModuleView(state: m.browsers)
         case "iPhone": IPhoneView(state: m.iphone)
+        case "Photos": PhotosModuleView()
         case "Status": StatusView(state: m.status, memory: m.memory)
         case "Memory": MemoryView(monitor: m.memory)
         case "My Clutter": module("My Clutter", String(localized: "Duplicates across your home folder and large, old files."), tabs: ["Duplicates", "Large & old files"], selection: $clutterTab, summary: clutterSummary, scanAll: scanClutter) {

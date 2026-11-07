@@ -52,6 +52,7 @@ cat > "$steward_app/Contents/Info.plist" <<'PLIST'
 <key>NSDesktopFolderUsageDescription</key><string>Measure Desktop storage for Space Map. Files stay unchanged until you review a cleanup.</string>
 <key>NSDocumentsFolderUsageDescription</key><string>Measure storage and find disposable leftovers in Documents. You review every cleanup.</string>
 <key>NSAppleEventsUsageDescription</key><string>Artifloam asks Finder what the Trash holds and to empty it, and System Events to list, add or remove login items you choose.</string>
+<key>NSPhotoLibraryUsageDescription</key><string>Artifloam finds large videos, screenshots and duplicates so you can choose what to delete. Your photos stay on your Mac and in your iCloud.</string>
 <key>NSDownloadsFolderUsageDescription</key><string>Find large files and exact duplicates in Downloads. You choose what moves to Trash.</string>
 </dict></plist>
 PLIST
@@ -67,8 +68,9 @@ if [[ "$steward_signing_identity" != "-" ]]; then
   steward_signing_options+=(--timestamp)
 fi
 codesign "${steward_signing_options[@]}" --identifier com.vasquezgroup.artifloam.stewardctl "$steward_app/Contents/Helpers/stewardctl"
-codesign "${steward_signing_options[@]}" "$steward_app/Contents/MacOS/MacSteward"
-codesign "${steward_signing_options[@]}" "$steward_app"
+# The hardened runtime blocks the Photos library unless the app says it needs it.
+codesign "${steward_signing_options[@]}" --entitlements scripts/Artifloam.entitlements "$steward_app/Contents/MacOS/MacSteward"
+codesign "${steward_signing_options[@]}" --entitlements scripts/Artifloam.entitlements "$steward_app"
 codesign --verify --deep --strict "$steward_app"
 # Preserve the current bundle until the replacement has been built and verified.
 # Keep its backup for a running instance and for local rollback.

@@ -62,9 +62,15 @@ Measured on an iPhone 12 with 24,254 items, Release build. A first scan reads ev
 
 Measure with a Release build. Debug is far slower.
 
+## Shared with the Mac
+
+`Artifloam/Shared` holds the photo scan, cache and media changes. It's also the `PhotoEngine` target in the root `Package.swift`, which the Mac's Photos section uses, so a change there affects both apps. Everything used by the Mac must be `public`.
+
+After reading an iPhone, the Mac writes `Documents/mac-app-list.json` into this app over the cable, and the Apps tab shows it. `UIFileSharingEnabled` allows that in App Store builds.
+
 ## Translations
 
-The app has the Mac app's 25 languages, in `Localizable.xcstrings`, `InfoPlist.xcstrings` and the widget's `Localizable.xcstrings`. New text needs adding to the catalogs. Text with `^[…](inflect: true)` needs plain plural forms in every language except English. They're machine translated, so have a native speaker check them before release.
+The app has the Mac app's 25 languages, in `Localizable.xcstrings`, `InfoPlist.xcstrings` and the widget's `Localizable.xcstrings`. New text needs adding to the catalogs, and `scripts/check-iphone-strings.sh` fails until it is. Text with `^[…](inflect: true)` needs plain plural forms in every language except English. They're machine translated, so have a native speaker check them before release.
 
 ## Rules to keep
 

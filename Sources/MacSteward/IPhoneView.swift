@@ -113,6 +113,8 @@ final class IPhoneState: ObservableObject {
             reading = false
             switch result {
             case .success(let report): self.report = report
+                // Artifloam on the iPhone can't see other apps, so it gets this list whenever one is read. Not worth an error if it fails.
+                if let list = IPhoneAppList(report: report) { Task.detached(priority: .utility) { try? watcher.send(list, deviceID: id) } }
             case .failure(let error): problem = error as? IPhoneReadError ?? .failed(-1)
             }
         }

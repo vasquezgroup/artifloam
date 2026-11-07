@@ -11,6 +11,7 @@ enum ScanInfo {
         ("Applications", ["Leftovers"]),
         ("Browsers", ["Browser data"]),
         ("Space Map", ["Space Map"]),
+        ("Photos", ["Photos"]),
     ]
     /// Pages reached from inside a module run a single tool.
     static func tools(for section: String) -> [String] {

@@ -318,4 +318,14 @@ final class WhatsAppBackupTests: XCTestCase {
         XCTAssertEqual(WhatsAppMediaKind(path: "a/b.docx"), .documents)
         XCTAssertEqual(WhatsAppMediaKind(path: "a/b"), .other)
     }
+
+    func testAppListIsOnlySentWhenTheIPhoneAppIsThere() throws {
+        let other = IPhoneAppRow(name: "Small", bundleID: "a.b", appBytes: 1, dataBytes: 1, measured: true)
+        let big = IPhoneAppRow(name: "Big", bundleID: "c.d", appBytes: 5, dataBytes: 5, measured: true)
+        let unmeasured = IPhoneAppRow(name: "Unknown", bundleID: "e.f", appBytes: 0, dataBytes: 0, measured: false)
+        let ours = IPhoneAppRow(name: "Artifloam", bundleID: IPhoneAppList.bundleID, appBytes: 3, dataBytes: 0, measured: true)
+        XCTAssertNil(IPhoneAppList(report: IPhoneAppsReport(deviceID: "x", deviceName: nil, apps: [other, big])))
+        let list = try XCTUnwrap(IPhoneAppList(report: IPhoneAppsReport(deviceID: "x", deviceName: nil, apps: [other, big, unmeasured, ours])))
+        XCTAssertEqual(list.apps.map(\.name), ["Big", "Artifloam", "Small"])
+    }
 }

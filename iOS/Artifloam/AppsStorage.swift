@@ -4,22 +4,62 @@ import SwiftUI
 struct AppsStorageView: View {
     private static let common = ["WhatsApp", "Netflix", "YouTube", "Roblox", "TikTok", "Instagram", "Facebook", "Spotify", "Telegram", "Prime Video", "Messages", "Games and other apps"]
 
+    @State private var list = MacAppList.load()
+
     var body: some View {
         StagePage(theme: .iphone, title: "Apps", subtitle: "Connect to your Mac to see and delete every app.", artwork: "iphone-connect") {
-            GlassCard {
-                Text("See every app, by size").font(.headline)
-                Text("iOS doesn't show other apps' sizes to an iPhone app. Connect this iPhone to Artifloam on your Mac to list every app, delete the ones you don't need, and see WhatsApp by person or group.").font(.subheadline)
-            }
-            GlassCard {
-                Text("Cleaning common apps").font(.headline)
-                ForEach(Self.common, id: \.self) { name in
-                    NavigationLink { AdviceView(name: name, advice: StorageAdvice.lookup(name)) } label: {
-                        FeatureRow(icon: "category-drive", title: LocalizedStringKey(name))
+            if let list {
+                GlassCard {
+                    Text("See every app, by size").font(.headline)
+                    Text("Read by your Mac on \(list.readAt, style: .date)").font(.footnote).foregroundStyle(.white.opacity(0.7))
+                    LazyVStack(spacing: 12) {
+                        ForEach(list.apps) { app in
+                            NavigationLink { AdviceView(name: app.name, advice: StorageAdvice.lookup(app.name)) } label: {
+                                FeatureRow(icon: "category-drive", title: "\(app.name)", detail: Text("App \(formatted(app.appBytes)) · Data \(formatted(app.dataBytes))"), value: formatted(app.appBytes + app.dataBytes))
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
-                    .buttonStyle(.plain)
+                }
+            } else {
+                GlassCard {
+                    Text("See every app, by size").font(.headline)
+                    Text("iOS doesn't show other apps' sizes to an iPhone app. Connect this iPhone to Artifloam on your Mac to list every app, delete the ones you don't need, and see WhatsApp by person or group.").font(.subheadline)
+                }
+                GlassCard {
+                    Text("Cleaning common apps").font(.headline)
+                    ForEach(Self.common, id: \.self) { name in
+                        NavigationLink { AdviceView(name: name, advice: StorageAdvice.lookup(name)) } label: {
+                            FeatureRow(icon: "category-drive", title: LocalizedStringKey(name))
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
             }
         }
+        .onAppear { list = MacAppList.load() }
+    }
+}
+
+/// The list Artifloam on the Mac leaves here over the cable, because an iPhone app can't see other apps. See IPhoneAppList on the Mac.
+struct MacAppList: Decodable {
+    struct App: Decodable, Identifiable {
+        let name: String
+        let appBytes: Int64
+        let dataBytes: Int64
+        var id: String { name }
+    }
+    let readAt: Date
+    let apps: [App]
+
+    static func decode(_ data: Data) -> MacAppList? {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return try? decoder.decode(MacAppList.self, from: data)
+    }
+    static func load() -> MacAppList? {
+        guard let data = try? Data(contentsOf: URL.documentsDirectory.appending(path: "mac-app-list.json")), let list = decode(data), !list.apps.isEmpty else { return nil }
+        return list
     }
 }
 

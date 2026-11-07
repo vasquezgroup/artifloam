@@ -37,7 +37,7 @@ struct OverviewView: View {
         .refreshable { Task { await library.scan() } }
         .navigationDestination(isPresented: $reviewing) {
             // Ticked in advance because they're recommended. Nothing goes until the person has seen them and pressed Delete.
-            PhotoReviewView(title: "Recommended", note: "Exact copies, and screenshots over 90 days old. Untick anything to keep. Items in iCloud may free less on this iPhone.", theme: .care, groups: library.recommendedGroups, preselected: true)
+            PhotoReviewView(title: "Recommended", note: "Exact copies, and screenshots over 90 days old. Untick anything to keep. Items in iCloud may free less on this device.", theme: .care, groups: library.recommendedGroups, preselected: true)
         }
         .orbFooter(summary: library.scanSummary) {
             if library.phase == .done && !picks.isEmpty {

@@ -183,4 +183,17 @@ final class ArtifloamLogicTests: XCTestCase {
         XCTAssertEqual(counts.screenshotBytes, 5)
         XCTAssertEqual(counts.livePhotoBytes, 3)
     }
+
+    func testMacAppListDecodesWhatTheMacWrites() throws {
+        let json = #"{"readAt":"2026-11-07T12:00:00Z","apps":[{"name":"Netflix","appBytes":10,"dataBytes":20}]}"#
+        let list = try XCTUnwrap(MacAppList.decode(Data(json.utf8)))
+        XCTAssertEqual(list.apps.first?.name, "Netflix")
+        XCTAssertEqual(list.apps.first?.dataBytes, 20)
+        XCTAssertNil(MacAppList.decode(Data("nonsense".utf8)))
+    }
+
+    func testRoomCheckNeedsTwiceTheSize() {
+        XCTAssertTrue(MediaChanges.hasRoom(for: 100, free: 200))
+        XCTAssertFalse(MediaChanges.hasRoom(for: 100, free: 199))
+    }
 }
