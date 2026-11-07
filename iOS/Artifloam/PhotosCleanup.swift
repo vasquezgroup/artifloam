@@ -7,7 +7,7 @@ enum MediaSection {
     var theme: StewardTheme { self == .photos ? .cleanup : .files }
     var title: LocalizedStringKey { self == .photos ? "Photos" : "Videos" }
     var subtitle: LocalizedStringKey { self == .photos ? "Keep the best, lose the rest." : "Big memories, smaller files." }
-    var categories: [PhotoCategory] { self == .photos ? [.duplicates, .similar, .blurred, .screenshots, .livePhotos] : [.largeVideos, .oldVideos, .screenRecordings] }
+    var categories: [PhotoCategory] { self == .photos ? [.duplicates, .similar, .blurred, .screenshots] : [.largeVideos, .oldVideos, .screenRecordings] }
 }
 
 struct MediaSectionView: View {
@@ -29,6 +29,12 @@ struct MediaSectionView: View {
                     }
                     .buttonStyle(.plain)
                 }
+                if section == .photos {
+                    NavigationLink { LivePhotosView() } label: {
+                        GlassCard { FeatureRow(icon: "category-branch", title: "Turn off Live Photos", detail: Text("Keep the photo, remove its short video."), value: library.items(.livePhotos).isEmpty ? nil : formatted(library.saving(.livePhotos))) }
+                    }
+                    .buttonStyle(.plain)
+                }
                 GlassCard {
                     ForEach(section.categories) { category in
                         let items = library.items(category)
@@ -46,12 +52,12 @@ struct MediaSectionView: View {
                         .opacity(items.isEmpty ? 0.5 : 1)
                     }
                 }
-                ScanOrb(theme: section.theme)
                 Text("Sizes are the full originals. If you use Optimize iPhone Storage, deleting may free less on this iPhone. Favourites are never listed.")
                     .font(.footnote).foregroundStyle(.white.opacity(0.65)).multilineTextAlignment(.center)
             }
         }
         .refreshable { await library.scan() }
+        .orbFooter(summary: library.scanSummary) { ScanOrb(theme: section.theme) }
     }
 }
 
@@ -68,6 +74,7 @@ struct PhotoReviewView: View {
     @State private var selection: Set<String> = []
     @State private var dropped: Set<String> = []
     @State private var didPreselect = false
+    @State private var columns = 3
 
     private var liveGroups: [CleanupGroup] {
         (category.flatMap { library.results[$0] } ?? groups).map { CleanupGroup(keep: $0.keep, items: $0.items.filter { !dropped.contains($0.id) }) }.filter { !$0.items.isEmpty }
@@ -76,13 +83,16 @@ struct PhotoReviewView: View {
     private var selectedBytes: Int64 { items.filter { selection.contains($0.id) }.reduce(0) { $0 + $1.bytes } }
 
     var body: some View {
-        DetailPage(theme: theme, title: title) {
-            Text(note).font(.subheadline)
-            Text("Deleted items stay in Recently Deleted for about 30 days. With iCloud Photos they leave all your devices.").font(.footnote).foregroundStyle(.white.opacity(0.7))
-            NavigationLink { SwipeReviewView(items: items, theme: theme) } label: {
-                Label("Swipe through them", systemImage: "hand.draw").fontWeight(.medium)
+        PhotoPage(theme: theme, title: title, columns: $columns) {
+            VStack(alignment: .leading, spacing: 10) {
+                Text(note).font(.subheadline)
+                Text("Deleted items stay in Recently Deleted for about 30 days. With iCloud Photos they leave all your devices.").font(.footnote).foregroundStyle(.white.opacity(0.7))
+                NavigationLink { SwipeReviewView(items: items, theme: theme) } label: {
+                    Label("Swipe through them", systemImage: "hand.draw").fontWeight(.medium)
+                }
             }
-            PhotoGrid(groups: liveGroups, selection: $selection) { item in
+        } grid: {
+            PhotoGrid(groups: liveGroups, selection: $selection, columnCount: $columns) { item in
                 library.protect(item)
                 dropped.insert(item.id)
                 selection.remove(item.id)
@@ -94,23 +104,60 @@ struct PhotoReviewView: View {
                 selection = selection.count == items.count ? [] : Set(items.map(\.id))
             }
         }
-        .safeAreaInset(edge: .bottom) {
-            if !selection.isEmpty {
-                Button(role: .destructive) {
-                    let chosen = selection
-                    Task {
-                        if await library.delete(chosen) {
-                            dropped.formUnion(chosen)
-                            selection = []
-                            if items.isEmpty { dismiss() }
-                        }
+        .orbFooter(summary: selection.isEmpty ? nil : Text("\(formatted(selectedBytes))\n^[\(selection.count) item](inflect: true)")) {
+            OrbAction(title: "Delete", icon: "trash", accent: theme.vivid, disabled: selection.isEmpty) {
+                let chosen = selection
+                Task {
+                    if await library.delete(chosen) {
+                        dropped.formUnion(chosen)
+                        selection = []
+                        if items.isEmpty { dismiss() }
                     }
-                } label: {
-                    Text("Delete \(selection.count), up to \(formatted(selectedBytes))").fontWeight(.semibold).frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.borderedProminent).controlSize(.large).tint(.red).padding(.horizontal, 16).padding(.bottom, 8)
             }
         }
+    }
+}
+
+/// A page of photos, edge to edge. Once pictures are large, everything else fades away so they get the whole screen.
+struct PhotoPage<Header: View, Grid: View>: View {
+    let theme: StewardTheme
+    let title: LocalizedStringKey
+    @Binding var columns: Int
+    @ViewBuilder let header: Header
+    @ViewBuilder let grid: Grid
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private var fullScreen: Bool { columns <= 2 }
+
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            AtmosphereView(theme: theme)
+            if fullScreen { Color.black.ignoresSafeArea().transition(.opacity) }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    if !fullScreen { header.padding(.horizontal, 16).transition(.opacity) }
+                    grid
+                }
+            }
+            .ignoresSafeArea(.container, edges: fullScreen ? [.top, .horizontal] : .horizontal)
+            if fullScreen {
+                Button { dismiss() } label: {
+                    Image(systemName: "chevron.backward").font(.body.weight(.semibold)).foregroundStyle(.white).frame(width: 40, height: 40).background(.ultraThinMaterial, in: .circle)
+                }
+                .accessibilityLabel("Back").padding(.leading, 14).padding(.top, 6).transition(.opacity)
+            }
+        }
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.28), value: fullScreen)
+        .navigationTitle(fullScreen ? "" : title)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(fullScreen)
+        .toolbar(fullScreen ? .hidden : .automatic, for: .navigationBar)
+        .toolbar(fullScreen ? .hidden : .automatic, for: .tabBar)
+        .statusBarHidden(fullScreen)
+        .environment(\.stewardTheme, theme)
+        .tint(theme.accent)
     }
 }
 
@@ -119,6 +166,9 @@ struct PhotoCell: View {
     let item: PhotoItem
     let state: CellState
     var side: CGFloat = 320
+    /// One column shows the whole picture instead of a square crop.
+    var whole = false
+    var showsSize = true
     var toggle: () -> Void = {}
     var protect: (() -> Void)? = nil
     @State private var image: UIImage?
@@ -129,13 +179,14 @@ struct PhotoCell: View {
     var body: some View {
         Button(action: toggle) {
             Color.white.opacity(0.08)
-                .aspectRatio(1, contentMode: .fit)
+                .aspectRatio(whole && item.asset.pixelHeight > 0 ? CGFloat(item.asset.pixelWidth) / CGFloat(item.asset.pixelHeight) : 1, contentMode: .fit)
                 .overlay { if let image { Image(uiImage: image).resizable().scaledToFill() } }
-                .clipShape(.rect(cornerRadius: 8))
-                .overlay { if selected { RoundedRectangle(cornerRadius: 8).fill(.black.opacity(0.22)).overlay { RoundedRectangle(cornerRadius: 8).stroke(.white, lineWidth: 2) } } }
-                .scaleEffect(selected && !reduceMotion ? 0.93 : 1)
+                .clipped()
+                .overlay { if selected { Rectangle().fill(.black.opacity(0.22)).overlay { Rectangle().stroke(.white, lineWidth: 2) } } }
+                // Smaller inset on large pictures, or it would leave wide borders.
+                .scaleEffect(selected && !reduceMotion ? (whole ? 0.985 : 0.93) : 1)
                 .overlay(alignment: .bottomLeading) {
-                    if state != .picture && side >= 200 { Text(state == .keeps ? String(localized: "Stays") : formatted(item.saving)).font(.caption2.bold()).foregroundStyle(.white).padding(4)
+                    if state != .picture && showsSize { Text(state == .keeps ? String(localized: "Stays") : formatted(item.saving)).font(.caption2.bold()).foregroundStyle(.white).padding(4)
                         .background(state == .keeps ? AnyShapeStyle(StewardTheme.cleanup.vivid) : AnyShapeStyle(.black.opacity(0.6)), in: .rect(cornerRadius: 4)).padding(4) }
                 }
                 .overlay(alignment: .topTrailing) {
@@ -219,11 +270,13 @@ func swipeSelection(base: Set<String>, ids: [String], anchor: Int, current: Int,
     return selecting ? base.union(range) : base.subtracting(range)
 }
 
-/// Pinching out makes pictures bigger, so fewer columns. One step per gesture stage, so it never jumps.
-func columns(from current: Int, pinch: CGFloat) -> Int {
-    if pinch > 1.25 { return max(current - 1, PhotoGrid.columnRange.lowerBound) }
-    if pinch < 0.8 { return min(current + 1, PhotoGrid.columnRange.upperBound) }
-    return current
+/// Keeps a picture the same size on screen while the grid swaps to the column count closest to it,
+/// so a pinch feels continuous. Returns the columns to show and the scale still left to apply.
+func zoomStep(columns: Int, scale: CGFloat) -> (columns: Int, scale: CGFloat) {
+    let share = scale / CGFloat(columns)
+    let ideal = Int((1 / share).rounded())
+    let next = Swift.min(Swift.max(ideal, PhotoGrid.columnRange.lowerBound), PhotoGrid.columnRange.upperBound)
+    return (next, Swift.min(Swift.max(share * CGFloat(next), 0.78), 1.3))
 }
 
 private struct CellFrames: PreferenceKey {
@@ -241,48 +294,51 @@ private struct CellFrameReader: View {
     }
 }
 
-/// Selection that behaves like Photos: tap to select, swipe across to select many, pinch to change size, hold to see it large.
+/// Selection that behaves like Photos: tap to select, swipe across to select many, pinch to resize smoothly, hold to see it large.
 struct PhotoGrid: View {
     static let columnRange = 1...7
     let groups: [CleanupGroup]
     @Binding var selection: Set<String>
+    @Binding var columnCount: Int
     var protect: ((PhotoItem) -> Void)? = nil
-    @AppStorage("photoColumns") private var columnCount = 3
     @State private var frames: [String: CGRect] = [:]
-    @State private var pinchBase: CGFloat = 1
+    @State private var liveScale: CGFloat = 1
+    @State private var lastMagnification: CGFloat = 1
+    @State private var zoomAnchor = UnitPoint.center
+    @State private var anchorID: String?
     @State private var swipe: (anchor: Int, selecting: Bool, base: Set<String>)?
     @State private var locked = false
-    @State private var width: CGFloat = 390
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var ids: [String] { groups.flatMap(\.items).map(\.id) }
-    private var side: CGFloat {
-        let pixels: CGFloat = width / CGFloat(columnCount) * UIScreen.main.scale
-        return Swift.max(CGFloat(160), Swift.min(CGFloat(1200), pixels))
-    }
+    /// In steps, so resizing doesn't reload every picture at each column.
+    private var side: CGFloat { columnCount == 1 ? 1400 : columnCount == 2 ? 800 : 360 }
 
     var body: some View {
-        VStack(spacing: 12) {
-            ForEach(groups) { group in
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 3), count: columnCount), spacing: 3) {
-                    if let keep = group.keep { PhotoCell(item: keep, state: .keeps, side: side) }
-                    ForEach(group.items) { item in
-                        PhotoCell(item: item, state: selection.contains(item.id) ? .selected : .available, side: side) {
-                            if !selection.insert(item.id).inserted { selection.remove(item.id) }
-                        } protect: { protect?(item) }
-                        .background(CellFrameReader(id: item.id))
+        ScrollViewReader { proxy in
+            VStack(spacing: 2) {
+                ForEach(groups) { group in
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 2), count: columnCount), spacing: 2) {
+                        if let keep = group.keep { PhotoCell(item: keep, state: .keeps, side: side, whole: columnCount == 1).id(keep.id) }
+                        ForEach(group.items) { item in
+                            PhotoCell(item: item, state: selection.contains(item.id) ? .selected : .available, side: side, whole: columnCount == 1, showsSize: columnCount <= 4) {
+                                if !selection.insert(item.id).inserted { selection.remove(item.id) }
+                            } protect: { protect?(item) }
+                            .id(item.id)
+                            .background(CellFrameReader(id: item.id))
+                        }
                     }
                 }
             }
+            .coordinateSpace(.named("photoGrid"))
+            .onPreferenceChange(CellFrames.self) { frames = $0 }
+            .scaleEffect(liveScale, anchor: zoomAnchor)
+            .simultaneousGesture(swipeGesture)
+            .simultaneousGesture(pinchGesture(proxy))
+            .scrollDisabled(locked)
+            .accessibilityAction(named: "Bigger pictures") { columnCount = Swift.max(columnCount - 1, Self.columnRange.lowerBound) }
+            .accessibilityAction(named: "Smaller pictures") { columnCount = Swift.min(columnCount + 1, Self.columnRange.upperBound) }
         }
-        .coordinateSpace(.named("photoGrid"))
-        .background { GeometryReader { geometry in Color.clear.onAppear { width = geometry.size.width }.onChange(of: geometry.size.width) { _, new in width = new } } }
-        .onPreferenceChange(CellFrames.self) { frames = $0 }
-        .simultaneousGesture(swipeGesture)
-        .simultaneousGesture(pinchGesture)
-        .scrollDisabled(locked)
-        .accessibilityAction(named: "Bigger pictures") { columnCount = max(columnCount - 1, Self.columnRange.lowerBound) }
-        .accessibilityAction(named: "Smaller pictures") { columnCount = min(columnCount + 1, Self.columnRange.upperBound) }
     }
 
     /// A swipe that starts sideways selects. One that starts up or down is left to scroll, as in Photos.
@@ -300,15 +356,32 @@ struct PhotoGrid: View {
             .onEnded { _ in swipe = nil; locked = false }
     }
 
-    private var pinchGesture: some Gesture {
-        MagnifyGesture()
+    /// The pictures follow the fingers exactly. When they get close to another column count the grid changes
+    /// underneath at the same visual size, with no animation, so nothing jumps. Letting go settles it.
+    private func pinchGesture(_ proxy: ScrollViewProxy) -> some Gesture {
+        MagnifyGesture(minimumScaleDelta: 0)
             .onChanged { value in
-                let next = columns(from: columnCount, pinch: value.magnification / pinchBase)
-                guard next != columnCount else { return }
-                pinchBase = value.magnification
-                if reduceMotion { columnCount = next } else { withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) { columnCount = next } }
+                if lastMagnification == 1 && liveScale == 1 {
+                    zoomAnchor = value.startAnchor
+                    anchorID = frames.first { $0.value.contains(value.startLocation) }?.key
+                }
+                let total = liveScale * value.magnification / lastMagnification
+                lastMagnification = value.magnification
+                let step = zoomStep(columns: columnCount, scale: total)
+                var quiet = Transaction()
+                quiet.disablesAnimations = true
+                withTransaction(quiet) {
+                    if step.columns != columnCount {
+                        columnCount = step.columns
+                        if let anchorID { proxy.scrollTo(anchorID, anchor: zoomAnchor) }
+                    }
+                    liveScale = step.scale
+                }
             }
-            .onEnded { _ in pinchBase = 1 }
+            .onEnded { _ in
+                lastMagnification = 1
+                if reduceMotion { liveScale = 1 } else { withAnimation(.spring(response: 0.34, dampingFraction: 0.86)) { liveScale = 1 } }
+            }
     }
 
     private func index(at point: CGPoint) -> Int? {
@@ -393,6 +466,7 @@ struct CompressView: View {
     @State private var selection: Set<String> = []
     @State private var running = false
     @State private var progress = 0
+    @State private var total = 0
     @State private var result: LocalizedStringKey?
     @State private var failure: String?
 
@@ -425,13 +499,8 @@ struct CompressView: View {
             }
             if let result { GlassCard { Text(result) } }
         }
-        .safeAreaInset(edge: .bottom) {
-            if running {
-                ProgressView("Compressing \(progress) of \(selection.count)").tint(.white).foregroundStyle(.white).padding(12).frame(maxWidth: .infinity)
-            } else if !selection.isEmpty {
-                Button { Task { await run() } } label: { Text("Compress \(selection.count)").fontWeight(.semibold).frame(maxWidth: .infinity) }
-                    .buttonStyle(.borderedProminent).controlSize(.large).tint(StewardTheme.files.vivid).padding(.horizontal, 16).padding(.bottom, 8)
-            }
+        .orbFooter(summary: running ? Text("\(progress) of \(total)") : selection.isEmpty ? nil : Text("^[\(selection.count) video](inflect: true)")) {
+            OrbAction(title: "Compress", icon: "arrow.down.right.and.arrow.up.left", accent: StewardTheme.files.vivid, disabled: selection.isEmpty || running) { Task { await run() } }
         }
         .alert("Couldn't compress", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) { Button("OK", role: .cancel) {} } message: { Text(failure ?? "") }
     }
@@ -447,6 +516,7 @@ struct CompressView: View {
     private func run() async {
         running = true
         progress = 0
+        total = selection.count
         var done: Set<String> = []
         var saved: Int64 = 0
         var skipped = 0
@@ -485,23 +555,23 @@ struct LivePhotosView: View {
     @State private var running = false
     @State private var result: LocalizedStringKey?
     @State private var failure: String?
+    @State private var columns = 3
 
     private var items: [PhotoItem] { library.items(.livePhotos) }
 
     var body: some View {
-        DetailPage(theme: .cleanup, title: "Live Photos") {
-            Text("Keeps the photo with its date and place, and removes the short video. Sizes show what you'd save.").font(.subheadline)
-            PhotoGrid(groups: items.isEmpty ? [] : [CleanupGroup(items: items)], selection: $selection)
-            if let result { GlassCard { Text(result) } }
+        PhotoPage(theme: .cleanup, title: "Turn off Live Photos", columns: $columns) {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Keeps the photo with its date and place, and removes the short video. Sizes show what you'd save.").font(.subheadline)
+                if items.isEmpty { GlassCard { Text(library.phase == .idle ? "Press Scan first to find your Live Photos." : "No Live Photos found.") } }
+                if let result { GlassCard { Text(result) } }
+            }
+        } grid: {
+            PhotoGrid(groups: items.isEmpty ? [] : [CleanupGroup(items: items)], selection: $selection, columnCount: $columns)
         }
         .toolbar { Button(selection.count == items.count ? "Select None" : "Select All") { selection = selection.count == items.count ? [] : Set(items.map(\.id)) } }
-        .safeAreaInset(edge: .bottom) {
-            if running {
-                ProgressView("Converting").tint(.white).foregroundStyle(.white).padding(12).frame(maxWidth: .infinity)
-            } else if !selection.isEmpty {
-                Button { Task { await run() } } label: { Text("Convert \(selection.count)").fontWeight(.semibold).frame(maxWidth: .infinity) }
-                    .buttonStyle(.borderedProminent).controlSize(.large).tint(StewardTheme.cleanup.vivid).padding(.horizontal, 16).padding(.bottom, 8)
-            }
+        .orbFooter(summary: selection.isEmpty ? nil : Text("^[\(selection.count) photo](inflect: true)")) {
+            OrbAction(title: "Convert", icon: "livephoto.slash", accent: StewardTheme.cleanup.vivid, disabled: selection.isEmpty || running, progress: running ? nil : nil) { Task { await run() } }
         }
         .alert("Couldn't convert", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) { Button("OK", role: .cancel) {} } message: { Text(failure ?? "") }
     }

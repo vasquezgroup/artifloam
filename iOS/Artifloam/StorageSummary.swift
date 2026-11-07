@@ -31,13 +31,15 @@ struct StorageSummaryView: View {
                     Text("Scan your library to see more").font(.headline)
                     Text("Press Scan to see what's on this iPhone and in iCloud, what could go, and your biggest items.").font(.footnote).foregroundStyle(.white.opacity(0.75))
                 }
-                ScanOrb(theme: .space).frame(maxWidth: .infinity)
             } else {
                 libraryCard
                 cleanCard
                 yearsCard
                 biggestCard
             }
+        }
+        .orbFooter(summary: library.scanSummary) {
+            if library.phase == .idle || library.working { ScanOrb(theme: .space) }
         }
     }
 

@@ -46,6 +46,13 @@ struct OverviewView: View {
             Text("iOS doesn't let any app look inside another app or clear its data. Artifloam only shows what it can really see, and removes nothing until you choose.")
                 .font(.footnote).foregroundStyle(.white.opacity(0.65)).multilineTextAlignment(.center)
         }
+        .orbFooter(summary: footerSummary) {
+            if library.phase == .done && !library.recommended.isEmpty {
+                OrbAction(title: "Review", icon: "sparkles", accent: StewardTheme.care.vivid) { reviewing = true }
+            } else {
+                ScanOrb(theme: .care)
+            }
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { space = DiskSpace.current }
         }
@@ -64,13 +71,11 @@ struct OverviewView: View {
                     Text(library.phase == .reading ? "Reading your library" : "Looking for similar and blurred photos").font(.headline)
                     Text("\(library.checked) of \(library.total) checked").font(.footnote).foregroundStyle(.white.opacity(0.7)).monospacedDigit()
                 }
-                ScanOrb(theme: .care)
             } else if library.phase == .stopped {
                 VStack(spacing: 4) {
                     Text("Scan stopped").font(.headline)
                     Text("Results may be incomplete.").font(.footnote).foregroundStyle(.white.opacity(0.7))
                 }
-                ScanOrb(theme: .care)
             }
             summary
         }
@@ -87,24 +92,29 @@ struct OverviewView: View {
                 Text("Recommended: ^[\(picks.count) item](inflect: true), up to \(formatted(bytes))").font(.headline).multilineTextAlignment(.center)
                 Text("Exact copies, and screenshots over 90 days old. You'll see each one first, and can untick any you want to keep.").font(.footnote).foregroundStyle(.white.opacity(0.75)).multilineTextAlignment(.center)
                 if library.phase == .done {
-                    OrbAction(title: "Review", icon: "sparkles", accent: StewardTheme.care.vivid) { reviewing = true }.padding(.top, 6)
-                    Button("Scan again") { Task { await library.scan() } }.font(.subheadline.weight(.medium)).foregroundStyle(.white).padding(.top, 8)
-                } else {
-                    Button("Review these") { reviewing = true }.font(.subheadline.weight(.semibold)).foregroundStyle(.white).disabled(library.phase == .reading)
+                    Button("Scan again") { Task { await library.scan() } }.font(.subheadline.weight(.medium)).foregroundStyle(.white)
+                } else if library.phase != .reading {
+                    Button("Review these") { reviewing = true }.font(.subheadline.weight(.semibold)).foregroundStyle(.white)
                 }
             }
             .navigationDestination(isPresented: $reviewing) {
                 // Ticked in advance because they're recommended. Nothing goes until the person has seen them and pressed Delete.
                 PhotoReviewView(title: "Recommended", note: "Exact copies, and screenshots over 90 days old. Untick anything you want to keep.", theme: .care, groups: library.recommendedGroups, preselected: true)
             }
-        } else if library.phase == .done || library.phase == .idle {
-            ScanOrb(theme: .care)
-if library.phase == .done { GlassCard { Label(library.everything > 0 ? "Nothing is safe to remove without a look. Check Photos and Videos for the rest." : "Nothing to clean right now.", systemImage: "checkmark.seal.fill") } }
+        } else if library.phase == .done {
+            GlassCard { Label(library.everything > 0 ? "Nothing is safe to remove without a look. Check Photos and Videos for the rest." : "Nothing to clean right now.", systemImage: "checkmark.seal.fill") }
         }
         if library.phase == .done || library.phase == .stopped { ScanResults() }
         if let notice = library.notice {
             GlassCard { Label(notice, systemImage: "info.circle") }
         }
+    }
+
+    private var footerSummary: Text? {
+        if library.working { return library.scanSummary }
+        let picks = library.recommended
+        guard library.phase == .done, !picks.isEmpty else { return nil }
+        return Text("\(formatted(picks.reduce(0) { $0 + $1.bytes }))\n^[\(picks.count) item](inflect: true)")
     }
 
     private var failureBinding: Binding<Bool> {

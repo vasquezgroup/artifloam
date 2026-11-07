@@ -13,12 +13,14 @@ struct ToolsView: View {
     var body: some View {
         StagePage(theme: .space, title: "Tools", subtitle: "Everything else that frees up room.") {
             GlassCard {
+                row(CompressView(), "category-done", "Compress videos", "Keep them, at a smaller size.")
+                row(LivePhotosView(), "category-branch", "Turn off Live Photos", "Keep the photo, remove its short video.")
                 row(StorageSummaryView(), "category-drive", "Storage summary", "What's on this iPhone, and what could go.")
                 row(SpaceHistoryView(), "category-sparkles", "Space history")
                 row(AlbumsView(), "category-stack", "Albums by size", "Includes albums apps create when saving media.")
                 row(CategoriesView(), "category-globe", "Library categories", "Food, pets, documents and more.")
                 row(LargeFilesView(), "category-document", "Large files", "Choose a folder from Files.")
-                row(ContactsCleanupView(), "category-branch", "Merge contacts", "Same name and a shared number or email.")
+                row(ContactsCleanupView(), "category-stack", "Merge contacts", "Same name and a shared number or email.")
                 row(HealthView(), "category-done", "Device health")
             }
             GlassCard {

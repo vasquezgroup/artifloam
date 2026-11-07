@@ -123,43 +123,71 @@ private struct LoopingMovie: UIViewRepresentable {
     func updateUIView(_ view: PlayerView, context: Context) {}
 }
 
-/// The Mac's glowing round action button.
+/// Our round action button in liquid glass, tinted with the section's colour.
 struct OrbAction: View {
     let title: LocalizedStringKey
     let icon: String
     let accent: Color
     var disabled = false
-    /// Shows a ring around the button, as on the Mac, while something is running.
+    /// Shows a ring around the button while something is running.
     var progress: Double? = nil
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
             ZStack {
-                Circle().fill(accent.opacity(0.55)).blur(radius: 20)
+                Circle().fill(accent.opacity(0.5)).blur(radius: 18)
                 if let progress {
-                    Circle().stroke(.white.opacity(0.16), lineWidth: 7).padding(-8)
-                    Circle().trim(from: 0, to: min(1, max(0, progress))).stroke(LinearGradient(colors: [accent, .white], startPoint: .bottomLeading, endPoint: .topTrailing), style: StrokeStyle(lineWidth: 7, lineCap: .round))
-                        .rotationEffect(.degrees(-90)).padding(-8)
+                    Circle().stroke(.white.opacity(0.18), lineWidth: 6).padding(-7)
+                    Circle().trim(from: 0, to: min(1, max(0, progress))).stroke(LinearGradient(colors: [accent, .white], startPoint: .bottomLeading, endPoint: .topTrailing), style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                        .rotationEffect(.degrees(-90)).padding(-7)
                 }
-                Circle().fill(accent)
-                Circle().fill(LinearGradient(colors: [.white.opacity(0.28), .clear, .black.opacity(0.35)], startPoint: .top, endPoint: .bottom))
-                Circle().fill(RadialGradient(colors: [.white.opacity(0.18), .clear], center: UnitPoint(x: 0.5, y: 0.2), startRadius: 2, endRadius: 50))
-                Circle().stroke(LinearGradient(colors: [.white.opacity(0.95), accent.opacity(0.5), .white.opacity(0.75)], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1.8)
-                VStack(spacing: 3) {
-                    Image(systemName: icon).font(.system(size: 26, weight: .medium)).shadow(color: .black.opacity(0.45), radius: 1, x: 1, y: 3)
-                    Text(title).font(.subheadline.weight(.medium)).shadow(color: .black.opacity(0.3), radius: 2, y: 1)
+                glass
+                Circle().fill(RadialGradient(colors: [.white.opacity(0.34), .clear], center: UnitPoint(x: 0.5, y: 0.12), startRadius: 2, endRadius: 46))
+                Circle().stroke(LinearGradient(colors: [.white.opacity(0.9), .white.opacity(0.12), .white.opacity(0.55)], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1.2)
+                VStack(spacing: 2) {
+                    Image(systemName: icon).font(.system(size: 23, weight: .medium)).shadow(color: .black.opacity(0.35), radius: 1, y: 2)
+                    Text(title).font(.footnote.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.7).shadow(color: .black.opacity(0.3), radius: 2, y: 1)
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(.white).padding(8)
             }
-            .frame(width: 104, height: 104)
+            .frame(width: 92, height: 92)
             .contentShape(Circle())
-            .shadow(color: .black.opacity(0.3), radius: 9, y: 7)
+            .shadow(color: .black.opacity(0.3), radius: 10, y: 6)
         }
         .buttonStyle(.plain)
         .disabled(disabled)
-        .opacity(disabled ? 0.45 : 1)
+        .opacity(disabled ? 0.5 : 1)
         .accessibilityValue(progress.map { Text("\(Int($0 * 100)) percent complete") } ?? Text(""))
+    }
+
+    @ViewBuilder private var glass: some View {
+        if #available(iOS 26.0, *) {
+            Color.clear.glassEffect(.regular.tint(accent.opacity(0.75)).interactive(), in: .circle)
+        } else {
+            Circle().fill(.ultraThinMaterial).overlay { Circle().fill(accent.opacity(0.62)) }
+        }
+    }
+}
+
+extension View {
+    /// The main action, fixed above the tab bar while the page scrolls behind it, with a short summary beside it.
+    func orbFooter<Orb: View>(summary: Text? = nil, @ViewBuilder orb: () -> Orb) -> some View {
+        let button = orb()
+        return safeAreaInset(edge: .bottom, spacing: 0) {
+            // Equal space on both sides keeps the button centred, with or without a summary.
+            HStack(spacing: 12) {
+                Color.clear.frame(maxWidth: .infinity, maxHeight: 1)
+                button
+                Color.clear.frame(maxWidth: .infinity, maxHeight: 1).overlay(alignment: .leading) {
+                    if let summary {
+                        summary.font(.caption.weight(.semibold)).monospacedDigit().foregroundStyle(.white).multilineTextAlignment(.leading).lineLimit(2).minimumScaleFactor(0.8).fixedSize()
+                            .padding(.horizontal, 10).padding(.vertical, 7).background(.ultraThinMaterial, in: .rect(cornerRadius: 12))
+                    }
+                }
+            }
+            .padding(.horizontal, 12).padding(.vertical, 10)
+        }
     }
 }
 
@@ -268,10 +296,12 @@ struct ScanOrb: View {
     var body: some View {
         if library.working {
             OrbAction(title: "Stop", icon: "stop.fill", accent: theme.vivid, progress: Double(library.checked) / Double(max(library.total, 1))) { library.stop() }
-                .padding(.vertical, 10)
         } else {
             OrbAction(title: "Scan", icon: "magnifyingglass", accent: theme.vivid) { Task { await library.start() } }
-                .padding(.vertical, 6)
         }
     }
+}
+
+extension Library {
+    var scanSummary: Text? { working ? Text("\(checked) of \(total)") : nil }
 }

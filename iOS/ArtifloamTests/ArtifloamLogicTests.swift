@@ -98,12 +98,17 @@ final class ArtifloamLogicTests: XCTestCase {
         XCTAssertEqual(swipeSelection(base: ["a", "b", "c"], ids: ids, anchor: 1, current: 2, selecting: false), ["a"])
     }
 
-    func testPinchMovesOneColumnAtATimeAndStaysInRange() {
-        XCTAssertEqual(columns(from: 3, pinch: 1.5), 2)
-        XCTAssertEqual(columns(from: 3, pinch: 0.6), 4)
-        XCTAssertEqual(columns(from: 3, pinch: 1.05), 3)
-        XCTAssertEqual(columns(from: 1, pinch: 3), 1)
-        XCTAssertEqual(columns(from: 7, pinch: 0.2), 7)
+    func testZoomKeepsThePictureTheSameSizeWhenColumnsChange() {
+        // Three columns scaled to 1.4 looks like about two columns.
+        let bigger = zoomStep(columns: 3, scale: 1.4)
+        XCTAssertEqual(bigger.columns, 2)
+        XCTAssertEqual(bigger.scale, 1.4 / 3 * 2, accuracy: 0.001)
+        XCTAssertEqual(zoomStep(columns: 3, scale: 1).columns, 3)
+        XCTAssertEqual(zoomStep(columns: 3, scale: 0.6).columns, 5)
+        // Stops at the ends instead of growing without limit.
+        XCTAssertEqual(zoomStep(columns: 1, scale: 3).columns, 1)
+        XCTAssertEqual(zoomStep(columns: 1, scale: 3).scale, 1.3, accuracy: 0.001)
+        XCTAssertEqual(zoomStep(columns: 7, scale: 0.2).columns, 7)
     }
 
     func testLowSpaceIsUnderTenPercent() {

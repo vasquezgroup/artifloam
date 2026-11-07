@@ -48,6 +48,10 @@ Artifloam can never delete inside another app. It points people to the right scr
 
 The Scan button runs photos and videos, the health check, and duplicate contacts only if Contacts access was already given. It never asks for access by itself. Library categories and albums stay in Tools because they don't free space by themselves, and large files stay there because iOS needs a folder chosen. Compressing starts from a choice.
 
+## Photo pages and the zoom
+
+`PhotoPage` and `PhotoGrid` are shared by every photo list. The pictures follow the pinch exactly: `zoomStep` swaps the column count at the same visual size with no animation, and the scale settles when fingers lift. At two columns or fewer the title, text and bars fade out. The main action is always `orbFooter`, fixed above the tab bar.
+
 ## Rules to keep
 
 - **Same look as the Mac.** Each section has one `StewardTheme`: its gradient, its sculpture, glass cards, the orb for the main action. Colours in `Theme.swift` must match `Sources/MacSteward/VisualLanguage.swift`. Use `StagePage` for sections and `DetailPage` below them.
