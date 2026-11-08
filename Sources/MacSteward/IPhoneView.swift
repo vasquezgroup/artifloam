@@ -22,7 +22,10 @@ final class IPhoneState: ObservableObject {
     @Published var group: IPhoneAppGroup?
     @Published var selection = Set<String>()
     @Published var removalPlan: IPhoneRemovalPlan?
-    @Published private(set) var removing: String?
+    /// Deleting apps runs on the centred stage, like removals on the Mac.
+    @Published private(set) var stage: RemovalProgress?
+    var removing: Bool { stage != nil }
+    private var stageStop = false
     @Published private(set) var removalResult: IPhoneRemovalResult?
     @Published private(set) var removalProblem = false
     /// Waiting for the person to unlock before something that needs it. Shown as a large overlay.
@@ -184,27 +187,40 @@ final class IPhoneState: ObservableObject {
     }
     /// Removes exactly the reviewed apps, one at a time, then reads the iPhone again to see what really changed.
     func remove(_ plan: IPhoneRemovalPlan) {
-        guard let report, removing == nil else { return }
+        guard let report, !removing else { return }
         let id = report.deviceID, usedBefore = report.usedBytes, watcher = watcher
-        removalPlan = nil; removalResult = nil; removalProblem = false
+        removalPlan = nil; removalResult = nil; removalProblem = false; stageStop = false
+        let copy = StageCopy(working: String(localized: "Deleting from your iPhone…"), done: String(localized: "Deleted from your iPhone"),
+                             amount: String(localized: "freed", comment: "Under a byte counter: how much space was freed"), note: nil)
+        stage = RemovalProgress(copy: copy, total: plan.apps.count, current: plan.apps.first.map { String(localized: "Removing \($0.name) from your iPhone. Keep it unlocked and connected.") } ?? "")
+        StewardSound.start.play()
         Task {
-            for app in plan.apps {
-                guard await waitForUnlock(id) else { break }
-                removing = app.name
+            for (index, app) in plan.apps.enumerated() {
+                guard !stageStop, await waitForUnlock(id) else { break }
+                stage?.current = String(localized: "Removing \(app.name) from your iPhone. Keep it unlocked and connected.")
                 let bundle = app.bundleID
                 _ = await Task.detached(priority: .userInitiated) { Result { try watcher.uninstall(bundleID: bundle, deviceID: id) } }.value
+                stage?.completed = index + 1
             }
+            stage?.current = String(localized: "Reading your iPhone…")
             let after = await Task.detached(priority: .userInitiated) { Result { try watcher.read(deviceID: id) } }.value
-            removing = nil
             selection = []
             switch after {
             case .success(let fresh):
                 self.report = fresh
-                removalResult = IPhoneRemovalResult(plan: plan, usedBefore: usedBefore, after: fresh)
+                let result = IPhoneRemovalResult(plan: plan, usedBefore: usedBefore, after: fresh)
+                removalResult = result
+                // Apps still there are listed on the page after Done, with what to do.
+                stage?.completed = result.removed.count; stage?.bytes = result.freedBytes ?? 0
             case .failure: removalProblem = true
             }
+            stage?.current = ""; stage?.stopped = stageStop; stage?.finished = true
+            StewardSound.done.play()
         }
     }
+    /// Stop finishes the app being removed, then skips the rest.
+    func stopStage() { stageStop = true }
+    func finishStage() { stage = nil }
     func stopBackup() { backupHolder.process?.terminate() }
     func removeBackup() {
         guard let backup = removableBackup else { return }
@@ -334,7 +350,7 @@ struct IPhoneView: View {
     private func bulkBar(_ apps: [IPhoneAppRow]) -> some View {
         let chosen = apps.filter { state.selection.contains($0.id) }
         let skipped = apps.count - apps.bulkSelectable.count
-        return BulkBar(title: String(localized: "Select all", comment: "Checkbox: select every item in the list"), isOn: selectAll(apps), enabled: state.removing == nil,
+        return BulkBar(title: String(localized: "Select all", comment: "Checkbox: select every item in the list"), isOn: selectAll(apps), enabled: !state.removing,
                        help: skipped > 0 ? String(localized: "Chat and login-code apps can only be chosen one at a time") : String(localized: "Select or deselect everything listed"),
                        summary: String(localized: "\(chosen.count) selected · \(formattedBytes(chosen.reduce(0) { $0 + $1.totalBytes }))")) { EmptyView() }
     }
@@ -362,7 +378,7 @@ struct IPhoneView: View {
             let chosen = apps.filter { state.selection.contains($0.id) }
             VStack(spacing: 8) {
                 HStack(spacing: 10) {
-                    Toggle(String(localized: "Select all \(title)"), isOn: selectAll(apps)).toggleStyle(.stewardCheckboxOnly).disabled(state.removing != nil).padding(.leading, 14)
+                    Toggle(String(localized: "Select all \(title)"), isOn: selectAll(apps)).toggleStyle(.stewardCheckboxOnly).disabled(state.removing).padding(.leading, 14)
                     Button {
                         if open { expanded.remove(id) } else { expanded.insert(id) }
                     } label: {
@@ -390,7 +406,7 @@ struct IPhoneView: View {
     private func appRow(_ app: IPhoneAppRow) -> some View {
         HStack(alignment: .top, spacing: 8) {
             Toggle(String(localized: "Select \(app.name)"), isOn: Binding(get: { state.selection.contains(app.id) }, set: { if $0 { state.selection.insert(app.id) } else { state.selection.remove(app.id) } }))
-                .toggleStyle(.stewardCheckboxOnly).disabled(state.removing != nil)
+                .toggleStyle(.stewardCheckboxOnly).disabled(state.removing)
             VStack(alignment: .leading, spacing: 3) {
                 Text(app.name).stewardFont(.body, weight: .semibold).lineLimit(1).help(app.bundleID)
                 if app.measured && app.totalBytes > 0 { Text(advice(app.advice)).stewardFont(.caption).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true) }
@@ -649,9 +665,7 @@ private struct IPhoneBackupStatus: View {
 struct IPhoneSelectionBar: View {
     @ObservedObject var state: IPhoneState
     var body: some View {
-        if let removing = state.removing {
-            StewardProgressBar(title: String(localized: "Removing \(removing) from your iPhone. Keep it unlocked and connected.")).padding(.horizontal, 30).padding(.vertical, 12).background(.ultraThinMaterial)
-        } else if let report = state.report, !state.selection.isEmpty {
+        if !state.removing, let report = state.report, !state.selection.isEmpty {
             let chosen = report.apps.filter { state.selection.contains($0.id) }
             HStack(spacing: 10) {
                 Text("\(chosen.count) chosen · \(formattedBytes(chosen.reduce(0) { $0 + $1.totalBytes }))").stewardFont(.body, weight: .semibold)

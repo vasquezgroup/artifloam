@@ -126,9 +126,11 @@ struct MainView: View {
     private var isMapStage: Bool { isMapStagePage(m.section) }
     private func isMapStagePage(_ section: String) -> Bool { !m.scanning && section == "Space Map" && (storageMap.snapshot == nil || storageMap.mappingFully) }
     /// A removal has the whole window, so Run can't be pressed again under it.
-    private var isStage: Bool { m.removal == nil && m.cleaning == nil && (isIntro || isSummary || isMapStage) }
+    /// A removal on the stage: the Mac's, or apps being deleted from the iPhone.
+    private var stageRemoval: RemovalProgress? { m.removal ?? m.iphone.stage }
+    private var isStage: Bool { stageRemoval == nil && m.cleaning == nil && (isIntro || isSummary || isMapStage) }
     /// Scans, Trash moves and cleanups take the whole window: the sidebar hides.
-    private var focusedScan: Bool { stageWorking || storageMap.mappingFully || m.removal != nil || m.cleaning != nil }
+    private var focusedScan: Bool { stageWorking || storageMap.mappingFully || stageRemoval != nil || m.cleaning != nil }
     private var navigationWidth: CGFloat { focusedScan ? 0 : hideSidebar ? 72 : sidebarWidth }
     private var sidebarWidth: CGFloat { 250 + (textScale - 1) * 80 }
     // Names respond to available width; active scans temporarily hide navigation.
@@ -660,15 +662,15 @@ struct MainView: View {
     /// Header, pages, banner and footer to the right of the sidebar.
     private var mainColumn: some View {
         VStack(spacing: 0) {
-            if !m.scanning && m.removal == nil && !isMapStage && (isStage || ["Overview", "Cleanup", "Worktrees", "Duplicates", "System"].contains(m.section)) { header }
+            if !m.scanning && stageRemoval == nil && !isMapStage && (isStage || ["Overview", "Cleanup", "Worktrees", "Duplicates", "System"].contains(m.section)) { header }
             pages.frame(maxWidth: .infinity, maxHeight: .infinity).environment(\.stewardPageSwitching, switching)
                 .background { GeometryReader { geometry in Color.clear.onAppear { pageHeight = geometry.size.height }.onChange(of: geometry.size.height) { _, height in pageHeight = height } } }
-            if !isStage && m.cleaning == nil && m.removal == nil { FullDiskAccessBanner() }
+            if !isStage && m.cleaning == nil && stageRemoval == nil { FullDiskAccessBanner() }
             if showsFooter { footer }
         }.frame(maxWidth: .infinity).padding(.bottom, isStage ? max(130 + (textScale - 1) * 50, stageControlsHeight - 60) : 0)
     }
     private var showsFooter: Bool {
-        !isStage && m.cleaning == nil && m.removal == nil && !["Space Map", "Memory", "Tools", "Settings", "Large & old files", "App removal", "Login & background items", "Performance", "Applications", "Trash bins", "Leftovers", "Browser data", "Status", "Browsers", "iPhone"].contains(m.section) && !(m.section == "My Clutter" && clutterTab != "Duplicates")
+        !isStage && m.cleaning == nil && stageRemoval == nil && !["Space Map", "Memory", "Tools", "Settings", "Large & old files", "App removal", "Login & background items", "Performance", "Applications", "Trash bins", "Leftovers", "Browser data", "Status", "Browsers", "iPhone"].contains(m.section) && !(m.section == "My Clutter" && clutterTab != "Duplicates")
     }
     /// A carousel driven by hand: during a change the leaving page and the current page are both ordinary,
     /// live pages moved by one `slide` value. SwiftUI's removal transitions only move a leaving page; they never blur or fade it.
@@ -684,8 +686,10 @@ struct MainView: View {
     }
     /// One page of the main area, for any section, so the carousel can show the leaving page next to the new one.
     @ViewBuilder private func page(_ section: String) -> some View {
-        if let removal = m.removal {
-            RemovalStage(progress: removal, stop: { m.stopRemoval() }, done: { withAnimation(.easeOut(duration: 0.25)) { m.finishRemoval() } })
+        if let removal = stageRemoval {
+            let mac = m.removal != nil
+            RemovalStage(progress: removal, stop: { mac ? m.stopRemoval() : m.iphone.stopStage() },
+                         done: { withAnimation(.easeOut(duration: 0.25)) { if mac { m.finishRemoval() } else { m.iphone.finishStage() } } })
                 .transition(.opacity.combined(with: .scale(scale: reduceMotion ? 1 : 0.97)))
         } else if isSummaryPage(section) {
             summaryStage
