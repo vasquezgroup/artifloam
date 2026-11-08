@@ -127,6 +127,7 @@ struct ContactsCleanupView: View {
     @State private var failure: String?
     @State private var lastBackup: URL?
     @State private var mergedCount = 0
+    @State private var saved: Saving?
     private let store = CNContactStore()
 
     var body: some View {
@@ -161,6 +162,9 @@ struct ContactsCleanupView: View {
         } message: { _ in
             Text("The extra cards are deleted, and a backup of them is saved first. Notes on the extra cards can't be copied, because iOS keeps them private, so check any that matter in Contacts first.")
         }
+        .savedStage($saved, theme: .space, note: "A backup of the original cards is on this iPhone. To undo, open it and add the cards back to Contacts.",
+                    accessory: lastBackup.map { AnyView(ShareLink("Open or save the backup", item: $0)) },
+                    detail: { Text("Merged ^[\($0.count) group](inflect: true).") })
         .alert("Couldn't merge", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) { Button("OK", role: .cancel) {} } message: { Text(failure ?? "") }
     }
 
@@ -186,6 +190,8 @@ struct ContactsCleanupView: View {
         do {
             lastBackup = try ContactsCleanup.merge(chosen, in: store)
             mergedCount += chosen.count
+            // Each group becomes one card.
+            saved = Saving(before: Int64(chosen.reduce(0) { $0 + $1.count }), after: Int64(chosen.count), count: chosen.count, counts: true)
             let gone = Set(chosen.compactMap { $0.first?.identifier })
             groups?.removeAll { gone.contains($0.first?.identifier ?? "") }
         } catch {

@@ -304,6 +304,90 @@ struct StagePage<Content: View>: View {
     }
 }
 
+/// How big the chosen items were before and after, for the result. Deleting leaves nothing after.
+struct Saving: Identifiable {
+    let id = UUID()
+    var before: Int64 = 0
+    var after: Int64 = 0
+    var count = 0
+    /// Counts cards or items instead of bytes, for work that tidies rather than frees space.
+    var counts = false
+
+    func text(_ value: Int64) -> String { counts ? value.formatted() : formatted(value) }
+}
+
+extension View {
+    /// Once something is freed: the stage's result straight away, for work that's quick once iOS has confirmed it.
+    func savedStage(_ saving: Binding<Saving?>, theme: StewardTheme, note: LocalizedStringKey? = nil, accessory: AnyView? = nil,
+                    detail: @escaping (Saving) -> Text?, done: @escaping () -> Void = {}) -> some View {
+        fullScreenCover(item: saving) { value in
+            WorkStage(theme: theme, title: "All done", detail: detail(value), saving: value, note: note, accessory: accessory) { saving.wrappedValue = nil; done() }
+        }
+    }
+}
+
+/// Work that takes a while, staged like the Mac: the section's artwork centred and moving, a progress bar, then the result and Done.
+/// `done` is nil while working.
+struct WorkStage: View {
+    let theme: StewardTheme
+    let title: LocalizedStringKey
+    var detail: Text? = nil
+    var fraction: Double? = nil
+    var saving: Saving? = nil
+    var note: LocalizedStringKey? = nil
+    /// Something to keep at hand from the result, like a backup to save.
+    var accessory: AnyView? = nil
+    var done: (() -> Void)? = nil
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        let finished = done != nil
+        ZStack {
+            AtmosphereView(theme: theme)
+            VStack(spacing: 14) {
+                Sculpture(theme: theme, moving: !finished).frame(width: 240, height: 240)
+                    .scaleEffect(finished && !reduceMotion ? 1.08 : 1)
+                    .animation(reduceMotion ? nil : .spring(response: 0.55, dampingFraction: 0.5), value: finished)
+                Text(title).font(.title2.weight(.semibold)).accessibilityAddTraits(.isHeader)
+                if let saving, finished {
+                    // The saving is the point, so it's the big number. Before and after show where it came from.
+                    metric(saving.text(saving.before - saving.after), saving.counts ? "removed" : "saved", size: 44, tint: theme.accent)
+                    if saving.after > 0 {
+                        HStack(spacing: 18) {
+                            metric(saving.text(saving.before), "before", size: 20)
+                            Image(systemName: "arrow.right").foregroundStyle(.white.opacity(0.55)).accessibilityHidden(true)
+                            metric(saving.text(saving.after), "after", size: 20)
+                        }
+                    }
+                }
+                detail?.font(.subheadline).foregroundStyle(.white.opacity(0.75)).monospacedDigit()
+                if let fraction, !finished { GlassMeter(fraction: fraction, theme: theme).frame(maxWidth: 320).padding(.top, 6) }
+                if let note { Text(note).font(.footnote).foregroundStyle(.white.opacity(0.65)).padding(.top, 6) }
+                if finished { accessory?.fontWeight(.medium) }
+                if let done {
+                    Button("Done", action: done).font(.headline).padding(.horizontal, 36).padding(.vertical, 13)
+                        .background(theme.vivid, in: .capsule).padding(.top, 10)
+                }
+            }
+            .multilineTextAlignment(.center)
+            .foregroundStyle(.white)
+            .padding(24)
+            .frame(maxWidth: 520)
+        }
+        .sensoryFeedback(.success, trigger: finished) { _, now in now }
+        .interactiveDismissDisabled()
+        .environment(\.stewardTheme, theme)
+    }
+
+    private func metric(_ value: String, _ label: LocalizedStringKey, size: CGFloat, tint: Color = .white) -> some View {
+        VStack(spacing: 2) {
+            Text(value).font(.system(size: size, weight: .semibold, design: .rounded)).monospacedDigit().foregroundStyle(tint)
+            Text(label).font(.caption).foregroundStyle(.white.opacity(0.6))
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
 /// How full something is: a glowing, glass-topped bar in the section's colours.
 struct GlassMeter: View {
     let fraction: Double

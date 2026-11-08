@@ -39,7 +39,8 @@ public enum MediaChanges {
     }
 
     /// Returns the new copy's size, or nil if the saving was too small and nothing was added.
-    public static func compress(_ item: PhotoItem) async throws -> Int64? {
+    /// `progress` hears how far the export is, from 0 to 1, a few times a second.
+    public static func compress(_ item: PhotoItem, progress: (@MainActor (Double) -> Void)? = nil) async throws -> Int64? {
         try checkRoom(for: item)
         let (session, original) = try await exportSession(for: item.asset)
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
@@ -47,7 +48,14 @@ public enum MediaChanges {
         session.outputURL = url
         session.outputFileType = .mp4
         session.shouldOptimizeForNetworkUse = false
+        let watch = Task { @MainActor in
+            while !Task.isCancelled, let progress {
+                progress(Double(session.progress))
+                try? await Task.sleep(for: .milliseconds(250))
+            }
+        }
         await session.export()
+        watch.cancel()
         guard session.status == .completed else {
             throw session.error ?? Failure(errorDescription: String(localized: "Compression stopped."))
         }

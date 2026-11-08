@@ -273,6 +273,8 @@ private struct LargeFilesView: View {
     @State private var folder: URL?
     @State private var files: [FileRow] = []
     @State private var pending: FileRow?
+    @State private var saved: Saving?
+    @State private var removed = ""
     @State private var failure: String?
 
     var body: some View {
@@ -308,6 +310,7 @@ private struct LargeFilesView: View {
         } message: { _ in
             Text("It can't be restored from Artifloam.")
         }
+        .savedStage($saved, theme: .space, detail: { [removed] _ in Text(verbatim: removed) })
         .alert("Couldn't delete", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) { Button("OK", role: .cancel) {} } message: { Text(failure ?? "") }
     }
 
@@ -318,6 +321,8 @@ private struct LargeFilesView: View {
         do {
             try FileManager.default.removeItem(at: file.url)
             files.removeAll { $0.id == file.id }
+            removed = file.url.lastPathComponent
+            saved = Saving(before: file.bytes, count: 1)
         } catch {
             failure = error.localizedDescription
         }

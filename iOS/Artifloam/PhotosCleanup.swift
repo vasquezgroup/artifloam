@@ -71,6 +71,7 @@ struct PhotoReviewView: View {
     @Environment(Library.self) private var library
     @Environment(\.dismiss) private var dismiss
     @State private var selection: Set<String> = []
+    @State private var saved: Saving?
     @State private var dropped: Set<String> = []
     @State private var didPreselect = false
     @State private var columns = 3
@@ -115,14 +116,18 @@ struct PhotoReviewView: View {
         .orbFooter(summary: selection.isEmpty ? nil : Text("\(formatted(selectedBytes))\n^[\(selection.count) item](inflect: true)")) {
             OrbAction(title: "Delete", icon: "trash", accent: theme.vivid, disabled: selection.isEmpty) {
                 let chosen = selection
+                let bytes = selectedBytes
                 Task {
                     if await library.delete(chosen) {
                         dropped.formUnion(chosen)
                         selection = []
-                        if items.isEmpty { dismiss() }
+                        saved = Saving(before: bytes, count: chosen.count)
                     }
                 }
             }
+        }
+        .savedStage($saved, theme: theme, note: "Moved to Recently Deleted. The space comes back when iOS empties it after about 30 days, or when you empty it in Photos.", detail: { Text("^[\($0.count) item](inflect: true)") }) {
+            if items.isEmpty { dismiss() }
         }
     }
 }
@@ -616,6 +621,7 @@ struct SwipeReviewView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var index = 0
     @State private var marked: [String] = []
+    @State private var saved: Saving?
     @State private var image: UIImage?
     @State private var drag = CGSize.zero
 
@@ -648,13 +654,16 @@ struct SwipeReviewView: View {
             }
             if !marked.isEmpty {
                 Button {
-                    Task { if await library.delete(Set(marked)) { dismiss() } }
+                    let chosen = Set(marked)
+                    let bytes = items.filter { chosen.contains($0.id) }.reduce(0) { $0 + $1.bytes }
+                    Task { if await library.delete(chosen) { saved = Saving(before: bytes, count: chosen.count) } }
                 } label: {
                     Text("Delete \(marked.count) now").fontWeight(.semibold).frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered).controlSize(.large)
             }
         }
+        .savedStage($saved, theme: theme, note: "Moved to Recently Deleted. The space comes back when iOS empties it after about 30 days, or when you empty it in Photos.", detail: { Text("^[\($0.count) item](inflect: true)") }) { dismiss() }
     }
 
     private func decide(delete: Bool) {
@@ -669,9 +678,12 @@ struct CompressView: View {
     @State private var estimates: [String: Int64] = [:]
     @State private var selection: Set<String> = []
     @State private var running = false
+    @State private var staged = false
     @State private var progress = 0
     @State private var total = 0
+    @State private var fraction = 0.0
     @State private var result: LocalizedStringKey?
+    @State private var saving: Saving?
     @State private var failure: String?
 
     private var videos: [PhotoItem] { library.items(.largeVideos) }
@@ -703,10 +715,15 @@ struct CompressView: View {
             }
             if let result { GlassCard { Text(result) } }
         }
-        .orbFooter(summary: running ? Text("\(progress) of \(total)") : selection.isEmpty ? nil : Text("^[\(selection.count) video](inflect: true)")) {
+        .orbFooter(summary: selection.isEmpty ? nil : Text("^[\(selection.count) video](inflect: true)")) {
             OrbAction(title: "Compress", icon: "arrow.down.right.and.arrow.up.left", accent: StewardTheme.files.vivid, disabled: selection.isEmpty || running) { Task { await run() } }
         }
-        .alert("Couldn't compress", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) { Button("OK", role: .cancel) {} } message: { Text(failure ?? "") }
+        .fullScreenCover(isPresented: $staged) {
+            WorkStage(theme: .files, title: running ? "Compressing videos…" : failure != nil ? "Couldn't compress" : "All done",
+                      detail: running ? Text("\(progress) of \(total)") : outcome(saving.map { Text("^[\($0.count) video](inflect: true)") } ?? result.map { Text($0) }, failure),
+                      fraction: fraction, saving: saving, note: stageNote(running: running, saved: saving != nil),
+                      done: running ? nil : { staged = false; failure = nil })
+        }
     }
 
     private func estimate(_ item: PhotoItem) async {
@@ -719,17 +736,24 @@ struct CompressView: View {
 
     private func run() async {
         running = true
+        staged = true
+        result = nil
+        saving = nil
         progress = 0
+        fraction = 0
         total = selection.count
         var done: Set<String> = []
-        var saved: Int64 = 0
+        var sizes = Saving()
         var skipped = 0
         for item in videos where selection.contains(item.id) {
             progress += 1
+            let finished = Double(progress - 1)
             do {
-                if let bytes = try await MediaChanges.compress(item) {
+                if let bytes = try await MediaChanges.compress(item, progress: { fraction = (finished + $0) / Double(total) }) {
                     done.insert(item.id)
-                    saved += item.bytes - bytes
+                    sizes.before += item.bytes
+                    sizes.after += bytes
+                    sizes.count += 1
                 } else {
                     skipped += 1
                 }
@@ -738,14 +762,16 @@ struct CompressView: View {
                 break
             }
         }
-        running = false
+        fraction = 1
         selection = []
+        defer { running = false }
         guard !done.isEmpty else {
             result = skipped > 0 ? "The saving would be too small, so nothing changed." : nil
             return
         }
         if await library.delete(done) {
-            result = "Saved about \(formatted(saved)). Originals are in Recently Deleted."
+            result = "Saved about \(formatted(sizes.before - sizes.after)). Originals are in Recently Deleted."
+            saving = sizes
         } else {
             result = "Kept your originals as well as the smaller copies. Nothing was removed."
             await library.scan()
@@ -753,11 +779,32 @@ struct CompressView: View {
     }
 }
 
+/// What a finished stage says: the result, and what went wrong if something did.
+private func outcome(_ result: Text?, _ failure: String?) -> Text? {
+    switch (result, failure) {
+    case let (result?, failure?): result + Text("\n\n") + Text(failure)
+    case let (result?, nil): result
+    case let (nil, failure?): Text(failure)
+    case (nil, nil): nil
+    }
+}
+
+/// Removing the original means removing it, so iOS's own confirmation says Delete: this says so first.
+/// Apps can't empty Recently Deleted, so afterwards it says where the space is.
+private func stageNote(running: Bool, saved: Bool) -> LocalizedStringKey? {
+    running ? "iOS then asks to delete the originals. The new copies stay."
+        : saved ? "Moved to Recently Deleted. The space comes back when iOS empties it after about 30 days, or when you empty it in Photos." : nil
+}
+
 struct LivePhotosView: View {
     @Environment(Library.self) private var library
     @State private var selection: Set<String> = []
     @State private var running = false
+    @State private var staged = false
+    @State private var progress = 0
+    @State private var total = 0
     @State private var result: LocalizedStringKey?
+    @State private var saving: Saving?
     @State private var failure: String?
     @State private var columns = 3
 
@@ -775,26 +822,47 @@ struct LivePhotosView: View {
         }
         .toolbar { Button(selection.count == items.count ? "Select None" : "Select All") { selection = selection.count == items.count ? [] : Set(items.map(\.id)) } }
         .orbFooter(summary: selection.isEmpty ? nil : Text("^[\(selection.count) photo](inflect: true)")) {
-            OrbAction(title: "Convert", icon: "livephoto.slash", accent: StewardTheme.cleanup.vivid, disabled: selection.isEmpty || running, progress: running ? nil : nil) { Task { await run() } }
+            OrbAction(title: "Turn off", icon: "livephoto.slash", accent: StewardTheme.cleanup.vivid, disabled: selection.isEmpty || running) { Task { await run() } }
         }
-        .alert("Couldn't convert", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) { Button("OK", role: .cancel) {} } message: { Text(failure ?? "") }
+        .fullScreenCover(isPresented: $staged) {
+            WorkStage(theme: .cleanup, title: running ? "Turning off Live Photos…" : failure != nil ? "Couldn't convert" : "All done",
+                      detail: running ? Text("\(progress) of \(total)") : outcome(saving.map { Text("^[\($0.count) photo](inflect: true)") } ?? result.map { Text($0) }, failure),
+                      fraction: Double(progress) / Double(max(total, 1)), saving: saving, note: stageNote(running: running, saved: saving != nil),
+                      done: running ? nil : { staged = false; failure = nil })
+        }
     }
 
     private func run() async {
         running = true
+        staged = true
+        result = nil
+        saving = nil
+        progress = 0
+        total = selection.count
         var done: Set<String> = []
+        var sizes = Saving()
         for item in items where selection.contains(item.id) {
+            progress += 1
             do {
                 try await MediaChanges.makeStill(item)
                 done.insert(item.id)
+                // The still keeps the photo. What goes is the short video.
+                sizes.before += item.bytes
+                sizes.after += item.bytes - item.saving
+                sizes.count += 1
             } catch {
                 failure = error.localizedDescription
                 break
             }
         }
-        running = false
         selection = []
+        defer { running = false }
         guard !done.isEmpty else { return }
-        result = await library.delete(done) ? "Converted. The originals are in Recently Deleted." : "You have both versions now. Nothing was removed."
+        if await library.delete(done) {
+            result = "Saved about \(formatted(sizes.before - sizes.after)). Originals are in Recently Deleted."
+            saving = sizes
+        } else {
+            result = "You have both versions now. Nothing was removed."
+        }
     }
 }
