@@ -676,7 +676,6 @@ struct SwipeReviewView: View {
 
 struct CompressView: View {
     @Environment(Library.self) private var library
-    @State private var estimates: [String: Int64] = [:]
     @State private var selection: Set<String> = []
     @State private var running = false
     @State private var staged = false
@@ -689,36 +688,22 @@ struct CompressView: View {
     /// Compressed, with their originals still there until the person says to delete them.
     @State private var originals: Set<String> = []
     @State private var sizes = Saving()
+    @State private var columns = 3
 
     private var videos: [PhotoItem] { library.items(.largeVideos) }
 
     var body: some View {
-        DetailPage(theme: .files, title: "Compress videos") {
-            Text("Makes a smaller copy with the same date and place, then asks to remove the original. If the saving is under 10%, the video is left as it is. Quality can drop slightly, and videos over 1080p become 1080p.").font(.subheadline)
-            if videos.isEmpty { GlassCard { Text("No large videos found.") } }
-            ForEach(videos) { item in
-                Button {
-                    if !selection.insert(item.id).inserted { selection.remove(item.id) }
-                } label: {
-                    GlassCard {
-                        HStack(spacing: 12) {
-                            PhotoCell(item: item, state: .picture).frame(width: 64, height: 64).allowsHitTesting(false)
-                            VStack(alignment: .leading) {
-                                Text(formatted(item.bytes)).font(.headline)
-                                if let estimate = estimates[item.id], estimate > 0, estimate < item.bytes {
-                                    Text("About \(formatted(estimate)) after").font(.footnote).foregroundStyle(.white.opacity(0.75))
-                                }
-                            }
-                            Spacer()
-                            Image(systemName: selection.contains(item.id) ? "checkmark.circle.fill" : "circle").font(.title2)
-                        }
-                    }
-                }
-                .buttonStyle(.plain)
-                .task { await estimate(item) }
+        PhotoPage(theme: .files, title: "Compress videos", columns: $columns) {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Makes a smaller copy with the same date and place, then asks to remove the original. If the saving is under 10%, the video is left as it is. Quality can drop slightly, and videos over 1080p become 1080p.").font(.subheadline)
+                if videos.isEmpty { GlassCard { Text("No large videos found.") } }
+                if let result { GlassCard { Text(result) } }
             }
-            if let result { GlassCard { Text(result) } }
+        } grid: {
+            // The same grid as every photo list: tap to watch, tap the circle to choose, pinch to resize.
+            PhotoGrid(groups: videos.isEmpty ? [] : [CleanupGroup(items: videos)], selection: $selection, columnCount: $columns)
         }
+        .toolbar { Button(selection.count == videos.count ? "Select None" : "Select All") { selection = selection.count == videos.count ? [] : Set(videos.map(\.id)) } }
         .orbFooter(summary: selection.isEmpty ? nil : Text("^[\(selection.count) video](inflect: true)")) {
             OrbAction(title: "Compress", icon: "arrow.down.right.and.arrow.up.left", accent: StewardTheme.files.vivid, disabled: selection.isEmpty || running) { Task { await run() } }
         }
@@ -733,14 +718,6 @@ struct CompressView: View {
                           Task { await library.scan() }
                       } : nil,
                       done: running || ready ? nil : { staged = false; failure = nil })
-        }
-    }
-
-    private func estimate(_ item: PhotoItem) async {
-        guard estimates[item.id] == nil, let (session, _) = try? await MediaChanges.exportSession(for: item.asset) else { return }
-        session.outputFileType = .mp4
-        session.estimateOutputFileLength { bytes, _ in
-            Task { @MainActor in estimates[item.id] = bytes }
         }
     }
 
