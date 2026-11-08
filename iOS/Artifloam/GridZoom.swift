@@ -259,7 +259,8 @@ private final class FingerWatcher: UIGestureRecognizer, UIGestureRecognizerDeleg
         let hadTwo = count.sawTwo
         state = .failed
         // A button acts as the finger lifts, in this same moment, so this stays set just long enough to stop it.
-        if hadTwo { DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { Self.isMultiTouch = false } }
+        // Unless fingers are down again by then: a quick second pinch must stay a pinch, or its moving finger swiped photos into the selection.
+        if hadTwo { DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { if self.count.down == 0 { Self.isMultiTouch = false } } }
     }
 }
 
