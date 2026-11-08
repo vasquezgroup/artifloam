@@ -118,7 +118,7 @@ The Mac app's iPhone section is in `Sources/MacSteward/IPhoneView.swift`, `Sourc
 - [ ] The WhatsApp schema on a real, current backup, for both WhatsApp and WhatsApp Business. Reading needs Full Disk Access. Table names come from older sources, the Business domain is matched by pattern and unconfirmed, and special chats such as `status@broadcast` would show as a person.
 - [x] The start, reading and results screens, with a real iPhone. Only one copy of Artifloam can run at a time, so quit others first, including debug builds.
 - [x] The "Connect your iPhone" line with no iPhone connected.
-- [ ] Reading by itself when one iPhone is plugged in. Unit-tested, not yet seen on a real cable.
+- [x] One iPhone is chosen in advance, and nothing is read until Read is pressed. Seen on a real iPhone.
 - [ ] A Developer ID signed build. Loading the framework works with an ad-hoc hardened runtime signature.
 - [ ] Decide whether the backup list should show every device's backups by name when the chosen phone has none.
 

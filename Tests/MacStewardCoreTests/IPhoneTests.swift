@@ -40,11 +40,7 @@ final class IPhoneAppsTests: XCTestCase {
 
     func testOnlyOneIPhoneOnACableIsReadByItself() {
         let cabled = IPhoneDevice(id: "a", cabled: true), other = IPhoneDevice(id: "b", cabled: true), wireless = IPhoneDevice(id: "c")
-        XCTAssertEqual(IPhoneDevice.automatic(from: [cabled, wireless]), cabled)
-        XCTAssertNil(IPhoneDevice.automatic(from: [wireless]))
-        XCTAssertNil(IPhoneDevice.automatic(from: [cabled, other]))
-        XCTAssertNil(IPhoneDevice.automatic(from: []))
-        // One iPhone, even over Wi-Fi, is chosen in advance but never read by itself.
+        // One iPhone, on a cable or Wi-Fi, is chosen in advance but never read until Read is pressed.
         XCTAssertEqual(IPhoneDevice.preselected(from: [wireless]), wireless)
         XCTAssertNil(IPhoneDevice.preselected(from: [cabled, other]))
         XCTAssertNil(IPhoneDevice.preselected(from: []))

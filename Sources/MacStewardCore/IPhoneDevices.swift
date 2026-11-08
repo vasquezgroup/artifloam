@@ -13,13 +13,6 @@ public struct IPhoneDevice: Identifiable, Hashable, Sendable {
     public static func == (a: IPhoneDevice, b: IPhoneDevice) -> Bool { a.id == b.id }
     public func hash(into hasher: inout Hasher) { hasher.combine(id) }
 
-    /// The iPhone to read without asking. Plugging one in says which is meant. A paired iPhone on Wi-Fi may be
-    /// someone else's, so it's never read by itself, and neither is one of several on cables.
-    public static func automatic(from devices: [IPhoneDevice]) -> IPhoneDevice? {
-        let cabled = devices.filter(\.cabled)
-        return cabled.count == 1 ? cabled[0] : nil
-    }
-
     /// Chosen in advance so Read works straight away, but not read until pressed. With only one iPhone there's nothing to choose.
     public static func preselected(from devices: [IPhoneDevice]) -> IPhoneDevice? {
         devices.count == 1 ? devices[0] : nil

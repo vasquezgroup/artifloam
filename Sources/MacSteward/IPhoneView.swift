@@ -50,7 +50,6 @@ final class IPhoneState: ObservableObject {
     @Published private(set) var removableBackup: IPhoneBackup?
     var insights: IPhoneInsights? { report.map { IPhoneInsights(apps: $0.apps, lastChanged: lastChanged) } }
     private let watcher = IPhoneDeviceWatcher()
-    private var autoRead: String?
     /// A read can't be cancelled once it is talking to the iPhone, so a stopped one must finish before the next starts.
     @Published private var readInFlight = false
     private final class ProcessHolder: @unchecked Sendable { var process: Process? }
@@ -94,15 +93,8 @@ final class IPhoneState: ObservableObject {
     private func update(_ devices: [IPhoneDevice]) {
         self.devices = devices
         if let picked, !devices.contains(picked) { self.picked = nil; if problem != nil { problem = nil } }
-        if !devices.contains(where: { $0.id == autoRead }) { autoRead = nil }
-        // Once per plug-in, so Start over or an error doesn't start it again by itself.
-        if picked == nil, report == nil, !reading, !backupsOnly, let phone = IPhoneDevice.automatic(from: devices), phone.id != autoRead {
-            autoRead = phone.id
-            pick(phone)
-            read()
-        } else if picked == nil, let only = IPhoneDevice.preselected(from: devices) {
-            pick(only)
-        }
+        // Chosen in advance when there's only one, but nothing is read until Read is pressed.
+        if picked == nil, let only = IPhoneDevice.preselected(from: devices) { pick(only) }
     }
     func pick(_ device: IPhoneDevice) { picked = device; problem = nil }
     func read() {
