@@ -1,5 +1,6 @@
 import AVKit
 import Photos
+import PhotosUI
 import SwiftUI
 
 /// What a tap on a picture opens: the picture full screen, videos playing, swipe for the next one, and a large button to choose it.
@@ -46,8 +47,14 @@ struct PhotoViewer: View {
     private func bar(_ item: PhotoItem) -> some View {
         let chosen = selection.contains(item.id)
         return VStack(spacing: 10) {
-            Text("\(formatted(item.saving)) · \(item.asset.creationDate?.formatted(date: .abbreviated, time: .shortened) ?? "")")
-                .font(.footnote.weight(.medium)).foregroundStyle(.white.opacity(0.85)).monospacedDigit()
+            HStack(spacing: 6) {
+                // iOS's own LIVE badge, so it's clear holding will play it.
+                if item.asset.mediaSubtypes.contains(.photoLive) {
+                    Image(uiImage: PHLivePhotoView.livePhotoBadgeImage(options: .overContent)).accessibilityLabel("Live Photos")
+                }
+                Text("\(formatted(item.saving)) · \(item.asset.creationDate?.formatted(date: .abbreviated, time: .shortened) ?? "")")
+                    .font(.footnote.weight(.medium)).foregroundStyle(.white.opacity(0.85)).monospacedDigit()
+            }
             if keeps.contains(item.id) {
                 Text("Stays").font(.headline).foregroundStyle(.white).padding(.horizontal, 22).padding(.vertical, 12).background(StewardTheme.cleanup.vivid, in: .capsule)
             } else {
@@ -79,6 +86,8 @@ private struct ViewerPage: View {
             } else if let picture = image ?? Thumbnails.cached(item.id) {
                 // The grid's small version straight away, the sharp one as soon as it arrives.
                 Image(uiImage: picture).resizable().scaledToFit()
+                // Moves while held, as in Photos.
+                if item.asset.mediaSubtypes.contains(.photoLive) && showing { LivePhotoView(asset: item.asset) }
                 if item.asset.mediaType == .video && showing { ProgressView().tint(.white).padding(12).background(.black.opacity(0.45), in: Circle()) }
             } else {
                 ProgressView().tint(.white)
@@ -100,5 +109,38 @@ private struct ViewerPage: View {
             player?.play()
         }
         .onDisappear { player?.pause() }
+    }
+}
+
+/// A Live Photo that moves: while held, as in Photos, or straight away for a preview.
+struct LivePhotoView: UIViewRepresentable {
+    let asset: PHAsset
+    var autoplay = false
+
+    final class Coordinator { var request: PHImageRequestID? }
+    func makeCoordinator() -> Coordinator { Coordinator() }
+
+    func makeUIView(context: Context) -> PHLivePhotoView {
+        let view = PHLivePhotoView()
+        view.contentMode = .scaleAspectFit
+        // A preview plays silently, like videos there. Held full screen, it has its sound, as in Photos.
+        view.isMuted = autoplay
+        let options = PHLivePhotoRequestOptions()
+        options.isNetworkAccessAllowed = true
+        options.deliveryMode = .highQualityFormat
+        let autoplay = autoplay
+        context.coordinator.request = PHImageManager.default().requestLivePhoto(for: asset, targetSize: CGSize(width: 1200, height: 1200), contentMode: .aspectFit, options: options) { [weak view] photo, _ in
+            guard let view, let photo else { return }
+            view.livePhoto = photo
+            if autoplay { view.startPlayback(with: .full) }
+        }
+        return view
+    }
+
+    func updateUIView(_ view: PHLivePhotoView, context: Context) {}
+
+    static func dismantleUIView(_ view: PHLivePhotoView, coordinator: Coordinator) {
+        view.stopPlayback()
+        if let request = coordinator.request { PHImageManager.default().cancelImageRequest(request) }
     }
 }

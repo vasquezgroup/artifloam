@@ -297,6 +297,7 @@ private struct PhotoPreview: View {
         ZStack {
             Color.black
             if let picture = image ?? placeholder { Image(uiImage: picture).resizable().scaledToFit() }
+            if asset.mediaSubtypes.contains(.photoLive) { LivePhotoView(asset: asset, autoplay: true) }
             if let player { VideoPlayer(player: player).disabled(true) }
         }
         .frame(width: previewSize.width, height: previewSize.height)
