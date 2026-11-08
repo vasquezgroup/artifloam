@@ -21,7 +21,7 @@ import SwiftUI
     static func stop() { library.stop() }
 }
 
-private func size(_ bytes: Int64) -> String { formattedBytes(UInt64(max(bytes, 0))) }
+private func size(_ bytes: Int64) -> String { bytes <= 0 ? "0" : formattedBytes(UInt64(bytes)) }
 
 struct PhotosModuleView: View {
     private enum Page: Equatable {
@@ -223,12 +223,11 @@ private struct PhotoTile: View {
     @State private var image: NSImage?
 
     var body: some View {
-        ZStack {
-            Rectangle().fill(.white.opacity(0.06))
-            if let image { Image(nsImage: image).resizable().scaledToFill() }
-        }
-        .aspectRatio(1, contentMode: .fit)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        // A square that the picture fills and is cropped to. Sizing to the picture let wide videos spill over their neighbours.
+        Color.white.opacity(0.06)
+            .aspectRatio(1, contentMode: .fit)
+            .overlay { if let image { Image(nsImage: image).resizable().scaledToFill() } }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
         .overlay(alignment: .bottomLeading) {
             Group { if selected == nil { Text("Stays") } else { Text(size(item.saving)) } }
                 .stewardFont(.caption, weight: .semibold).padding(.horizontal, 6).padding(.vertical, 2)
