@@ -90,6 +90,7 @@ struct PhotoReviewView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text(note).font(.subheadline)
                 Text("Deleted items stay in Recently Deleted for about 30 days. With iCloud Photos they leave all your devices.").font(.footnote).foregroundStyle(.white.opacity(0.7))
+                Label("Tap a photo to see it. Tap the circle to choose it.", systemImage: "hand.tap").font(.footnote.weight(.medium))
                 NavigationLink { SwipeReviewView(items: items, theme: theme) } label: {
                     Label("Swipe through them", systemImage: "hand.draw").fontWeight(.medium)
                 }
@@ -196,6 +197,8 @@ struct PhotoCell: View, Equatable {
     /// One column shows the whole picture instead of a square crop.
     var whole = false
     var showsSize = true
+    /// A tap on the picture opens it. Without this, the tap chooses it instead, as on pages that only list pictures.
+    var open: (() -> Void)? = nil
     var toggle: () -> Void = {}
     var protect: (() -> Void)? = nil
     @State private var image: UIImage?
@@ -204,7 +207,7 @@ struct PhotoCell: View, Equatable {
     private var selected: Bool { state == .selected }
 
     var body: some View {
-        Button(action: toggle) {
+        Group {
             Color.white.opacity(0.08)
                 .aspectRatio(whole && item.asset.pixelHeight > 0 ? CGFloat(item.asset.pixelWidth) / CGFloat(item.asset.pixelHeight) : 1, contentMode: .fit)
                 .overlay {
@@ -222,22 +225,32 @@ struct PhotoCell: View, Equatable {
                 }
                 .overlay(alignment: .topTrailing) {
                     if state == .available || state == .selected {
-                        Image(systemName: selected ? "checkmark.circle.fill" : "circle")
-                            .contentTransition(.symbolEffect(.replace))
-                            .symbolEffect(.bounce, value: selected)
-                            // A dark disc instead of a shadow, which costs an extra drawing pass for every picture on screen.
-                            .font(.title3).foregroundStyle(selected ? StewardTheme.care.vivid : .white).background { Circle().fill(selected ? AnyShapeStyle(.white) : AnyShapeStyle(.black.opacity(0.22))).padding(selected ? 3 : 1) }
-                            .padding(4)
+                        // The circle chooses. Its tap area is far bigger than it looks, so it's easy to hit.
+                        Button(action: toggle) {
+                            Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+                                .contentTransition(.symbolEffect(.replace))
+                                .symbolEffect(.bounce, value: selected)
+                                // A dark disc instead of a shadow, which costs an extra drawing pass for every picture on screen.
+                                .font(.title3).foregroundStyle(selected ? StewardTheme.care.vivid : .white).background { Circle().fill(selected ? AnyShapeStyle(.white) : AnyShapeStyle(.black.opacity(0.22))).padding(selected ? 3 : 1) }
+                                .padding(4)
+                                .frame(minWidth: 48, minHeight: 48, alignment: .topTrailing)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(selected ? Text("Deselect") : Text("Select"))
                     }
                 }
                 .animation(reduceMotion ? nil : .spring(response: 0.28, dampingFraction: 0.58), value: selected)
         }
-        .buttonStyle(.plain)
-        .allowsHitTesting(state == .available || state == .selected)
+        .contentShape(Rectangle())
+        .onTapGesture { if let open { open() } else { toggle() } }
+        .allowsHitTesting(state == .available || state == .selected || open != nil)
         .sensoryFeedback(.selection, trigger: selected)
         .accessibilityLabel(label)
         .accessibilityAddTraits(selected ? .isSelected : [])
-        .accessibilityHint("Hold to see it larger")
+        .accessibilityAddTraits(.isButton)
+        .accessibilityHint(open == nil ? Text("Chooses it") : Text("Opens it"))
+        .accessibilityAction(named: "Select") { toggle() }
         .contextMenu {
             Text(item.asset.creationDate?.formatted(date: .long, time: .shortened) ?? "")
             Text(formatted(item.saving))
@@ -335,6 +348,8 @@ struct PhotoGrid: View {
     var protect: ((PhotoItem) -> Void)? = nil
     @State private var layout = GridLayout()
     @Environment(GridZoom.self) private var zoom
+    @State private var viewing: ViewerStart?
+    private struct ViewerStart: Identifiable { let id: String }
     @State private var swipe: (anchor: Int, selecting: Bool, base: Set<String>)?
     @State private var locked = false
     @State private var swipeCurrent = 0
@@ -353,11 +368,11 @@ struct PhotoGrid: View {
                 ForEach(groups) { group in
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 2), count: columnCount), spacing: 2) {
                         if let keep = group.keep {
-                            PhotoCell(item: keep, state: .keeps, side: side, whole: columnCount == 1).equatable().id(keep.id)
+                            PhotoCell(item: keep, state: .keeps, side: side, whole: columnCount == 1, open: { open(keep.id) }).equatable().id(keep.id)
                                 .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("photoGrid")) } action: { layout.frames[keep.id] = $0 }
                         }
                         ForEach(group.items) { item in
-                            PhotoCell(item: item, state: selection.contains(item.id) ? .selected : .available, side: side, whole: columnCount == 1, showsSize: columnCount <= 4) {
+                            PhotoCell(item: item, state: selection.contains(item.id) ? .selected : .available, side: side, whole: columnCount == 1, showsSize: columnCount <= 4, open: { open(item.id) }) {
                                 guard !Fingers.multiTouch else { return }
                                 if !selection.insert(item.id).inserted { selection.remove(item.id) }
                             } protect: { protect?(item) }
@@ -370,6 +385,9 @@ struct PhotoGrid: View {
             }
             .coordinateSpace(.named("photoGrid"))
             .background(FingerWatcherInstaller())
+            .fullScreenCover(item: $viewing) { start in
+                PhotoViewer(items: groups.flatMap { ($0.keep.map { [$0] } ?? []) + $0.items }, keeps: Set(groups.compactMap(\.keep?.id)), selection: $selection, start: start.id)
+            }
             .onAppear { layout.use(groups) }
             .onChange(of: groups.count) { _, _ in layout.use(groups) }
             .onGeometryChange(for: CGFloat.self) { $0.frame(in: .global).minY } action: {
@@ -464,6 +482,11 @@ struct PhotoGrid: View {
                     withAnimation(.spring(response: 0.34, dampingFraction: 0.86)) { zoom.side = settled } completion: { takeOver(target, proxy) }
                 }
             }
+    }
+
+    private func open(_ id: String) {
+        guard !Fingers.multiTouch, !zoom.active else { return }
+        viewing = ViewerStart(id: id)
     }
 
     /// A swipe may have started in the moment before the second finger landed. This undoes what it selected.

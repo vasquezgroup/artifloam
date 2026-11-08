@@ -90821,6 +90821,302 @@
         }
       }
     },
+    "Click a photo to see it, or point at it and press Space. Click the box to choose it." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "انقر على صورة لعرضها، أو أشِر إليها واضغط على المسافة. انقر على المربع لتحديدها."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fes clic en una foto per veure-la, o posa-hi el punter i prem l’espai. Fes clic a la casella per seleccionar-la."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klicke auf ein Foto, um es anzusehen, oder zeige darauf und drücke die Leertaste. Klicke auf das Feld, um es auszuwählen."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click a photo to see it, or point at it and press Space. Click the box to choose it."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click a photo to see it, or point at it and press Space. Click the box to choose it."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click a photo to see it, or point at it and press Space. Click the box to choose it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz clic en una foto para verla, o señálala y pulsa la barra espaciadora. Haz clic en la casilla para seleccionarla."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz clic en una foto para verla, o apúntala y presiona la barra espaciadora. Haz clic en la casilla para seleccionarla."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cliquez sur une photo pour la voir, ou pointez-la et appuyez sur la barre d’espace. Cliquez sur la case pour la sélectionner."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klick uf es Foti, zum es aaluege, oder zeig druf und drück d Leertaschte. Klick uf s Fäldli, zum es uuswähle."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "फ़ोटो देखने के लिए उस पर क्लिक करें, या पॉइंटर उस पर रखकर Space दबाएँ। चुनने के लिए बॉक्स पर क्लिक करें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klikni fotografiju da je vidiš ili pokaži na nju i pritisni razmaknicu. Klikni okvir da je odabereš."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fai clic su una foto per vederla, oppure puntala e premi la barra spaziatrice. Fai clic sulla casella per selezionarla."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真をクリックすると表示されます。ポインタを合わせてスペースキーを押しても表示できます。チェックボックスをクリックすると選択できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사진을 클릭하면 볼 수 있고, 포인터를 올리고 Space 키를 눌러도 됩니다. 체크 상자를 클릭하면 선택됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noklikšķini uz fotoattēla, lai to skatītu, vai uzvirzi rādītāju un nospied atstarpes taustiņu. Noklikšķini uz rūtiņas, lai to atlasītu."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kliknij zdjęcie, aby je zobaczyć, lub wskaż je i naciśnij spację. Kliknij pole wyboru, aby je zaznaczyć."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clique numa foto para a ver ou aponte para ela e prima a barra de espaço. Clique na caixa para a selecionar."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kliko mbi një foto për ta parë, ose drejtoje treguesin te ajo dhe shtyp Space. Kliko kutinë për ta zgjedhur."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Кликни на фотографију да је видиш или покажи на њу и притисни размакницу. Кликни на поље да је изабереш."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klikni na fotografiju da je vidiš ili pokaži na nju i pritisni razmaknicu. Klikni na polje da je izabereš."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klicka på ett foto för att se det, eller peka på det och tryck på mellanslag. Klicka på rutan för att välja det."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görmek için bir fotoğrafa tıkla veya işaretçiyi üzerine getirip Boşluk tuşuna bas. Seçmek için kutuya tıkla."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "单击照片即可查看，或将指针移到照片上并按空格键。单击方框即可选择。"
+          }
+        }
+      }
+    },
+    "Click to see it" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "انقر للعرض"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fes clic per veure-la"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klicken zum Ansehen"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click to see it"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click to see it"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click to see it"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz clic para verla"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz clic para verla"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cliquer pour la voir"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klick zum aaluege"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "देखने के लिए क्लिक करें"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klikni da vidiš"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fai clic per vederla"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クリックして表示"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "클릭하여 보기"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noklikšķini, lai skatītu"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kliknij, aby zobaczyć"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clique para ver"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kliko për ta parë"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Кликни да видиш"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klikni da vidiš"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klicka för att se"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görmek için tıkla"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "单击以查看"
+          }
+        }
+      }
+    },
     "Close" : {
       "localizations" : {
         "ar" : {

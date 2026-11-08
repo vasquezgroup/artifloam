@@ -1,3 +1,4 @@
+import AVKit
 import MacStewardCore
 import Photos
 import PhotoEngine
@@ -21,6 +22,13 @@ import SwiftUI
     static func stop() { library.stop() }
 }
 
+/// The grid's pictures, kept so the viewer can show one instantly while the large version loads.
+@MainActor private let tileImages: NSCache<NSString, NSImage> = {
+    let cache = NSCache<NSString, NSImage>()
+    cache.countLimit = 600
+    return cache
+}()
+
 private func size(_ bytes: Int64) -> String { bytes <= 0 ? "0" : formattedBytes(UInt64(bytes)) }
 
 struct PhotosModuleView: View {
@@ -34,6 +42,10 @@ struct PhotosModuleView: View {
     @State private var running = false
     @State private var result: LocalizedStringKey?
     @State private var failure: String?
+    @State private var viewing: Viewing?
+    @State private var hovered: String?
+    @FocusState private var gridFocused: Bool
+    private struct Viewing: Identifiable { let id: String }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -126,6 +138,7 @@ struct PhotosModuleView: View {
             Button { self.page = nil; selection = [] } label: { Label("Back", systemImage: "chevron.backward") }.buttonStyle(.plain)
             Text(pageNote(page)).stewardFont(.callout).foregroundStyle(.secondary)
             Text("Deleted items stay in Recently Deleted for about 30 days. With iCloud Photos they leave all your devices.").stewardFont(.caption).foregroundStyle(.secondary)
+            Label("Click a photo to see it, or point at it and press Space. Click the box to choose it.", systemImage: "cursorarrow.click").stewardFont(.caption, weight: .medium)
             BulkBar(title: String(localized: "Select all"), isOn: Binding(get: { !items.isEmpty && chosen.count == items.count }, set: { selection = $0 ? Set(items.map(\.id)) : [] }), enabled: !running, summary: String(localized: "\(chosen.count) chosen · \(size(chosen.reduce(0) { $0 + $1.saving }))")) {
                 if running { ProgressView().controlSize(.small) }
                 if page == .category(.largeVideos) || page == .category(.oldVideos) {
@@ -139,12 +152,25 @@ struct PhotosModuleView: View {
             }
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 8)], spacing: 8) {
                 ForEach(groups) { group in
-                    if let keep = group.keep { PhotoTile(item: keep, selected: nil) }
+                    if let keep = group.keep { PhotoTile(item: keep, selected: nil, open: { viewing = Viewing(id: keep.id) }, hovered: $hovered) }
                     ForEach(group.items) { item in
-                        PhotoTile(item: item, selected: Binding(get: { selection.contains(item.id) }, set: { if $0 { selection.insert(item.id) } else { selection.remove(item.id) } }))
+                        PhotoTile(item: item, selected: Binding(get: { selection.contains(item.id) }, set: { if $0 { selection.insert(item.id) } else { selection.remove(item.id) } }), open: { viewing = Viewing(id: item.id) }, hovered: $hovered)
                     }
                 }
             }
+            // Space opens the picture under the pointer, like Quick Look in Finder.
+            .focusable()
+            .focusEffectDisabled()
+            .focused($gridFocused)
+            .onAppear { gridFocused = true }
+            .onKeyPress(.space) {
+                guard let hovered else { return .ignored }
+                viewing = Viewing(id: hovered)
+                return .handled
+            }
+        }
+        .sheet(item: $viewing) { start in
+            MacPhotoViewer(items: groups.flatMap { ($0.keep.map { [$0] } ?? []) + $0.items }, keeps: Set(groups.compactMap(\.keep?.id)), selection: $selection, current: start.id)
         }
     }
 
@@ -220,6 +246,8 @@ struct PhotosModuleView: View {
 private struct PhotoTile: View {
     let item: PhotoItem
     let selected: Binding<Bool>?
+    let open: () -> Void
+    @Binding var hovered: String?
     @State private var image: NSImage?
 
     var body: some View {
@@ -237,9 +265,24 @@ private struct PhotoTile: View {
             if let selected { Toggle("Select", isOn: selected).toggleStyle(.stewardCheckboxOnly).padding(6) }
         }
         .overlay { if selected?.wrappedValue == true { RoundedRectangle(cornerRadius: 8).stroke(.white, lineWidth: 2) } }
+        // Shows that the picture opens, while the pointer is on it.
+        .overlay {
+            if hovered == item.id {
+                Image(systemName: "arrow.up.left.and.arrow.down.right").font(.title3.weight(.semibold)).foregroundStyle(.white)
+                    .padding(10).background(.black.opacity(0.45), in: Circle()).allowsHitTesting(false)
+            }
+        }
         .contentShape(Rectangle())
-        .onTapGesture { selected?.wrappedValue.toggle() }
-        .task(id: item.id) { image = await load() }
+        .onTapGesture(perform: open)
+        .onHover { inside in
+            if inside { hovered = item.id } else if hovered == item.id { hovered = nil }
+        }
+        .help(Text("Click to see it"))
+        .task(id: item.id) {
+            if let known = tileImages.object(forKey: item.id as NSString) { image = known; return }
+            image = await load()
+            if let image { tileImages.setObject(image, forKey: item.id as NSString) }
+        }
     }
 
     /// Whatever Photos has at hand. A grid never downloads originals, because this Mac may be short of space.
@@ -254,4 +297,125 @@ private struct PhotoTile: View {
             }
         }
     }
+}
+
+/// A picture or video at full size, with arrows or the arrow keys for the next one and a button to choose it. Escape or Space closes it.
+private struct MacPhotoViewer: View {
+    let items: [PhotoItem]
+    let keeps: Set<String>
+    @Binding var selection: Set<String>
+    @State var current: String
+    @State private var image: NSImage?
+    @State private var player: AVPlayer?
+    @Environment(\.dismiss) private var dismiss
+    @FocusState private var focused: Bool
+
+    private var index: Int { items.firstIndex { $0.id == current } ?? 0 }
+    private var item: PhotoItem { items[index] }
+
+    var body: some View {
+        let chosen = selection.contains(item.id)
+        VStack(spacing: 0) {
+            ZStack {
+                Color.black
+                if let player, item.asset.mediaType == .video {
+                    PlayerView(player: player)
+                } else if let picture = image ?? tileImages.object(forKey: item.id as NSString) {
+                    // The grid's small version straight away, the sharp one as soon as it arrives.
+                    Image(nsImage: picture).resizable().scaledToFit()
+                    if image == nil || player == nil && item.asset.mediaType == .video { ProgressView().controlSize(.small).padding(10).background(.black.opacity(0.45), in: Circle()) }
+                } else {
+                    ProgressView()
+                }
+            }
+            .overlay(alignment: .leading) { arrow("chevron.left", by: -1).padding(14) }
+            .overlay(alignment: .trailing) { arrow("chevron.right", by: 1).padding(14) }
+            HStack(spacing: 14) {
+                Text("\(size(item.saving)) · \(item.asset.creationDate?.formatted(date: .abbreviated, time: .shortened) ?? "")").stewardFont(.callout).monospacedDigit().foregroundStyle(.secondary)
+                Text("\(index + 1) of \(items.count)").stewardFont(.caption).foregroundStyle(.tertiary).monospacedDigit()
+                Spacer()
+                if keeps.contains(item.id) {
+                    Text("Stays").stewardFont(.callout, weight: .semibold)
+                } else {
+                    Toggle(chosen ? String(localized: "Selected") : String(localized: "Select"), isOn: Binding(get: { chosen }, set: { if $0 { selection.insert(item.id) } else { selection.remove(item.id) } }))
+                        .toggleStyle(.stewardCheckbox)
+                }
+                Button("Close") { dismiss() }.keyboardShortcut(.cancelAction)
+            }
+            .padding(14)
+        }
+        .frame(minWidth: 700, idealWidth: 1000, minHeight: 460, idealHeight: 640)
+        .focusable()
+        .focusEffectDisabled()
+        .focused($focused)
+        .onAppear { focused = true }
+        .onKeyPress(.leftArrow) { move(-1); return .handled }
+        .onKeyPress(.rightArrow) { move(1); return .handled }
+        .onKeyPress(.space) { dismiss(); return .handled }
+        .task(id: current) { await load() }
+        .onDisappear { player?.pause() }
+    }
+
+    private func arrow(_ symbol: String, by step: Int) -> some View {
+        Button { move(step) } label: {
+            Image(systemName: symbol).font(.title2.weight(.semibold)).foregroundStyle(.white).frame(width: 44, height: 44).background(.black.opacity(0.45), in: Circle())
+        }
+        .buttonStyle(.plain)
+        .opacity(items.indices.contains(index + step) ? 1 : 0)
+        .disabled(!items.indices.contains(index + step))
+    }
+
+    private func move(_ step: Int) {
+        guard items.indices.contains(index + step) else { return }
+        current = items[index + step].id
+    }
+
+    /// The large version may come from iCloud. A video starts playing straight away, without sound until unmuted.
+    private func load() async {
+        player?.pause()
+        player = nil
+        image = nil
+        let asset = item.asset
+        if asset.mediaType == .video {
+            let options = PHVideoRequestOptions()
+            options.isNetworkAccessAllowed = true
+            // Starts streaming from iCloud much sooner than the original, and looks the same in a window.
+            options.deliveryMode = .mediumQualityFormat
+            let playerItem: AVPlayerItem? = await withCheckedContinuation { continuation in
+                PHImageManager.default().requestPlayerItem(forVideo: asset, options: options) { result, _ in continuation.resume(returning: result) }
+            }
+            guard asset.localIdentifier == item.asset.localIdentifier, let playerItem else { return }
+            let video = AVPlayer(playerItem: playerItem)
+            video.isMuted = true
+            video.play()
+            player = video
+            return
+        }
+        let options = PHImageRequestOptions()
+        options.deliveryMode = .opportunistic
+        options.isNetworkAccessAllowed = true
+        for await picture in pictures(asset, options) where asset.localIdentifier == item.asset.localIdentifier { image = picture }
+    }
+
+    private func pictures(_ asset: PHAsset, _ options: PHImageRequestOptions) -> AsyncStream<NSImage> {
+        AsyncStream { continuation in
+            let id = PHImageManager.default().requestImage(for: asset, targetSize: CGSize(width: 1600, height: 1600), contentMode: .aspectFit, options: options) { result, info in
+                if let result { continuation.yield(result) }
+                if !((info?[PHImageResultIsDegradedKey] as? Bool) ?? false) { continuation.finish() }
+            }
+            continuation.onTermination = { _ in PHImageManager.default().cancelImageRequest(id) }
+        }
+    }
+}
+
+/// The system's own video view. SwiftUI's VideoPlayer crashed in this app on macOS, before it showed anything.
+private struct PlayerView: NSViewRepresentable {
+    let player: AVPlayer
+    func makeNSView(context: Context) -> AVPlayerView {
+        let view = AVPlayerView()
+        view.controlsStyle = .floating
+        view.player = player
+        return view
+    }
+    func updateNSView(_ view: AVPlayerView, context: Context) { view.player = player }
 }
