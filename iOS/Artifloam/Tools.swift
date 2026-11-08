@@ -7,9 +7,6 @@ import UserNotifications
 import Vision
 
 struct ToolsView: View {
-    @Environment(Library.self) private var library
-    @State private var reminder = SpaceReminder.enabled
-
     var body: some View {
         StagePage(theme: .space, title: "Tools", subtitle: "Everything else that frees up room.") {
             GlassCard {
@@ -22,17 +19,6 @@ struct ToolsView: View {
                 row(LargeFilesView(), "category-document", "Large files", "Choose a folder from Files.")
                 row(ContactsCleanupView(), "category-stack", "Merge contacts", "Same name and a shared number or email.")
                 row(HealthView(), "category-done", "Device health")
-            }
-            GlassCard {
-                Toggle("Remind me when space runs low", isOn: $reminder)
-                    .onChange(of: reminder) { _, on in Task { reminder = await SpaceReminder.set(on) } }
-                Text("iOS decides when this check runs, so a reminder can come late.").font(.footnote).foregroundStyle(.white.opacity(0.7))
-                Divider()
-                Text("Add the free space widget by holding your Home Screen, then tapping Edit and Add Widget.").font(.footnote).foregroundStyle(.white.opacity(0.7))
-                if !library.protected.isEmpty {
-                    Divider()
-                    Button("Suggest \(library.protected.count) protected items again") { library.clearProtected() }
-                }
             }
         }
     }

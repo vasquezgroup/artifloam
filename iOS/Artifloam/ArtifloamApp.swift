@@ -9,11 +9,11 @@ struct ArtifloamApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                NavigationStack { OverviewView() }.tabItem { Label("Overview", systemImage: "leaf.fill") }
-                NavigationStack { MediaSectionView(section: .photos) }.tabItem { Label("Photos", systemImage: "sparkles") }
-                NavigationStack { MediaSectionView(section: .videos) }.tabItem { Label("Videos", systemImage: "video.fill") }
-                NavigationStack { AppsStorageView() }.tabItem { Label("Apps", systemImage: "square.grid.2x2.fill") }
-                NavigationStack { ToolsView() }.tabItem { Label("Tools", systemImage: "wrench.and.screwdriver.fill") }
+                NavigationStack { OverviewView().settingsButton() }.tabItem { Label("Overview", systemImage: "leaf.fill") }
+                NavigationStack { MediaSectionView(section: .photos).settingsButton() }.tabItem { Label("Photos", systemImage: "sparkles") }
+                NavigationStack { MediaSectionView(section: .videos).settingsButton() }.tabItem { Label("Videos", systemImage: "video.fill") }
+                NavigationStack { AppsStorageView().settingsButton() }.tabItem { Label("Apps", systemImage: "square.grid.2x2.fill") }
+                NavigationStack { ToolsView().settingsButton() }.tabItem { Label("Tools", systemImage: "wrench.and.screwdriver.fill") }
             }
             .tint(.white)
             .environment(library)
