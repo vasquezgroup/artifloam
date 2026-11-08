@@ -5,6 +5,8 @@ struct AppsStorageView: View {
     private static let common = ["WhatsApp", "Netflix", "YouTube", "Roblox", "TikTok", "Instagram", "Facebook", "Spotify", "Telegram", "Prime Video", "Messages", "Games and other apps"]
 
     @State private var list = MacAppList.load()
+    @State private var receiver: AppListReceiver?
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         StagePage(theme: .iphone, title: "Apps", subtitle: "Connect to your Mac to see and delete every app.", artwork: "iphone-connect") {
@@ -37,11 +39,16 @@ struct AppsStorageView: View {
                 }
             }
         }
-        .onAppear { list = MacAppList.load() }
+        .onAppear { list = MacAppList.load(); listen() }
+        .onDisappear { receiver?.stop() }
+        .onReceive(NotificationCenter.default.publisher(for: .appListArrived)) { _ in list = MacAppList.load() }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { list = MacAppList.load(); listen() } else { receiver?.stop() }
+        }
     }
 }
 
-/// The list Artifloam on the Mac leaves here over the cable, because an iPhone app can't see other apps. See IPhoneAppList on the Mac.
+/// The list Artifloam on the Mac sends over Wi-Fi, because an iPhone app can't see other apps. See IPhoneAppList on the Mac.
 struct MacAppList: Decodable {
     struct App: Decodable, Identifiable {
         let name: String
@@ -57,10 +64,25 @@ struct MacAppList: Decodable {
         decoder.dateDecodingStrategy = .iso8601
         return try? decoder.decode(MacAppList.self, from: data)
     }
+    static var file: URL { URL.documentsDirectory.appending(path: "mac-app-list.json") }
+
     static func load() -> MacAppList? {
-        guard let data = try? Data(contentsOf: URL.documentsDirectory.appending(path: "mac-app-list.json")), let list = decode(data), !list.apps.isEmpty else { return nil }
+        guard let data = try? Data(contentsOf: file), let list = decode(data), !list.apps.isEmpty else { return nil }
         return list
     }
+}
+
+extension AppsStorageView {
+    private func listen() {
+        if receiver == nil {
+            receiver = AppListReceiver { Task { @MainActor in NotificationCenter.default.post(name: .appListArrived, object: nil) } }
+        }
+        receiver?.start()
+    }
+}
+
+extension Notification.Name {
+    static let appListArrived = Notification.Name("appListArrived")
 }
 
 struct StorageAdvice {

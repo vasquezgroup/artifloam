@@ -617,6 +617,161 @@
         }
       }
     },
+    "NSLocalNetworkUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرسل Artifloam قائمة تطبيقات هذا iPhone بين Mac وiPhone عبر شبكة Wi-Fi الخاصة بك. القائمة مشفّرة وتبقى على أجهزتك."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam envia la llista d'apps d'aquest iPhone entre el teu Mac i l'iPhone per la teva xarxa Wi-Fi. Està xifrada i es queda als teus dispositius."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam überträgt die App-Liste dieses iPhone über dein WLAN zwischen deinem Mac und iPhone. Sie ist verschlüsselt und bleibt auf deinen Geräten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam sends the list of this iPhone's apps between your Mac and iPhone over your Wi-Fi. It's encrypted and stays on your devices."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam sends the list of this iPhone's apps between your Mac and iPhone over your Wi-Fi. It's encrypted and stays on your devices."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam sends the list of this iPhone's apps between your Mac and iPhone over your Wi-Fi. It's encrypted and stays on your devices."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam sends the list of this iPhone's apps between your Mac and iPhone over your Wi-Fi. It's encrypted and stays on your devices."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam envía la lista de apps de este iPhone entre tu Mac y tu iPhone por tu red Wi-Fi. Está cifrada y se queda en tus dispositivos."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam envía la lista de apps de este iPhone entre tu Mac y tu iPhone por tu red Wi-Fi. Está cifrada y permanece en tus dispositivos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam transfère la liste des apps de cet iPhone entre votre Mac et votre iPhone via votre réseau Wi-Fi. Elle est chiffrée et reste sur vos appareils."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam schickt d App-Lischte vo dem iPhone über dis WLAN zwüsched dim Mac und iPhone. Si isch verschlüsslet und bliibt uf dine Grät."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam इस iPhone की ऐप सूची को आपके Wi-Fi पर आपके Mac और iPhone के बीच भेजता है। यह एन्क्रिप्टेड है और आपके डिवाइस पर ही रहती है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam šalje popis aplikacija ovog iPhonea između tvog Maca i iPhonea preko tvoje Wi-Fi mreže. Popis je šifriran i ostaje na tvojim uređajima."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam invia l'elenco delle app di questo iPhone tra il tuo Mac e il tuo iPhone tramite la tua rete Wi-Fi. È criptato e resta sui tuoi dispositivi."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloamは、このiPhoneのアプリ一覧をWi-Fi経由でMacとiPhoneの間で送信します。一覧は暗号化され、お使いのデバイス内にとどまります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam은 이 iPhone의 앱 목록을 Wi-Fi를 통해 Mac과 iPhone 간에 전송합니다. 목록은 암호화되며 사용자의 기기에만 보관됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam pārsūta šī iPhone lietotņu sarakstu starp tavu Mac un iPhone tavā Wi-Fi tīklā. Tas ir šifrēts un paliek tavās ierīcēs."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam przesyła listę aplikacji tego iPhone’a między Twoim Makiem a iPhone’em przez Twoją sieć Wi-Fi. Lista jest zaszyfrowana i pozostaje na Twoich urządzeniach."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Artifloam envia a lista de apps deste iPhone entre o seu Mac e o seu iPhone pela sua rede Wi-Fi. Ela é criptografada e fica nos seus dispositivos."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam dërgon listën e aplikacioneve të këtij iPhone ndërmjet Mac-ut dhe iPhone-it tuaj përmes rrjetit tuaj Wi-Fi. Ajo është e enkriptuar dhe qëndron në pajisjet tuaja."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam шаље списак апликација овог iPhone уређаја између твог Mac рачунара и iPhone уређаја преко твоје Wи-Фи мреже. Списак је шифрован и остаје на твојим уређајима."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam šalje spisak aplikacija ovog iPhone uređaja između tvog Mac računara i iPhone uređaja preko tvoje Wi-Fi mreže. Spisak je šifrovan i ostaje na tvojim uređajima."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam skickar listan över appar på den här iPhonen mellan din Mac och iPhone via ditt Wi-Fi. Den är krypterad och stannar på dina enheter."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam, bu iPhone’daki uygulamaların listesini Wi-Fi ağınız üzerinden Mac’iniz ile iPhone’unuz arasında gönderir. Liste şifrelidir ve aygıtlarınızda kalır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam 通过你的 Wi-Fi 在 Mac 和 iPhone 之间发送这台 iPhone 的 App 列表。列表已加密，只保存在你的设备上。"
+          }
+        }
+      }
+    },
     "NSPhotoLibraryUsageDescription" : {
       "extractionState" : "manual",
       "localizations" : {

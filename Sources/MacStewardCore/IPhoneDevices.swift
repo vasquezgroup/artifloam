@@ -19,6 +19,11 @@ public struct IPhoneDevice: Identifiable, Hashable, Sendable {
         let cabled = devices.filter(\.cabled)
         return cabled.count == 1 ? cabled[0] : nil
     }
+
+    /// Chosen in advance so Read works straight away, but not read until pressed. With only one iPhone there's nothing to choose.
+    public static func preselected(from devices: [IPhoneDevice]) -> IPhoneDevice? {
+        devices.count == 1 ? devices[0] : nil
+    }
 }
 
 public struct IPhoneAppRow: Identifiable, Equatable, Sendable {
@@ -35,6 +40,8 @@ public struct IPhoneAppRow: Identifiable, Equatable, Sendable {
     public var firstDownloaded: Date? = nil
     /// The App Store's number for this app. Without one it can't simply be downloaded again.
     public var storeID: String? = nil
+    /// Where the app keeps its data on the iPhone. Only used to find Artifloam's own.
+    public var container: String? = nil
     public var id: String { bundleID }
     public var storeURL: URL? { storeID.flatMap { URL(string: "https://apps.apple.com/app/id\($0)") } }
     /// Apps whose data is often the only copy, and hard or impossible to get back.
@@ -123,7 +130,9 @@ public enum IPhoneApps {
             let app = attributes["StaticDiskUsage"] as? NSNumber, data = attributes["DynamicDiskUsage"] as? NSNumber
             let name = (attributes["CFBundleDisplayName"] as? String).flatMap { $0.isEmpty ? nil : $0 } ?? bundleID
             let store = storeDetails(attributes["iTunesMetadata"])
-            return IPhoneAppRow(name: name.cleanedName, bundleID: bundleID.displaySafe, appBytes: UInt64(max(0, app?.int64Value ?? 0)), dataBytes: UInt64(max(0, data?.int64Value ?? 0)), measured: app != nil || data != nil, category: store.category, firstDownloaded: store.firstDownloaded, storeID: store.storeID)
+            var row = IPhoneAppRow(name: name.cleanedName, bundleID: bundleID.displaySafe, appBytes: UInt64(max(0, app?.int64Value ?? 0)), dataBytes: UInt64(max(0, data?.int64Value ?? 0)), measured: app != nil || data != nil, category: store.category, firstDownloaded: store.firstDownloaded, storeID: store.storeID)
+            row.container = attributes["Container"] as? String
+            return row
         }.sorted { ($0.totalBytes, $1.name.lowercased()) > ($1.totalBytes, $0.name.lowercased()) }
     }
 }
@@ -285,7 +294,7 @@ public final class IPhoneDeviceWatcher: @unchecked Sendable {
         guard framework.isPaired(device) == 1, framework.validatePairing(device) == 0, framework.startSession(device) == 0 else { throw IPhoneReadError.needsTrust }
         defer { _ = framework.stopSession(device) }
         let name = framework.copyValue(device, nil, "DeviceName" as CFString)?.takeRetainedValue() as? String
-        let options = ["ApplicationType": "User", "ReturnAttributes": ["CFBundleIdentifier", "CFBundleDisplayName", "StaticDiskUsage", "DynamicDiskUsage", "iTunesMetadata"]] as [String: Any]
+        let options = ["ApplicationType": "User", "ReturnAttributes": ["CFBundleIdentifier", "CFBundleDisplayName", "StaticDiskUsage", "DynamicDiskUsage", "Container", "iTunesMetadata"]] as [String: Any]
         var found: Unmanaged<CFDictionary>?
         let code = framework.lookup(device, options as CFDictionary, &found)
         guard code == 0, let apps = found?.takeRetainedValue() as? [String: Any] else { throw IPhoneReadError.failed(code) }

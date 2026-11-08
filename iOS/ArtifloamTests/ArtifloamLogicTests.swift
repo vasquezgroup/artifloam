@@ -185,6 +185,16 @@ final class ArtifloamLogicTests: XCTestCase {
         XCTAssertFalse(MediaChanges.hasRoom(for: 100, free: 199))
     }
 
+    func testAppListOnlyOpensWithTheSameContainer() throws {
+        let path = "/private/var/mobile/Containers/Data/Application/6E1F0E2A-3B4C-4D5E-8F90-1A2B3C4D5E6F"
+        let secret = try XCTUnwrap(AppListLink.secret(fromContainer: path))
+        let other = try XCTUnwrap(AppListLink.secret(fromContainer: "/x/11111111-2222-4333-8444-555555555555"))
+        let sealed = try XCTUnwrap(AppListLink.seal(Data("list".utf8), secret: secret))
+        XCTAssertEqual(AppListLink.open(sealed, secret: secret), Data("list".utf8))
+        XCTAssertNil(AppListLink.open(sealed, secret: other))
+        XCTAssertNotEqual(AppListLink.serviceName(secret: secret), AppListLink.serviceName(secret: other))
+        XCTAssertNil(AppListLink.secret(fromContainer: "/not/an/id"))
+    }
 
     func testZoomLevelsCrossFadeBetweenNeighbours() {
         let width: CGFloat = 400

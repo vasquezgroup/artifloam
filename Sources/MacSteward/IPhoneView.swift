@@ -98,6 +98,8 @@ final class IPhoneState: ObservableObject {
             autoRead = phone.id
             pick(phone)
             read()
+        } else if picked == nil, let only = IPhoneDevice.preselected(from: devices) {
+            pick(only)
         }
     }
     func pick(_ device: IPhoneDevice) { picked = device; problem = nil }
@@ -112,7 +114,9 @@ final class IPhoneState: ObservableObject {
             guard current == generation else { return }
             reading = false
             switch result {
-            case .success(let report): self.report = report
+            case .success(let report):
+                self.report = report
+                IPhoneAppListSender.shared.offer(report)
             case .failure(let error): problem = error as? IPhoneReadError ?? .failed(-1)
             }
         }

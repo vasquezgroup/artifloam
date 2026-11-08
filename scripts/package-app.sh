@@ -52,6 +52,8 @@ cat > "$steward_app/Contents/Info.plist" <<'PLIST'
 <key>NSDesktopFolderUsageDescription</key><string>Measure Desktop storage for Space Map. Files stay unchanged until you review a cleanup.</string>
 <key>NSDocumentsFolderUsageDescription</key><string>Measure storage and find disposable leftovers in Documents. You review every cleanup.</string>
 <key>NSAppleEventsUsageDescription</key><string>Artifloam asks Finder what the Trash holds and to empty it, and System Events to list, add or remove login items you choose.</string>
+<key>NSLocalNetworkUsageDescription</key><string>Artifloam sends the list of this iPhone's apps between your Mac and iPhone over your Wi-Fi. It's encrypted and stays on your devices.</string>
+<key>NSBonjourServices</key><array><string>_artifloam-list._tcp</string></array>
 <key>NSPhotoLibraryUsageDescription</key><string>Artifloam finds large videos, screenshots and duplicates so you can choose what to delete. Your photos stay on your Mac and in your iCloud.</string>
 <key>NSDownloadsFolderUsageDescription</key><string>Find large files and exact duplicates in Downloads. You choose what moves to Trash.</string>
 </dict></plist>

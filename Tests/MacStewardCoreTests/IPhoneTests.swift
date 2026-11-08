@@ -44,6 +44,10 @@ final class IPhoneAppsTests: XCTestCase {
         XCTAssertNil(IPhoneDevice.automatic(from: [wireless]))
         XCTAssertNil(IPhoneDevice.automatic(from: [cabled, other]))
         XCTAssertNil(IPhoneDevice.automatic(from: []))
+        // One iPhone, even over Wi-Fi, is chosen in advance but never read by itself.
+        XCTAssertEqual(IPhoneDevice.preselected(from: [wireless]), wireless)
+        XCTAssertNil(IPhoneDevice.preselected(from: [cabled, other]))
+        XCTAssertNil(IPhoneDevice.preselected(from: []))
     }
 
     func testBackupNeedsRoomForTheIPhonePlusAMargin() {

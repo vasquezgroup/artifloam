@@ -6,6 +6,12 @@
 	<array>
 		<string>com.vasquezgroup.artifloam.iphone.space</string>
 	</array>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_artifloam-list._tcp</string>
+	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Artifloam sends the list of this iPhone's apps between your Mac and iPhone over your Wi-Fi. It's encrypted and stays on your devices.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
