@@ -17,8 +17,16 @@ struct PhotoViewer: View {
     private var current: PhotoItem? { items.first { $0.id == (position ?? start) } }
 
     var body: some View {
-        ZStack {
-            Color.black.ignoresSafeArea()
+        // Close above the picture and the bar below it, never on top: a video's own controls fill its frame.
+        VStack(spacing: 12) {
+            HStack {
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark").font(.body.weight(.semibold)).foregroundStyle(.white).frame(width: 44, height: 44).background(.ultraThinMaterial, in: .circle)
+                }
+                .accessibilityLabel("Close")
+                Spacer()
+            }
+            .padding(.horizontal, 16)
             ScrollView(.horizontal) {
                 LazyHStack(spacing: 0) {
                     ForEach(items) { item in
@@ -30,16 +38,10 @@ struct PhotoViewer: View {
             .scrollTargetBehavior(.paging)
             .scrollPosition(id: $position)
             .scrollIndicators(.hidden)
-            .ignoresSafeArea()
+            if let current { bar(current) }
         }
-        .overlay(alignment: .topLeading) {
-            Button { dismiss() } label: {
-                Image(systemName: "xmark").font(.body.weight(.semibold)).foregroundStyle(.white).frame(width: 44, height: 44).background(.ultraThinMaterial, in: .circle)
-            }
-            .accessibilityLabel("Close")
-            .padding(.leading, 16).padding(.top, 8)
-        }
-        .overlay(alignment: .bottom) { if let current { bar(current) } }
+        .padding(.top, 8)
+        .background(Color.black.ignoresSafeArea())
         .onAppear { position = start }
         .statusBarHidden()
     }
@@ -68,7 +70,7 @@ struct PhotoViewer: View {
                 .sensoryFeedback(.selection, trigger: chosen)
             }
         }
-        .padding(.bottom, 24)
+        .padding(.bottom, 12)
     }
 }
 
