@@ -334,9 +334,11 @@ private final class GridLayout {
         guard all != ids else { return }
         ids = all
         positions = Dictionary(all.enumerated().map { ($1, $0) }) { first, _ in first }
+        // Deleted pictures leave their old place behind. Finding one of those first stopped swipes from starting after a delete.
+        frames = frames.filter { positions[$0.key] != nil }
     }
     func index(at point: CGPoint) -> Int? {
-        frames.first { $0.value.contains(point) }.flatMap { positions[$0.key] }
+        frames.first { positions[$0.key] != nil && $0.value.contains(point) }.flatMap { positions[$0.key] }
     }
 }
 
@@ -389,7 +391,7 @@ struct PhotoGrid: View {
                 PhotoViewer(items: groups.flatMap { ($0.keep.map { [$0] } ?? []) + $0.items }, keeps: Set(groups.compactMap(\.keep?.id)), selection: $selection, start: start.id)
             }
             .onAppear { layout.use(groups) }
-            .onChange(of: groups.count) { _, _ in layout.use(groups) }
+            .onChange(of: groups.reduce(0) { $0 + $1.items.count }) { _, _ in layout.use(groups) }
             .onGeometryChange(for: CGFloat.self) { $0.frame(in: .global).minY } action: {
                 gridTop = $0
                 // The page opens scrolled to the top, so the first reading is where the grid rests.
