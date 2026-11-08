@@ -266,7 +266,7 @@ struct StagePage<Content: View>: View {
                             .padding(.horizontal, 24).padding(.vertical, 24)
                             .frame(maxWidth: WideLayout.readable).frame(maxWidth: .infinity)
                     }
-                    .defaultScrollAnchor(.center, for: .alignment)
+                    .centredWhenShort()
                 }
             } else {
                 let scroll = ScrollView {
@@ -392,4 +392,11 @@ struct ScanOrb: View {
 
 extension Library {
     var scanSummary: Text? { working ? Text("\(checked) of \(total)") : nil }
+}
+
+extension View {
+    /// Cards shorter than the screen sit in its middle, beside the artwork. iOS 17 keeps them at the top.
+    @ViewBuilder func centredWhenShort() -> some View {
+        if #available(iOS 18.0, *) { defaultScrollAnchor(.center, for: .alignment) } else { self }
+    }
 }

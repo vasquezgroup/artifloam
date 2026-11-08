@@ -13,15 +13,7 @@ struct ArtifloamApp: App {
 
     var body: some Scene {
         WindowGroup {
-            TabView {
-                Tab("Overview", systemImage: "leaf.fill") { NavigationStack { OverviewView().settingsButton() } }
-                Tab("Photos", systemImage: "sparkles") { NavigationStack { MediaSectionView(section: .photos).settingsButton() } }
-                Tab("Videos", systemImage: "video.fill") { NavigationStack { MediaSectionView(section: .videos).settingsButton() } }
-                Tab("Apps", systemImage: "square.grid.2x2.fill") { NavigationStack { AppsStorageView().settingsButton() } }
-                Tab("Tools", systemImage: "wrench.and.screwdriver.fill") { NavigationStack { ToolsView().settingsButton() } }
-            }
-            // A tab bar on iPhone; on iPad and an unfolded iPhone a sidebar like the Mac's, which can fold away.
-            .tabViewStyle(.sidebarAdaptable)
+            Sections()
             .tint(.white)
             // Dates, numbers and sizes follow the chosen language too.
             .environment(\.locale, language.map(Locale.init(identifier:)) ?? .autoupdatingCurrent)
@@ -29,6 +21,35 @@ struct ArtifloamApp: App {
             .preferredColorScheme(.dark)
         }
     }
+}
+
+/// A tab bar on iPhone; from iOS 18 a sidebar on iPad, like the Mac's, which can fold away. iOS 17 keeps the tab bar everywhere.
+private struct Sections: View {
+    var body: some View {
+        if #available(iOS 18.0, *) {
+            TabView {
+                Tab("Overview", systemImage: "leaf.fill") { overview }
+                Tab("Photos", systemImage: "sparkles") { photos }
+                Tab("Videos", systemImage: "video.fill") { videos }
+                Tab("Apps", systemImage: "square.grid.2x2.fill") { apps }
+                Tab("Tools", systemImage: "wrench.and.screwdriver.fill") { tools }
+            }
+            .tabViewStyle(.sidebarAdaptable)
+        } else {
+            TabView {
+                overview.tabItem { Label("Overview", systemImage: "leaf.fill") }
+                photos.tabItem { Label("Photos", systemImage: "sparkles") }
+                videos.tabItem { Label("Videos", systemImage: "video.fill") }
+                apps.tabItem { Label("Apps", systemImage: "square.grid.2x2.fill") }
+                tools.tabItem { Label("Tools", systemImage: "wrench.and.screwdriver.fill") }
+            }
+        }
+    }
+    private var overview: some View { NavigationStack { OverviewView().settingsButton() } }
+    private var photos: some View { NavigationStack { MediaSectionView(section: .photos).settingsButton() } }
+    private var videos: some View { NavigationStack { MediaSectionView(section: .videos).settingsButton() } }
+    private var apps: some View { NavigationStack { AppsStorageView().settingsButton() } }
+    private var tools: some View { NavigationStack { ToolsView().settingsButton() } }
 }
 
 func formatted(_ bytes: Int64) -> String { ByteCountFormatter.string(fromByteCount: bytes, countStyle: .file) }
