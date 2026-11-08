@@ -2,7 +2,7 @@
 
 Native SwiftUI app for iPhone and iPad, iOS 17+. On iOS 17 the iPad keeps the tab bar instead of the sidebar. No third-party dependencies. It shares the Mac app's look but none of its code.
 
-**Status: in development, not released.** Work is on the local branch `iphone-app`. Don't push it or merge it to `main` until the owner says so, because `origin` is the public repository.
+**Status: version 1.0, ready for App Review.**
 
 ## Run it
 
