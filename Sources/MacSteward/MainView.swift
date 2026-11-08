@@ -49,7 +49,7 @@ struct MainView: View {
         case "Duplicates", "My Clutter": return .files
         case "Applications": return .system
         case "iPhone": return .iphone
-        case "Photos": return .files
+        case "Photos": return .photos
         case "Browsers", "Browser data": return .browsers
         case "Worktrees": return .worktrees
         case "Space Map": return .space

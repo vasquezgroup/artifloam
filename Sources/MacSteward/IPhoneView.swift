@@ -58,7 +58,9 @@ final class IPhoneState: ObservableObject {
     private var generation = 0
 
     var onStage: Bool { reading || (report == nil && !backupsOnly) }
-    var canRead: Bool { picked != nil && !readInFlight }
+    /// Read stays available while an earlier read is still waiting on the iPhone. It then starts again as soon as that one ends.
+    var canRead: Bool { picked != nil }
+    private var readAgain = false
     /// Backups of the iPhone just read. Others show only if it has none here, so the person can pick one.
     var shownBackups: [IPhoneBackup] {
         let all = backups ?? []
@@ -105,12 +107,18 @@ final class IPhoneState: ObservableObject {
     func pick(_ device: IPhoneDevice) { picked = device; problem = nil }
     func read() {
         guard let picked, canRead else { return }
+        if readInFlight {
+            generation += 1
+            reading = true; problem = nil; readAgain = true
+            return
+        }
         generation += 1
         let current = generation, watcher = watcher, id = picked.id
         reading = true; readInFlight = true; problem = nil
         Task {
             let result = await Task.detached(priority: .userInitiated) { Result { try watcher.read(deviceID: id) } }.value
             readInFlight = false
+            if readAgain { readAgain = false; read(); return }
             guard current == generation else { return }
             reading = false
             switch result {
@@ -121,7 +129,7 @@ final class IPhoneState: ObservableObject {
             }
         }
     }
-    func stop() { generation += 1; reading = false }
+    func stop() { generation += 1; reading = false; readAgain = false }
     func openBackups() { backupsOnly = true; findBackups() }
     func findBackups() {
         generation += 1
