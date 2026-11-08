@@ -326,6 +326,14 @@ extension View {
     }
 }
 
+/// A step that waits for the person: what to do next, or leave things as they are.
+struct StageChoice {
+    let title: LocalizedStringKey
+    let action: () -> Void
+    let skip: LocalizedStringKey
+    let onSkip: () -> Void
+}
+
 /// Work that takes a while, staged like the Mac: the section's artwork centred and moving, a progress bar, then the result and Done.
 /// `done` is nil while working.
 struct WorkStage: View {
@@ -337,6 +345,8 @@ struct WorkStage: View {
     var note: LocalizedStringKey? = nil
     /// Something to keep at hand from the result, like a backup to save.
     var accessory: AnyView? = nil
+    /// Asks before going on, so iOS's own confirmation never comes as a surprise.
+    var choice: StageChoice? = nil
     var done: (() -> Void)? = nil
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -345,7 +355,7 @@ struct WorkStage: View {
         ZStack {
             AtmosphereView(theme: theme)
             VStack(spacing: 14) {
-                Sculpture(theme: theme, moving: !finished).frame(width: 240, height: 240)
+                Sculpture(theme: theme, moving: !finished && choice == nil).frame(width: 240, height: 240)
                     .scaleEffect(finished && !reduceMotion ? 1.08 : 1)
                     .animation(reduceMotion ? nil : .spring(response: 0.55, dampingFraction: 0.5), value: finished)
                 Text(title).font(.title2.weight(.semibold)).accessibilityAddTraits(.isHeader)
@@ -361,9 +371,14 @@ struct WorkStage: View {
                     }
                 }
                 detail?.font(.subheadline).foregroundStyle(.white.opacity(0.75)).monospacedDigit()
-                if let fraction, !finished { GlassMeter(fraction: fraction, theme: theme).frame(maxWidth: 320).padding(.top, 6) }
+                if let fraction, !finished, choice == nil { GlassMeter(fraction: fraction, theme: theme).frame(maxWidth: 320).padding(.top, 6) }
                 if let note { Text(note).font(.footnote).foregroundStyle(.white.opacity(0.65)).padding(.top, 6) }
                 if finished { accessory?.fontWeight(.medium) }
+                if let choice {
+                    Button(choice.title, action: choice.action).font(.headline).padding(.horizontal, 36).padding(.vertical, 13)
+                        .background(theme.vivid, in: .capsule).padding(.top, 10)
+                    Button(choice.skip, action: choice.onSkip).font(.subheadline.weight(.medium))
+                }
                 if let done {
                     Button("Done", action: done).font(.headline).padding(.horizontal, 36).padding(.vertical, 13)
                         .background(theme.vivid, in: .capsule).padding(.top, 10)

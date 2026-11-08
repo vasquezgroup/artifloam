@@ -686,6 +686,9 @@ struct CompressView: View {
     @State private var result: LocalizedStringKey?
     @State private var saving: Saving?
     @State private var failure: String?
+    /// Compressed, with their originals still there until the person says to delete them.
+    @State private var originals: Set<String> = []
+    @State private var sizes = Saving()
 
     private var videos: [PhotoItem] { library.items(.largeVideos) }
 
@@ -720,10 +723,16 @@ struct CompressView: View {
             OrbAction(title: "Compress", icon: "arrow.down.right.and.arrow.up.left", accent: StewardTheme.files.vivid, disabled: selection.isEmpty || running) { Task { await run() } }
         }
         .fullScreenCover(isPresented: $staged) {
-            WorkStage(theme: .files, title: running ? "Compressing videos…" : failure != nil ? "Couldn't compress" : "All done",
-                      detail: running ? Text("\(progress) of \(total)") : outcome(saving.map { Text("^[\($0.count) video](inflect: true)") } ?? result.map { Text($0) }, failure),
-                      fraction: fraction, saving: saving, note: stageNote(running: running, saved: saving != nil),
-                      done: running ? nil : { staged = false; failure = nil })
+            let ready = !running && !originals.isEmpty
+            WorkStage(theme: .files, title: running ? "Compressing videos…" : ready ? "Your smaller videos are ready" : failure != nil ? "Couldn't compress" : "All done",
+                      detail: running ? Text("\(progress) of \(total)") : outcome(ready ? Text("^[\(originals.count) video](inflect: true)") : saving.map { Text("^[\($0.count) video](inflect: true)") } ?? result.map { Text($0) }, failure),
+                      fraction: fraction, saving: saving, note: stageNote(ready: ready, saved: saving != nil),
+                      choice: ready ? StageChoice(title: "Delete originals", action: { Task { await removeOriginals() } }, skip: "Keep both") {
+                          originals = []
+                          result = "Kept your originals as well as the smaller copies. Nothing was removed."
+                          Task { await library.scan() }
+                      } : nil,
+                      done: running || ready ? nil : { staged = false; failure = nil })
         }
     }
 
@@ -765,18 +774,19 @@ struct CompressView: View {
         }
         fraction = 1
         selection = []
-        defer { running = false }
-        guard !done.isEmpty else {
-            result = skipped > 0 ? "The saving would be too small, so nothing changed." : nil
-            return
-        }
-        if await library.delete(done) {
-            result = "Saved about \(formatted(sizes.before - sizes.after)). Originals are in Recently Deleted."
-            saving = sizes
-        } else {
-            result = "Kept your originals as well as the smaller copies. Nothing was removed."
-            await library.scan()
-        }
+        running = false
+        if done.isEmpty { result = skipped > 0 ? "The saving would be too small, so nothing changed." : nil }
+        originals = done
+        self.sizes = sizes
+    }
+
+    /// Only when asked, so iOS's Delete prompt comes after the explanation, not as a surprise.
+    /// Cancelling it leaves the choice on screen.
+    private func removeOriginals() async {
+        guard await library.delete(originals) else { return }
+        result = "Saved about \(formatted(sizes.before - sizes.after)). Originals are in Recently Deleted."
+        saving = sizes
+        originals = []
     }
 }
 
@@ -790,10 +800,10 @@ private func outcome(_ result: Text?, _ failure: String?) -> Text? {
     }
 }
 
-/// Removing the original means removing it, so iOS's own confirmation says Delete: this says so first.
+/// The only way to free the space is to delete the original, and iOS confirms that with its own Delete prompt: this says so first.
 /// Apps can't empty Recently Deleted, so afterwards it says where the space is.
-private func stageNote(running: Bool, saved: Bool) -> LocalizedStringKey? {
-    running ? "iOS then asks to delete the originals. The new copies stay."
+private func stageNote(ready: Bool, saved: Bool) -> LocalizedStringKey? {
+    ready ? "Delete the originals to free the space. iOS asks you to confirm, and the new versions stay."
         : saved ? "Moved to Recently Deleted. The space comes back when iOS empties it after about 30 days, or when you empty it in Photos." : nil
 }
 
@@ -808,6 +818,9 @@ struct LivePhotosView: View {
     @State private var saving: Saving?
     @State private var failure: String?
     @State private var columns = 3
+    /// Saved as normal photos, with the Live originals still there until the person says to delete them.
+    @State private var originals: Set<String> = []
+    @State private var sizes = Saving()
 
     private var items: [PhotoItem] { library.items(.livePhotos) }
 
@@ -826,10 +839,15 @@ struct LivePhotosView: View {
             OrbAction(title: "Turn off", icon: "livephoto.slash", accent: StewardTheme.cleanup.vivid, disabled: selection.isEmpty || running) { Task { await run() } }
         }
         .fullScreenCover(isPresented: $staged) {
-            WorkStage(theme: .cleanup, title: running ? "Turning off Live Photos…" : failure != nil ? "Couldn't convert" : "All done",
-                      detail: running ? Text("\(progress) of \(total)") : outcome(saving.map { Text("^[\($0.count) photo](inflect: true)") } ?? result.map { Text($0) }, failure),
-                      fraction: Double(progress) / Double(max(total, 1)), saving: saving, note: stageNote(running: running, saved: saving != nil),
-                      done: running ? nil : { staged = false; failure = nil })
+            let ready = !running && !originals.isEmpty
+            WorkStage(theme: .cleanup, title: running ? "Turning off Live Photos…" : ready ? "Your normal photos are ready" : failure != nil ? "Couldn't convert" : "All done",
+                      detail: running ? Text("\(progress) of \(total)") : outcome(ready ? Text("^[\(originals.count) photo](inflect: true)") : saving.map { Text("^[\($0.count) photo](inflect: true)") } ?? result.map { Text($0) }, failure),
+                      fraction: Double(progress) / Double(max(total, 1)), saving: saving, note: stageNote(ready: ready, saved: saving != nil),
+                      choice: ready ? StageChoice(title: "Delete originals", action: { Task { await removeOriginals() } }, skip: "Keep both") {
+                          originals = []
+                          result = "You have both versions now. Nothing was removed."
+                      } : nil,
+                      done: running || ready ? nil : { staged = false; failure = nil })
         }
     }
 
@@ -857,13 +875,16 @@ struct LivePhotosView: View {
             }
         }
         selection = []
-        defer { running = false }
-        guard !done.isEmpty else { return }
-        if await library.delete(done) {
-            result = "Saved about \(formatted(sizes.before - sizes.after)). Originals are in Recently Deleted."
-            saving = sizes
-        } else {
-            result = "You have both versions now. Nothing was removed."
-        }
+        running = false
+        originals = done
+        self.sizes = sizes
+    }
+
+    /// Only when asked, so iOS's Delete prompt comes after the explanation. Cancelling it leaves the choice on screen.
+    private func removeOriginals() async {
+        guard await library.delete(originals) else { return }
+        result = "Saved about \(formatted(sizes.before - sizes.after)). Originals are in Recently Deleted."
+        saving = sizes
+        originals = []
     }
 }
