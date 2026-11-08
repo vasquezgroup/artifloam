@@ -64,21 +64,21 @@ struct HealthReport {
     init(reading r: DeviceReading) {
         var list: [HealthItem] = []
         let share = r.total > 0 ? Double(r.free) / Double(r.total) : 1
-        list.append(HealthItem(id: "storage", title: "Storage", value: String(localized: "\(formatted(r.free)) free"), level: share < 0.05 ? .problem : share < 0.1 ? .note : .good,
+        list.append(HealthItem(id: "storage", title: "Storage", value: String(app: "\(formatted(r.free)) free"), level: share < 0.05 ? .problem : share < 0.1 ? .note : .good,
                                advice: share < 0.1 ? "Run a scan to see what can go. Under 10% free, iOS may slow down and updates can fail." : nil))
-        list.append(HealthItem(id: "passcode", title: "Passcode", value: r.passcode ? String(localized: "On") : String(localized: "Off"), level: r.passcode ? .good : .problem,
+        list.append(HealthItem(id: "passcode", title: "Passcode", value: r.passcode ? String(app: "On") : String(app: "Off"), level: r.passcode ? .good : .problem,
                                advice: r.passcode ? nil : "Without a passcode, anyone holding this iPhone can open it, and its data isn't protected. Turn it on in Settings, Face ID & Passcode."))
         if let name = r.biometrics { list.append(HealthItem(id: "biometrics", title: "Biometric unlock", value: name, level: .good)) }
         switch r.heat {
-        case .serious: list.append(HealthItem(id: "heat", title: "Temperature", value: String(localized: "Hot"), level: .note, advice: "iOS may slow down to cool off. Give it a break from charging or heavy apps."))
-        case .critical: list.append(HealthItem(id: "heat", title: "Temperature", value: String(localized: "Very hot"), level: .problem, advice: "Take it out of the sun, stop heavy apps and let it cool down."))
-        default: list.append(HealthItem(id: "heat", title: "Temperature", value: String(localized: "Normal"), level: .good))
+        case .serious: list.append(HealthItem(id: "heat", title: "Temperature", value: String(app: "Hot"), level: .note, advice: "iOS may slow down to cool off. Give it a break from charging or heavy apps."))
+        case .critical: list.append(HealthItem(id: "heat", title: "Temperature", value: String(app: "Very hot"), level: .problem, advice: "Take it out of the sun, stop heavy apps and let it cool down."))
+        default: list.append(HealthItem(id: "heat", title: "Temperature", value: String(app: "Normal"), level: .good))
         }
         if r.battery >= 0 {
             let low = r.battery < 0.2 && !r.charging
-            list.append(HealthItem(id: "battery", title: "Battery charge", value: "\(Int(r.battery * 100))%" + (r.charging ? " · " + String(localized: "Charging") : ""), level: low ? .note : .good, advice: low ? "Running low. Charge it soon." : nil))
+            list.append(HealthItem(id: "battery", title: "Battery charge", value: "\(Int(r.battery * 100))%" + (r.charging ? " · " + String(app: "Charging") : ""), level: low ? .note : .good, advice: low ? "Running low. Charge it soon." : nil))
         }
-        list.append(HealthItem(id: "power", title: "Low Power Mode", value: r.lowPower ? String(localized: "On") : String(localized: "Off"), level: .good))
+        list.append(HealthItem(id: "power", title: "Low Power Mode", value: r.lowPower ? String(app: "On") : String(app: "Off"), level: .good))
         items = list
         about = [("Model code", r.model), ("iOS", r.iosVersion), ("Memory", ByteCountFormatter.string(fromByteCount: Int64(r.memory), countStyle: .memory)), ("Processor cores", String(r.cores)),
                  ("On for", Duration.seconds(r.uptime).formatted(.units(allowed: [.days, .hours], width: .wide, maximumUnitCount: 2))), ("iOS can clear by itself", formatted(r.purgeable))]

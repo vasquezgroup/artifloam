@@ -4,7 +4,12 @@ import SwiftUI
 struct ArtifloamApp: App {
     @State private var library = Library()
 
-    init() { SpaceReminder.register() }
+    @AppStorage(AppLanguage.key) private var language: String?
+
+    init() {
+        LanguageBundle.use(AppLanguage.chosen)
+        SpaceReminder.register()
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -16,6 +21,8 @@ struct ArtifloamApp: App {
                 NavigationStack { ToolsView().settingsButton() }.tabItem { Label("Tools", systemImage: "wrench.and.screwdriver.fill") }
             }
             .tint(.white)
+            // Dates, numbers and sizes follow the chosen language too.
+            .environment(\.locale, language.map(Locale.init(identifier:)) ?? .autoupdatingCurrent)
             .environment(library)
             .preferredColorScheme(.dark)
         }

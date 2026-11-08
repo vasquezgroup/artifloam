@@ -281,6 +281,7 @@ struct DetailPage<Content: View>: View {
     let theme: StewardTheme
     let title: LocalizedStringKey
     @ViewBuilder let content: Content
+    @Environment(\.locale) private var locale
 
     var body: some View {
         ZStack {
@@ -293,6 +294,8 @@ struct DetailPage<Content: View>: View {
         .navigationBarTitleDisplayMode(.inline)
         .environment(\.stewardTheme, theme)
         .tint(theme.accent)
+        // iOS keeps the title it was first given; a new identity makes it take the app's new language.
+        .id(locale.identifier)
     }
 }
 

@@ -25,10 +25,9 @@ struct SettingsView: View {
     @State private var photos = PHPhotoLibrary.authorizationStatus(for: .readWrite)
     @State private var contacts = CNContactStore.authorizationStatus(for: .contacts)
 
-    /// iOS keeps each app's language in its own Settings page. Opening it is the only way that works everywhere, and it's where people expect it.
+    @AppStorage(AppLanguage.key) private var chosen: String?
     private var language: String {
-        let code = Bundle.main.preferredLocalizations.first ?? "en"
-        return Locale.current.localizedString(forIdentifier: code)?.localizedCapitalized ?? code
+        chosen.map(AppLanguage.name) ?? String(app: "Same as iPhone")
     }
     private var version: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
@@ -37,10 +36,10 @@ struct SettingsView: View {
     var body: some View {
         DetailPage(theme: .care, title: "Settings") {
             GlassCard {
-                settingsLink {
-                    FeatureRow(icon: "category-globe", title: "Language", detail: Text(language))
+                NavigationLink { LanguagePicker() } label: {
+                    FeatureRow(icon: "category-globe", title: "Language", detail: Text(verbatim: language))
                 }
-                Text("Opens the iPhone Settings for Artifloam. Choose Language there.").font(.footnote).foregroundStyle(.white.opacity(0.7))
+                .buttonStyle(.plain)
             }
             GlassCard {
                 Toggle("Remind me when space runs low", isOn: $reminder)
@@ -81,18 +80,18 @@ struct SettingsView: View {
 
     private func status(_ status: PHAuthorizationStatus) -> String {
         switch status {
-        case .authorized: String(localized: "Allowed")
-        case .limited: String(localized: "Some photos")
-        case .notDetermined: String(localized: "Not asked yet")
-        default: String(localized: "Not allowed")
+        case .authorized: String(app: "Allowed")
+        case .limited: String(app: "Some photos")
+        case .notDetermined: String(app: "Not asked yet")
+        default: String(app: "Not allowed")
         }
     }
     private func status(_ status: CNAuthorizationStatus) -> String {
         switch status {
-        case .authorized: String(localized: "Allowed")
-        case .limited: String(localized: "Some contacts")
-        case .notDetermined: String(localized: "Not asked yet")
-        default: String(localized: "Not allowed")
+        case .authorized: String(app: "Allowed")
+        case .limited: String(app: "Some contacts")
+        case .notDetermined: String(app: "Not asked yet")
+        default: String(app: "Not allowed")
         }
     }
 }

@@ -220,7 +220,7 @@ struct PhotoCell: View, Equatable {
                 // Smaller inset on large pictures, or it would leave wide borders.
                 .scaleEffect(selected && !reduceMotion ? (whole ? 0.985 : 0.93) : 1)
                 .overlay(alignment: .bottomLeading) {
-                    if state != .picture && showsSize { Text(state == .keeps ? String(localized: "Stays") : formatted(item.saving)).font(.caption2.bold()).foregroundStyle(.white).padding(4)
+                    if state != .picture && showsSize { Text(state == .keeps ? String(app: "Stays") : formatted(item.saving)).font(.caption2.bold()).foregroundStyle(.white).padding(4)
                         .background(state == .keeps ? AnyShapeStyle(StewardTheme.cleanup.vivid) : AnyShapeStyle(.black.opacity(0.6)), in: .rect(cornerRadius: 4)).padding(4) }
                 }
                 .overlay(alignment: .topTrailing) {
@@ -264,7 +264,7 @@ struct PhotoCell: View, Equatable {
     }
 
     private var label: Text {
-        let kind = item.asset.mediaType == .video ? String(localized: "Video") : String(localized: "Photo")
+        let kind = item.asset.mediaType == .video ? String(app: "Video") : String(app: "Photo")
         let date = item.asset.creationDate?.formatted(date: .abbreviated, time: .omitted) ?? ""
         return state == .keeps ? Text("\(kind), \(date), stays") : Text("\(kind), \(formatted(item.saving)), \(date)")
     }

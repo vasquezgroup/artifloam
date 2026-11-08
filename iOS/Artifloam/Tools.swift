@@ -99,8 +99,8 @@ enum SpaceReminder {
             let space = DiskSpace.current
             if isLow(free: space.free, total: space.total) {
                 let content = UNMutableNotificationContent()
-                content.title = String(localized: "Your iPhone is running low on space")
-                content.body = String(localized: "\(formatted(space.free)) left. Open Artifloam to see what can go.")
+                content.title = String(app: "Your iPhone is running low on space")
+                content.body = String(app: "\(formatted(space.free)) left. Open Artifloam to see what can go.")
                 UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: "lowSpace", content: content, trigger: nil))
             }
             task.setTaskCompleted(success: true)
