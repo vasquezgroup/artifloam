@@ -52,6 +52,19 @@ So I built Artifloam. It started as a small tool for my own Mac, and it's still 
 
 There's also a command-line helper, `stewardctl`.
 
+## Artifloam for iPhone and iPad
+
+A separate native app for iPhone and iPad, iOS 17 or later, in the same style and the same 25 languages. It's in App Store review and will be free.
+
+| Area | What it does |
+| --- | --- |
+| **Photos** | Duplicates, similar shots with the sharpest kept, blurred photos and screenshots. Turns Live Photos into stills |
+| **Videos** | Large and old videos and screen recordings. Compresses videos to keep them at a smaller size |
+| **Tools** | Storage summary, space history, albums by size, large files in a folder you choose, duplicate contacts and device health |
+| **Widget** | Free space on your Home Screen |
+
+Like the Mac app, it deletes nothing from one tap: every list opens as a review first. It collects no data and has no account, ads or tracking. iOS doesn't let an app read other apps' data, so per-app sizes come from the Mac app's iPhone section instead. The code is in `iOS/`, see [iOS/README.md](iOS/README.md).
+
 ## Languages
 
 Artifloam follows your Mac's language, and you can choose another in Settings. It's available in 25 languages and regional variants:
