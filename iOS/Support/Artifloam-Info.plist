@@ -5,6 +5,7 @@
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.vasquezgroup.artifloam.iphone.space</string>
+		<string>com.vasquezgroup.artifloam.iphone.work.*</string>
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>

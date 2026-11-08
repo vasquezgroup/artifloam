@@ -40553,6 +40553,154 @@
         }
       }
     },
+    "You can switch apps. It carries on in the background, and iOS shows how far it is." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يمكنك التبديل إلى تطبيقات أخرى. تستمر العملية في الخلفية، ويعرض iOS مدى تقدمها."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pots canviar d’app. Continua en segon pla, i l’iOS mostra com va."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du kannst die App wechseln. Es läuft im Hintergrund weiter, und iOS zeigt, wie weit es ist."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can switch apps. It carries on in the background, and iOS shows how far it is."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can switch apps. It carries on in the background, and iOS shows how far it is."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can switch apps. It carries on in the background, and iOS shows how far it is."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes cambiar de app. Sigue en segundo plano, e iOS muestra cuánto falta."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes cambiar de app. Sigue en segundo plano, e iOS muestra cuánto falta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous pouvez changer d’app. Le travail continue en arrière-plan, et iOS affiche où il en est."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du chasch d App wächsle. Es lauft im Hintergrund wiiter, und iOS zeigt, wie wiit es isch."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आप दूसरी ऐप पर जा सकते हैं। यह बैकग्राउंड में चलता रहता है, और iOS दिखाता है कि कितना हुआ।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Možeš prijeći u drugu aplikaciju. Nastavlja se u pozadini, a iOS prikazuje napredak."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puoi passare a un’altra app. Continua in background e iOS mostra a che punto è."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ほかのアプリに切り替えても大丈夫です。バックグラウンドで続き、iOSが進み具合を表示します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다른 앱으로 전환해도 됩니다. 백그라운드에서 계속되며, iOS가 진행 상황을 보여 줍니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vari pārslēgties uz citu lietotni. Tas turpinās fonā, un iOS rāda, cik tālu tas ir."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Możesz przełączyć aplikację. Praca trwa w tle, a iOS pokazuje postęp."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pode mudar de app. Continua em segundo plano, e o iOS mostra o progresso."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mund të kalosh në një aplikacion tjetër. Vazhdon në sfond, dhe iOS tregon sa ka përparuar."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Можеш да пређеш у другу апликацију. Наставља се у позадини, а iOS приказује напредак."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Možeš da pređeš u drugu aplikaciju. Nastavlja se u pozadini, a iOS prikazuje napredak."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du kan byta app. Det fortsätter i bakgrunden, och iOS visar hur långt det har kommit."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başka bir uygulamaya geçebilirsiniz. İşlem arka planda sürer ve iOS ne kadar kaldığını gösterir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你可以切换到其他 App。它会在后台继续，iOS 会显示进度。"
+          }
+        }
+      }
+    },
     "You have both versions now. Nothing was removed." : {
       "localizations" : {
         "ar" : {

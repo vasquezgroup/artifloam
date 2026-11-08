@@ -27,8 +27,9 @@ public enum MediaChanges {
     /// What a compression is busy with, for showing it.
     public enum Step: Sendable { case downloading, compressing }
 
-    /// `download` hears how far an original in iCloud has come down, from 0 to 1. Cancelling the task stops the download.
-    public static func exportSession(for asset: PHAsset, download: (@MainActor (Double) -> Void)? = nil) async throws -> (AVAssetExportSession, AVAsset) {
+    /// The original video, from iCloud if need be. `download` hears how far it has come down, from 0 to 1.
+    /// Cancelling the task stops the download. Can run ahead of `compress`, so the next video downloads while one compresses.
+    public static func original(_ asset: PHAsset, download: (@MainActor (Double) -> Void)? = nil) async throws -> AVAsset {
         let options = PHVideoRequestOptions()
         options.version = .original
         options.isNetworkAccessAllowed = true
@@ -41,18 +42,20 @@ public enum MediaChanges {
             }
         } onCancel: { request.cancel() }
         try Task.checkCancellation()
-        guard let video, let session = AVAssetExportSession(asset: video, presetName: AVAssetExportPresetHEVC1920x1080) else {
-            throw Failure(errorDescription: String(localized: "This video can't be compressed."))
-        }
-        return (session, video)
+        guard let video else { throw Failure(errorDescription: String(localized: "This video can't be compressed.")) }
+        return video
     }
 
     /// Returns the new copy's size, or nil if the saving was too small and nothing was added.
-    /// `progress` hears what it's doing and how far that is, from 0 to 1, a few times a second.
+    /// `original` is the video already fetched, if it was. `progress` hears what it's doing and how far that is, from 0 to 1, a few times a second.
     /// Cancelling the task stops it and throws `CancellationError`, with nothing added.
-    public static func compress(_ item: PhotoItem, progress: (@MainActor (Step, Double) -> Void)? = nil) async throws -> Int64? {
+    public static func compress(_ item: PhotoItem, original: AVAsset? = nil, progress: (@MainActor (Step, Double) -> Void)? = nil) async throws -> Int64? {
         try checkRoom(for: item)
-        let (session, original) = try await exportSession(for: item.asset, download: progress.map { report in { @MainActor in report(.downloading, $0) } })
+        let video: AVAsset
+        if let original { video = original } else { video = try await Self.original(item.asset, download: progress.map { report in { @MainActor in report(.downloading, $0) } }) }
+        guard let session = AVAssetExportSession(asset: video, presetName: AVAssetExportPresetHEVC1920x1080) else {
+            throw Failure(errorDescription: String(localized: "This video can't be compressed."))
+        }
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
         defer { try? FileManager.default.removeItem(at: url) }
         session.outputURL = url
@@ -72,7 +75,7 @@ public enum MediaChanges {
         }
         let bytes = (try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize).flatMap { $0 }.map(Int64.init) ?? 0
         guard isWorthKeeping(original: item.bytes, compressed: bytes) else { return nil }
-        let before = try await original.load(.duration).seconds
+        let before = try await video.load(.duration).seconds
         let after = try await AVURLAsset(url: url).load(.duration).seconds
         guard abs(before - after) < 1 else { throw Failure(errorDescription: String(localized: "The compressed copy didn't match the original.")) }
         let source = item.asset
@@ -85,26 +88,40 @@ public enum MediaChanges {
         return bytes
     }
 
-    /// Adds a still copy of a Live Photo, with its date and place.
-    public static func makeStill(_ item: PhotoItem) async throws {
+    /// The photo inside a Live Photo, as a file, from iCloud if need be. Several can download at once.
+    /// The caller removes the file once `addStills` has used it.
+    public static func stillFile(_ item: PhotoItem) async throws -> URL {
         try checkRoom(for: item)
         let resources = PHAssetResource.assetResources(for: item.asset)
         guard let photo = resources.first(where: { $0.type == .fullSizePhoto }) ?? resources.first(where: { $0.type == .photo }) else {
             throw Failure(errorDescription: String(localized: "This Live Photo can't be converted."))
         }
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + "-" + photo.originalFilename)
-        defer { try? FileManager.default.removeItem(at: url) }
         let options = PHAssetResourceRequestOptions()
         options.isNetworkAccessAllowed = true
         try await PHAssetResourceManager.default().writeData(for: photo, toFile: url, options: options)
-        let source = item.asset
+        return url
+    }
+
+    /// Adds still copies of Live Photos, with their dates and places, in one change to the library.
+    /// One change for many is much faster than one each.
+    public static func addStills(_ stills: [(item: PhotoItem, file: URL)]) async throws {
         try await PHPhotoLibrary.shared().performChanges {
-            let request = PHAssetCreationRequest.forAsset()
-            request.addResource(with: .photo, fileURL: url, options: nil)
-            request.creationDate = source.creationDate
-            request.location = source.location
-            request.isFavorite = source.isFavorite
+            for (item, file) in stills {
+                let request = PHAssetCreationRequest.forAsset()
+                request.addResource(with: .photo, fileURL: file, options: nil)
+                request.creationDate = item.asset.creationDate
+                request.location = item.asset.location
+                request.isFavorite = item.asset.isFavorite
+            }
         }
+    }
+
+    /// Adds a still copy of a Live Photo, with its date and place.
+    public static func makeStill(_ item: PhotoItem) async throws {
+        let file = try await stillFile(item)
+        defer { try? FileManager.default.removeItem(at: file) }
+        try await addStills([(item, file)])
     }
 }
 

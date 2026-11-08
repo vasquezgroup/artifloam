@@ -691,8 +691,11 @@ struct CompressView: View {
     @State private var columns = 3
     @State private var work: Task<Void, Never>?
     @State private var step = MediaChanges.Step.compressing
-    @State private var downloaded = 0.0
+    /// How far each video has come down from iCloud, by its place in the run. Only those that needed it are here.
+    @State private var downloads: [Int: Double] = [:]
     @State private var currentBytes: Int64 = 0
+    /// iOS lets it carry on after the person leaves the app.
+    @State private var background = false
 
     private var videos: [PhotoItem] { library.items(.largeVideos) }
 
@@ -715,14 +718,14 @@ struct CompressView: View {
             let ready = !running && !originals.isEmpty
             WorkStage(theme: .files, title: running ? "Compressing videos…" : ready ? "Your smaller videos are ready" : failure != nil ? "Couldn't compress" : "All done",
                       detail: running ? Text("\(progress) of \(total)") + Text(verbatim: " · " + formatted(currentBytes)) : outcome(ready ? Text("^[\(originals.count) video](inflect: true)") : saving.map { Text("^[\($0.count) video](inflect: true)") } ?? result.map { Text($0) }, failure),
-                      fraction: fraction, saving: saving, note: stageNote(ready: ready, saved: saving != nil),
+                      fraction: fraction, saving: saving, note: stageNote(running: running, background: background, ready: ready, saved: saving != nil),
                       choice: ready ? StageChoice(title: "Delete originals", action: { Task { await removeOriginals() } }, skip: "Keep both") {
                           originals = []
                           result = "Kept your originals as well as the smaller copies. Nothing was removed."
                           Task { await library.scan() }
                       } : nil,
                       // A video only in iCloud comes down first, which can take a while, so that gets its own line.
-                      status: step == .downloading ? Text("Downloading from iCloud…") + Text(verbatim: " ") + Text(downloaded, format: .percent.precision(.fractionLength(0))) : Text("Keep Artifloam open until it's done."),
+                      status: step == .downloading ? Text("Downloading from iCloud…") + Text(verbatim: " ") + Text(downloads[progress - 1] ?? 0, format: .percent.precision(.fractionLength(0))) : nil,
                       stop: { work?.cancel() },
                       done: running || ready ? nil : { staged = false; failure = nil })
         }
@@ -735,21 +738,28 @@ struct CompressView: View {
         saving = nil
         progress = 0
         fraction = 0
-        total = selection.count
+        downloads = [:]
+        let picked = videos.filter { selection.contains($0.id) }
+        total = picked.count
+        background = BackgroundWork.shared.begin(title: String(localized: "Compressing videos…"), subtitle: String(localized: "\(1) of \(total)")) { work?.cancel() }
         var done: Set<String> = []
         var sizes = Saving()
         var skipped = 0
-        for item in videos where selection.contains(item.id) {
-            if Task.isCancelled { break }
-            progress += 1
+        // The next video downloads from iCloud while this one compresses, so the two waits overlap instead of adding up.
+        var next: Task<AVAsset, Error>? = picked.isEmpty ? nil : fetch(picked, 0)
+        for (index, item) in picked.enumerated() {
+            guard !Task.isCancelled, let current = next else { break }
+            next = index + 1 < picked.count ? fetch(picked, index + 1) : nil
+            progress = index + 1
             currentBytes = item.bytes
-            downloaded = 0
-            step = .compressing
-            let finished = Double(progress - 1)
+            // Waiting for the original means it's still coming down. One already on the phone passes in a moment.
+            step = .downloading
+            show(index, exported: nil)
             do {
-                let compressed = try await MediaChanges.compress(item) { now, value in
-                    step = now
-                    if now == .downloading { downloaded = value } else { fraction = (finished + value) / Double(total) }
+                let original = try await withTaskCancellationHandler { try await current.value } onCancel: { current.cancel() }
+                step = .compressing
+                let compressed = try await MediaChanges.compress(item, original: original) { now, value in
+                    if now == .compressing { show(index, exported: value) }
                 }
                 if let bytes = compressed {
                     done.insert(item.id)
@@ -765,7 +775,9 @@ struct CompressView: View {
                 break
             }
         }
+        next?.cancel()
         running = false
+        BackgroundWork.shared.end(success: !Task.isCancelled && failure == nil)
         // Stopped before anything was made: nothing to show, and the choice stays ticked to start again.
         if Task.isCancelled && done.isEmpty { staged = false; return }
         fraction = 1
@@ -773,6 +785,24 @@ struct CompressView: View {
         if done.isEmpty { result = skipped > 0 ? "The saving would be too small, so nothing changed." : nil }
         originals = done
         self.sizes = sizes
+    }
+
+    private func fetch(_ picked: [PhotoItem], _ index: Int) -> Task<AVAsset, Error> {
+        Task {
+            try await MediaChanges.original(picked[index].asset) { value in
+                downloads[index] = value
+                if progress == index + 1 && step == .downloading { show(index, exported: nil) }
+            }
+        }
+    }
+
+    /// One bar for the whole run. A video that came from iCloud gives its first 30% to the download,
+    /// so the bar, and iOS's own progress, keep moving while it comes down.
+    private func show(_ index: Int, exported: Double?) {
+        let fetched = downloads[index]
+        let share = exported.map { fetched == nil ? $0 : 0.3 + 0.7 * $0 } ?? 0.3 * (fetched ?? 0)
+        fraction = (Double(index) + share) / Double(max(total, 1))
+        BackgroundWork.shared.update(fraction, subtitle: String(localized: "\(index + 1) of \(total)"))
     }
 
     /// Only when asked, so iOS's Delete prompt comes after the explanation, not as a surprise.
@@ -797,8 +827,10 @@ private func outcome(_ result: Text?, _ failure: String?) -> Text? {
 
 /// The only way to free the space is to delete the original, and iOS confirms that with its own Delete prompt: this says so first.
 /// Apps can't empty Recently Deleted, so afterwards it says where the space is.
-private func stageNote(ready: Bool, saved: Bool) -> LocalizedStringKey? {
-    ready ? "Delete the originals to free the space. iOS asks you to confirm, and the new versions stay."
+private func stageNote(running: Bool, background: Bool, ready: Bool, saved: Bool) -> LocalizedStringKey? {
+    // While working, whether leaving the app is safe: only when iOS has agreed to carry on in the background.
+    running ? (background ? "You can switch apps. It carries on in the background, and iOS shows how far it is." : "Keep Artifloam open until it's done.")
+        : ready ? "Delete the originals to free the space. iOS asks you to confirm, and the new versions stay."
         : saved ? "Moved to Recently Deleted. The space comes back when iOS empties it after about 30 days, or when you empty it in Photos." : nil
 }
 
@@ -817,6 +849,7 @@ struct LivePhotosView: View {
     @State private var originals: Set<String> = []
     @State private var sizes = Saving()
     @State private var work: Task<Void, Never>?
+    @State private var background = false
 
     private var items: [PhotoItem] { library.items(.livePhotos) }
 
@@ -838,12 +871,11 @@ struct LivePhotosView: View {
             let ready = !running && !originals.isEmpty
             WorkStage(theme: .cleanup, title: running ? "Turning off Live Photos…" : ready ? "Your normal photos are ready" : failure != nil ? "Couldn't convert" : "All done",
                       detail: running ? Text("\(progress) of \(total)") : outcome(ready ? Text("^[\(originals.count) photo](inflect: true)") : saving.map { Text("^[\($0.count) photo](inflect: true)") } ?? result.map { Text($0) }, failure),
-                      fraction: Double(progress) / Double(max(total, 1)), saving: saving, note: stageNote(ready: ready, saved: saving != nil),
+                      fraction: Double(progress) / Double(max(total, 1)), saving: saving, note: stageNote(running: running, background: background, ready: ready, saved: saving != nil),
                       choice: ready ? StageChoice(title: "Delete originals", action: { Task { await removeOriginals() } }, skip: "Keep both") {
                           originals = []
                           result = "You have both versions now. Nothing was removed."
                       } : nil,
-                      status: Text("Keep Artifloam open until it's done."),
                       stop: { work?.cancel() },
                       done: running || ready ? nil : { staged = false; failure = nil })
         }
@@ -855,26 +887,47 @@ struct LivePhotosView: View {
         result = nil
         saving = nil
         progress = 0
-        total = selection.count
+        let picked = items.filter { selection.contains($0.id) }
+        total = picked.count
+        background = BackgroundWork.shared.begin(title: String(localized: "Turning off Live Photos…"), subtitle: String(localized: "\(0) of \(total)")) { work?.cancel() }
         var done: Set<String> = []
         var sizes = Saving()
-        for item in items where selection.contains(item.id) {
-            // Stops between photos: one already on its way finishes, so nothing is left half done.
-            if Task.isCancelled { break }
-            progress += 1
-            do {
-                try await MediaChanges.makeStill(item)
+        var waiting: [(item: PhotoItem, file: URL)] = []
+        /// Saves the downloaded photos in one change to the library: far faster than one change each.
+        func save() async throws {
+            guard !waiting.isEmpty else { return }
+            defer { for still in waiting { try? FileManager.default.removeItem(at: still.file) }; waiting = [] }
+            try await MediaChanges.addStills(waiting)
+            for (item, _) in waiting {
                 done.insert(item.id)
                 // The still keeps the photo. What goes is the short video.
                 sizes.before += item.bytes
                 sizes.after += item.bytes - item.saving
                 sizes.count += 1
-            } catch {
-                failure = error.localizedDescription
-                break
             }
         }
+        do {
+            // A few at once: most of the time goes on waiting for iCloud, and several downloads overlap well.
+            try await withThrowingTaskGroup(of: (PhotoItem, URL).self) { group in
+                var queue = picked.makeIterator()
+                for _ in 0..<4 { if let item = queue.next() { group.addTask { (item, try await MediaChanges.stillFile(item)) } } }
+                while let (item, file) = try await group.next() {
+                    waiting.append((item, file))
+                    progress += 1
+                    BackgroundWork.shared.update(Double(progress) / Double(max(total, 1)), subtitle: String(localized: "\(progress) of \(total)"))
+                    if waiting.count >= 20 { try await save() }
+                    // Stops between photos: those already on their way finish, so nothing is left half done.
+                    if !Task.isCancelled, let item = queue.next() { group.addTask { (item, try await MediaChanges.stillFile(item)) } }
+                }
+            }
+            try await save()
+        } catch {
+            if !Task.isCancelled { failure = error.localizedDescription }
+            // What came down before the problem or the Stop is kept.
+            try? await save()
+        }
         running = false
+        BackgroundWork.shared.end(success: !Task.isCancelled && failure == nil)
         if Task.isCancelled && done.isEmpty { staged = false; return }
         selection = []
         originals = done
