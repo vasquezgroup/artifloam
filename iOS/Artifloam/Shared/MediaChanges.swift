@@ -24,14 +24,23 @@ public enum MediaChanges {
         }
     }
 
-    public static func exportSession(for asset: PHAsset) async throws -> (AVAssetExportSession, AVAsset) {
+    /// What a compression is busy with, for showing it.
+    public enum Step: Sendable { case downloading, compressing }
+
+    /// `download` hears how far an original in iCloud has come down, from 0 to 1. Cancelling the task stops the download.
+    public static func exportSession(for asset: PHAsset, download: (@MainActor (Double) -> Void)? = nil) async throws -> (AVAssetExportSession, AVAsset) {
         let options = PHVideoRequestOptions()
         options.version = .original
         options.isNetworkAccessAllowed = true
         options.deliveryMode = .highQualityFormat
-        let video: AVAsset? = await withCheckedContinuation { continuation in
-            PHImageManager.default().requestAVAsset(forVideo: asset, options: options) { result, _, _ in continuation.resume(returning: result) }
-        }
+        if let download { options.progressHandler = { value, _, _, _ in Task { @MainActor in download(value) } } }
+        let request = RequestID()
+        let video: AVAsset? = await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                request.set(PHImageManager.default().requestAVAsset(forVideo: asset, options: options) { result, _, _ in continuation.resume(returning: result) })
+            }
+        } onCancel: { request.cancel() }
+        try Task.checkCancellation()
         guard let video, let session = AVAssetExportSession(asset: video, presetName: AVAssetExportPresetHEVC1920x1080) else {
             throw Failure(errorDescription: String(localized: "This video can't be compressed."))
         }
@@ -39,10 +48,11 @@ public enum MediaChanges {
     }
 
     /// Returns the new copy's size, or nil if the saving was too small and nothing was added.
-    /// `progress` hears how far the export is, from 0 to 1, a few times a second.
-    public static func compress(_ item: PhotoItem, progress: (@MainActor (Double) -> Void)? = nil) async throws -> Int64? {
+    /// `progress` hears what it's doing and how far that is, from 0 to 1, a few times a second.
+    /// Cancelling the task stops it and throws `CancellationError`, with nothing added.
+    public static func compress(_ item: PhotoItem, progress: (@MainActor (Step, Double) -> Void)? = nil) async throws -> Int64? {
         try checkRoom(for: item)
-        let (session, original) = try await exportSession(for: item.asset)
+        let (session, original) = try await exportSession(for: item.asset, download: progress.map { report in { @MainActor in report(.downloading, $0) } })
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
         defer { try? FileManager.default.removeItem(at: url) }
         session.outputURL = url
@@ -50,12 +60,13 @@ public enum MediaChanges {
         session.shouldOptimizeForNetworkUse = false
         let watch = Task { @MainActor in
             while !Task.isCancelled, let progress {
-                progress(Double(session.progress))
+                progress(.compressing, Double(session.progress))
                 try? await Task.sleep(for: .milliseconds(250))
             }
         }
-        await session.export()
+        await withTaskCancellationHandler { await session.export() } onCancel: { session.cancelExport() }
         watch.cancel()
+        try Task.checkCancellation()
         guard session.status == .completed else {
             throw session.error ?? Failure(errorDescription: String(localized: "Compression stopped."))
         }
@@ -94,5 +105,20 @@ public enum MediaChanges {
             request.location = source.location
             request.isFavorite = source.isFavorite
         }
+    }
+}
+
+/// A Photos request that a cancelled task can stop, even from another thread.
+private final class RequestID: @unchecked Sendable {
+    private let lock = NSLock()
+    private var id: PHImageRequestID?
+    private var cancelled = false
+    func set(_ new: PHImageRequestID) {
+        lock.lock(); id = new; let stop = cancelled; lock.unlock()
+        if stop { PHImageManager.default().cancelImageRequest(new) }
+    }
+    func cancel() {
+        lock.lock(); cancelled = true; let current = id; lock.unlock()
+        if let current { PHImageManager.default().cancelImageRequest(current) }
     }
 }

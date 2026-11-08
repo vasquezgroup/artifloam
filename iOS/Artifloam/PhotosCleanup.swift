@@ -689,6 +689,10 @@ struct CompressView: View {
     @State private var originals: Set<String> = []
     @State private var sizes = Saving()
     @State private var columns = 3
+    @State private var work: Task<Void, Never>?
+    @State private var step = MediaChanges.Step.compressing
+    @State private var downloaded = 0.0
+    @State private var currentBytes: Int64 = 0
 
     private var videos: [PhotoItem] { library.items(.largeVideos) }
 
@@ -705,18 +709,21 @@ struct CompressView: View {
         }
         .toolbar { Button(selection.count == videos.count ? "Select None" : "Select All") { selection = selection.count == videos.count ? [] : Set(videos.map(\.id)) } }
         .orbFooter(summary: selection.isEmpty ? nil : Text("^[\(selection.count) video](inflect: true)")) {
-            OrbAction(title: "Compress", icon: "arrow.down.right.and.arrow.up.left", accent: StewardTheme.files.vivid, disabled: selection.isEmpty || running) { Task { await run() } }
+            OrbAction(title: "Compress", icon: "arrow.down.right.and.arrow.up.left", accent: StewardTheme.files.vivid, disabled: selection.isEmpty || running) { work = Task { await run() } }
         }
         .fullScreenCover(isPresented: $staged) {
             let ready = !running && !originals.isEmpty
             WorkStage(theme: .files, title: running ? "Compressing videos…" : ready ? "Your smaller videos are ready" : failure != nil ? "Couldn't compress" : "All done",
-                      detail: running ? Text("\(progress) of \(total)") : outcome(ready ? Text("^[\(originals.count) video](inflect: true)") : saving.map { Text("^[\($0.count) video](inflect: true)") } ?? result.map { Text($0) }, failure),
+                      detail: running ? Text("\(progress) of \(total)") + Text(verbatim: " · " + formatted(currentBytes)) : outcome(ready ? Text("^[\(originals.count) video](inflect: true)") : saving.map { Text("^[\($0.count) video](inflect: true)") } ?? result.map { Text($0) }, failure),
                       fraction: fraction, saving: saving, note: stageNote(ready: ready, saved: saving != nil),
                       choice: ready ? StageChoice(title: "Delete originals", action: { Task { await removeOriginals() } }, skip: "Keep both") {
                           originals = []
                           result = "Kept your originals as well as the smaller copies. Nothing was removed."
                           Task { await library.scan() }
                       } : nil,
+                      // A video only in iCloud comes down first, which can take a while, so that gets its own line.
+                      status: step == .downloading ? Text("Downloading from iCloud…") + Text(verbatim: " ") + Text(downloaded, format: .percent.precision(.fractionLength(0))) : Text("Keep Artifloam open until it's done."),
+                      stop: { work?.cancel() },
                       done: running || ready ? nil : { staged = false; failure = nil })
         }
     }
@@ -733,10 +740,18 @@ struct CompressView: View {
         var sizes = Saving()
         var skipped = 0
         for item in videos where selection.contains(item.id) {
+            if Task.isCancelled { break }
             progress += 1
+            currentBytes = item.bytes
+            downloaded = 0
+            step = .compressing
             let finished = Double(progress - 1)
             do {
-                if let bytes = try await MediaChanges.compress(item, progress: { fraction = (finished + $0) / Double(total) }) {
+                let compressed = try await MediaChanges.compress(item) { now, value in
+                    step = now
+                    if now == .downloading { downloaded = value } else { fraction = (finished + value) / Double(total) }
+                }
+                if let bytes = compressed {
                     done.insert(item.id)
                     sizes.before += item.bytes
                     sizes.after += bytes
@@ -745,13 +760,16 @@ struct CompressView: View {
                     skipped += 1
                 }
             } catch {
-                failure = error.localizedDescription
+                // Stopping isn't a failure. What's done so far stays, and goes on to the choice.
+                if !Task.isCancelled { failure = error.localizedDescription }
                 break
             }
         }
+        running = false
+        // Stopped before anything was made: nothing to show, and the choice stays ticked to start again.
+        if Task.isCancelled && done.isEmpty { staged = false; return }
         fraction = 1
         selection = []
-        running = false
         if done.isEmpty { result = skipped > 0 ? "The saving would be too small, so nothing changed." : nil }
         originals = done
         self.sizes = sizes
@@ -798,6 +816,7 @@ struct LivePhotosView: View {
     /// Saved as normal photos, with the Live originals still there until the person says to delete them.
     @State private var originals: Set<String> = []
     @State private var sizes = Saving()
+    @State private var work: Task<Void, Never>?
 
     private var items: [PhotoItem] { library.items(.livePhotos) }
 
@@ -813,7 +832,7 @@ struct LivePhotosView: View {
         }
         .toolbar { Button(selection.count == items.count ? "Select None" : "Select All") { selection = selection.count == items.count ? [] : Set(items.map(\.id)) } }
         .orbFooter(summary: selection.isEmpty ? nil : Text("^[\(selection.count) photo](inflect: true)")) {
-            OrbAction(title: "Turn off", icon: "livephoto.slash", accent: StewardTheme.cleanup.vivid, disabled: selection.isEmpty || running) { Task { await run() } }
+            OrbAction(title: "Turn off", icon: "livephoto.slash", accent: StewardTheme.cleanup.vivid, disabled: selection.isEmpty || running) { work = Task { await run() } }
         }
         .fullScreenCover(isPresented: $staged) {
             let ready = !running && !originals.isEmpty
@@ -824,6 +843,8 @@ struct LivePhotosView: View {
                           originals = []
                           result = "You have both versions now. Nothing was removed."
                       } : nil,
+                      status: Text("Keep Artifloam open until it's done."),
+                      stop: { work?.cancel() },
                       done: running || ready ? nil : { staged = false; failure = nil })
         }
     }
@@ -838,6 +859,8 @@ struct LivePhotosView: View {
         var done: Set<String> = []
         var sizes = Saving()
         for item in items where selection.contains(item.id) {
+            // Stops between photos: one already on its way finishes, so nothing is left half done.
+            if Task.isCancelled { break }
             progress += 1
             do {
                 try await MediaChanges.makeStill(item)
@@ -851,8 +874,9 @@ struct LivePhotosView: View {
                 break
             }
         }
-        selection = []
         running = false
+        if Task.isCancelled && done.isEmpty { staged = false; return }
+        selection = []
         originals = done
         self.sizes = sizes
     }

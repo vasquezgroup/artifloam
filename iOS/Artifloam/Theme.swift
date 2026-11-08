@@ -347,11 +347,16 @@ struct WorkStage: View {
     var accessory: AnyView? = nil
     /// Asks before going on, so iOS's own confirmation never comes as a surprise.
     var choice: StageChoice? = nil
+    /// What it's busy with right now, under the bar.
+    var status: Text? = nil
+    var stop: (() -> Void)? = nil
     var done: (() -> Void)? = nil
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var started = Date.now
 
     var body: some View {
         let finished = done != nil
+        let working = !finished && choice == nil
         ZStack {
             AtmosphereView(theme: theme)
             VStack(spacing: 14) {
@@ -371,9 +376,21 @@ struct WorkStage: View {
                     }
                 }
                 detail?.font(.subheadline).foregroundStyle(.white.opacity(0.75)).monospacedDigit()
-                if let fraction, !finished, choice == nil { GlassMeter(fraction: fraction, theme: theme).frame(maxWidth: 320).padding(.top, 6) }
+                if let fraction, working {
+                    GlassMeter(fraction: fraction, theme: theme).frame(maxWidth: 320).padding(.top, 6)
+                    // Once a second, so the time left moves even while a step reports nothing.
+                    TimelineView(.periodic(from: .now, by: 1)) { context in
+                        timing(fraction, now: context.date).font(.footnote.weight(.medium)).foregroundStyle(.white.opacity(0.75)).monospacedDigit()
+                    }
+                }
+                if working { status?.font(.footnote).foregroundStyle(.white.opacity(0.75)).monospacedDigit() }
                 if let note { Text(note).font(.footnote).foregroundStyle(.white.opacity(0.65)).padding(.top, 6) }
                 if finished { accessory?.fontWeight(.medium) }
+                if working, let stop {
+                    Button(action: stop) { Label("Stop", systemImage: "stop.fill") }
+                        .font(.subheadline.weight(.semibold)).padding(.horizontal, 22).padding(.vertical, 10)
+                        .background(.ultraThinMaterial, in: .capsule).padding(.top, 8)
+                }
                 if let choice {
                     Button(choice.title, action: choice.action).font(.headline).padding(.horizontal, 36).padding(.vertical, 13)
                         .background(theme.vivid, in: .capsule).padding(.top, 10)
@@ -390,8 +407,20 @@ struct WorkStage: View {
             .frame(maxWidth: 520)
         }
         .sensoryFeedback(.success, trigger: finished) { _, now in now }
+        // Locking the screen pauses an export, so it stays on while this shows.
+        .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+        .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
         .interactiveDismissDisabled()
         .environment(\.stewardTheme, theme)
+    }
+
+    /// "23 % · About 4 min left". The time is a guess from the pace so far, so it waits for a few seconds of it.
+    private func timing(_ fraction: Double, now: Date) -> Text {
+        let percent = Text(min(1, max(0, fraction)), format: .percent.precision(.fractionLength(0)))
+        let elapsed = now.timeIntervalSince(started)
+        guard fraction > 0.02, elapsed > 5 else { return percent }
+        let left = Duration.seconds(max(1, elapsed * (1 - fraction) / fraction))
+        return percent + Text(verbatim: " · ") + Text("About \(Text(left, format: .units(allowed: [.hours, .minutes, .seconds], width: .abbreviated, maximumUnitCount: 1))) left")
     }
 
     private func metric(_ value: String, _ label: LocalizedStringKey, size: CGFloat, tint: Color = .white) -> some View {
