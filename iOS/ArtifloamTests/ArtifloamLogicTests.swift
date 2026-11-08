@@ -210,6 +210,18 @@ final class ArtifloamLogicTests: XCTestCase {
         XCTAssertGreaterThan(ZoomLevels.resisted(side: width * 2, width: width), width)
     }
 
+    func testWideScreensGetMoreColumnsAndKeepTheLevelWhenResized() {
+        XCTAssertEqual(ZoomLevels.columns(402), [7, 5, 3, 2, 1])
+        let iPad = ZoomLevels.columns(1100)
+        XCTAssertEqual(iPad, [18, 13, 8, 5, 2])
+        XCTAssertTrue(ZoomLevels.large(5, width: 1100))
+        XCTAssertFalse(ZoomLevels.large(8, width: 1100))
+        // Unfolding: three iPhone columns become the iPad's middle level, and folding brings them back.
+        XCTAssertEqual(ZoomLevels.fitted(3, from: 402, to: 1100), 8)
+        XCTAssertEqual(ZoomLevels.fitted(8, from: 1100, to: 402), 3)
+        XCTAssertEqual(ZoomLevels.fitted(3, from: 0, to: 1100), 8)
+    }
+
     func testZoomRectsMatchTheRealGridSpacing() {
         let rects = ZoomLevels.rects(groups: [4, 1], ratios: [1, 1, 1, 1, 1], columns: 3, width: 304)
         XCTAssertEqual(rects[0], CGRect(x: 0, y: 0, width: 100, height: 100))

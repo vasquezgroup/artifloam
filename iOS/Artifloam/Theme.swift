@@ -173,8 +173,24 @@ struct OrbAction: View {
 extension View {
     /// The main action, fixed above the tab bar while the page scrolls behind it, with a short summary beside it.
     func orbFooter<Orb: View>(summary: Text? = nil, @ViewBuilder orb: () -> Orb) -> some View {
-        let button = orb()
-        return safeAreaInset(edge: .bottom, spacing: 0) {
+        modifier(OrbFooter(summary: summary, orb: orb()))
+    }
+}
+
+/// How wide the artwork column is when a stage page splits in two.
+enum WideLayout {
+    static let artColumn: CGFloat = 340
+    /// Cards, lists and detail pages stay this wide at most, so lines don't run across a whole iPad.
+    static let readable: CGFloat = 640
+}
+
+private struct OrbFooter<Orb: View>: ViewModifier {
+    let summary: Text?
+    let orb: Orb
+
+    func body(content: Content) -> some View {
+        let button = orb
+        return content.safeAreaInset(edge: .bottom, spacing: 0) {
             // Equal space on both sides keeps the button centred, with or without a summary.
             HStack(spacing: 12) {
                 Color.clear.frame(maxWidth: .infinity, maxHeight: 1)
@@ -187,6 +203,7 @@ extension View {
                 }
             }
             .padding(.horizontal, 12).padding(.vertical, 10)
+            .frame(maxWidth: WideLayout.readable).frame(maxWidth: .infinity)
         }
     }
 }
@@ -221,32 +238,69 @@ struct StagePage<Content: View>: View {
     /// A picture of its own instead of the section's sculpture, for when the art itself has something to say.
     var artwork: String? = nil
     var sculptureSize: CGFloat = 170
+    /// The page's round button and the short text beside it. On a wide screen they sit under the artwork, otherwise above the tab bar.
+    var orb: AnyView? = nil
+    var summary: Text? = nil
     @ViewBuilder let content: Content
+    @State private var width: CGFloat = 0
+    /// Room for the artwork column and cards an iPhone's width: iPads, not an unfolded iPhone, which gets one centred column.
+    private var split: Bool { width >= 760 }
 
     var body: some View {
         ZStack {
             AtmosphereView(theme: theme)
-            ScrollView {
-                VStack(spacing: 18) {
-                    if let artwork {
-                        Artwork.image(artwork).resizable().scaledToFit().frame(width: 240, height: 240).shadow(color: theme.vivid.opacity(0.45), radius: 26, y: 10).padding(.top, 8).accessibilityHidden(true)
-                    } else {
-                        Sculpture(theme: theme, moving: moving).frame(width: sculptureSize, height: sculptureSize).padding(.top, 8)
-                    }
-                    if let title, let subtitle {
-                        VStack(spacing: 4) {
-                            Text(title).font(.largeTitle.weight(.light)).accessibilityAddTraits(.isHeader)
-                            Text(subtitle).font(.subheadline).foregroundStyle(.white.opacity(0.75)).multilineTextAlignment(.center)
+            if split {
+                // iPad and an unfolded iPhone: the artwork stays put on the left, like the Mac's stage, and the cards scroll beside it.
+                // Both columns centre on the screen's middle, so a short page reads as one piece.
+                HStack(spacing: 0) {
+                    VStack(spacing: 22) {
+                        hero(art: 260)
+                        if let orb {
+                            orb
+                            summary?.font(.caption.weight(.semibold)).monospacedDigit().foregroundStyle(.white.opacity(0.85))
                         }
                     }
-                    content
+                    .padding(.horizontal, 24).frame(width: WideLayout.artColumn).frame(maxHeight: .infinity)
+                    ScrollView {
+                        VStack(spacing: 18) { content }
+                            .padding(.horizontal, 24).padding(.vertical, 24)
+                            .frame(maxWidth: WideLayout.readable).frame(maxWidth: .infinity)
+                    }
+                    .defaultScrollAnchor(.center, for: .alignment)
                 }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 28)
+            } else {
+                let scroll = ScrollView {
+                    VStack(spacing: 18) {
+                        hero(art: 240)
+                        content
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 28)
+                    .frame(maxWidth: WideLayout.readable).frame(maxWidth: .infinity)
+                }
+                if let orb { scroll.orbFooter(summary: summary) { orb } } else { scroll }
             }
         }
+        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
         .environment(\.stewardTheme, theme)
         .tint(theme.accent)
+    }
+
+    @ViewBuilder private func hero(art: CGFloat) -> some View {
+        VStack(spacing: 18) {
+            if let artwork {
+                Artwork.image(artwork).resizable().scaledToFit().frame(width: art, height: art).shadow(color: theme.vivid.opacity(0.45), radius: 26, y: 10).padding(.top, 8).accessibilityHidden(true)
+            } else {
+                let size = split ? max(sculptureSize, 260) : sculptureSize
+                Sculpture(theme: theme, moving: moving).frame(width: size, height: size).padding(.top, 8)
+            }
+            if let title, let subtitle {
+                VStack(spacing: 4) {
+                    Text(title).font(.largeTitle.weight(.light)).accessibilityAddTraits(.isHeader)
+                    Text(subtitle).font(.subheadline).foregroundStyle(.white.opacity(0.75)).multilineTextAlignment(.center)
+                }
+            }
+        }
     }
 }
 
@@ -288,6 +342,7 @@ struct DetailPage<Content: View>: View {
             AtmosphereView(theme: theme)
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) { content }.padding(16)
+                    .frame(maxWidth: WideLayout.readable).frame(maxWidth: .infinity)
             }
         }
         .navigationTitle(title)

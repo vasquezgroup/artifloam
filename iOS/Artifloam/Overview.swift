@@ -14,7 +14,13 @@ struct OverviewView: View {
 
     var body: some View {
         let picks = library.recommended
-        StagePage(theme: .care, moving: library.working, sculptureSize: 220) {
+        StagePage(theme: .care, moving: library.working, sculptureSize: 220, orb: AnyView(Group {
+            if library.phase == .done && !picks.isEmpty {
+                OrbAction(title: "Review", icon: "sparkles", accent: StewardTheme.care.vivid) { reviewing = true }
+            } else {
+                ScanOrb(theme: .care)
+            }
+        }), summary: library.scanSummary) {
             GlassCard {
                 HStack(alignment: .firstTextBaseline) {
                     amount(formatted(space.free), "Free", .leading, size: 30)
@@ -38,13 +44,6 @@ struct OverviewView: View {
         .navigationDestination(isPresented: $reviewing) {
             // Ticked in advance because they're recommended. Nothing goes until the person has seen them and pressed Delete.
             PhotoReviewView(title: "Recommended", note: "Exact copies, and screenshots over 90 days old. Untick anything to keep. Items in iCloud may free less on this device.", theme: .care, groups: library.recommendedGroups, preselected: true)
-        }
-        .orbFooter(summary: library.scanSummary) {
-            if library.phase == .done && !picks.isEmpty {
-                OrbAction(title: "Review", icon: "sparkles", accent: StewardTheme.care.vivid) { reviewing = true }
-            } else {
-                ScanOrb(theme: .care)
-            }
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { space = DiskSpace.current }

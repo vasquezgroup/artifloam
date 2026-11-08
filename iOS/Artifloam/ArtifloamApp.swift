@@ -14,12 +14,14 @@ struct ArtifloamApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                NavigationStack { OverviewView().settingsButton() }.tabItem { Label("Overview", systemImage: "leaf.fill") }
-                NavigationStack { MediaSectionView(section: .photos).settingsButton() }.tabItem { Label("Photos", systemImage: "sparkles") }
-                NavigationStack { MediaSectionView(section: .videos).settingsButton() }.tabItem { Label("Videos", systemImage: "video.fill") }
-                NavigationStack { AppsStorageView().settingsButton() }.tabItem { Label("Apps", systemImage: "square.grid.2x2.fill") }
-                NavigationStack { ToolsView().settingsButton() }.tabItem { Label("Tools", systemImage: "wrench.and.screwdriver.fill") }
+                Tab("Overview", systemImage: "leaf.fill") { NavigationStack { OverviewView().settingsButton() } }
+                Tab("Photos", systemImage: "sparkles") { NavigationStack { MediaSectionView(section: .photos).settingsButton() } }
+                Tab("Videos", systemImage: "video.fill") { NavigationStack { MediaSectionView(section: .videos).settingsButton() } }
+                Tab("Apps", systemImage: "square.grid.2x2.fill") { NavigationStack { AppsStorageView().settingsButton() } }
+                Tab("Tools", systemImage: "wrench.and.screwdriver.fill") { NavigationStack { ToolsView().settingsButton() } }
             }
+            // A tab bar on iPhone; on iPad and an unfolded iPhone a sidebar like the Mac's, which can fold away.
+            .tabViewStyle(.sidebarAdaptable)
             .tint(.white)
             // Dates, numbers and sizes follow the chosen language too.
             .environment(\.locale, language.map(Locale.init(identifier:)) ?? .autoupdatingCurrent)

@@ -15,7 +15,7 @@ struct MediaSectionView: View {
     @Environment(Library.self) private var library
 
     var body: some View {
-        StagePage(theme: section.theme, title: section.title, subtitle: section.subtitle, moving: library.working) {
+        StagePage(theme: section.theme, title: section.title, subtitle: section.subtitle, moving: library.working, orb: AnyView(ScanOrb(theme: section.theme)), summary: library.scanSummary) {
             switch library.status {
             case .denied, .restricted:
                 NoPhotoAccess()
@@ -57,7 +57,6 @@ struct MediaSectionView: View {
             }
         }
         .refreshable { await library.scan() }
-        .orbFooter(summary: library.scanSummary) { ScanOrb(theme: section.theme) }
     }
 }
 
@@ -140,13 +139,13 @@ struct PhotoPage<Header: View, Grid: View>: View {
     @State private var zoom = GridZoom()
 
     /// While pinching this follows the fingers, so the bars come and go during the gesture rather than after it.
-    private var fullScreen: Bool { zoom.active ? darkness > 0.5 : columns <= 2 }
+    private var fullScreen: Bool { zoom.active ? darkness > 0.5 : ZoomLevels.large(columns, width: zoom.viewport.width) }
     /// How far the background has gone dark while pinching towards large pictures.
     private var darkness: Double {
         guard zoom.active, zoom.width > 0 else { return fullScreen ? 1 : 0 }
         let (from, to, progress) = ZoomLevels.between(side: zoom.side, width: zoom.width)
-        if to > 2 { return 0 }
-        return from <= 2 ? 1 : Double(progress)
+        if !ZoomLevels.large(to, width: zoom.width) { return 0 }
+        return ZoomLevels.large(from, width: zoom.width) ? 1 : Double(progress)
     }
 
     var body: some View {
@@ -160,10 +159,15 @@ struct PhotoPage<Header: View, Grid: View>: View {
                     grid.animation(nil, value: fullScreen)
                 }
             }
-            .ignoresSafeArea(.container, edges: fullScreen ? [.top, .horizontal] : .horizontal)
+            // Sides stay inside the safe area, so an iPad's sidebar never covers pictures.
+            .ignoresSafeArea(.container, edges: fullScreen ? .top : [])
             .opacity(zoom.active ? 0 : 1)
             .scrollDisabled(zoom.active)
-            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { zoom.viewport = $0 }
+            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { frame in
+                // Turning, unfolding or resizing keeps the pictures about the same size, with more or fewer columns.
+                if frame.width != zoom.viewport.width { columns = ZoomLevels.fitted(columns, from: zoom.viewport.width, to: frame.width) }
+                zoom.viewport = frame
+            }
             if zoom.active { ZoomCanvas(zoom: zoom, side: zoom.side).ignoresSafeArea() }
             if fullScreen {
                 Button { dismiss() } label: {
@@ -361,7 +365,11 @@ struct PhotoGrid: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// In steps, so resizing doesn't reload every picture at each column.
-    private var side: CGFloat { columnCount == 1 ? 1400 : columnCount == 2 ? 800 : columnCount <= 4 ? 360 : 200 }
+    /// Pixels to ask for, from how big a cell is on screen, so a wide iPad grid doesn't ask for more than it shows.
+    private var side: CGFloat {
+        let cell = (zoom.viewport.width > 0 ? zoom.viewport.width : 402) / CGFloat(columnCount)
+        return cell > 300 ? 1400 : cell > 170 ? 800 : cell > 100 ? 360 : 200
+    }
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -400,8 +408,8 @@ struct PhotoGrid: View {
             .simultaneousGesture(swipeGesture(proxy))
             .simultaneousGesture(pinchGesture(proxy))
             .scrollDisabled(locked)
-            .accessibilityAction(named: "Bigger pictures") { columnCount = ZoomLevels.columns.last { $0 < columnCount } ?? columnCount }
-            .accessibilityAction(named: "Smaller pictures") { columnCount = ZoomLevels.columns.first { $0 > columnCount } ?? columnCount }
+            .accessibilityAction(named: "Bigger pictures") { columnCount = ZoomLevels.columns(zoom.viewport.width).last { $0 < columnCount } ?? columnCount }
+            .accessibilityAction(named: "Smaller pictures") { columnCount = ZoomLevels.columns(zoom.viewport.width).first { $0 > columnCount } ?? columnCount }
         }
     }
 

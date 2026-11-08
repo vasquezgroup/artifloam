@@ -1,6 +1,6 @@
 # Artifloam for iPhone
 
-Native SwiftUI app, iOS 17+. No third-party dependencies. It shares the Mac app's look but none of its code.
+Native SwiftUI app for iPhone and iPad, iOS 18+. No third-party dependencies. It shares the Mac app's look but none of its code.
 
 **Status: in development, not released.** Work is on the local branch `iphone-app`. Don't push it or merge it to `main` until the owner says so, because `origin` is the public repository.
 
@@ -47,6 +47,10 @@ Artifloam can never delete inside another app. It points people to the right scr
 ## What the main scan covers
 
 The Scan button runs photos and videos, the health check, and duplicate contacts only if Contacts access was already given. It never asks for access by itself. Library categories and albums stay in Tools because they don't free space by themselves, and large files stay there because iOS needs a folder chosen. Compressing starts from a choice.
+
+## iPad and unfolded iPhones
+
+The tabs become a sidebar on iPad, like the Mac. At 760 points wide or more a section page splits: artwork, title and Scan button fixed on the left, cards scrolling beside them. Narrower wide screens (iPad mini upright, an unfolded iPhone) get one centred column. Detail pages stay 640 points wide at most. The photo grid scales its column levels with the width and keeps the level when the screen turns, folds or unfolds. The unfolded Duo couldn't be shown in the Simulator here, so it was checked at the iPad mini's width.
 
 ## Photo pages and the zoom
 

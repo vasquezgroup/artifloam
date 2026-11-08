@@ -4,18 +4,37 @@ import SwiftUI
 
 /// How much of each column count shows at a given picture size. Between two levels both show, cross-fading, like Photos.
 enum ZoomLevels {
-    static let columns = [7, 5, 3, 2, 1]
+    static let iPhoneColumns = [7, 5, 3, 2, 1]
     static let spacing: CGFloat = 2
+    /// Wider screens get more columns, so each level shows pictures about the size an iPhone does.
+    /// The largest is two columns there: one picture across a whole iPad is what the viewer is for.
+    static func columns(_ width: CGFloat) -> [Int] {
+        let scale = width / 430
+        guard scale > 1.25 else { return iPhoneColumns }
+        return iPhoneColumns.dropLast().map { Int((CGFloat($0) * scale).rounded()) } + [2]
+    }
+    /// The two largest levels, where the pictures get the whole screen.
+    static func large(_ count: Int, width: CGFloat) -> Bool {
+        let levels = columns(width)
+        return count <= levels[levels.count - 2]
+    }
+    /// The same level on a new width, after turning or unfolding, so the pictures stay about the same size.
+    static func fitted(_ count: Int, from old: CGFloat, to new: CGFloat) -> Int {
+        let before = columns(old), after = columns(new)
+        let index = before.firstIndex(of: count) ?? before.indices.min { abs(before[$0] - count) < abs(before[$1] - count) } ?? 2
+        return after[min(index, after.count - 1)]
+    }
 
     static func side(columns: Int, width: CGFloat) -> CGFloat {
         (width - spacing * CGFloat(columns - 1)) / CGFloat(columns)
     }
     /// The level to settle on after letting go.
     static func nearest(side: CGFloat, width: CGFloat) -> Int {
-        columns.min { abs(log(self.side(columns: $0, width: width) / side)) < abs(log(self.side(columns: $1, width: width) / side)) } ?? 3
+        columns(width).min { abs(log(self.side(columns: $0, width: width) / side)) < abs(log(self.side(columns: $1, width: width) / side)) } ?? 3
     }
     /// The two levels around a size, and how far it is from the first to the second, from 0 to 1.
     static func between(side: CGFloat, width: CGFloat) -> (from: Int, to: Int, progress: CGFloat) {
+        let columns = columns(width)
         for (small, large) in zip(columns, columns.dropFirst()) {
             let low = self.side(columns: small, width: width), high = self.side(columns: large, width: width)
             if side <= high {
@@ -27,6 +46,7 @@ enum ZoomLevels {
     }
     /// Past the smallest or largest level the pictures still move, but less and less, then spring back.
     static func resisted(side: CGFloat, width: CGFloat) -> CGFloat {
+        let columns = columns(width)
         let low = self.side(columns: columns[0], width: width), high = self.side(columns: columns[columns.count - 1], width: width)
         if side < low { return low * pow(side / low, 0.2) }
         if side > high { return high * pow(side / high, 0.2) }
@@ -125,7 +145,7 @@ final class GridZoom {
     func offset(_ columns: Int) -> CGFloat {
         let rects = level(columns), rect = rects[anchorIndex]
         return ZoomLevels.offset(wanted: finger.y - (rect.minY + anchorShare * rect.height), contentHeight: rects.last?.maxY ?? 0,
-                                 top: columns <= 2 ? 0 : (restTop ?? viewport.minY), bottom: viewport.maxY - (columns <= 2 ? 0 : ZoomLevels.bottomBars))
+                                 top: ZoomLevels.large(columns, width: width) ? 0 : (restTop ?? viewport.minY), bottom: viewport.maxY - (ZoomLevels.large(columns, width: width) ? 0 : ZoomLevels.bottomBars))
     }
     /// Where the pinched picture ends up on screen once settled, for placing the real grid under it.
     func settledTop(_ columns: Int) -> (top: CGFloat, height: CGFloat) {
