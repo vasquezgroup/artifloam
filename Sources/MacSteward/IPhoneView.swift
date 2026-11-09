@@ -181,9 +181,9 @@ final class IPhoneState: ObservableObject {
             readWhatsApp(own)
         }
     }
-    func planRemoval(clearing: Bool) {
+    func planRemoval() {
         guard let report else { return }
-        removalPlan = IPhoneRemovalPlan(apps: report.apps.filter { selection.contains($0.id) }, clearing: clearing, backupIsOld: report.backupIsOld())
+        removalPlan = IPhoneRemovalPlan(apps: report.apps.filter { selection.contains($0.id) }, backupIsOld: report.backupIsOld())
     }
     /// Removes exactly the reviewed apps, one at a time, then reads the iPhone again to see what really changed.
     func remove(_ plan: IPhoneRemovalPlan) {
@@ -671,8 +671,7 @@ struct IPhoneSelectionBar: View {
                 Text("\(chosen.count) chosen · \(formattedBytes(chosen.reduce(0) { $0 + $1.totalBytes }))").stewardFont(.body, weight: .semibold)
                 Button("Clear choice") { state.selection = [] }.buttonStyle(.plain).foregroundStyle(.white.opacity(0.7)).stewardFont(.callout)
                 Spacer()
-                Button("Clear data…") { state.planRemoval(clearing: true) }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
-                Button("Delete…") { state.planRemoval(clearing: false) }.buttonStyle(CleanupGlassButtonStyle(compact: true))
+                Button("Delete…") { state.planRemoval() }.buttonStyle(CleanupGlassButtonStyle(compact: true))
             }
             .padding(.horizontal, 30).padding(.vertical, 12).background(.ultraThinMaterial)
             .sheet(item: Binding(get: { state.removalPlan.map(IPhonePlanItem.init) }, set: { if $0 == nil { state.removalPlan = nil } })) { item in
@@ -683,7 +682,7 @@ struct IPhoneSelectionBar: View {
 }
 private struct IPhonePlanItem: Identifiable {
     let plan: IPhoneRemovalPlan
-    var id: String { plan.apps.map(\.id).joined() + String(plan.clearing) }
+    var id: String { plan.apps.map(\.id).joined() }
 }
 
 /// Everything someone needs to decide, before anything happens. Nothing here is chosen for them.
@@ -696,7 +695,7 @@ private struct IPhoneRemovalSheet: View {
     private var phone: String { report.deviceName ?? String(localized: "this iPhone") }
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text(plan.clearing ? "Clear the data of ^[\(plan.apps.count) app](inflect: true) on \(phone)?" : "Delete ^[\(plan.apps.count) app](inflect: true) from \(phone)?").stewardFont(.title2, weight: .semibold).fixedSize(horizontal: false, vertical: true)
+            Text("Delete ^[\(plan.apps.count) app](inflect: true) from \(phone)?").stewardFont(.title2, weight: .semibold).fixedSize(horizontal: false, vertical: true)
             Text("Frees up to \(formattedBytes(plan.freedBytes))").font(.system(size: 22, weight: .semibold, design: .rounded)).monospacedDigit()
             ScrollView {
                 VStack(spacing: 6) {
@@ -710,9 +709,7 @@ private struct IPhoneRemovalSheet: View {
                 }
             }.frame(maxHeight: 170)
             Text("This is what iOS reports for these apps. The real amount can be lower. You'll see what actually changed afterwards.").stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
-            info("trash", "What goes", plan.clearing
-                 ? String(localized: "iOS can't clear an app's data on its own, so this deletes the app. Then you install it again from the App Store and sign in. Its downloads, settings and anything not synced are gone.")
-                 : String(localized: "The app and everything stored in it on this iPhone: downloads, settings and anything not synced. This can't be undone from Artifloam."))
+            info("trash", "What goes", String(localized: "The app and everything stored in it on this iPhone: downloads, settings and anything not synced. This can't be undone from Artifloam."))
             info("person.crop.circle", "What usually stays", String(localized: "Your account, and whatever the app keeps online or in iCloud. Purchases can be restored. Not every app works this way, so check if it matters to you."))
             info(report.backupIsOld() ? "exclamationmark.triangle.fill" : "checkmark.shield", "Your backup", report.newestBackup.map { String(localized: "Newest backup: \($0.formatted(date: .abbreviated, time: .omitted)).") + (report.backupIsOld() ? " " + String(localized: "That's over a month ago, so it may not hold what you'd lose.") : "") } ?? String(localized: "This iPhone has no backup."), warning: report.backupIsOld())
             ForEach(plan.risky) { app in
@@ -720,14 +717,14 @@ private struct IPhoneRemovalSheet: View {
                      ? String(localized: "Deleting this removes its chats from this iPhone. They only come back if they're in the app's own backup. To free space and keep chats, remove media in the app instead.")
                      : String(localized: "This may hold your login codes. Without them or a recovery option, you can get locked out of your accounts."), warning: true)
             }
-            if plan.clearing && !plan.notOnStore.isEmpty {
+            if !plan.notOnStore.isEmpty {
                 info("exclamationmark.triangle.fill", "Can't simply be installed again", String(localized: "Not from the App Store, so you may not get these back: \(plan.notOnStore.map(\.name).joined(separator: ", "))."), warning: true)
             }
             if plan.needsAcknowledgement { Toggle("I understand and still want to do this", isOn: $understood).toggleStyle(.stewardCheckbox).stewardFont(.body) }
             HStack {
                 Spacer()
                 Button("Cancel", role: .cancel) { dismiss() }.keyboardShortcut(.cancelAction)
-                Button(plan.clearing ? "Delete and clear data" : "Delete from iPhone", role: .destructive) { dismiss(); confirm() }
+                Button("Delete from iPhone", role: .destructive) { dismiss(); confirm() }
                     .disabled(plan.needsAcknowledgement && !understood)
             }
         }.padding(24).frame(width: 540)
@@ -752,16 +749,8 @@ private struct IPhoneRemovalResultCard: View {
                 Label("Removed ^[\(result.removed.count) app](inflect: true).", systemImage: "checkmark.circle.fill").stewardFont(.body, weight: .semibold)
                 // iOS can take a while to release the space, and what it reports per app can be more than comes back.
                 if let freed = result.freedBytes { Text(freed > 0 ? "So far your iPhone uses \(formattedBytes(freed)) less. iOS can take a while to release more." : "iOS hasn't released the space yet. It can take a while, so check again later.").stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true) }
-            }
-            if result.clearing {
-                ForEach(result.removed) { app in
-                    HStack {
-                        Text(app.name).stewardFont(.callout)
-                        Spacer()
-                        if let url = app.storeURL { Link("Open in App Store", destination: url).stewardFont(.callout) } else { Text("Not from the App Store").stewardFont(.caption).foregroundStyle(.secondary) }
-                    }
-                }
-                if !result.removed.isEmpty { Text("To get them back, install them on your iPhone from the App Store, then sign in.").stewardFont(.caption).foregroundStyle(.secondary) }
+                // Deleting is also the only way iOS empties an app's data, so say how to get a fresh copy.
+                Text("To get them back, install them on your iPhone from the App Store, then sign in.").stewardFont(.caption).foregroundStyle(.secondary)
             }
             if !result.stillThere.isEmpty {
                 Label("Still on your iPhone: \(result.stillThere.map(\.name).joined(separator: ", ")). Unlock it and try again, or delete them on the iPhone.", systemImage: "exclamationmark.triangle.fill").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)

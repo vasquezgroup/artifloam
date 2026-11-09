@@ -36,7 +36,6 @@ public struct IPhoneAppRow: Identifiable, Equatable, Sendable {
     /// Where the app keeps its data on the iPhone. Only used to find Artifloam's own.
     public var container: String? = nil
     public var id: String { bundleID }
-    public var storeURL: URL? { storeID.flatMap { URL(string: "https://apps.apple.com/app/id\($0)") } }
     /// Apps whose data is often the only copy, and hard or impossible to get back.
     public enum Risk: Equatable, Sendable { case chats, loginCodes }
     public var risk: Risk? {

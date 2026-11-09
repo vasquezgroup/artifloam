@@ -81,34 +81,29 @@ public struct IPhoneInsights: Equatable, Sendable {
     }
 }
 
-/// What removing these apps means, before anything happens. iOS can't clear an app's data alone,
-/// so clearing is deleting the app, then getting it again from the App Store.
+/// What deleting these apps means, before anything happens. iOS can't clear an app's data alone,
+/// so there is no separate "clear data": deleting, then installing again from the App Store, is the only way.
 public struct IPhoneRemovalPlan: Equatable, Sendable {
     public let apps: [IPhoneAppRow]
-    public let clearing: Bool
     public let backupIsOld: Bool
-    public init(apps: [IPhoneAppRow], clearing: Bool, backupIsOld: Bool) {
+    public init(apps: [IPhoneAppRow], backupIsOld: Bool) {
         self.apps = apps
-        self.clearing = clearing
         self.backupIsOld = backupIsOld
     }
-    /// Clearing brings the app back, so only its data counts.
-    public var freedBytes: UInt64 { apps.reduce(0) { $0 + (clearing ? $1.dataBytes : $1.totalBytes) } }
+    public var freedBytes: UInt64 { apps.reduce(0) { $0 + $1.totalBytes } }
     public var risky: [IPhoneAppRow] { apps.filter { $0.risk != nil } }
     public var notOnStore: [IPhoneAppRow] { apps.filter { $0.storeID == nil } }
     /// These can't be undone in a way the person may not expect, so they must say they understand.
-    public var needsAcknowledgement: Bool { backupIsOld || !risky.isEmpty || (clearing && !notOnStore.isEmpty) }
+    public var needsAcknowledgement: Bool { backupIsOld || !risky.isEmpty || !notOnStore.isEmpty }
 }
 
 /// What really happened, judged by reading the iPhone again rather than by what the removal call returned.
 public struct IPhoneRemovalResult: Equatable, Sendable {
-    public let clearing: Bool
     public let removed: [IPhoneAppRow]
     public let stillThere: [IPhoneAppRow]
     public let freedBytes: UInt64?
     public init(plan: IPhoneRemovalPlan, usedBefore: UInt64?, after: IPhoneAppsReport) {
         let remaining = Set(after.apps.map(\.bundleID))
-        clearing = plan.clearing
         removed = plan.apps.filter { !remaining.contains($0.bundleID) }
         stillThere = plan.apps.filter { remaining.contains($0.bundleID) }
         if let usedBefore, let used = after.usedBytes { freedBytes = usedBefore > used ? usedBefore - used : 0 } else { freedBytes = nil }

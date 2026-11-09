@@ -98,14 +98,11 @@ final class IPhoneAppsTests: XCTestCase {
         var game = IPhoneAppRow(name: "Game", bundleID: "game", appBytes: 100, dataBytes: 40, measured: true); game.storeID = "1"
         var chat = IPhoneAppRow(name: "WA Business", bundleID: "net.whatsapp.WhatsAppSMB", appBytes: 10, dataBytes: 90, measured: true); chat.storeID = "2"
         let beta = IPhoneAppRow(name: "Beta", bundleID: "beta", appBytes: 5, dataBytes: 5, measured: true)
-        XCTAssertEqual(IPhoneRemovalPlan(apps: [game], clearing: false, backupIsOld: false).freedBytes, 140)
-        XCTAssertEqual(IPhoneRemovalPlan(apps: [game], clearing: true, backupIsOld: false).freedBytes, 40)
-        XCTAssertFalse(IPhoneRemovalPlan(apps: [game], clearing: false, backupIsOld: false).needsAcknowledgement)
-        XCTAssertTrue(IPhoneRemovalPlan(apps: [game], clearing: false, backupIsOld: true).needsAcknowledgement)
-        XCTAssertTrue(IPhoneRemovalPlan(apps: [chat], clearing: false, backupIsOld: false).needsAcknowledgement)
-        XCTAssertTrue(IPhoneRemovalPlan(apps: [beta], clearing: true, backupIsOld: false).needsAcknowledgement)
-        XCTAssertFalse(IPhoneRemovalPlan(apps: [beta], clearing: false, backupIsOld: false).needsAcknowledgement)
-        XCTAssertEqual(chat.storeURL?.absoluteString, "https://apps.apple.com/app/id2")
+        XCTAssertEqual(IPhoneRemovalPlan(apps: [game], backupIsOld: false).freedBytes, 140)
+        XCTAssertFalse(IPhoneRemovalPlan(apps: [game], backupIsOld: false).needsAcknowledgement)
+        XCTAssertTrue(IPhoneRemovalPlan(apps: [game], backupIsOld: true).needsAcknowledgement)
+        XCTAssertTrue(IPhoneRemovalPlan(apps: [chat], backupIsOld: false).needsAcknowledgement)
+        XCTAssertTrue(IPhoneRemovalPlan(apps: [beta], backupIsOld: false).needsAcknowledgement, "not from the App Store, so it may not come back")
     }
 
     func testSelectAllLeavesOutChatsAndLoginCodes() {
@@ -124,7 +121,7 @@ final class IPhoneAppsTests: XCTestCase {
     func testResultTrustsTheNewListNotTheCall() {
         let gone = IPhoneAppRow(name: "Gone", bundleID: "gone", appBytes: 100, dataBytes: 0, measured: true)
         let stuck = IPhoneAppRow(name: "Stuck", bundleID: "stuck", appBytes: 100, dataBytes: 0, measured: true)
-        let plan = IPhoneRemovalPlan(apps: [gone, stuck], clearing: false, backupIsOld: false)
+        let plan = IPhoneRemovalPlan(apps: [gone, stuck], backupIsOld: false)
         let result = IPhoneRemovalResult(plan: plan, usedBefore: 1_000, after: IPhoneAppsReport(deviceID: "x", deviceName: nil, apps: [stuck], usedBytes: 900))
         XCTAssertEqual(result.removed.map(\.bundleID), ["gone"])
         XCTAssertEqual(result.stillThere.map(\.bundleID), ["stuck"])
