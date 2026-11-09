@@ -9,6 +9,14 @@ final class MacDashboardTests: XCTestCase {
         let rollover = CPUCounters(user: UInt32.max - 4, system: 0, idle: 0, nice: 0)
         XCTAssertEqual(CPUCounters(user: 5, system: 0, idle: 10, nice: 0).usage(since: rollover)!, 50, accuracy: 0.001)
     }
+    /// The per-core counters move every half second, idle included; the whole-Mac counter often didn't, which read as 100 %.
+    func testCPUReadingMovesWithinHalfASecond() throws {
+        let before = try XCTUnwrap(CPUCounters.perCore())
+        Thread.sleep(forTimeInterval: 0.5)
+        let after = try XCTUnwrap(CPUCounters.perCore())
+        XCTAssertGreaterThan(after.user + after.system + after.idle, before.user + before.system + before.idle)
+        XCTAssertNotNil(CPUCounters.read())
+    }
     func testCPUSplitBatteryHealthAndAppCPURate() {
         let split = CPUCounters(user: 30, system: 20, idle: 150, nice: 0).split(since: CPUCounters(user: 10, system: 10, idle: 80, nice: 0))!
         XCTAssertEqual(split.user, 20, accuracy: 0.001); XCTAssertEqual(split.system, 10, accuracy: 0.001); XCTAssertEqual(split.idle, 70, accuracy: 0.001)

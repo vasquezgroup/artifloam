@@ -65,11 +65,9 @@ public final class SystemStatusSampler: @unchecked Sendable {
     }
 
     func cpuTicks() -> (busy: Double, total: Double) {
-        var info = host_cpu_load_info(), count = mach_msg_type_number_t(MemoryLayout<host_cpu_load_info>.size / MemoryLayout<integer_t>.size)
-        let result = withUnsafeMutablePointer(to: &info) { $0.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { host_statistics(mach_host_self(), HOST_CPU_LOAD_INFO, $0, &count) } }
-        guard result == KERN_SUCCESS else { return (0, 0) }
-        let user = Double(info.cpu_ticks.0), system = Double(info.cpu_ticks.1), idle = Double(info.cpu_ticks.2), nice = Double(info.cpu_ticks.3)
-        return (user + system + nice, user + system + idle + nice)
+        guard let ticks = CPUCounters.perCore() else { return (0, 0) }
+        let busy = Double(ticks.user + ticks.system + ticks.nice)
+        return (busy, busy + Double(ticks.idle))
     }
     func loadAverage() -> Double { var values = [Double](repeating: 0, count: 3); return getloadavg(&values, 3) > 0 ? values[0] : 0 }
     /// Cumulative bytes from every block storage driver's statistics.

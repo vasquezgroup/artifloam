@@ -8,6 +8,23 @@ import CoreAudio
 public struct CPUCounters: Sendable {
     public let user: UInt32, system: UInt32, idle: UInt32, nice: UInt32
     public init(user: UInt32, system: UInt32, idle: UInt32, nice: UInt32) { self.user = user; self.system = system; self.idle = idle; self.nice = nice }
+    /// Every core's ticks added up. The whole-Mac counter (HOST_CPU_LOAD_INFO) adds idle time late on Apple silicon:
+    /// over a second or two it barely moves, so a busy-but-not-full Mac read as 100 %. The per-core counters keep up, like `top`.
+    public static func perCore() -> (user: UInt64, system: UInt64, idle: UInt64, nice: UInt64)? {
+        var cpus: natural_t = 0, info: processor_info_array_t?, count: mach_msg_type_number_t = 0
+        guard host_processor_info(mach_host_self(), PROCESSOR_CPU_LOAD_INFO, &cpus, &info, &count) == KERN_SUCCESS, let info else { return nil }
+        defer { vm_deallocate(mach_task_self_, vm_address_t(UInt(bitPattern: info)), vm_size_t(Int(count) * MemoryLayout<integer_t>.stride)) }
+        var user: UInt64 = 0, system: UInt64 = 0, idle: UInt64 = 0, nice: UInt64 = 0
+        func ticks(_ core: Int, _ state: Int32) -> UInt64 { UInt64(UInt32(bitPattern: info[core * Int(CPU_STATE_MAX) + Int(state)])) }
+        for core in 0..<Int(cpus) {
+            user += ticks(core, CPU_STATE_USER); system += ticks(core, CPU_STATE_SYSTEM); idle += ticks(core, CPU_STATE_IDLE); nice += ticks(core, CPU_STATE_NICE)
+        }
+        return (user, system, idle, nice)
+    }
+    /// Kept to 32 bits so `usage` and `split` handle a wrap the same way as before; a sample's change never comes near that size.
+    public static func read() -> CPUCounters? {
+        perCore().map { CPUCounters(user: UInt32(truncatingIfNeeded: $0.user), system: UInt32(truncatingIfNeeded: $0.system), idle: UInt32(truncatingIfNeeded: $0.idle), nice: UInt32(truncatingIfNeeded: $0.nice)) }
+    }
     public func usage(since previous: CPUCounters) -> Double? {
         func delta(_ current: UInt32, _ old: UInt32) -> UInt64 { current >= old ? UInt64(current - old) : UInt64(UInt32.max) - UInt64(old) + UInt64(current) + 1 }
         let busy = delta(user, previous.user) + delta(system, previous.system) + delta(nice, previous.nice)
@@ -94,16 +111,7 @@ public enum MacDashboard {
         case .critical: thermal = "Critical"
         @unknown default: thermal = "Unavailable"
         }
-        return MacDashboardSample(uptime: ProcessInfo.processInfo.systemUptime, cpu: cpuCounters(), network: networkCounters(), battery: battery(), thermalState: thermal, disk: .read(), devices: includeDevices ? connectedDevices() : nil)
-    }
-    private static func cpuCounters() -> CPUCounters? {
-        var info = host_cpu_load_info_data_t()
-        var count = mach_msg_type_number_t(MemoryLayout<host_cpu_load_info_data_t>.size / MemoryLayout<integer_t>.size)
-        let result = withUnsafeMutablePointer(to: &info) { pointer in
-            pointer.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { host_statistics(mach_host_self(), HOST_CPU_LOAD_INFO, $0, &count) }
-        }
-        guard result == KERN_SUCCESS else { return nil }
-        return CPUCounters(user: info.cpu_ticks.0, system: info.cpu_ticks.1, idle: info.cpu_ticks.2, nice: info.cpu_ticks.3)
+        return MacDashboardSample(uptime: ProcessInfo.processInfo.systemUptime, cpu: CPUCounters.read(), network: networkCounters(), battery: battery(), thermalState: thermal, disk: .read(), devices: includeDevices ? connectedDevices() : nil)
     }
     private static func battery() -> MacBattery? {
         guard let info = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(), let sources = IOPSCopyPowerSourcesList(info)?.takeRetainedValue() as? [CFTypeRef] else { return nil }
