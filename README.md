@@ -56,6 +56,14 @@ There's also a command-line helper, `stewardctl`.
 
 A separate native app for iPhone and iPad, iOS 17 or later, in the same style and the same 25 languages. It's in App Store review and will be free.
 
+<p align="center">
+  <img src=".github/images/artifloam-iphone.jpg" width="900" alt="Artifloam on iPhone: Overview, Photos, choosing similar photos, Videos and Tools">
+</p>
+
+<p align="center">
+  <img src=".github/images/artifloam-ipad.jpg" width="900" alt="Artifloam on iPad: Overview with free space, and choosing similar photos in a wide grid">
+</p>
+
 | Area | What it does |
 | --- | --- |
 | **Photos** | Duplicates, similar shots with the sharpest kept, blurred photos and screenshots. Turns Live Photos into stills |
