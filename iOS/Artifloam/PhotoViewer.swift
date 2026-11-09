@@ -13,6 +13,7 @@ struct PhotoViewer: View {
     let start: String
     @State private var position: String?
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.horizontalSizeClass) private var sizeClass
 
     private var current: PhotoItem? { items.first { $0.id == (position ?? start) } }
 
@@ -43,7 +44,8 @@ struct PhotoViewer: View {
         .padding(.top, 8)
         .background(Color.black.ignoresSafeArea())
         .onAppear { position = start }
-        .statusBarHidden()
+        // iPhone only: hiding it on iPad left the page underneath with its bar over the status bar after closing.
+        .statusBarHidden(sizeClass == .compact)
     }
 
     private func bar(_ item: PhotoItem) -> some View {

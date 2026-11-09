@@ -141,6 +141,7 @@ struct PhotoPage<Header: View, Grid: View>: View {
     @ViewBuilder let grid: Grid
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.horizontalSizeClass) private var sizeClass
     @State private var zoom = GridZoom()
 
     /// While pinching this follows the fingers, so the bars come and go during the gesture rather than after it.
@@ -188,7 +189,8 @@ struct PhotoPage<Header: View, Grid: View>: View {
         .navigationBarBackButtonHidden(fullScreen)
         .toolbar(fullScreen ? .hidden : .automatic, for: .navigationBar)
         .toolbar(fullScreen ? .hidden : .automatic, for: .tabBar)
-        .statusBarHidden(fullScreen)
+        // iPhone only. On iPad, the bar with the tabs didn't always move back below the status bar once it returned, so they overlapped.
+        .statusBarHidden(fullScreen && sizeClass == .compact)
         .environment(\.stewardTheme, theme)
         .tint(theme.accent)
     }
@@ -382,8 +384,10 @@ struct PhotoGrid: View {
 
     /// In steps, so resizing doesn't reload every picture at each column.
     /// Pixels to ask for, from how big a cell is on screen, so a wide iPad grid doesn't ask for more than it shows.
+    /// One picture's width in points.
+    private var cellWidth: CGFloat { (zoom.viewport.width > 0 ? zoom.viewport.width : 402) / CGFloat(columnCount) }
     private var side: CGFloat {
-        let cell = (zoom.viewport.width > 0 ? zoom.viewport.width : 402) / CGFloat(columnCount)
+        let cell = cellWidth
         return cell > 300 ? 1400 : cell > 170 ? 800 : cell > 100 ? 360 : 200
     }
 
@@ -398,7 +402,7 @@ struct PhotoGrid: View {
                                 .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("photoGrid")) } action: { layout.frames[keep.id] = $0 }
                         }
                         ForEach(group.items) { item in
-                            PhotoCell(item: item, state: selection.contains(item.id) ? .selected : .available, side: side, whole: columnCount == 1, showsSize: columnCount <= 4, open: { open(item.id) }) {
+                            PhotoCell(item: item, state: selection.contains(item.id) ? .selected : .available, side: side, whole: columnCount == 1, showsSize: cellWidth >= 70, open: { open(item.id) }) {
                                 guard !Fingers.multiTouch else { return }
                                 if !selection.insert(item.id).inserted { selection.remove(item.id) }
                             } protect: { protect?(item) }
