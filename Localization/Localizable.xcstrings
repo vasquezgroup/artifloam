@@ -100349,24 +100349,6 @@
         "ar" : {
           "variations" : {
             "plural" : {
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "هل تريد حذف %1$lld عنصر من %2$@؟"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "هل تريد حذف %1$lld عنصر من %2$@؟"
-                }
-              },
-              "two" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "هل تريد حذف %1$lld عنصر من %2$@؟"
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -100379,7 +100361,25 @@
                   "value" : "هل تريد حذف %1$lld عنصرًا من %2$@؟"
                 }
               },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "هل تريد حذف %1$lld عنصر من %2$@؟"
+                }
+              },
               "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "هل تريد حذف %1$lld عنصر من %2$@؟"
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "هل تريد حذف %1$lld عنصر من %2$@؟"
+                }
+              },
+              "zero" : {
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "هل تريد حذف %1$lld عنصر من %2$@؟"
@@ -100589,16 +100589,16 @@
         "hr" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Izbrisati %1$lld stavku s %2$@?"
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Izbrisati %1$lld stavke s %2$@?"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Izbrisati %1$lld stavku s %2$@?"
                 }
               },
               "other" : {
@@ -100655,12 +100655,6 @@
         "lv" : {
           "variations" : {
             "plural" : {
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Dzēst %1$lld vienumus no %2$@?"
-                }
-              },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -100672,6 +100666,12 @@
                   "state" : "translated",
                   "value" : "Dzēst %1$lld vienumus no %2$@?"
                 }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Dzēst %1$lld vienumus no %2$@?"
+                }
               }
             }
           }
@@ -100679,12 +100679,6 @@
         "pl" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Usunąć %1$lld element z urządzenia %2$@?"
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -100695,6 +100689,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Usunąć %1$lld elementów z urządzenia %2$@?"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Usunąć %1$lld element z urządzenia %2$@?"
                 }
               },
               "other" : {
@@ -100745,16 +100745,16 @@
         "sr-Cyrl" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Обрисати %1$lld ставку са %2$@?"
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Обрисати %1$lld ставке са %2$@?"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Обрисати %1$lld ставку са %2$@?"
                 }
               },
               "other" : {
@@ -100769,16 +100769,16 @@
         "sr-Latn" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Obrisati %1$lld stavku sa %2$@?"
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Obrisati %1$lld stavke sa %2$@?"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Obrisati %1$lld stavku sa %2$@?"
                 }
               },
               "other" : {
@@ -105978,6 +105978,155 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "开发者工具"
+          }
+        }
+      }
+    },
+    "Device" : {
+      "comment" : "Sidebar: an iPhone or iPad connected to this Mac",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الجهاز"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dispositiu"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gerät"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Device"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Device"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Device"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dispositivo"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dispositivo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appareil"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grät"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "डिवाइस"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uređaj"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dispositivo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "デバイス"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기기"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ierīce"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Urządzenie"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dispositivo"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pajisja"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Уређај"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uređaj"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enhet"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cihaz"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设备"
           }
         }
       }
@@ -118681,24 +118830,6 @@
         "ar" : {
           "variations" : {
             "plural" : {
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "تم تصدير %1$lld عنصر (%2$@) إلى %3$@. لم يتغير شيء على %4$@."
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "تم تصدير %1$lld عنصر (%2$@) إلى %3$@. لم يتغير شيء على %4$@."
-                }
-              },
-              "two" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "تم تصدير %1$lld عنصر (%2$@) إلى %3$@. لم يتغير شيء على %4$@."
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -118711,7 +118842,25 @@
                   "value" : "تم تصدير %1$lld عنصرًا (%2$@) إلى %3$@. لم يتغير شيء على %4$@."
                 }
               },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "تم تصدير %1$lld عنصر (%2$@) إلى %3$@. لم يتغير شيء على %4$@."
+                }
+              },
               "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "تم تصدير %1$lld عنصر (%2$@) إلى %3$@. لم يتغير شيء على %4$@."
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "تم تصدير %1$lld عنصر (%2$@) إلى %3$@. لم يتغير شيء على %4$@."
+                }
+              },
+              "zero" : {
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "تم تصدير %1$lld عنصر (%2$@) إلى %3$@. لم يتغير شيء على %4$@."
@@ -118921,16 +119070,16 @@
         "hr" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Izvezena je %1$lld stavka (%2$@) u %3$@. Na %4$@ ništa nije promijenjeno."
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Izvezene su %1$lld stavke (%2$@) u %3$@. Na %4$@ ništa nije promijenjeno."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Izvezena je %1$lld stavka (%2$@) u %3$@. Na %4$@ ništa nije promijenjeno."
                 }
               },
               "other" : {
@@ -118987,12 +119136,6 @@
         "lv" : {
           "variations" : {
             "plural" : {
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Eksportēti %1$lld vienumi (%2$@) uz %3$@. %4$@ nekas netika mainīts."
-                }
-              },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -119004,6 +119147,12 @@
                   "state" : "translated",
                   "value" : "Eksportēti %1$lld vienumi (%2$@) uz %3$@. %4$@ nekas netika mainīts."
                 }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Eksportēti %1$lld vienumi (%2$@) uz %3$@. %4$@ nekas netika mainīts."
+                }
               }
             }
           }
@@ -119011,12 +119160,6 @@
         "pl" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Wyeksportowano %1$lld element (%2$@) do %3$@. Na urządzeniu %4$@ nic nie zmieniono."
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -119027,6 +119170,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Wyeksportowano %1$lld elementów (%2$@) do %3$@. Na urządzeniu %4$@ nic nie zmieniono."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Wyeksportowano %1$lld element (%2$@) do %3$@. Na urządzeniu %4$@ nic nie zmieniono."
                 }
               },
               "other" : {
@@ -119077,16 +119226,16 @@
         "sr-Cyrl" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Извезена је %1$lld ставка (%2$@) у %3$@. На %4$@ ништа није промењено."
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Извезене су %1$lld ставке (%2$@) у %3$@. На %4$@ ништа није промењено."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Извезена је %1$lld ставка (%2$@) у %3$@. На %4$@ ништа није промењено."
                 }
               },
               "other" : {
@@ -119101,16 +119250,16 @@
         "sr-Latn" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Izvezena je %1$lld stavka (%2$@) u %3$@. Na %4$@ ništa nije promenjeno."
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Izvezene su %1$lld stavke (%2$@) u %3$@. Na %4$@ ništa nije promenjeno."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Izvezena je %1$lld stavka (%2$@) u %3$@. Na %4$@ ništa nije promenjeno."
                 }
               },
               "other" : {
@@ -119190,6 +119339,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exportiere %1$lld von %2$lld: %3$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporting %1$lld of %2$lld: %3$@"
           }
         },
         "en-AU" : {
@@ -119316,12 +119471,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在导出第 %1$lld 个，共 %2$lld 个：%3$@"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exporting %1$lld of %2$lld: %3$@"
           }
         }
       }
@@ -249093,6 +249242,12 @@
             "value" : "Auf %1$@ gespeichert: Fotos %2$@, Videos %3$@"
           }
         },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stored on %1$@: photos %2$@, videos %3$@"
+          }
+        },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
@@ -249217,12 +249372,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "储存在 %1$@ 上：照片 %2$@，视频 %3$@"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stored on %1$@: photos %2$@, videos %3$@"
           }
         }
       }

@@ -193,7 +193,8 @@ struct MainView: View {
         .onChange(of: focusedScan) { _, _ in windowPointer = nil }
         .onChange(of: isStage) { _, _ in windowPointer = nil }
         .onChange(of: m.scanning) { _, scanning in if scanning { storageMap.cancel(); cleanupReviewing = false; runCleanup = true; runDuplicates = true; runBrowsers = false; runLeftovers = false; runQuitApps = false } }
-        .onChange(of: m.section) { _, section in
+        // Also at launch: the window can open straight on Photos or iPhone, and they look for devices.
+        .onChange(of: m.section, initial: true) { _, section in
             // Coming back from a page opened inside Overview's detail returns to that detail.
             if section != "Overview" && m.cameFrom?.from != "Overview" { overviewDetail = nil }
             if section == "iPhone" { m.iphone.watch() }

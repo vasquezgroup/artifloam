@@ -8,7 +8,7 @@ enum DeviceWord {
     /// For sentences: "Unlock your iPad", or "Unlock your iPhone or iPad" before one has been read.
     static var text: String { kind ?? String(localized: "iPhone or iPad") }
     /// For the sidebar and the page title.
-    static var title: String { kind ?? "iPhone | iPad" }
+    static var title: String { kind ?? String(localized: "Device", comment: "Sidebar: an iPhone or iPad connected to this Mac") }
 }
 
 /// What the iPhone page knows. It connects to an iPhone on a cable by itself, and to any other only after it's picked.
