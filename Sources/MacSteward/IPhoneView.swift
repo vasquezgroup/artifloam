@@ -2,6 +2,15 @@ import SwiftUI
 import AppKit
 import MacStewardCore
 
+/// The word for the connected device: iPhone or iPad once one has been read, both until then.
+enum DeviceWord {
+    nonisolated(unsafe) static var kind: String?
+    /// For sentences: "Unlock your iPad", or "Unlock your iPhone or iPad" before one has been read.
+    static var text: String { kind ?? String(localized: "iPhone or iPad") }
+    /// For the sidebar and the page title.
+    static var title: String { kind ?? "iPhone | iPad" }
+}
+
 /// What the iPhone page knows. It connects to an iPhone on a cable by itself, and to any other only after it's picked.
 @MainActor
 final class IPhoneState: ObservableObject {
@@ -10,7 +19,7 @@ final class IPhoneState: ObservableObject {
     @Published private(set) var picked: IPhoneDevice?
     @Published private(set) var reading = false
     @Published private(set) var problem: IPhoneReadError?
-    @Published private(set) var report: IPhoneAppsReport?
+    @Published private(set) var report: IPhoneAppsReport? { didSet { DeviceWord.kind = report?.deviceKind } }
     /// The person went straight to a backup, without reading an iPhone.
     @Published private(set) var backupsOnly = false
     @Published private(set) var backups: [IPhoneBackup]?
@@ -76,15 +85,15 @@ final class IPhoneState: ObservableObject {
     var stageLine: String {
         if frameworkMissing { return String(localized: "This Mac is missing the Apple software that talks to iPhones. Connecting an iPhone in Finder once usually installs it.") }
         switch problem {
-        case .needsTrust: return String(localized: "Unlock your iPhone and tap Trust. If nothing appears, select it in Finder once, then press Read again.")
-        case .unreachable: return String(localized: "Your iPhone didn't answer. Unlock it, check the cable and press Read again.")
-        case .deviceGone: return String(localized: "That iPhone is no longer connected.")
+        case .needsTrust: return String(localized: "Unlock your \(DeviceWord.text) and tap Trust. If nothing appears, select it in Finder once, then press Read again.")
+        case .unreachable: return String(localized: "Your \(DeviceWord.text) didn't answer. Unlock it, check the cable and press Read again.")
+        case .deviceGone: return String(localized: "That \(DeviceWord.text) is no longer connected.")
         case .frameworkMissing: return String(localized: "This Mac is missing the Apple software that talks to iPhones. Connecting an iPhone in Finder once usually installs it.")
-        case .failed(let code): return String(localized: "Your iPhone couldn't list its apps (error \(code)). Unlock it and try again.")
+        case .failed(let code): return String(localized: "Your \(DeviceWord.text) couldn't list its apps (error \(code)). Unlock it and try again.")
         case nil: break
         }
-        if devices.isEmpty { return String(localized: "Connect your iPhone with a cable and unlock it.") }
-        return picked == nil ? String(localized: "Choose your iPhone. Only the one you choose is read.") : String(localized: "Press Read to list its apps by size.")
+        if devices.isEmpty { return String(localized: "Connect your \(DeviceWord.text) with a cable and unlock it.") }
+        return picked == nil ? String(localized: "Choose your \(DeviceWord.text). Only the one you choose is read.") : String(localized: "Press Read to list its apps by size.")
     }
 
     /// Listening for iPhones connects to none of them.
@@ -190,19 +199,19 @@ final class IPhoneState: ObservableObject {
         guard let report, !removing else { return }
         let id = report.deviceID, usedBefore = report.usedBytes, watcher = watcher
         removalPlan = nil; removalResult = nil; removalProblem = false; stageStop = false
-        let copy = StageCopy(working: String(localized: "Deleting from your iPhone…"), done: String(localized: "Deleted from your iPhone"),
+        let copy = StageCopy(working: String(localized: "Deleting from your \(DeviceWord.text)…"), done: String(localized: "Deleted from your \(DeviceWord.text)"),
                              amount: String(localized: "freed", comment: "Under a byte counter: how much space was freed"), note: nil)
-        stage = RemovalProgress(copy: copy, total: plan.apps.count, current: plan.apps.first.map { String(localized: "Removing \($0.name) from your iPhone. Keep it unlocked and connected.") } ?? "")
+        stage = RemovalProgress(copy: copy, total: plan.apps.count, current: plan.apps.first.map { String(localized: "Removing \($0.name) from your \(DeviceWord.text). Keep it unlocked and connected.") } ?? "")
         StewardSound.start.play()
         Task {
             for (index, app) in plan.apps.enumerated() {
                 guard !stageStop, await waitForUnlock(id) else { break }
-                stage?.current = String(localized: "Removing \(app.name) from your iPhone. Keep it unlocked and connected.")
+                stage?.current = String(localized: "Removing \(app.name) from your \(DeviceWord.text). Keep it unlocked and connected.")
                 let bundle = app.bundleID
                 _ = await Task.detached(priority: .userInitiated) { Result { try watcher.uninstall(bundleID: bundle, deviceID: id) } }.value
                 stage?.completed = index + 1
             }
-            stage?.current = String(localized: "Reading your iPhone…")
+            stage?.current = String(localized: "Reading your \(DeviceWord.text)…")
             let after = await Task.detached(priority: .userInitiated) { Result { try watcher.read(deviceID: id) } }.value
             selection = []
             switch after {
@@ -282,7 +291,7 @@ struct IPhoneView: View {
                     if let report = state.report {
                         Text("\(report.apps.count) apps · \(formattedBytes(report.totalBytes))").stewardFont(.body).foregroundStyle(.secondary)
                     }
-                    Label(state.report == nil ? "Read from a backup on this Mac. Nothing is changed." : "Sizes come from the iPhone. Nothing is changed on it.", systemImage: "lock.fill").stewardFont(.caption).foregroundStyle(.secondary)
+                    Label(state.report == nil ? "Read from a backup on this Mac. Nothing is changed." : "Sizes come from the \(DeviceWord.text). Nothing is changed on it.", systemImage: "lock.fill").stewardFont(.caption).foregroundStyle(.secondary)
                 }
                 Spacer()
                 Button("Start over") { state.reset() }.buttonStyle(CleanupGlassButtonStyle(secondary: true))
@@ -290,7 +299,7 @@ struct IPhoneView: View {
             if let report = state.report, let insights = state.insights {
                 IPhoneBackupStatus(report: report)
                 if let result = state.removalResult { IPhoneRemovalResultCard(result: result) }
-                if state.removalProblem { Text("Your iPhone stopped answering, so Artifloam can't confirm what was removed. Check it, then start over.").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true) }
+                if state.removalProblem { Text("Your \(DeviceWord.text) stopped answering, so Artifloam can't confirm what was removed. Check it, then start over.").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true) }
                 IPhoneSpaceBar(apps: report.apps, total: report.totalBytes)
                 IPhoneGroupTiles(insights: insights, hasBackup: !state.lastChanged.isEmpty, selected: $state.group)
                 apps(report, insights)
@@ -301,9 +310,9 @@ struct IPhoneView: View {
     @ViewBuilder private func apps(_ report: IPhoneAppsReport, _ insights: IPhoneInsights) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             if report.sizesMissing {
-                Text("This iPhone listed its apps but didn't report their sizes.").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+                Text("This \(DeviceWord.text) listed its apps but didn't report their sizes.").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
             }
-            if report.apps.isEmpty { Text("This iPhone reported no apps.").stewardFont(.body).foregroundStyle(.secondary) }
+            if report.apps.isEmpty { Text("This \(DeviceWord.text) reported no apps.").stewardFont(.body).foregroundStyle(.secondary) }
             else if let group = state.group {
                 HStack(spacing: 8) {
                     Text(IPhoneGroupTiles.title(group)).stewardFont(.title3, weight: .semibold)
@@ -438,7 +447,7 @@ struct IPhoneView: View {
             else {
                 if let problem = state.backupProblem { backupMessage(problem) }
                 if state.makingBackup {
-                    StewardProgressBar(title: String(localized: "Backing up your iPhone. Keep it unlocked and connected.")).frame(maxWidth: 420)
+                    StewardProgressBar(title: String(localized: "Backing up your \(DeviceWord.text). Keep it unlocked and connected.")).frame(maxWidth: 420)
                     Button("Stop") { state.stopBackup() }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
                 } else {
                     if let backups = state.backups { backupList(backups) }
@@ -452,7 +461,7 @@ struct IPhoneView: View {
     @ViewBuilder private func backupOffer(_ report: IPhoneAppsReport) -> some View {
         let free = DiskSpace.read().free, used = report.usedBytes ?? report.totalBytes
         VStack(alignment: .leading, spacing: 8) {
-            if state.backupFailed { Text("The backup didn't finish. Unlock your iPhone, keep it connected and try again.").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true) }
+            if state.backupFailed { Text("The backup didn't finish. Unlock your \(DeviceWord.text), keep it connected and try again.").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true) }
             if report.encryptsBackups {
                 encryptedNote
             } else if IPhoneBackupMaker.hasRoom(free: free, phoneUses: used) {
@@ -462,10 +471,10 @@ struct IPhoneView: View {
                 Text("This Mac doesn't have room for a backup. It needs up to \(formattedBytes(used + 5_000_000_000)) and has \(formattedBytes(free)) free. You can see chats by size in WhatsApp: Settings, Storage and data, Manage storage.").stewardFont(.body).fixedSize(horizontal: false, vertical: true)
             }
         }
-        .confirmationDialog("Back up this iPhone to this Mac?", isPresented: $confirmingBackup, titleVisibility: .visible) {
+        .confirmationDialog("Back up this \(DeviceWord.text) to this Mac?", isPresented: $confirmingBackup, titleVisibility: .visible) {
             Button("Back Up") { state.makeBackup() }
         } message: {
-            Text("This can take a long time and use up to \(formattedBytes(used)). It's an unencrypted copy of your iPhone, so you can remove it once it's been read.")
+            Text("This can take a long time and use up to \(formattedBytes(used)). It's an unencrypted copy of your \(DeviceWord.text), so you can remove it once it's been read.")
         }
     }
     @ViewBuilder private func backupMessage(_ problem: WhatsAppBackupError) -> some View {
@@ -483,13 +492,13 @@ struct IPhoneView: View {
         }
     }
     private var encryptedNote: some View {
-        Text("Encrypted backups aren't supported yet. To check yours, select your iPhone in Finder and look at Encrypt local backup.").stewardFont(.caption).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+        Text("Encrypted backups aren't supported yet. To check yours, select your \(DeviceWord.text) in Finder and look at Encrypt local backup.").stewardFont(.caption).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
     }
     @ViewBuilder private func backupList(_ backups: [IPhoneBackup]) -> some View {
         if backups.isEmpty {
-            Text("There's no iPhone backup on this Mac. To make one, select your iPhone in Finder, choose to back up all its data to this Mac, then click Back Up Now.").stewardFont(.body).fixedSize(horizontal: false, vertical: true)
+            Text("There's no \(DeviceWord.text) backup on this Mac. To make one, select your \(DeviceWord.text) in Finder, choose to back up all its data to this Mac, then click Back Up Now.").stewardFont(.body).fixedSize(horizontal: false, vertical: true)
         } else {
-            if !state.hasOwnBackup { Text("No backup of this iPhone is on this Mac. You can pick another one.").stewardFont(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true) }
+            if !state.hasOwnBackup { Text("No backup of this \(DeviceWord.text) is on this Mac. You can pick another one.").stewardFont(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true) }
             ForEach(state.shownBackups) { backup in
                 HStack(spacing: 12) {
                     VStack(alignment: .leading, spacing: 3) {
@@ -650,9 +659,9 @@ private struct IPhoneBackupStatus: View {
         HStack(alignment: .top, spacing: 10) {
             Image(systemName: old ? "exclamationmark.triangle.fill" : "checkmark.shield.fill").foregroundStyle(old ? .orange : .mint).accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 3) {
-                Text(old ? "Back up before you delete anything" : "This iPhone has a recent backup").stewardFont(.body, weight: .semibold)
+                Text(old ? "Back up before you delete anything" : "This \(DeviceWord.text) has a recent backup").stewardFont(.body, weight: .semibold)
                 Text("iCloud: \(when(report.lastCloudBackup)) · This Mac: \(when(report.lastMacBackup))").stewardFont(.caption).foregroundStyle(.white.opacity(0.75))
-                if old { Text("Its newest backup is over a month old, or there isn't one. On the iPhone: Settings, your name, iCloud, iCloud Backup, Back Up Now.").stewardFont(.caption).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true) }
+                if old { Text("Its newest backup is over a month old, or there isn't one. On the \(DeviceWord.text): Settings, your name, iCloud, iCloud Backup, Back Up Now.").stewardFont(.caption).foregroundStyle(.white.opacity(0.75)).fixedSize(horizontal: false, vertical: true) }
             }
             Spacer(minLength: 0)
         }
@@ -692,7 +701,7 @@ private struct IPhoneRemovalSheet: View {
     let confirm: () -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var understood = false
-    private var phone: String { report.deviceName ?? String(localized: "this iPhone") }
+    private var phone: String { report.deviceName ?? String(localized: "this \(DeviceWord.text)") }
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("Delete ^[\(plan.apps.count) app](inflect: true) from \(phone)?").stewardFont(.title2, weight: .semibold).fixedSize(horizontal: false, vertical: true)
@@ -709,12 +718,12 @@ private struct IPhoneRemovalSheet: View {
                 }
             }.frame(maxHeight: 170)
             Text("This is what iOS reports for these apps. The real amount can be lower. You'll see what actually changed afterwards.").stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
-            info("trash", "What goes", String(localized: "The app and everything stored in it on this iPhone: downloads, settings and anything not synced. This can't be undone from Artifloam."))
+            info("trash", "What goes", String(localized: "The app and everything stored in it on this \(DeviceWord.text): downloads, settings and anything not synced. This can't be undone from Artifloam."))
             info("person.crop.circle", "What usually stays", String(localized: "Your account, and whatever the app keeps online or in iCloud. Purchases can be restored. Not every app works this way, so check if it matters to you."))
-            info(report.backupIsOld() ? "exclamationmark.triangle.fill" : "checkmark.shield", "Your backup", report.newestBackup.map { String(localized: "Newest backup: \($0.formatted(date: .abbreviated, time: .omitted)).") + (report.backupIsOld() ? " " + String(localized: "That's over a month ago, so it may not hold what you'd lose.") : "") } ?? String(localized: "This iPhone has no backup."), warning: report.backupIsOld())
+            info(report.backupIsOld() ? "exclamationmark.triangle.fill" : "checkmark.shield", "Your backup", report.newestBackup.map { String(localized: "Newest backup: \($0.formatted(date: .abbreviated, time: .omitted)).") + (report.backupIsOld() ? " " + String(localized: "That's over a month ago, so it may not hold what you'd lose.") : "") } ?? String(localized: "This \(DeviceWord.text) has no backup."), warning: report.backupIsOld())
             ForEach(plan.risky) { app in
                 info("exclamationmark.triangle.fill", app.name, app.risk == .chats
-                     ? String(localized: "Deleting this removes its chats from this iPhone. They only come back if they're in the app's own backup. To free space and keep chats, remove media in the app instead.")
+                     ? String(localized: "Deleting this removes its chats from this \(DeviceWord.text). They only come back if they're in the app's own backup. To free space and keep chats, remove media in the app instead.")
                      : String(localized: "This may hold your login codes. Without them or a recovery option, you can get locked out of your accounts."), warning: true)
             }
             if !plan.notOnStore.isEmpty {
@@ -724,7 +733,7 @@ private struct IPhoneRemovalSheet: View {
             HStack {
                 Spacer()
                 Button("Cancel", role: .cancel) { dismiss() }.keyboardShortcut(.cancelAction)
-                Button("Delete from iPhone", role: .destructive) { dismiss(); confirm() }
+                Button("Delete from \(DeviceWord.text)", role: .destructive) { dismiss(); confirm() }
                     .disabled(plan.needsAcknowledgement && !understood)
             }
         }.padding(24).frame(width: 540)
@@ -748,12 +757,12 @@ private struct IPhoneRemovalResultCard: View {
             if !result.removed.isEmpty {
                 Label("Removed ^[\(result.removed.count) app](inflect: true).", systemImage: "checkmark.circle.fill").stewardFont(.body, weight: .semibold)
                 // iOS can take a while to release the space, and what it reports per app can be more than comes back.
-                if let freed = result.freedBytes { Text(freed > 0 ? "So far your iPhone uses \(formattedBytes(freed)) less. iOS can take a while to release more." : "iOS hasn't released the space yet. It can take a while, so check again later.").stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true) }
+                if let freed = result.freedBytes { Text(freed > 0 ? "So far your \(DeviceWord.text) uses \(formattedBytes(freed)) less. iOS can take a while to release more." : "iOS hasn't released the space yet. It can take a while, so check again later.").stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true) }
                 // Deleting is also the only way iOS empties an app's data, so say how to get a fresh copy.
-                Text("To get them back, install them on your iPhone from the App Store, then sign in.").stewardFont(.caption).foregroundStyle(.secondary)
+                Text("To get them back, install them on your \(DeviceWord.text) from the App Store, then sign in.").stewardFont(.caption).foregroundStyle(.secondary)
             }
             if !result.stillThere.isEmpty {
-                Label("Still on your iPhone: \(result.stillThere.map(\.name).joined(separator: ", ")). Unlock it and try again, or delete them on the iPhone.", systemImage: "exclamationmark.triangle.fill").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+                Label("Still on your \(DeviceWord.text): \(result.stillThere.map(\.name).joined(separator: ", ")). Unlock it and try again, or delete them on the \(DeviceWord.text).", systemImage: "exclamationmark.triangle.fill").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding(16).frame(maxWidth: .infinity, alignment: .leading).background(.black.opacity(0.18), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
@@ -773,8 +782,8 @@ struct IPhoneUnlockOverlay: View {
                         .background(StewardTheme.iphone.vivid, in: Circle()).overlay { Circle().stroke(.white.opacity(0.75), lineWidth: 1.5) }
                         .shadow(color: .black.opacity(0.35), radius: 8, y: 4).offset(x: -6, y: -6).accessibilityHidden(true)
                 }
-                Text("Unlock your iPhone").font(.system(size: 34, weight: .light)).accessibilityAddTraits(.isHeader)
-                Text("Enter your passcode on the iPhone. Artifloam continues by itself as soon as it's unlocked.").stewardFont(.body).foregroundStyle(.white.opacity(0.8)).multilineTextAlignment(.center).frame(maxWidth: 420)
+                Text("Unlock your \(DeviceWord.text)").font(.system(size: 34, weight: .light)).accessibilityAddTraits(.isHeader)
+                Text("Enter your passcode on the \(DeviceWord.text). Artifloam continues by itself as soon as it's unlocked.").stewardFont(.body).foregroundStyle(.white.opacity(0.8)).multilineTextAlignment(.center).frame(maxWidth: 420)
                 HStack(spacing: 10) {
                     Button("Cancel") { state.cancelUnlock() }.buttonStyle(CleanupGlassButtonStyle(secondary: true)).keyboardShortcut(.cancelAction)
                     Button("It's unlocked") { state.continueAnyway() }.buttonStyle(CleanupGlassButtonStyle())

@@ -82,6 +82,8 @@ public struct IPhoneAppsReport: Equatable, Sendable {
     public let apps: [IPhoneAppRow]
     /// Everything stored on the iPhone, as it reports. A backup is smaller than this, so it's a safe estimate.
     public var usedBytes: UInt64? = nil
+    /// "iPhone" or "iPad", as the device says. nil when it didn't say or said something unexpected.
+    public var deviceKind: String? = nil
     public var encryptsBackups = false
     public var lastCloudBackup: Date? = nil
     public var lastMacBackup: Date? = nil
@@ -286,6 +288,7 @@ public final class IPhoneDeviceWatcher: @unchecked Sendable {
         guard framework.isPaired(device) == 1, framework.validatePairing(device) == 0, framework.startSession(device) == 0 else { throw IPhoneReadError.needsTrust }
         defer { _ = framework.stopSession(device) }
         let name = framework.copyValue(device, nil, "DeviceName" as CFString)?.takeRetainedValue() as? String
+        let kind = (framework.copyValue(device, nil, "DeviceClass" as CFString)?.takeRetainedValue() as? String).flatMap { ["iPhone", "iPad"].contains($0) ? $0 : nil }
         let options = ["ApplicationType": "User", "ReturnAttributes": ["CFBundleIdentifier", "CFBundleDisplayName", "StaticDiskUsage", "DynamicDiskUsage", "Container", "iTunesMetadata"]] as [String: Any]
         var found: Unmanaged<CFDictionary>?
         let code = framework.lookup(device, options as CFDictionary, &found)
@@ -293,7 +296,7 @@ public final class IPhoneDeviceWatcher: @unchecked Sendable {
         func value(_ domain: String, _ key: String) -> CFTypeRef? { framework.copyValue(device, domain as CFString, key as CFString)?.takeRetainedValue() }
         let capacity = value("com.apple.disk_usage", "TotalDataCapacity") as? NSNumber, available = value("com.apple.disk_usage", "TotalDataAvailable") as? NSNumber
         let used = capacity.flatMap { capacity in available.map { UInt64(max(0, capacity.int64Value - $0.int64Value)) } }
-        return IPhoneAppsReport(deviceID: id, deviceName: name?.displaySafe, apps: IPhoneApps.rows(from: apps), usedBytes: used, encryptsBackups: value("com.apple.mobile.backup", "WillEncrypt") as? Bool ?? false,
+        return IPhoneAppsReport(deviceID: id, deviceName: name?.displaySafe, apps: IPhoneApps.rows(from: apps), usedBytes: used, deviceKind: kind, encryptsBackups: value("com.apple.mobile.backup", "WillEncrypt") as? Bool ?? false,
                                 lastCloudBackup: IPhoneApps.backupDate(value("com.apple.mobile.backup", "LastCloudBackupDate")), lastMacBackup: IPhoneApps.backupDate(value("com.apple.mobile.backup", "LastiTunesBackupDate")))
     }
 }

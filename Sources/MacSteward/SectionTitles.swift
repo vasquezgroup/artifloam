@@ -15,7 +15,7 @@ func sectionTitle(_ section: String) -> String {
     case "Browser data": return String(localized: "Browser data")
     case "Worktrees": return String(localized: "Worktrees", comment: "Section: Git worktrees, the developer term")
     case "Space Map": return String(localized: "Space Map")
-    case "iPhone": return String(localized: "iPhone")
+    case "iPhone": return DeviceWord.title
     case "Photos": return String(localized: "Photos")
     case "Login & background items": return String(localized: "Login & background items")
     case "Leftovers": return String(localized: "Leftovers", comment: "Section: files left behind by apps you removed")
