@@ -217,7 +217,11 @@ struct MainView: View {
     private func worktreeSheet(_ batch: StewardModel.WorktreeBatch) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             Label("Delete merged worktrees", systemImage: "trash").stewardFont(.title2, weight: .semibold)
-            Text("Git confirms every commit is merged, no tracked file is edited and no running process uses these checkouts. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. Each merged branch is deleted too; its commit is shown afterwards so you can recreate it.").stewardFont(.body).fixedSize(horizontal: false, vertical: true)
+            Text("Git rechecked each checkout just now. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. A merged branch is deleted too; its commit is shown afterwards so you can recreate it. Read the warnings before you choose.").stewardFont(.body).fixedSize(horizontal: false, vertical: true)
+            let ids = Set(batch.candidates.map(\.id))
+            Toggle(isOn: Binding(get: { ids.isSubset(of: m.worktreeChoice) }, set: { if $0 { m.worktreeChoice.formUnion(ids) } else { m.worktreeChoice.subtract(ids) } })) {
+                Text("Select all", comment: "Checkbox: select every item in the list").stewardFont(.callout, weight: .semibold)
+            }.toggleStyle(.stewardCheckbox)
             ScrollView {
                 VStack(alignment: .leading, spacing: 10) {
                     ForEach(batch.candidates) { candidate in
@@ -861,6 +865,10 @@ struct MainView: View {
         let bytes = reports.flatMap(\.items).reduce(UInt64(0)) { $0 + $1.bytes }
         return String(localized: "Browsers · \(formattedBytes(bytes))")
     }
+    /// Ticks only what passed every check and loses nothing, and unticks the rest.
+    private func smartSelectButton(_ scope: [Finding]) -> some View {
+        SmartSelectButton(enabled: !m.busy && scope.contains(where: \.certain), help: String(localized: "Selects only what passed every check and loses nothing: caches ready to clean, and worktrees that are merged, clean and not used lately.")) { m.smartSelect(scope) }
+    }
     private var reviewBulkBar: some View {
         let scope = m.bulkScope, isWorktrees = !m.showAllFindings && m.group == .worktrees
         let chosen = m.reviewableWorktrees.filter { m.worktreeSelection.contains($0.id) }
@@ -869,6 +877,7 @@ struct MainView: View {
         return BulkBar(title: m.showAllFindings ? String(localized: "Select ready") : m.search.isEmpty ? String(localized: "Select all") : String(localized: "Select shown"), isOn: Binding(get: { m.allSelected(scope) }, set: { m.setSelected(scope, $0) }), enabled: !scope.isEmpty && !m.busy,
                        help: m.showAllFindings ? String(localized: "Every category's ready items. Recent caches and running apps are chosen per category.") : String(localized: "Everything listed here that can be removed, including recently used caches. You confirm before anything goes."),
                        summary: String(localized: "\(count) selected · \(formattedBytes(bytes))")) {
+            smartSelectButton((m.report?.findings ?? []).filter { (m.showAllFindings || $0.group == m.group) && (m.search.isEmpty || $0.path.localizedCaseInsensitiveContains(m.search)) })
             if isWorktrees {
                 Button("Delete \(count)…") { m.requestWorktreeRemoval(chosen) }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(count == 0 || m.busy)
             } else {
@@ -951,15 +960,25 @@ struct MainView: View {
                 Text(finding.reason).stewardFont(.callout).foregroundStyle(finding.safety == .automatic ? .white.opacity(0.8) : muted).fixedSize(horizontal: false, vertical: true)
                 if finding.hold == .recent { Label("Used recently. You can still clean it; its app will likely rebuild it.", systemImage: "clock.arrow.circlepath").stewardFont(.caption).foregroundStyle(.orange) }
                 if finding.hold == .inUse, let owner = finding.owner { Label("\(owner) is running. Artifloam quits it first if you clean this.", systemImage: "xmark.app").stewardFont(.caption).foregroundStyle(.orange) }
-                if finding.group == .worktrees { Label(usage(finding), systemImage: "clock").stewardFont(.caption).foregroundStyle(muted) }
+                if finding.group == .worktrees {
+                    if finding.hold == .inUse { ForEach(finding.warnings ?? [], id: \.self) { Label($0, systemImage: "exclamationmark.triangle").stewardFont(.caption).foregroundStyle(.orange) } }
+                    Label(usage(finding), systemImage: "clock").stewardFont(.caption).foregroundStyle(muted)
+                }
                 else { ForEach(finding.warnings ?? [], id: \.self) { Label($0, systemImage: "exclamationmark.triangle").stewardFont(.caption).foregroundStyle(.orange) } }
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Modified \(finding.modifiedAt.formatted(date: .abbreviated, time: .shortened))").stewardFont(.caption).foregroundStyle(muted)
-                    HStack { Button("Finder") { m.reveal(finding.path) }; if finding.rule == "xcode-managed-review" { Button("Open Xcode") { m.openXcode() } }; if finding.rule == BroadCaches.brewOldVersionsRule { Button("Run brew cleanup in Terminal") { m.runBrewCleanup(cellar: finding.path) }.help("Opens Terminal and runs Homebrew's own cleanup there") }; if finding.group == .worktrees { Button("Delete…") { m.requestWorktreeRemoval([finding]) }.disabled(m.busy || finding.safety != .review).help(finding.safety == .review ? String(localized: "Review and delete this merged worktree") : finding.reason) }; if finding.safety == .automatic { Button("Select to clean") { m.selected.insert(finding.id) }.disabled(m.selected.contains(finding.id) || m.busy) }; Button { m.ignore(finding) } label: { Text("Keep", comment: "Button: keep this item and never suggest it again") } }
+                    HStack { Button("Finder") { m.reveal(finding.path) }; if finding.rule == "xcode-managed-review" { Button("Open Xcode") { m.openXcode() } }; if finding.rule == BroadCaches.brewOldVersionsRule { Button("Run brew cleanup in Terminal") { m.runBrewCleanup(cellar: finding.path) }.help("Opens Terminal and runs Homebrew's own cleanup there") }; if finding.group == .worktrees { worktreeDeleteButton(finding) }; if finding.safety == .automatic { Button("Select to clean") { m.selected.insert(finding.id) }.disabled(m.selected.contains(finding.id) || m.busy) }; Button { m.ignore(finding) } label: { Text("Keep", comment: "Button: keep this item and never suggest it again") } }
                         .buttonStyle(.bordered).stewardFont(.body).foregroundStyle(mint)
                 }
             }
         }.padding(14).background(panel, in: RoundedRectangle(cornerRadius: 12))
+    }
+    /// Kept only because a process has it open: Git found nothing that would be lost, so the person may still delete it.
+    private func worktreeDeleteButton(_ finding: Finding) -> some View {
+        let anyway = finding.hold == .inUse
+        return Button(anyway ? String(localized: "Delete anyway…") : String(localized: "Delete…")) { m.requestWorktreeRemoval([finding]) }
+            .disabled(m.busy || (finding.safety != .review && !anyway))
+            .help(anyway ? String(localized: "Git rechecks it first. The processes keep running, but lose this folder.") : finding.safety == .review ? String(localized: "Review and delete this merged worktree") : finding.reason)
     }
     private func usage(_ finding: Finding) -> String {
         guard let used = finding.lastUsedAt else { return String(localized: "No agent session in 90 days") }
@@ -1004,6 +1023,7 @@ struct MainView: View {
                         let chosen = m.reviewableWorktrees.filter { m.worktreeSelection.contains($0.id) }
                         if !finished.isEmpty {
                             BulkBar(title: String(localized: "Select all"), isOn: Binding(get: { m.allSelected(finished) }, set: { m.setSelected(finished, $0) }), enabled: !m.busy, summary: String(localized: "\(chosen.count) selected · \(formattedBytes(chosen.reduce(0) { $0 + $1.bytes }))")) {
+                                smartSelectButton(finished)
                                 Button("Delete \(chosen.count)…") { m.requestWorktreeRemoval(chosen) }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(chosen.isEmpty || m.busy)
                             }
                         }
@@ -1027,6 +1047,7 @@ struct MainView: View {
                 ForEach(finding.warnings ?? [], id: \.self) { Label($0, systemImage: "exclamationmark.triangle.fill").stewardFont(.caption).foregroundStyle(.orange).lineLimit(1) }
             }
             Spacer(minLength: 12)
+            if finding.hold == .inUse { worktreeDeleteButton(finding).buttonStyle(.bordered).controlSize(.small) }
             Text(usage(finding)).stewardFont(.caption).foregroundStyle(muted).frame(width: 150, alignment: .trailing)
             Text(formattedBytes(finding.bytes)).stewardFont(.callout, weight: .medium).foregroundStyle(mint).frame(width: 80, alignment: .trailing)
         }

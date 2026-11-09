@@ -327,6 +327,11 @@ final class StewardModel: ObservableObject {
         let trees = Set(items.filter { $0.group == .worktrees }.map(\.id)), rest = Set(items.map(\.id)).subtracting(trees)
         if on { worktreeSelection.formUnion(trees); selected.formUnion(rest) } else { worktreeSelection.subtract(trees); selected.subtract(rest) }
     }
+    /// Ticks only what's certain in `items` and unticks the rest, so the selection is exactly the safe part.
+    func smartSelect(_ items: [Finding]) {
+        setSelected(items, false)
+        setSelected(items.filter(\.certain), true)
+    }
     var reviewableWorktrees: [Finding] { report?.findings.filter { $0.group == .worktrees && $0.safety == .review } ?? [] }
     /// Rechecks each worktree, then opens one sheet. Clean ones start ticked; ones with warnings start unticked.
     func requestWorktreeRemoval(_ findings: [Finding]) {
@@ -342,7 +347,8 @@ final class StewardModel: ObservableObject {
             }
             let candidates = checked.compactMap(\.0), blocked = checked.compactMap(\.1)
             if candidates.isEmpty { error = blocked.joined(separator: "\n") }
-            else { worktreeChoice = Set(candidates.filter { $0.assessment.warnings.isEmpty }.map(\.id)); worktreeBatch = WorktreeBatch(candidates: candidates, blocked: blocked) }
+            // The person already chose these, so they stay ticked. Only a worktree that would lose work Git can't restore starts unticked.
+            else { worktreeChoice = Set(candidates.filter { !$0.assessment.losesWork }.map(\.id)); worktreeBatch = WorktreeBatch(candidates: candidates, blocked: blocked) }
             progress = String(localized: "Nothing was removed."); busy = false
             if candidates.isEmpty { runNextRemoval() }
         }

@@ -67,6 +67,8 @@ func git(_ directory: URL, _ args: [String]) -> CommandResult {
 }
 public struct ActivitySnapshot: Sendable {
     public let openPaths: [String]
+    /// The name of the process that has each of `openPaths` open, in the same order. Empty when not known.
+    let owners: [String]
     public var commands: String { didSet { commandBytes = Array(commands.utf8); lowercasedCommandBytes = Array(commands.lowercased().utf8) } }
     /// Command lines run to a few hundred KB (Electron apps), and every check searches them: a byte search,
     /// prepared once, finds the same matches about 50 times faster than String.contains.
@@ -74,8 +76,8 @@ public struct ActivitySnapshot: Sendable {
     public var reliable: Bool
     /// Every open file and each folder above it, so `isActive` is one lookup instead of a scan of all open files.
     let openFolders: Set<String>
-    public init(openPaths: [String] = [], commands: String = "", reliable: Bool = true) {
-        self.openPaths = openPaths; self.commands = commands; self.reliable = reliable
+    public init(openPaths: [String] = [], owners: [String] = [], commands: String = "", reliable: Bool = true) {
+        self.openPaths = openPaths; self.owners = owners; self.commands = commands; self.reliable = reliable
         commandBytes = Array(commands.utf8); lowercasedCommandBytes = Array(commands.lowercased().utf8)
         var folders = Set<String>()
         for path in openPaths {
@@ -85,20 +87,46 @@ public struct ActivitySnapshot: Sendable {
         openFolders = folders
     }
     public static func capture() -> ActivitySnapshot {
-        let files = run("/usr/sbin/lsof", ["-n", "-P", "-Fn"], timeout: 45)
+        let files = run("/usr/sbin/lsof", ["-n", "-P", "-Fcn"], timeout: 45)
         let processes = run("/bin/ps", ["-axo", "command"])
-        return ActivitySnapshot(openPaths: openPaths(lsof: files.output, leaving: getpid()), commands: processes.output, reliable: files.code == 0 && processes.code == 0 && files.error.isEmpty)
+        let open = openFiles(lsof: files.output, leaving: getpid())
+        return ActivitySnapshot(openPaths: open.map(\.path), owners: open.map(\.owner), commands: processes.output, reliable: files.code == 0 && processes.code == 0 && files.error.isEmpty)
     }
+    static func openPaths(lsof output: String, leaving pid: pid_t) -> [String] { openFiles(lsof: output, leaving: pid).map(\.path) }
     /// Open file names from `lsof -F` output. lsof starts each process with a "p<pid>" line. The files of `pid` (this
     /// process) are left out: they are the folders the scan itself is reading, not another app using them. Child
     /// processes such as git have their own pids and are kept.
-    static func openPaths(lsof output: String, leaving pid: pid_t) -> [String] {
+    /// "c<name>" follows each "p" line when lsof is asked for -Fc, so each file can name the process that has it open.
+    static func openFiles(lsof output: String, leaving pid: pid_t) -> [(path: String, owner: String)] {
         let own = "p\(pid)"
-        var paths = [String](), mine = false
+        var files = [(path: String, owner: String)](), mine = false, owner = ""
         for line in output.split(separator: "\n") {
-            if line.first == "p" { mine = line == own } else if line.first == "n", !mine { paths.append(String(line.dropFirst())) }
+            switch line.first {
+            case "p": mine = line == own; owner = ""
+            case "c": owner = String(line.dropFirst())
+            case "n" where !mine: files.append((String(line.dropFirst()), owner))
+            default: break
+            }
         }
-        return paths
+        return files
+    }
+    /// Which processes keep `url` busy: those with a file open inside it, and those whose command line names it.
+    /// For telling the person, so they can decide; `isActive` stays the check.
+    public func holders(_ url: URL) -> [String] {
+        let path = url.standardizedFileURL.path
+        var variants = [path]
+        for prefix in ["/var/", "/tmp/"] {
+            if path.hasPrefix(prefix) { variants.append("/private" + path) }
+            if path.hasPrefix("/private" + prefix) { variants.append(String(path.dropFirst(8))) }
+        }
+        var names = Set<String>()
+        for (index, open) in openPaths.enumerated() where index < owners.count && !owners[index].isEmpty {
+            if variants.contains(where: { open == $0 || open.hasPrefix($0 + "/") }) { names.insert(owners[index]) }
+        }
+        for line in commands.split(separator: "\n") where variants.contains(where: { line.contains($0) }) {
+            if let program = line.split(separator: " ").first { names.insert((String(program) as NSString).lastPathComponent) }
+        }
+        return names.sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
     }
     public func isActive(_ url: URL) -> Bool {
         let path = url.standardizedFileURL.path

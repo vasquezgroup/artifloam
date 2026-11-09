@@ -19,6 +19,14 @@ public struct WorktreeAssessment: Sendable {
     public var unmerged = 0
     /// Status listed nothing. Git then rechecks at deletion, so a file created after the review is never lost.
     public var clean = false
+    /// Processes with the checkout open. When every Git check passed, this is the only reason it's kept,
+    /// and the person may delete it anyway: the processes keep running, but lose the folder.
+    public var holders = [String]()
+    public var inUse = false
+    /// Deleting would lose something Git can't bring back: uncommitted edits, untracked files or ignored secrets.
+    public var losesWork = false
+    /// Every Git check passed and only a running process keeps it.
+    public var overridable: Bool { inUse && blocker != nil }
 }
 public struct WorktreeRemoval: Sendable {
     public let branch: String?
@@ -41,7 +49,8 @@ public enum WorktreeReview {
         guard (try? URL(fileURLWithPath: path).resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == false else { return keep(String(localized: "Keep: the path is a symbolic link or missing.")) }
         guard !excluded.contains(where: { url.path == $0 || url.path.hasPrefix($0 + "/") }) else { return keep(String(localized: "Keep: in your keep list.")) }
         guard activity.reliable else { return keep(String(localized: "Keep: running processes could not be verified.")) }
-        guard !activity.isActive(url) else { return keep(String(localized: "Keep: used by a running process.")) }
+        // Git still checks a checkout in use, so the person can see whether anything would be lost and delete it anyway.
+        let inUse = activity.isActive(url), holders = inUse ? activity.holders(url) : []
         let list = git(url, ["worktree", "list", "--porcelain", "-z"])
         guard list.code == 0 else { return keep(String(localized: "Keep: Git registration could not be verified.")) }
         let blocks = list.output.components(separatedBy: "\0\0").filter { !$0.isEmpty }.map { $0.components(separatedBy: "\0") }
@@ -94,11 +103,16 @@ public enum WorktreeReview {
         if let time = TimeInterval(git(url, ["log", "-1", "--format=%ct"]).output.trimmingCharacters(in: .whitespacesAndNewlines)), now.timeIntervalSince1970 - time < recentInterval {
             warnings.append(String(localized: "Committed in the last 6 hours; an agent session may still be open on it."))
         }
-        if let lastUsed, now.timeIntervalSince(lastUsed) < sessionInterval {
+        let names = holders.joined(separator: ", ")
+        if inUse {
+            warnings.append(holders.isEmpty ? String(localized: "A running process uses it. It keeps running, but loses this folder.") : String(localized: "Open in \(names). They keep running, but lose this folder."))
+        } else if let lastUsed, now.timeIntervalSince(lastUsed) < sessionInterval {
             warnings.append(String(localized: "A Claude Code or Codex session used it in the last 24 hours."))
         }
         let digest = SHA256.hash(data: Data((status.output + "\0\0" + sensitive.joined(separator: "\0")).utf8)).map { String(format: "%02x", $0) }.joined()
-        return WorktreeAssessment(primary: primary, base: base, branch: branch, head: head, blocker: nil, warnings: warnings, lastUsed: lastUsed, fingerprint: "\(head):\(digest)", unmerged: unmerged.count, clean: status.output.isEmpty)
+        let blocker = !inUse ? nil : holders.isEmpty ? String(localized: "Keep: used by a running process.") : String(localized: "Keep: open in \(names).")
+        return WorktreeAssessment(primary: primary, base: base, branch: branch, head: head, blocker: blocker, warnings: warnings, lastUsed: lastUsed, fingerprint: "\(head):\(digest)", unmerged: unmerged.count, clean: status.output.isEmpty,
+                                  holders: holders, inUse: inUse, losesWork: modified > 0 || untracked > 0 || !sensitive.isEmpty)
     }
 
     /// The repository's default branch, falling back to the primary checkout.
@@ -111,18 +125,20 @@ public enum WorktreeReview {
     public static func validate(_ finding: Finding, configuration: Configuration) throws -> WorktreeAssessment {
         try validate(finding, configuration: configuration, activity: .capture())
     }
-    static func validate(_ finding: Finding, configuration: Configuration, activity: ActivitySnapshot, sessions: AgentSessionIndex? = nil) throws -> WorktreeAssessment {
-        guard finding.group == .worktrees, finding.rule == "worktree-review-only", finding.safety == .review else { throw StewardError.blocked(String(localized: "Only reviewable worktrees can be deleted.")) }
+    /// `allowInUse`: the person chose to delete it although a process has it open. Every other check still applies.
+    static func validate(_ finding: Finding, configuration: Configuration, activity: ActivitySnapshot, sessions: AgentSessionIndex? = nil, allowInUse: Bool = false) throws -> WorktreeAssessment {
+        guard finding.group == .worktrees, finding.rule == "worktree-review-only", finding.safety == .review || (allowInUse && finding.hold == .inUse) else { throw StewardError.blocked(String(localized: "Only reviewable worktrees can be deleted.")) }
         let assessment = assess(finding.path, configuration: configuration, activity: activity, sessions: sessions ?? .load(claudeHome: configuration.claudeHome, codexHome: configuration.codexHome))
-        if let blocker = assessment.blocker { throw StewardError.blocked(blocker) }
+        if let blocker = assessment.blocker, !(allowInUse && assessment.overridable) { throw StewardError.blocked(blocker) }
         guard assessment.fingerprint == finding.fingerprint else { throw StewardError.blocked(String(localized: "This worktree changed after the scan. Scan again.")) }
         return assessment
     }
 
     /// Rechecks several worktrees against one fresh process and session snapshot.
+    /// A worktree kept only because a process has it open is allowed when the person chose it (`hold == .inUse`).
     public static func validate(_ findings: [Finding], configuration: Configuration) -> [Result<WorktreeAssessment, Error>] {
         let activity = ActivitySnapshot.capture(), sessions = AgentSessionIndex.load(claudeHome: configuration.claudeHome, codexHome: configuration.codexHome)
-        return findings.map { finding in Result { try validate(finding, configuration: configuration, activity: activity, sessions: sessions) } }
+        return findings.map { finding in Result { try validate(finding, configuration: configuration, activity: activity, sessions: sessions, allowInUse: finding.hold == .inUse) } }
     }
     /// Deletes several worktrees, rechecking each against process evidence at most 5 seconds old.
     /// `progress` gets (worktrees done, the one just handled); `shouldStop` is asked before each. Stopping leaves the rest untouched.
@@ -132,7 +148,7 @@ public enum WorktreeReview {
         for finding in findings {
             if shouldStop() { break }
             if Date().timeIntervalSince(taken) > 5 { activity = .capture(); taken = Date() }
-            results.append(Result { [activity] in try delete(finding, configuration: configuration, activity: activity, remove: gitRemove) })
+            results.append(Result { [activity] in try delete(finding, configuration: configuration, activity: activity, allowInUse: finding.hold == .inUse, remove: gitRemove) })
             progress?(results.count, finding.title)
         }
         return results
@@ -143,8 +159,8 @@ public enum WorktreeReview {
         let result = git(primary, ["worktree", "remove"] + (force ? ["--force"] : []) + [worktree.path])
         guard result.code == 0 else { throw StewardError.blocked(String(localized: "Git could not delete the worktree: \(result.error.trimmingCharacters(in: .whitespacesAndNewlines))")) }
     }
-    static func delete(_ finding: Finding, configuration: Configuration, activity: ActivitySnapshot, sessions: AgentSessionIndex? = nil, remove: (URL, URL, Bool) throws -> Void) throws -> WorktreeRemoval {
-        let assessment = try validate(finding, configuration: configuration, activity: activity, sessions: sessions)
+    static func delete(_ finding: Finding, configuration: Configuration, activity: ActivitySnapshot, sessions: AgentSessionIndex? = nil, allowInUse: Bool = false, remove: (URL, URL, Bool) throws -> Void) throws -> WorktreeRemoval {
+        let assessment = try validate(finding, configuration: configuration, activity: activity, sessions: sessions, allowInUse: allowInUse)
         guard let primary = assessment.primary else { throw StewardError.blocked(String(localized: "Cannot find the primary checkout.")) }
         let source = URL(fileURLWithPath: finding.path)
         try remove(source, primary, !assessment.clean)

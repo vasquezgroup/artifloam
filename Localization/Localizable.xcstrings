@@ -48503,6 +48503,154 @@
         }
       }
     },
+    "A running process uses it. It keeps running, but loses this folder." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تستخدمه عملية قيد التشغيل. ستستمر في العمل، لكنها ستفقد هذا المجلد."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un procés en execució l’utilitza. Continuarà funcionant, però perdrà aquesta carpeta."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein laufender Prozess verwendet ihn. Er läuft weiter, verliert aber diesen Ordner."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A running process uses it. It keeps running, but loses this folder."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A running process uses it. It keeps running, but loses this folder."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A running process uses it. It keeps running, but loses this folder."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo usa un proceso en ejecución. Seguirá funcionando, pero perderá esta carpeta."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo usa un proceso en ejecución. Seguirá funcionando, pero perderá esta carpeta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un processus en cours l’utilise. Il continuera de tourner, mais perdra ce dossier."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En laufende Prozess bruucht en. Er lauft wiiter, verlüürt aber dä Ordner."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "एक चल रही प्रक्रिया इसका उपयोग कर रही है। वह चलती रहेगी, लेकिन यह फ़ोल्डर खो देगी।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koristi ga pokrenuti proces. Nastavit će raditi, ali će izgubiti ovu mapu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo usa un processo in esecuzione. Continuerà a funzionare, ma perderà questa cartella."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "実行中のプロセスが使用しています。プロセスは動き続けますが、このフォルダは失われます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "실행 중인 프로세스가 사용 중입니다. 계속 실행되지만 이 폴더를 잃게 됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To izmanto palaists process. Tas turpinās darboties, bet zaudēs šo mapi."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Używa go uruchomiony proces. Będzie działał dalej, ale straci ten folder."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Um processo em execução está a usá-lo. Continuará a funcionar, mas perde esta pasta."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E përdor një proces që po ekzekutohet. Do të vazhdojë, por do ta humbasë këtë dosje."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Користи га покренут процес. Наставиће да ради, али ће изгубити ову фасциклу."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koristi ga pokrenut proces. Nastaviće da radi, ali će izgubiti ovu fasciklu."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En process som körs använder den. Den fortsätter köra men förlorar den här mappen."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışan bir işlem bunu kullanıyor. Çalışmaya devam eder, ancak bu klasörü kaybeder."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有正在运行的进程在使用它。进程会继续运行，但会失去这个文件夹。"
+          }
+        }
+      }
+    },
     "A running process uses this folder" : {
       "localizations" : {
         "ar" : {
@@ -100696,6 +100844,154 @@
         }
       }
     },
+    "Delete anyway…" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "احذف على أي حال…"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina igualment…"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trotzdem löschen …"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete anyway…"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete anyway…"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete anyway…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar de todos modos…"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar de todos modos…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer quand même…"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glich lösche …"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "फिर भी हटाएँ…"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ipak izbriši…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina comunque…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "それでも削除…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "그래도 삭제…"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tomēr dzēst…"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuń mimo to…"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagar mesmo assim…"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fshije gjithsesi…"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ипак обриши…"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ipak obriši…"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radera ändå…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yine de sil…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仍然删除…"
+          }
+        }
+      }
+    },
     "Delete backup of %@" : {
       "localizations" : {
         "ar" : {
@@ -131164,154 +131460,6 @@
         }
       }
     },
-    "Git confirms every commit is merged, no tracked file is edited and no running process uses these checkouts. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. Each merged branch is deleted too; its commit is shown afterwards so you can recreate it." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يؤكد Git أن كل commit مدموج، وأن أي ملف متتبَّع لم يُعدَّل، وأن أي عملية قيد التشغيل لا تستخدم عمليات checkout هذه. تُحذف نهائيًا، بما في ذلك الملفات المتجاهَلة مثل node_modules ومخرجات البناء وملفات .env المحلية. كما يُحذف كل branch مدموج؛ ويُعرض commit الخاص به بعد ذلك لتتمكن من إعادة إنشائه."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git confirma que cada commit està fusionat, que cap arxiu seguit s’ha editat i que cap procés en execució fa servir aquests checkouts. S’esborren definitivament, inclosos els arxius ignorats com node_modules, la sortida de compilació i els arxius .env locals. Cada branca fusionada també s’esborra; després es mostra el commit perquè la puguis tornar a crear."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git bestätigt, dass jeder Commit zusammengeführt ist, keine verfolgte Datei bearbeitet wurde und kein laufender Prozess diese Checkouts verwendet. Sie werden endgültig gelöscht, auch ignorierte Dateien wie node_modules, Build-Ausgaben und lokale .env-Dateien. Jeder zusammengeführte Branch wird ebenfalls gelöscht; sein Commit wird danach angezeigt, damit du ihn neu erstellen kannst."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git confirms every commit is merged, no tracked file is edited and no running process uses these checkouts. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. Each merged branch is deleted too; its commit is shown afterwards so you can recreate it."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git confirms every commit is merged, no tracked file is edited and no running process uses these checkouts. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. Each merged branch is deleted too; its commit is shown afterwards so you can recreate it."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git confirms every commit is merged, no tracked file is edited and no running process uses these checkouts. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. Each merged branch is deleted too; its commit is shown afterwards so you can recreate it."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git confirma que todos los commits están fusionados, que no hay ningún archivo con seguimiento editado y que ningún proceso en ejecución usa estos checkouts. Se borran de forma permanente, incluidos los archivos ignorados como node_modules, los resultados de compilación y los archivos .env locales. Cada rama fusionada también se borra; después se muestra su commit para que puedas recrearla."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git confirma que todos los commits están fusionados, que no hay ningún archivo con seguimiento editado y que ningún proceso en ejecución usa estos checkouts. Se borran de forma permanente, incluidos los archivos ignorados como node_modules, los resultados de compilación y los archivos .env locales. Cada rama fusionada también se borra; después se muestra su commit para que puedas recrearla."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git confirme que chaque commit est fusionné, qu’aucun fichier suivi n’est modifié et qu’aucun processus en cours n’utilise ces checkouts. Ils sont supprimés définitivement, y compris les fichiers ignorés tels que node_modules, les sorties de build et les fichiers .env locaux. Chaque branche fusionnée est aussi supprimée ; son commit est affiché ensuite pour que vous puissiez la recréer."
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git bestätigt, dass jede Commit gmergt isch, kei getrackti Datei bearbeitet worde isch und kei laufende Prozess die Checkouts bruucht. Si werded für immer glöscht, au ignorierti Dateie wie node_modules, Build-Uusgab und lokali .env-Dateie. Jede gmergt Branch wird au glöscht; sin Commit wird nachher azeigt, damit du ne chasch neu erstelle."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git पुष्टि करता है कि हर कमिट मर्ज हो चुका है, कोई ट्रैक की गई फ़ाइल संपादित नहीं है और कोई चल रही प्रोसेस इन चेकआउट का उपयोग नहीं करती। इन्हें हमेशा के लिए डिलीट किया जाता है, अनदेखी की गई फ़ाइलों सहित, जैसे node_modules, बिल्ड आउटपुट और स्थानीय .env फ़ाइलें। हर मर्ज हो चुकी ब्रांच भी डिलीट की जाती है; उसका कमिट बाद में दिखाया जाता है ताकि आप उसे दोबारा बना सकें।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git potvrđuje da je svaki commit spojen, da nijedna praćena datoteka nije uređena i da nijedan pokrenuti proces ne koristi ove checkoute. Trajno se brišu, uključujući zanemarene datoteke poput node_modules, izlaza izgradnje i lokalnih .env datoteka. Briše se i svaki spojeni branch; nakon toga se prikazuje njegov commit kako bi ga mogao ponovno stvoriti."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git conferma che ogni commit è stato unito (merge), nessun file tracciato è modificato e nessun processo in esecuzione usa questi checkout. Vengono eliminati definitivamente, compresi i file ignorati come node_modules, l'output di build e i file .env locali. Anche ogni branch unito viene eliminato; il suo commit viene mostrato dopo, così puoi ricrearlo."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gitは、すべてのコミットがマージ済みで、編集された追跡ファイルがなく、実行中のプロセスがこれらのチェックアウトを使用していないことを確認します。node_modules、ビルド出力、ローカルの.envファイルなど、無視されるファイルを含めて完全に削除されます。マージ済みの各ブランチも削除されます。再作成できるよう、そのコミットは後で表示されます。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git이 모든 커밋이 병합되었고, 추적 중인 파일이 수정되지 않았으며, 실행 중인 프로세스가 이 체크아웃을 사용하지 않음을 확인합니다. node_modules, 빌드 결과물, 로컬 .env 파일 같은 무시된 파일을 포함해 영구적으로 삭제됩니다. 병합된 각 브랜치도 함께 삭제되며, 다시 만들 수 있도록 삭제 후 해당 커밋이 표시됩니다."
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git apstiprina, ka katrs commit ir sapludināts, neviens izsekots fails nav rediģēts un neviens darbojošs process neizmanto šos checkout. Tie tiek neatgriezeniski dzēsti, ieskaitot ignorētos failus, piemēram, node_modules, būvēšanas izvadi un lokālos .env failus. Katrs sapludinātais branch tiek dzēsts arī; pēc tam tiek parādīts tā commit, lai varētu to izveidot no jauna."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git potwierdza, że każdy commit jest scalony, żaden śledzony plik nie jest edytowany i żaden działający proces nie używa tych checkoutów. Zostaną usunięte na stałe, łącznie z ignorowanymi plikami, takimi jak node_modules, wyniki kompilacji i lokalne pliki .env. Każdy scalony branch również zostaje usunięty; jego commit jest pokazywany potem, aby można go było odtworzyć."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Git confirma que todos os commits foram integrados, que nenhum ficheiro rastreado foi editado e que nenhum processo em execução usa estes checkouts. São eliminados permanentemente, incluindo ficheiros ignorados como node_modules, saída de compilação e ficheiros .env locais. Cada branch integrado também é eliminado; o seu commit é mostrado depois para que o possa recriar."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git konfirmon që çdo commit është bashkuar, asnjë skedar i gjurmuar nuk është redaktuar dhe asnjë proces në punë nuk i përdor këto checkout-e. Ato fshihen përgjithmonë, përfshirë skedarët e injoruar si node_modules, dalja e ndërtimit dhe skedarët lokalë .env. Çdo branch i bashkuar fshihet gjithashtu; commit-i i tij shfaqet më pas që ta rikrijosh."
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git потврђује да је сваки commit спојен, да ниједан праћени фајл није измењен и да ниједан покренут процес не користи ове checkouts. Они се трајно бришу, укључујући игнорисане фајлове као што су node_modules, излаз изградње и локални .env фајлови. Сваки спојени branch се такође брише; његов commit се приказује након тога да бисте могли да га поново направите."
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git potvrđuje da je svaki commit spojen, da nijedan praćeni fajl nije izmenjen i da nijedan pokrenut proces ne koristi ove checkouts. Oni se trajno brišu, uključujući ignorisane fajlove kao što su node_modules, izlaz izgradnje i lokalni .env fajlovi. Svaki spojeni branch se takođe briše; njegov commit se prikazuje nakon toga da biste mogli da ga ponovo napravite."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git bekräftar att varje commit är mergad, att ingen spårad fil är ändrad och att ingen process som körs använder dessa checkouts. De raderas permanent, inklusive ignorerade filer som node_modules, byggutdata och lokala .env-filer. Varje mergad branch raderas också; dess commit visas efteråt så att du kan återskapa den."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git her commit’in birleştirildiğini, hiçbir izlenen dosyanın düzenlenmediğini ve çalışan hiçbir işlemin bu checkout’ları kullanmadığını doğrular. Bunlar, node_modules, derleme çıktısı ve yerel .env dosyaları gibi yok sayılan dosyalar dahil kalıcı olarak silinir. Birleştirilmiş her branch de silinir; sonradan yeniden oluşturabilmeniz için commit’i gösterilir."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git 确认每个提交都已合并、没有已跟踪的文件被编辑，也没有正在运行的进程使用这些检出。它们会被永久删除，包括被忽略的文件，例如 node_modules、构建输出和本地 .env 文件。每个已合并的分支也会被删除；之后会显示它的提交，以便你重新创建。"
-          }
-        }
-      }
-    },
     "Git could not delete the worktree: %@" : {
       "localizations" : {
         "ar" : {
@@ -131756,6 +131904,154 @@
         }
       }
     },
+    "Git rechecked each checkout just now. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. A merged branch is deleted too; its commit is shown afterwards so you can recreate it. Read the warnings before you choose." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أعاد Git للتو فحص كل نسخة. تُحذف نهائيًا، بما في ذلك الملفات المتجاهَلة مثل node_modules ومخرجات البناء وملفات ‎.env المحلية. يُحذف الفرع المدمج أيضًا؛ ويظهر الـ commit الخاص به بعد ذلك لتتمكن من إعادة إنشائه. اقرأ التحذيرات قبل أن تختار."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Git acaba de tornar a comprovar cada còpia. S’eliminen per sempre, inclosos els fitxers ignorats com node_modules, la sortida de compilació i els fitxers .env locals. La branca fusionada també s’elimina; després se’n mostra el commit perquè la puguis tornar a crear. Llegeix els avisos abans de triar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git hat jeden Checkout gerade erneut geprüft. Sie werden endgültig gelöscht, auch ignorierte Dateien wie node_modules, Build-Ausgaben und lokale .env-Dateien. Ein zusammengeführter Branch wird ebenfalls gelöscht; sein Commit wird danach angezeigt, damit du ihn neu erstellen kannst. Lies die Warnungen, bevor du wählst."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git rechecked each checkout just now. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. A merged branch is deleted too; its commit is shown afterwards so you can recreate it. Read the warnings before you choose."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git rechecked each checkout just now. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. A merged branch is deleted too; its commit is shown afterwards so you can recreate it. Read the warnings before you choose."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git rechecked each checkout just now. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. A merged branch is deleted too; its commit is shown afterwards so you can recreate it. Read the warnings before you choose."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git acaba de volver a comprobar cada copia. Se eliminan para siempre, incluidos los archivos ignorados como node_modules, la salida de compilación y los archivos .env locales. La rama fusionada también se elimina; después se muestra su commit para que puedas recrearla. Lee los avisos antes de elegir."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git acaba de volver a revisar cada copia. Se eliminan para siempre, incluidos los archivos ignorados como node_modules, la salida de compilación y los archivos .env locales. La rama fusionada también se elimina; después se muestra su commit para que puedas volver a crearla. Lee las advertencias antes de elegir."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git vient de revérifier chaque copie. Elles sont supprimées définitivement, y compris les fichiers ignorés comme node_modules, les résultats de compilation et les fichiers .env locaux. La branche fusionnée est aussi supprimée ; son commit s’affiche ensuite pour que vous puissiez la recréer. Lisez les avertissements avant de choisir."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git hät jede Checkout grad nomal prüeft. Si wärded endgültig glöscht, au ignorierti Dateie wie node_modules, Build-Usgabe und lokali .env-Dateie. En zämegfüehrte Branch wird au glöscht; sin Commit wird nachher aazeigt, demit du en neu chasch mache. Lies d Warnige, bevor du wählsch."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git ने अभी हर चेकआउट को फिर से जाँचा। ये स्थायी रूप से हटाए जाते हैं, जिनमें node_modules, बिल्ड आउटपुट और स्थानीय .env फ़ाइलें जैसी अनदेखी फ़ाइलें भी शामिल हैं। मर्ज की गई शाखा भी हटा दी जाती है; उसका commit बाद में दिखाया जाता है ताकि आप उसे फिर से बना सकें। चुनने से पहले चेतावनियाँ पढ़ें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git je upravo ponovno provjerio svaki checkout. Brišu se trajno, uključujući zanemarene datoteke kao što su node_modules, izlaz builda i lokalne .env datoteke. Spojena grana također se briše; njezin commit prikazuje se poslije kako bi je mogao ponovno stvoriti. Pročitaj upozorenja prije nego što odabereš."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git ha appena ricontrollato ogni copia. Vengono eliminate per sempre, compresi i file ignorati come node_modules, l’output di build e i file .env locali. Anche il branch unito viene eliminato; il suo commit viene mostrato dopo, così puoi ricrearlo. Leggi gli avvisi prima di scegliere."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gitが各チェックアウトを今再確認しました。node_modules、ビルド出力、ローカルの.envファイルなど無視されたファイルも含め、完全に削除されます。マージ済みのブランチも削除され、あとで作り直せるようにそのコミットが表示されます。選ぶ前に警告を読んでください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git이 방금 각 체크아웃을 다시 확인했습니다. node_modules, 빌드 결과물, 로컬 .env 파일 같은 무시된 파일을 포함해 영구적으로 삭제됩니다. 병합된 브랜치도 삭제되며, 다시 만들 수 있도록 커밋이 나중에 표시됩니다. 선택하기 전에 경고를 읽으세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git tikko vēlreiz pārbaudīja katru checkout. Tie tiek dzēsti neatgriezeniski, ieskaitot ignorētos failus, piemēram, node_modules, būvējuma izvadi un lokālos .env failus. Arī apvienotais zars tiek dzēsts; tā commit tiek parādīts pēc tam, lai tu to varētu izveidot no jauna. Izlasi brīdinājumus, pirms izvēlies."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git właśnie ponownie sprawdził każdą kopię. Zostaną usunięte na zawsze, łącznie z ignorowanymi plikami, takimi jak node_modules, wyniki kompilacji i lokalne pliki .env. Scalona gałąź też zostanie usunięta; jej commit pojawi się potem, aby można ją było odtworzyć. Przeczytaj ostrzeżenia, zanim wybierzesz."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Git acabou de voltar a verificar cada cópia. São apagadas para sempre, incluindo ficheiros ignorados como node_modules, resultados de compilação e ficheiros .env locais. O ramo integrado também é apagado; o seu commit é mostrado depois para que o possa recriar. Leia os avisos antes de escolher."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git sapo i rikontrolloi të gjitha kopjet. Ato fshihen përgjithmonë, përfshirë skedarët e shpërfillur si node_modules, rezultatet e ndërtimit dhe skedarët lokalë .env. Edhe dega e bashkuar fshihet; commit-i i saj shfaqet më pas që ta krijosh sërish. Lexo paralajmërimet para se të zgjedhësh."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git је управо поново проверио сваки checkout. Бришу се трајно, укључујући занемарене датотеке као што су node_modules, излаз изградње и локалне .env датотеке. Спојена грана се такође брише; њен commit се приказује после како бисте могли да је поново направите. Прочитајте упозорења пре него што изаберете."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git je upravo ponovo proverio svaki checkout. Brišu se trajno, uključujući zanemarene datoteke kao što su node_modules, izlaz izgradnje i lokalne .env datoteke. Spojena grana se takođe briše; njen commit se prikazuje posle kako biste mogli da je ponovo napravite. Pročitajte upozorenja pre nego što izaberete."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git kontrollerade nyss varje utcheckning igen. De raderas permanent, även ignorerade filer som node_modules, byggutdata och lokala .env-filer. En sammanslagen gren raderas också; dess commit visas efteråt så att du kan återskapa den. Läs varningarna innan du väljer."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git her çalışma kopyasını az önce yeniden denetledi. node_modules, derleme çıktısı ve yerel .env dosyaları gibi yok sayılan dosyalar dahil kalıcı olarak silinirler. Birleştirilmiş dal da silinir; yeniden oluşturabilmeniz için commit’i sonra gösterilir. Seçmeden önce uyarıları okuyun."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git 刚刚重新检查了每个检出。它们会被永久删除，包括被忽略的文件，例如 node_modules、构建输出和本地 .env 文件。已合并的分支也会被删除；之后会显示其提交，以便你重新创建。选择之前请阅读警告。"
+          }
+        }
+      }
+    },
     "Git rechecks each worktree next, and you confirm them one more time." : {
       "localizations" : {
         "ar" : {
@@ -131900,6 +132196,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "接下来 Git 会重新检查每个 worktree，你还需再确认一次。"
+          }
+        }
+      }
+    },
+    "Git rechecks it first. The processes keep running, but lose this folder." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يعيد Git فحصه أولًا. تستمر العمليات في العمل، لكنها تفقد هذا المجلد."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Git ho torna a comprovar primer. Els processos continuen funcionant, però perden aquesta carpeta."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git prüft ihn zuerst erneut. Die Prozesse laufen weiter, verlieren aber diesen Ordner."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git rechecks it first. The processes keep running, but lose this folder."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git rechecks it first. The processes keep running, but lose this folder."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git rechecks it first. The processes keep running, but lose this folder."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git lo vuelve a comprobar primero. Los procesos siguen funcionando, pero pierden esta carpeta."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git lo vuelve a revisar primero. Los procesos siguen funcionando, pero pierden esta carpeta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git le revérifie d’abord. Les processus continuent de tourner, mais perdent ce dossier."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git prüeft en zerscht nomal. D Prozess laufed wiiter, verlüüred aber dä Ordner."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git पहले इसे फिर से जाँचता है। प्रक्रियाएँ चलती रहती हैं, लेकिन यह फ़ोल्डर खो देती हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git ga najprije ponovno provjerava. Procesi nastavljaju raditi, ali gube ovu mapu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git lo ricontrolla prima. I processi continuano a funzionare, ma perdono questa cartella."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gitがまず再確認します。プロセスは動き続けますが、このフォルダは失われます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git이 먼저 다시 확인합니다. 프로세스는 계속 실행되지만 이 폴더를 잃게 됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git to vispirms pārbauda vēlreiz. Procesi turpina darboties, bet zaudē šo mapi."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git najpierw sprawdza go ponownie. Procesy działają dalej, ale tracą ten folder."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Git volta a verificá-lo primeiro. Os processos continuam a funcionar, mas perdem esta pasta."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git e rikontrollon së pari. Proceset vazhdojnë, por e humbasin këtë dosje."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git га прво поново проверава. Процеси настављају да раде, али губе ову фасциклу."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git ga prvo ponovo proverava. Procesi nastavljaju da rade, ali gube ovu fasciklu."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git kontrollerar den igen först. Processerna fortsätter köra men förlorar den här mappen."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git önce yeniden denetler. İşlemler çalışmaya devam eder, ancak bu klasörü kaybeder."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git 会先重新检查。进程会继续运行，但会失去这个文件夹。"
           }
         }
       }
@@ -147297,6 +147741,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "保留：无法验证合并状态。"
+          }
+        }
+      }
+    },
+    "Keep: open in %@." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الاحتفاظ: مفتوح في %@."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es conserva: obert a %@."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Behalten: geöffnet in %@."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep: open in %@."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep: open in %@."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep: open in %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se conserva: abierto en %@."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se conserva: abierto en %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conservé : ouvert dans %@."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bhalte: offe i %@."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "रखें: %@ में खुला है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadrži: otvoreno u %@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tenuto: aperto in %@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保持：%@ で開いています。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "유지: %@에서 열려 있음."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paturēt: atvērts %@."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zachowano: otwarte w %@."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantido: aberto em %@."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mbaje: e hapur në %@."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Задржано: отворено у %@."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadržano: otvoreno u %@."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Behålls: öppen i %@."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saklanıyor: %@ içinde açık."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保留：在 %@ 中打开。"
           }
         }
       }
@@ -191727,6 +192319,154 @@
         }
       }
     },
+    "Open in %@. They keep running, but lose this folder." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مفتوح في %@. ستستمر في العمل، لكنها ستفقد هذا المجلد."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obert a %@. Continuaran funcionant, però perdran aquesta carpeta."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geöffnet in %@. Sie laufen weiter, verlieren aber diesen Ordner."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open in %@. They keep running, but lose this folder."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open in %@. They keep running, but lose this folder."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open in %@. They keep running, but lose this folder."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abierto en %@. Seguirán funcionando, pero perderán esta carpeta."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abierto en %@. Seguirán funcionando, pero perderán esta carpeta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvert dans %@. Ils continuent de tourner, mais perdent ce dossier."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offe i %@. Si laufed wiiter, verlüüred aber dä Ordner."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ में खुला है। वे चलती रहेंगी, लेकिन यह फ़ोल्डर खो देंगी।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvoreno u %@. Nastavit će raditi, ali će izgubiti ovu mapu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperto in %@. Continuano a funzionare, ma perdono questa cartella."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ で開いています。動き続けますが、このフォルダは失われます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@에서 열려 있습니다. 계속 실행되지만 이 폴더를 잃게 됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atvērts %@. Tie turpinās darboties, bet zaudēs šo mapi."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwarte w %@. Będą działać dalej, ale stracą ten folder."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aberto em %@. Continuam a funcionar, mas perdem esta pasta."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E hapur në %@. Do të vazhdojnë, por do ta humbasin këtë dosje."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отворено у %@. Наставиће да раде, али ће изгубити ову фасциклу."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvoreno u %@. Nastaviće da rade, ali će izgubiti ovu fasciklu."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öppen i %@. De fortsätter köra men förlorar den här mappen."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ içinde açık. Çalışmaya devam ederler, ancak bu klasörü kaybederler."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 %@ 中打开。它们会继续运行，但会失去这个文件夹。"
+          }
+        }
+      }
+    },
     "Open local receipts" : {
       "localizations" : {
         "ar" : {
@@ -233624,6 +234364,154 @@
         }
       }
     },
+    "Selects only what passed every check and loses nothing: caches ready to clean, and worktrees that are merged, clean and not used lately." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يحدد فقط ما اجتاز كل الفحوصات ولا يُفقد شيئًا: ذاكرات التخزين المؤقت الجاهزة للتنظيف، ومسارات العمل المدمجة والنظيفة وغير المستخدمة مؤخرًا."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona només el que ha superat totes les comprovacions i no perd res: memòries cau a punt per netejar i worktrees fusionats, nets i no utilitzats últimament."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählt nur aus, was jede Prüfung bestanden hat und nichts verliert: bereinigbare Caches und Worktrees, die zusammengeführt, sauber und zuletzt nicht benutzt sind."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selects only what passed every check and loses nothing: caches ready to clean, and worktrees that are merged, clean and not used lately."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selects only what passed every check and loses nothing: caches ready to clean, and worktrees that are merged, clean and not used lately."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selects only what passed every check and loses nothing: caches ready to clean, and worktrees that are merged, clean and not used lately."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona solo lo que ha superado todas las comprobaciones y no pierde nada: cachés listas para limpiar y worktrees fusionados, limpios y sin uso reciente."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona solo lo que pasó todas las revisiones y no pierde nada: cachés listas para limpiar y worktrees fusionados, limpios y sin uso reciente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionne uniquement ce qui a passé toutes les vérifications et ne perd rien : les caches prêts à nettoyer, et les worktrees fusionnés, propres et inutilisés récemment."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählt nur us, was jedi Prüefig bestande hät und nüt verlüürt: Caches, wo parat zum Bereinige sind, und Worktrees, wo zämegfüehrt, suuber und lang nöd brucht worde sind."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "केवल वही चुनता है जो हर जाँच में पास हुआ और कुछ नहीं खोता: साफ़ करने के लिए तैयार कैश, और ऐसे worktree जो मर्ज, साफ़ और हाल में अप्रयुक्त हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odabire samo ono što je prošlo sve provjere i ništa ne gubi: međuspremnike spremne za čišćenje te worktreeje koji su spojeni, čisti i nedavno nekorišteni."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleziona solo ciò che ha superato ogni controllo e non perde nulla: cache pronte da pulire e worktree uniti, puliti e non usati di recente."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべての確認を通過し、何も失わないものだけを選択します：クリーンアップできるキャッシュと、マージ済みで変更がなく最近使われていないワークツリー。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 확인을 통과하고 잃는 것이 없는 항목만 선택합니다: 정리할 준비가 된 캐시, 그리고 병합되고 깨끗하며 최근에 사용하지 않은 워크트리."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atlasa tikai to, kas izturēja katru pārbaudi un neko nezaudē: kešatmiņas, kas gatavas tīrīšanai, un apvienotus, tīrus, nesen neizmantotus worktree."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaznacza tylko to, co przeszło wszystkie kontrole i niczego nie traci: pamięci podręczne gotowe do wyczyszczenia oraz worktree scalone, czyste i ostatnio nieużywane."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleciona apenas o que passou todas as verificações e não perde nada: caches prontas a limpar e worktrees integradas, limpas e sem uso recente."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zgjedh vetëm atë që kaloi çdo kontroll dhe nuk humbet asgjë: memorie të përkohshme gati për pastrim, dhe worktree të bashkuara, të pastra dhe të papërdorura së fundi."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Бира само оно што је прошло све провере и ништа не губи: кеш спреман за чишћење и worktree-ове који су спојени, чисти и недавно некоришћени."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bira samo ono što je prošlo sve provere i ništa ne gubi: keš spreman za čišćenje i worktree-ove koji su spojeni, čisti i nedavno nekorišćeni."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markerar bara det som klarat alla kontroller och inte förlorar något: cacheminnen redo att rensas, och worktrees som är sammanslagna, rena och inte använts på sistone."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca her denetimden geçen ve hiçbir şey kaybettirmeyenleri seçer: temizlenmeye hazır önbellekler ile birleştirilmiş, temiz ve son zamanlarda kullanılmamış worktree’ler."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只选择通过所有检查且不会丢失任何内容的项目：可清理的缓存，以及已合并、无改动且最近未使用的工作树。"
+          }
+        }
+      }
+    },
     "Sends %@ a normal Quit. It may ask you to save." : {
       "localizations" : {
         "ar" : {
@@ -238247,6 +239135,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "更小文字"
+          }
+        }
+      }
+    },
+    "Smart select" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تحديد ذكي"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecció intel·ligent"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smarte Auswahl"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smart select"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smart select"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smart select"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selección inteligente"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selección inteligente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélection intelligente"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gschiidi Uswahl"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "स्मार्ट चयन"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pametan odabir"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selezione intelligente"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スマート選択"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스마트 선택"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gudrā atlase"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inteligentny wybór"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleção inteligente"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zgjedhje e zgjuar"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Паметан избор"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pametan izbor"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smart markering"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akıllı seçim"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "智能选择"
           }
         }
       }
@@ -257107,6 +258143,450 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "勾选除最旧副本之外的所有副本"
+          }
+        }
+      }
+    },
+    "Ticks only caches that rebuild as you browse. Website data that can hold a sign-in stays unticked." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يحدد فقط ذاكرات التخزين المؤقت التي يُعاد بناؤها أثناء التصفح. تبقى بيانات المواقع التي قد تحفظ تسجيل دخول غير محددة."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca només les memòries cau que es refan mentre navegues. Les dades de llocs web que poden guardar una sessió queden sense marcar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählt nur Caches aus, die sich beim Surfen neu aufbauen. Website-Daten, die eine Anmeldung enthalten können, bleiben abgewählt."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ticks only caches that rebuild as you browse. Website data that can hold a sign-in stays unticked."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ticks only caches that rebuild as you browse. Website data that can hold a sign-in stays unticked."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ticks only caches that rebuild as you browse. Website data that can hold a sign-in stays unticked."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca solo las cachés que se reconstruyen al navegar. Los datos de sitios web que pueden guardar una sesión quedan sin marcar."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca solo las cachés que se reconstruyen al navegar. Los datos de sitios web que pueden guardar una sesión quedan sin marcar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coche uniquement les caches qui se reconstruisent pendant la navigation. Les données de sites pouvant conserver une connexion restent décochées."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählt nur Caches us, wo sich bim Surfe neu ufbaued. Website-Date, wo e Aamäldig chönd bhalte, bliibed abgwählt."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "केवल वे कैश चुनता है जो ब्राउज़ करते समय फिर बन जाते हैं। साइन-इन रख सकने वाला वेबसाइट डेटा अचयनित रहता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Označava samo međuspremnike koji se ponovno grade dok pregledavaš. Podaci web-stranica koji mogu čuvati prijavu ostaju neoznačeni."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleziona solo le cache che si ricreano navigando. I dati dei siti che possono conservare un accesso restano deselezionati."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ブラウズ中に再作成されるキャッシュだけを選択します。サインイン情報を保持する可能性のあるWebサイトデータは選択されません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "탐색하면서 다시 만들어지는 캐시만 선택합니다. 로그인을 담고 있을 수 있는 웹사이트 데이터는 선택되지 않습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atzīmē tikai kešatmiņas, kas pārlūkojot atjaunojas. Vietņu dati, kas var glabāt pieteikšanos, paliek neatzīmēti."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaznacza tylko pamięci podręczne, które odbudowują się podczas przeglądania. Dane witryn, które mogą przechowywać logowanie, pozostają odznaczone."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleciona apenas caches que se reconstroem ao navegar. Os dados de sites que podem guardar uma sessão ficam por selecionar."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shënon vetëm memoriet e përkohshme që rindërtohen gjatë shfletimit. Të dhënat e faqeve që mund të mbajnë një hyrje mbeten të pashënuara."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Означава само кеш који се поново гради док прегледате. Подаци сајтова који могу чувати пријаву остају неозначени."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Označava samo keš koji se ponovo gradi dok pregledate. Podaci sajtova koji mogu čuvati prijavu ostaju neoznačeni."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markerar bara cacheminnen som byggs upp igen när du surfar. Webbplatsdata som kan innehålla en inloggning förblir omarkerad."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca gezinirken yeniden oluşan önbellekleri işaretler. Oturum açma bilgisi tutabilen web sitesi verileri işaretsiz kalır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只勾选浏览时会重建的缓存。可能保存登录信息的网站数据保持未勾选。"
+          }
+        }
+      }
+    },
+    "Ticks only leftovers of apps you no longer have, and unticks anything that may be shared with an app you still have." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يحدد فقط بقايا التطبيقات التي لم تعد لديك، ويلغي تحديد أي شيء قد يكون مشتركًا مع تطبيق لا يزال لديك."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca només les restes d’apps que ja no tens i desmarca el que es pugui compartir amb una app que encara tens."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählt nur Reste von Apps aus, die du nicht mehr hast, und wählt alles ab, was mit einer noch vorhandenen App geteilt sein könnte."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ticks only leftovers of apps you no longer have, and unticks anything that may be shared with an app you still have."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ticks only leftovers of apps you no longer have, and unticks anything that may be shared with an app you still have."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ticks only leftovers of apps you no longer have, and unticks anything that may be shared with an app you still have."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca solo los restos de apps que ya no tienes y desmarca lo que pueda compartirse con una app que aún tienes."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca solo los restos de apps que ya no tienes y desmarca lo que pueda compartirse con una app que todavía tienes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coche uniquement les restes d’apps que vous n’avez plus, et décoche tout ce qui pourrait être partagé avec une app que vous avez encore."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählt nur Räschte vo Apps us, wo du nüme häsch, und wählt alles ab, wo mit ere App, wo du no häsch, teilt chönnt si."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "केवल उन ऐप्स के बचे हिस्से चुनता है जो अब आपके पास नहीं हैं, और वह सब अचयनित करता है जो किसी मौजूदा ऐप के साथ साझा हो सकता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Označava samo ostatke aplikacija koje više nemaš i poništava sve što bi moglo biti dijeljeno s aplikacijom koju još imaš."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleziona solo i resti di app che non hai più e deseleziona ciò che potrebbe essere condiviso con un’app che hai ancora."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "もう持っていないアプリの残り物だけを選択し、まだあるアプリと共有されている可能性があるものは選択を外します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "더 이상 없는 앱의 잔여물만 선택하고, 아직 있는 앱과 공유될 수 있는 항목은 선택 해제합니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atzīmē tikai to lietotņu atliekas, kuru tev vairs nav, un noņem atzīmi visam, kas varētu būt kopīgs ar lietotni, kas tev joprojām ir."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaznacza tylko pozostałości aplikacji, których już nie masz, i odznacza wszystko, co może być współdzielone z aplikacją, którą nadal masz."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleciona apenas restos de apps que já não tem e desmarca o que possa ser partilhado com uma app que ainda tem."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shënon vetëm mbetjet e aplikacioneve që nuk i ke më dhe heq shënimin nga çdo gjë që mund të ndahet me një aplikacion që e ke ende."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Означава само остатке апликација које више немате и уклања ознаку са свега што може бити дељено са апликацијом коју још имате."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Označava samo ostatke aplikacija koje više nemate i uklanja oznaku sa svega što može biti deljeno sa aplikacijom koju još imate."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markerar bara rester av appar du inte längre har och avmarkerar allt som kan delas med en app du fortfarande har."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca artık sahip olmadığınız uygulamaların kalıntılarını işaretler ve hâlâ sahip olduğunuz bir uygulamayla paylaşılıyor olabilecek her şeyin işaretini kaldırır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只勾选你已不再拥有的 App 的残留，并取消勾选可能与仍在使用的 App 共享的内容。"
+          }
+        }
+      }
+    },
+    "Ticks the extra copies outside your projects and keeps one copy of each. Copies inside a project stay unticked." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يحدد النسخ الإضافية خارج مشاريعك ويحتفظ بنسخة واحدة من كل ملف. تبقى النسخ داخل المشروع غير محددة."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca les còpies sobrants fora dels teus projectes i en conserva una de cada. Les còpies dins d’un projecte queden sense marcar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählt die zusätzlichen Kopien außerhalb deiner Projekte aus und behält je eine Kopie. Kopien in einem Projekt bleiben abgewählt."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ticks the extra copies outside your projects and keeps one copy of each. Copies inside a project stay unticked."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ticks the extra copies outside your projects and keeps one copy of each. Copies inside a project stay unticked."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ticks the extra copies outside your projects and keeps one copy of each. Copies inside a project stay unticked."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca las copias sobrantes fuera de tus proyectos y conserva una de cada. Las copias dentro de un proyecto quedan sin marcar."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca las copias extra fuera de tus proyectos y conserva una de cada. Las copias dentro de un proyecto quedan sin marcar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coche les copies en trop hors de vos projets et garde une copie de chaque. Les copies dans un projet restent décochées."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählt di zuesätzliche Kopie usserhalb vo dine Projekt us und bhaltet vo jedem eini. Kopie inere Projekt bliibed abgwählt."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आपके प्रोजेक्ट्स के बाहर की अतिरिक्त प्रतियाँ चुनता है और हर एक की एक प्रति रखता है। प्रोजेक्ट के अंदर की प्रतियाँ अचयनित रहती हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Označava suvišne kopije izvan tvojih projekata i zadržava po jednu. Kopije unutar projekta ostaju neoznačene."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleziona le copie in più fuori dai tuoi progetti e tiene una copia di ciascuna. Le copie dentro un progetto restano deselezionate."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プロジェクト外の余分なコピーを選択し、それぞれ1つを残します。プロジェクト内のコピーは選択されません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "프로젝트 밖의 여분 사본을 선택하고 각각 하나씩 남깁니다. 프로젝트 안의 사본은 선택되지 않습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atzīmē liekās kopijas ārpus taviem projektiem un patur pa vienai no katras. Kopijas projektā paliek neatzīmētas."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaznacza dodatkowe kopie poza Twoimi projektami i zostawia po jednej z każdej. Kopie w projekcie pozostają odznaczone."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleciona as cópias a mais fora dos seus projetos e mantém uma de cada. As cópias dentro de um projeto ficam por selecionar."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shënon kopjet e tepërta jashtë projekteve të tua dhe mban nga një kopje për secilën. Kopjet brenda një projekti mbeten të pashënuara."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Означава вишак копија ван ваших пројеката и задржава по једну. Копије унутар пројекта остају неозначене."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Označava višak kopija van vaših projekata i zadržava po jednu. Kopije unutar projekta ostaju neoznačene."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markerar de extra kopiorna utanför dina projekt och behåller en kopia av varje. Kopior i ett projekt förblir omarkerade."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Projelerinizin dışındaki fazla kopyaları işaretler ve her birinden bir kopya tutar. Proje içindeki kopyalar işaretsiz kalır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "勾选项目之外的多余副本，并为每个文件保留一份。项目内的副本保持未勾选。"
           }
         }
       }

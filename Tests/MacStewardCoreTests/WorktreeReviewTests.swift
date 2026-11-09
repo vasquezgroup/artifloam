@@ -113,4 +113,44 @@ final class WorktreeReviewTests: XCTestCase {
         XCTAssertEqual(git(config.projectRoots[0], ["worktree", "lock", tree.path]).code, 0)
         XCTAssertThrowsError(try WorktreeReview.validate(reviewed, configuration: config, activity: ActivitySnapshot()))
     }
+    /// A process only holding the folder doesn't hide what Git found: the person sees who holds it and may delete it anyway.
+    func testCheckoutInUseNamesItsProcessesAndCanBeDeletedAnyway() throws {
+        let (root, tree, config) = try fixture(); defer { try? FileManager.default.removeItem(at: root) }
+        let busy = ActivitySnapshot(openPaths: [tree.path + "/file", "/elsewhere"], owners: ["zsh", "Finder"])
+        let verdict = WorktreeReview.assess(tree.path, configuration: config, activity: busy)
+        XCTAssertEqual(verdict.holders, ["zsh"])
+        XCTAssertTrue(verdict.overridable); XCTAssertFalse(verdict.losesWork)
+        XCTAssertTrue(verdict.blocker?.contains("zsh") == true)
+        let held = Finding(path: tree.path, group: .worktrees, bytes: 0, modifiedAt: Date(), safety: .protected, reason: "fixture", rule: "worktree-review-only", fingerprint: verdict.fingerprint, hold: .inUse)
+        XCTAssertThrowsError(try WorktreeReview.validate(held, configuration: config, activity: busy), "never without the person's choice")
+        XCTAssertNoThrow(try WorktreeReview.validate(held, configuration: config, activity: busy, allowInUse: true))
+        // Anything else that keeps it still wins: a keep-list entry or a Git lock can't be overridden.
+        var excluded = config; excluded.ignoredPaths = [tree.path]
+        XCTAssertFalse(WorktreeReview.assess(tree.path, configuration: excluded, activity: busy).overridable)
+        XCTAssertThrowsError(try WorktreeReview.validate(held, configuration: excluded, activity: busy, allowInUse: true))
+        XCTAssertEqual(git(config.projectRoots[0], ["worktree", "lock", tree.path]).code, 0)
+        XCTAssertThrowsError(try WorktreeReview.validate(held, configuration: config, activity: busy, allowInUse: true))
+    }
+    func testUncommittedWorkIsMarkedAsLost() throws {
+        let (root, tree, config) = try fixture(); defer { try? FileManager.default.removeItem(at: root) }
+        XCTAssertFalse(WorktreeReview.assess(tree.path, configuration: config, activity: ActivitySnapshot()).losesWork)
+        try Data("draft".utf8).write(to: tree.appendingPathComponent("notes.txt"))
+        XCTAssertTrue(WorktreeReview.assess(tree.path, configuration: config, activity: ActivitySnapshot()).losesWork)
+    }
+    func testOpenFilesNameTheirProcess() {
+        let output = "p100\nczsh\nfcwd\nn/tmp/tree\np200\ncpython3\nf4\nn/tmp/tree/run.log\np300\ncFinder\nf5\nn/tmp/treehouse\n"
+        let files = ActivitySnapshot.openFiles(lsof: output, leaving: getpid())
+        let snapshot = ActivitySnapshot(openPaths: files.map(\.path), owners: files.map(\.owner), commands: "/usr/bin/java -jar /tmp/tree/build.jar\n")
+        XCTAssertEqual(snapshot.holders(URL(fileURLWithPath: "/private/tmp/tree")), ["java", "python3", "zsh"])
+    }
+    func testSmartSelectTakesOnlyCertainItems() {
+        func item(_ group: CleanupGroup, _ safety: Safety, warnings: [String]? = nil) -> Finding {
+            Finding(path: "/x/\(UUID())", group: group, bytes: 1, modifiedAt: Date(), safety: safety, reason: "", rule: "r", fingerprint: "f", warnings: warnings)
+        }
+        XCTAssertTrue(item(.projectCaches, .automatic).certain)
+        XCTAssertFalse(item(.projectCaches, .protected).certain, "a recent or busy cache is the person's call")
+        XCTAssertTrue(item(.worktrees, .review).certain)
+        XCTAssertFalse(item(.worktrees, .review, warnings: ["Committed in the last 6 hours"]).certain)
+        XCTAssertFalse(item(.worktrees, .protected).certain)
+    }
 }

@@ -240,6 +240,9 @@ struct LeftoversView: View {
                 ShareBreakdown(title: String(localized: "What they left"), parts: kinds.enumerated().map { index, kind in (kind.key, bytes(kind.value), kind.value.count, Self.palette[index % Self.palette.count]) })
                 BulkBar(title: String(localized: "Select all ready"), isOn: Binding(get: { !safeItems.isEmpty && state.selection.isSuperset(of: safeItems.map(\.id)) }, set: { if $0 { state.selection.formUnion(safeItems.map(\.id)) } else { state.selection.subtract(items.map(\.id)) } }), enabled: !safeItems.isEmpty && !state.busy,
                         help: String(localized: "Everything except items that may be shared with an app you still have"), summary: String(localized: "\(chosen.count) selected · \(size(chosen))")) {
+                    SmartSelectButton(enabled: !safeItems.isEmpty && !state.busy, help: String(localized: "Ticks only leftovers of apps you no longer have, and unticks anything that may be shared with an app you still have.")) {
+                        state.selection = Set(safeItems.map(\.id))
+                    }
                     Button("Review \(chosen.count) for Trash…", role: .destructive) { trashRequest = TrashRequest(urls: chosen.map(\.url)) }
                         .buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(chosen.isEmpty || state.busy)
                 }
@@ -342,6 +345,9 @@ struct BrowserDataView: View {
                 let caches = reports.flatMap(\.items).filter(\.recommended).map(\.id)
                 BulkBar(title: String(localized: "Select all caches"), isOn: Binding(get: { !caches.isEmpty && state.selection.isSuperset(of: caches) }, set: { if $0 { state.selection.formUnion(caches) } else { state.selection.subtract(reports.flatMap(\.items).map(\.id)) } }), enabled: !caches.isEmpty && !state.busy,
                         help: String(localized: "Caches that rebuild as you browse. Website data can hold a sign-in, so it is chosen one by one."), summary: String(localized: "\(chosen.count) selected · \(formattedBytes(chosen.reduce(0) { $0 + $1.bytes }))")) {
+                    SmartSelectButton(enabled: !caches.isEmpty && !state.busy, help: String(localized: "Ticks only caches that rebuild as you browse. Website data that can hold a sign-in stays unticked.")) {
+                        state.selection = Set(caches)
+                    }
                     Button("Clean \(chosen.count)…", role: .destructive) { confirming = true }
                         .buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(chosen.isEmpty || state.busy)
                 }

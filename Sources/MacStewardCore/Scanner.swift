@@ -305,9 +305,10 @@ public final class Scanner: @unchecked Sendable {
             let url = URL(fileURLWithPath: path, isDirectory: true)
             let verdict = WorktreeReview.assess(path, configuration: configuration, activity: activity, sessions: sessions)
             let merged = verdict.unmerged > 0 ? [] : [verdict.base == "HEAD" ? String(localized: "Merged into the primary checkout.") : String(localized: "Merged into \(verdict.base).")]
-            let reason = verdict.blocker ?? (merged + verdict.warnings).joined(separator: " ")
+            // Kept only for a running process: still say what Git found, since the person may delete it anyway.
+            let reason = verdict.overridable ? ([verdict.blocker!] + merged).joined(separator: " ") : verdict.blocker ?? (merged + verdict.warnings).joined(separator: " ")
             let values = try? url.resourceValues(forKeys: [.contentModificationDateKey])
-            return Finding(path: path, group: .worktrees, bytes: directoryBytes(url), modifiedAt: values?.contentModificationDate ?? Date(), safety: verdict.blocker == nil ? .review : .protected, reason: reason, rule: "worktree-review-only", fingerprint: verdict.fingerprint, lastUsedAt: verdict.lastUsed, warnings: verdict.warnings)
+            return Finding(path: path, group: .worktrees, bytes: directoryBytes(url), modifiedAt: values?.contentModificationDate ?? Date(), safety: verdict.blocker == nil ? .review : .protected, reason: reason, rule: "worktree-review-only", fingerprint: verdict.fingerprint, lastUsedAt: verdict.lastUsed, warnings: verdict.warnings, hold: verdict.overridable ? .inUse : nil)
         }
     }
 }

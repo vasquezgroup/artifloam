@@ -78,6 +78,8 @@ public struct Finding: Codable, Identifiable, Sendable {
     /// Cleaned without asking (`automatic`), held only by recency or a running owner the user can quit, or an Xcode folder the user may move to the Trash.
     public var userCleanable: Bool { safety == .automatic || hold == .recent || (hold == .inUse && owner != nil) || ([XcodeStorageInventory.trashRule, XcodeStorageInventory.simulatorRule].contains(rule) && safety == .review) }
     /// Ticked by a category checkbox or "Select ready": ready items plus unflagged choices. Flagged and held ones stay one-by-one.
+    /// What Smart select ticks: passed every check and loses nothing. A worktree must also be merged, clean and not used lately.
+    public var certain: Bool { group == .worktrees ? safety == .review && (warnings ?? []).isEmpty : safety == .automatic }
     public var tickable: Bool { safety == .automatic || (userCleanable && hold == nil && (warnings ?? []).isEmpty) }
     /// A readable name when the folder has none, such as a simulator's UUID.
     public var label: String? = nil

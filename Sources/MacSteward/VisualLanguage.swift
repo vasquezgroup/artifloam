@@ -448,6 +448,17 @@ struct PageSlide: ViewModifier, Animatable {
 
 
 /// The one bulk row for every page that lists things to remove: select all, what is selected, then the page's action.
+/// Ticks only what is certain to be safe on this list and unticks the rest. Every list uses the same one.
+struct SmartSelectButton: View {
+    var enabled = true
+    let help: String
+    let action: () -> Void
+    var body: some View {
+        Button(action: action) { Label("Smart select", systemImage: "wand.and.stars") }
+            .buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).disabled(!enabled).help(help)
+    }
+}
+
 struct BulkBar<Actions: View>: View {
     let title: String
     @Binding var isOn: Bool
