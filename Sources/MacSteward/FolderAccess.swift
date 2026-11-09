@@ -1,6 +1,19 @@
 import AppKit
+import ServiceManagement
 import SwiftUI
 import MacStewardCore
+
+/// Opens Artifloam when the person logs in. macOS also lists it under Login Items in System Settings, where it can be turned off.
+enum OpenAtLogin {
+    static var status: SMAppService.Status { SMAppService.mainApp.status }
+    /// Returns the status afterwards. A copy outside a bundle can't register, so it stays off.
+    @discardableResult static func set(_ on: Bool) -> SMAppService.Status {
+        try? on ? SMAppService.mainApp.register() : SMAppService.mainApp.unregister()
+        return status
+    }
+}
+
+extension SMAppService.Status { var isOn: Bool { self == .enabled || self == .requiresApproval } }
 
 struct FolderGrant: Codable, Identifiable {
     enum Role: String, Codable, CaseIterable {
@@ -214,6 +227,7 @@ struct AccessSettingsView: View {
     /// macOS picks the language at launch, so this remembers what the running app is showing.
     private static let launchLanguage = AppLanguage.chosen(in: UserDefaults.standard.persistentDomain(forName: Bundle.main.bundleIdentifier ?? "")) ?? ""
     @State private var language = Self.launchLanguage
+    @State private var login = OpenAtLogin.status
     /// One System Settings-style group: a heading, rows separated by hairlines, one short footer.
     private func section<Content: View>(_ title: LocalizedStringKey, footer: LocalizedStringKey? = nil, @ViewBuilder rows: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -261,6 +275,14 @@ struct AccessSettingsView: View {
                     Text("\(Int((model.textScale * 100).rounded()))%").monospacedDigit().frame(minWidth: 44)
                     Button { model.changeTextScale(0.15) } label: { Image(systemName: "plus") }.accessibilityLabel("Bigger text").disabled(model.textScale >= 2)
                     Button("Reset") { model.setTextScale(1) }.disabled(model.textScale == 1)
+                }
+            }
+            if Bundle.main.bundleURL.pathExtension == "app" {
+                section("Startup", footer: login == .requiresApproval ? "macOS needs your OK. Turn on Artifloam under Login Items in System Settings." : nil) {
+                    row(String(localized: "Open at login"), icon: "power", divider: false) {
+                        if login == .requiresApproval { Button("Open Settings") { SMAppService.openSystemSettingsLoginItems() } }
+                        Toggle(String(localized: "Open at login"), isOn: Binding(get: { login.isOn }, set: { login = OpenAtLogin.set($0) })).labelsHidden().toggleStyle(.switch).tint(.mint)
+                    }
                 }
             }
             section("Language", footer: language == Self.launchLanguage ? nil : "Artifloam needs to restart to change language.") {
@@ -327,7 +349,7 @@ struct AccessSettingsView: View {
         }
         .frame(maxWidth: 760, alignment: .leading)
         .disabled(model.busy || model.waitingForCancelledScan)
-        .onAppear { access.checkAccess(); access.discoverProjects() }
+        .onAppear { access.checkAccess(); access.discoverProjects(); login = OpenAtLogin.status }
         .task { gitAvailable = await Task.detached { DeveloperTools.gitExecutable != nil }.value }
         .sheet(isPresented: $showingProjects) { projectSuggestions }
         .alert("Folder access", isPresented: Binding(get: { access.error != nil }, set: { if !$0 { access.error = nil } })) { Button { access.error = nil } label: { Text("OK").stewardFont(.body) } } message: { Text(access.error ?? "") }

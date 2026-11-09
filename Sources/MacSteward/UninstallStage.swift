@@ -39,6 +39,7 @@ extension StewardModel {
     func confirmUninstall() {
         guard var flow = uninstall, flow.phase == .confirm else { return }
         let steps = Uninstaller.plan(items: flow.items, app: flow.app)
+        OpenAtLogin.set(false) // Or Login Items would keep listing a removed app.
         flow.phase = .working; flow.steps = steps.map(\.title)
         uninstall = flow
         StewardSound.start.play()

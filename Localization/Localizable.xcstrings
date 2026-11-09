@@ -53095,6 +53095,154 @@
         }
       }
     },
+    "All three are optional, and you can change them later in System Settings." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الثلاثة كلها اختيارية، ويمكنك تغييرها لاحقًا في إعدادات النظام."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tots tres són opcionals, i els pots canviar més tard a Configuració del Sistema."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle drei sind optional, und du kannst sie später in den Systemeinstellungen ändern."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All three are optional, and you can change them later in System Settings."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All three are optional, and you can change them later in System Settings."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All three are optional, and you can change them later in System Settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los tres son opcionales y puedes cambiarlos más tarde en Ajustes del Sistema."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los tres son opcionales y puedes cambiarlos más tarde en Configuración del Sistema."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les trois sont facultatifs, et vous pouvez les modifier plus tard dans Réglages Système."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alli drü sind optional, und du chasch si spöter i de Systemeinstellungen ändere."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "तीनों वैकल्पिक हैं, और आप इन्हें बाद में सिस्टम सेटिंग में बदल सकते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sva tri su neobavezna i kasnije ih možeš promijeniti u Postavkama sustava."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sono tutti e tre facoltativi e puoi cambiarli in seguito in Impostazioni di Sistema."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3つとも任意で、あとでシステム設定から変更できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "세 가지 모두 선택 사항이며, 나중에 시스템 설정에서 변경할 수 있습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visas trīs ir neobligātas, un vēlāk tās vari mainīt sadaļā Sistēmas iestatījumi."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wszystkie trzy są opcjonalne i możesz je później zmienić w Ustawieniach systemowych."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Os três são opcionais e pode alterá-los mais tarde nas Definições."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Të treja janë opsionale, dhe mund t'i ndryshosh më vonë te Cilësimet e sistemit."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сва три су опциона и касније их можете променити у Системским подешавањима."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sva tri su opciona i kasnije ih možete promeniti u Sistemskim podešavanjima."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alla tre är valfria, och du kan ändra dem senare i Systeminställningar."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Üçü de isteğe bağlıdır ve sonra Sistem Ayarları’ndan değiştirebilirsiniz."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这三项都是可选的，之后你可以在“系统设置”中更改。"
+          }
+        }
+      }
+    },
     "All users" : {
       "localizations" : {
         "ar" : {
@@ -192615,6 +192763,154 @@
         }
       }
     },
+    "Opens Artifloam when you log in to your Mac." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يفتح Artifloam عند تسجيل دخولك إلى جهاز Mac."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obre Artifloam quan inicies la sessió al Mac."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnet Artifloam, wenn du dich an deinem Mac anmeldest."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens Artifloam when you log in to your Mac."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens Artifloam when you log in to your Mac."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens Artifloam when you log in to your Mac."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre Artifloam cuando inicias sesión en tu Mac."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre Artifloam cuando inicias sesión en tu Mac."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvre Artifloam lorsque vous ouvrez une session sur votre Mac."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnet Artifloam, wänn du di am Mac aamäldsch."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "जब आप अपने Mac में लॉग इन करते हैं, तब Artifloam खोलता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvara Artifloam kad se prijaviš na Mac."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apre Artifloam quando accedi al Mac."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macにログインしたときに Artifloam を開きます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac에 로그인하면 Artifloam을 엽니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atver Artifloam, kad piesakies savā Mac datorā."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwiera Artifloam, gdy logujesz się na Macu."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre o Artifloam quando inicia sessão no Mac."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hap Artifloam kur hyn në Mac-un tënd."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отвара Artifloam када се пријавите на Mac."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvara Artifloam kada se prijavite na Mac."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öppnar Artifloam när du loggar in på din Mac."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac’inizde oturum açtığınızda Artifloam’u açar."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录 Mac 时打开 Artifloam。"
+          }
+        }
+      }
+    },
     "Opens Terminal and runs Homebrew's own cleanup there" : {
       "localizations" : {
         "ar" : {
@@ -240472,6 +240768,154 @@
         }
       }
     },
+    "Startup" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بدء التشغيل"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inici"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startup"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startup"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startup"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démarrage"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "स्टार्टअप"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokretanje"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avvio"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "起動"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시동"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startēšana"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uruchamianie"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arranque"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nisja"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Покретање"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokretanje"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başlangıç"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启动"
+          }
+        }
+      }
+    },
     "Startup Disk" : {
       "localizations" : {
         "ar" : {
@@ -285658,154 +286102,6 @@
         }
       }
     },
-    "macOS asks you first. Both are optional, and you can change them later in System Settings." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يسألك macOS أولًا. كلاهما اختياري، ويمكنك تغييرهما لاحقًا في إعدادات النظام."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS et ho pregunta primer. Tots dos són opcionals, i els pots canviar més tard a Configuració del Sistema."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS fragt dich zuerst. Beides ist optional, und du kannst es später in den Systemeinstellungen ändern."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS asks you first. Both are optional, and you can change them later in System Settings."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS asks you first. Both are optional, and you can change them later in System Settings."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS asks you first. Both are optional, and you can change them later in System Settings."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS te pregunta antes. Ambos son opcionales y puedes cambiarlos más tarde en Ajustes del Sistema."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS te pregunta antes. Ambos son opcionales y puedes cambiarlos más tarde en Configuración del Sistema."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS vous demande d’abord. Les deux sont facultatifs, et vous pouvez les modifier plus tard dans Réglages Système."
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS fraagt di zerscht. Beidi sind optional, und du chasch si spöter i de Systemeinstellungen ändere."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS पहले आपसे पूछता है। दोनों वैकल्पिक हैं, और आप इन्हें बाद में सिस्टम सेटिंग में बदल सकते हैं।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS prvo pita tebe. Oboje je neobavezno i kasnije možeš promijeniti u Postavkama sustava."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS te lo chiede prima. Entrambi sono facoltativi e puoi cambiarli in seguito in Impostazioni di Sistema."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOSが先に確認します。どちらも任意で、あとでシステム設定から変更できます。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS가 먼저 물어봅니다. 둘 다 선택 사항이며, 나중에 시스템 설정에서 변경할 수 있습니다."
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS vispirms jautā tev. Abas ir neobligātas, un vēlāk tās vari mainīt sadaļā Sistēmas iestatījumi."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS najpierw zapyta. Oba są opcjonalne i możesz je później zmienić w Ustawieniach systemowych."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O macOS pergunta-lhe primeiro. Ambos são opcionais e pode alterá-los mais tarde nas Definições."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS të pyet së pari. Të dyja janë opsionale, dhe mund t'i ndryshosh më vonë te Cilësimet e sistemit."
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS вас прво пита. Оба су опциона и касније их можете променити у Системским подешавањима."
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS vas prvo pita. Oba su opciona i kasnije ih možete promeniti u Sistemskim podešavanjima."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS frågar dig först. Båda är valfria, och du kan ändra dem senare i Systeminställningar."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS önce size sorar. İkisi de isteğe bağlıdır ve sonra Sistem Ayarları’ndan değiştirebilirsiniz."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS 会先询问你。两项都是可选的，之后你可以在“系统设置”中更改。"
-          }
-        }
-      }
-    },
     "macOS checks for security fixes and installs them by itself." : {
       "localizations" : {
         "ar" : {
@@ -287430,6 +287726,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "macOS 内存统计信息不可用。"
+          }
+        }
+      }
+    },
+    "macOS needs your OK. Turn on Artifloam under Login Items in System Settings." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يحتاج macOS إلى موافقتك. شغّل Artifloam ضمن عناصر تسجيل الدخول في إعدادات النظام."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El macOS necessita el teu permís. Activa Artifloam a Ítems d’inici de sessió, a Configuració del Sistema."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS braucht dein OK. Schalte Artifloam in den Systemeinstellungen unter Anmeldeobjekte ein."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS needs your OK. Turn on Artifloam under Login Items in System Settings."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS needs your OK. Turn on Artifloam under Login Items in System Settings."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS needs your OK. Turn on Artifloam under Login Items in System Settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS necesita tu permiso. Activa Artifloam en Ítems de inicio de sesión, en Ajustes del Sistema."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS necesita tu permiso. Activa Artifloam en Ítems de inicio de sesión, en Configuración del Sistema."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS a besoin de votre accord. Activez Artifloam dans Ouverture, sous Réglages Système."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS bruucht dis OK. Schalt Artifloam i de Systemeinstellungen under Aamäldeobjekt ii."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS को आपकी अनुमति चाहिए। सिस्टम सेटिंग में लॉगिन आइटम के अंतर्गत Artifloam चालू करें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS treba tvoje odobrenje. Uključi Artifloam pod Stavkama prijave u Postavkama sustava."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS ha bisogno del tuo consenso. Attiva Artifloam in Elementi login, in Impostazioni di Sistema."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOSの許可が必要です。システム設定の「ログイン項目」で Artifloam をオンにしてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS의 승인이 필요합니다. 시스템 설정의 로그인 항목에서 Artifloam을 켜세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS vajag tavu piekrišanu. Ieslēdz Artifloam sadaļā Pieteikšanās objekti, Sistēmas iestatījumos."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS potrzebuje Twojej zgody. Włącz Artifloam w Rzeczach otwieranych podczas logowania w Ustawieniach systemowych."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O macOS precisa da sua autorização. Ative o Artifloam em Elementos de início de sessão, nas Definições."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS ka nevojë për miratimin tënd. Aktivizo Artifloam te Artikujt e hyrjes në Cilësimet e sistemit."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS-у треба ваше одобрење. Укључите Artifloam у Ставкама за пријаву у Системским подешавањима."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS-u treba vaše odobrenje. Uključite Artifloam u Stavkama za prijavu u Sistemskim podešavanjima."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS behöver ditt godkännande. Slå på Artifloam under Inloggningsobjekt i Systeminställningar."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS’un onayınıza ihtiyacı var. Sistem Ayarları’nda Giriş Öğeleri altında Artifloam’u açın."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS 需要你的同意。请在“系统设置”的“登录项”中打开 Artifloam。"
           }
         }
       }

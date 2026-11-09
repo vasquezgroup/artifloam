@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import ServiceManagement
 import MacStewardCore
 
 /// Where Overview's sculpture and words really are, measured while the page sits hidden, so the welcome can land on them exactly.
@@ -46,6 +47,7 @@ struct WelcomeStage: View {
     @State private var finder: Bool?
     /// They've been sent to System Settings for Full Disk Access.
     @State private var askedFullDisk = false
+    @State private var login = OpenAtLogin.status
     private let offerMove = AppInstall.shouldOffer(Bundle.main.bundleURL)
 
     /// Placed by eye, large to small, in fractions of the window. Name, x, y, size in points, starting tilt.
@@ -119,6 +121,7 @@ struct WelcomeStage: View {
             // macOS doesn't announce a change of permission, so look until the step closes.
             while step == .permissions, !Task.isCancelled {
                 fullDisk = await Task.detached { FullDiskAccess.status() }.value
+                login = OpenAtLogin.status
                 try? await Task.sleep(for: .seconds(1.5))
             }
         }
@@ -225,7 +228,7 @@ struct WelcomeStage: View {
     private var permissions: some View {
         VStack(alignment: .leading, spacing: 14) {
             heading("Permissions")
-            line("macOS asks you first. Both are optional, and you can change them later in System Settings.")
+            line("All three are optional, and you can change them later in System Settings.")
             VStack(spacing: 12) {
                 WelcomePermissionCard(icon: "lock.shield.fill", title: String(localized: "Full Disk Access"), detail: String(localized: "Measures protected folders like the Trash."), accent: theme.accent, granted: fullDisk == .granted, actionTitle: askedFullDisk ? String(localized: "Settings", comment: "Button: open System Settings") : String(localized: "Allow", comment: "Button: allow this permission")) {
                     // Trying a protected folder first is what puts this app in the list. There's no API for this.
@@ -235,6 +238,10 @@ struct WelcomeStage: View {
                 }
                 WelcomePermissionCard(icon: "trash.fill", title: "Finder", detail: String(localized: "Lists and empties the Trash when you ask."), accent: theme.accent, granted: finder == true) {
                     Task { finder = await Task.detached { TrashBins.requestFinderAccess() }.value }
+                }
+                WelcomePermissionCard(icon: "power", title: String(localized: "Open at login"), detail: String(localized: "Opens Artifloam when you log in to your Mac."), accent: theme.accent, granted: login == .enabled,
+                                      actionTitle: login == .requiresApproval ? String(localized: "Settings", comment: "Button: open System Settings") : String(localized: "Allow", comment: "Button: allow this permission")) {
+                    if login == .requiresApproval { SMAppService.openSystemSettingsLoginItems() } else { login = OpenAtLogin.set(true) }
                 }
             }.padding(.top, 6)
             if askedFullDisk && fullDisk != .granted { fullDiskHelp }
