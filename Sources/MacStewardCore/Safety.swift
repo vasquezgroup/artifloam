@@ -52,18 +52,25 @@ struct TreeInventory {
         }
         try record(root, "")
         if nodes[""]!.mode & S_IFMT == S_IFDIR {
-            var enumerationError: Error?
-            guard let enumerator = FileManager.default.enumerator(at: root, includingPropertiesForKeys: nil, options: [], errorHandler: { _, error in enumerationError = error; return false }) else { throw StewardError.blocked(String(localized: "Cannot enumerate candidate")) }
-            while let url = enumerator.nextObject() as? URL {
+            // The same physical walk as TreeSummary: symlinks are reported, never followed, and every entry is seen.
+            // FileManager's enumerator hides AppleDouble "._" files, so the counts never matched the scan.
+            var paths: [UnsafeMutablePointer<CChar>?] = [strdup(root.path), nil]
+            defer { free(paths[0]) }
+            let rootLength = strlen(paths[0]!)
+            guard let stream = fts_open(&paths, FTS_PHYSICAL | FTS_NOCHDIR | FTS_XDEV, nil) else { throw StewardError.blocked(String(localized: "Cannot enumerate candidate")) }
+            defer { fts_close(stream) }
+            while let entry = fts_read(stream) {
                 try Task.checkCancellation()
-                let baseParts = root.resolvingSymlinksInPath().standardizedFileURL.pathComponents
-                // Resolve the parent only, so a symlink entry is located where it is, not at its target.
-                let fileParts = url.deletingLastPathComponent().resolvingSymlinksInPath().appendingPathComponent(url.lastPathComponent).standardizedFileURL.pathComponents
-                guard Array(fileParts.prefix(baseParts.count)) == baseParts else { throw StewardError.blocked(String(localized: "Enumeration escaped the cache root")) }
-                let relative = fileParts.dropFirst(baseParts.count).joined(separator: "/")
-                try record(url, relative)
+                let item = entry.pointee
+                switch Int32(item.fts_info) {
+                case FTS_DP: continue
+                case FTS_DNR, FTS_ERR, FTS_NS: throw StewardError.blocked(String(localized: "Cannot inspect part of \(root.lastPathComponent)"))
+                default: break
+                }
+                guard item.fts_level > 0 else { continue }
+                let path = String(cString: item.fts_path)
+                try record(URL(fileURLWithPath: path), String(cString: item.fts_path + rootLength + 1))
             }
-            if let error = enumerationError { throw error }
         }
         // Same fingerprint as TreeSummary, so a lean scan can be compared with the full check at clean time.
         return TreeInventory(nodes: nodes, bytes: bytes, newest: newest, lastAccessed: lastAccessed, fingerprint: TreeSummary.fingerprint(count: nodes.count, bytes: bytes, newest: newest))

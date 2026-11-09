@@ -39,6 +39,20 @@ final class SafetyTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: path.path), receipt.items.map(\.detail).joined(separator: "; ")); XCTAssertEqual(receipt.removedCount, 1)
         XCTAssertTrue(FileManager.default.fileExists(atPath: path.deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent(".gitignore").path))
     }
+    /// FileManager's enumerator hides AppleDouble "._" files, so a cache holding one never matched its scan and was never removed.
+    func testCacheWithAppleDoubleFilesMatchesItsScanAndIsRemoved() throws {
+        let path = try cache(), folder = path.appendingPathComponent("__MACOSX"), sidecar = folder.appendingPathComponent("._sound.mp3")
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        try Data("resource fork".utf8).write(to: sidecar)
+        let old = Date().addingTimeInterval(-10*86400)
+        try FileManager.default.setAttributes([.modificationDate: old], ofItemAtPath: sidecar.path)
+        try age(path)
+        let scanned = try TreeSummary.read(path)
+        XCTAssertEqual(try TreeInventory.read(path).fingerprint, scanned.fingerprint)
+        let item = Finding(path: path.path, group: .projectCaches, bytes: scanned.bytes, modifiedAt: scanned.newest, safety: .automatic, reason: "fixture", rule: "framework-cache", fingerprint: scanned.fingerprint)
+        let receipt = try Cleaner(configuration: config).clean(ScanReport(home: home.path, findings: [item]), selectedIDs: [item.id], activityOverride: ActivitySnapshot())
+        XCTAssertFalse(FileManager.default.fileExists(atPath: path.path), receipt.items.map(\.detail).joined(separator: "; "))
+    }
     func testModifiedAfterScanIsKept() throws {
         let path = try cache(); let item = try finding(path)
         try Data("new unfinished source".utf8).write(to: path.appendingPathComponent("generated.bin")); try age(path)
