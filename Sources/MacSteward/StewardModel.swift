@@ -11,7 +11,11 @@ final class StewardModel: ObservableObject {
         StewardPreferences.defaults.set(textScale, forKey: "textScale")
     }
     func changeTextScale(_ delta: Double) { setTextScale((textScale * 100 + delta * 100).rounded() / 100) }
-    @Published var section = "Overview"
+    @Published var section = "Overview" { didSet { if section != cameFrom?.to { cameFrom = nil } } }
+    /// A page opened from inside another one, so it can show the way back. Going anywhere else forgets it.
+    @Published private(set) var cameFrom: (from: String, to: String)?
+    func openPage(_ target: String) { let from = section; section = target; cameFrom = (from, target) }
+    func goBack() { if let from = cameFrom?.from { section = from } }
     /// Settings hosts General, Automation and Activity as tabs.
     @Published var settingsTab = "General"
     let access = FolderAccess()

@@ -71,14 +71,14 @@ struct ToolsView: View {
         switch id {
         // Each card starts only its own tool.
         case "Junk cleanup": model.review(); model.withFullDisk { model.scan(only: StewardModel.junkGroups) }
-        case "Worktrees": model.section = "Worktrees"; model.scan(only: [.worktrees])
-        case "Duplicates": model.section = "Duplicates"; model.scanDuplicates()
-        case "System": model.section = "System"; model.checkSystem()
-        case "Leftovers": model.section = "Leftovers"; model.leftovers.scan()
-        case "Login & background items": model.section = id; model.startup.scan()
-        case "Trash bins": model.section = "Trash bins"; model.withFullDisk { model.trashBins.scan() }
-        case "Browser data": model.section = "Browsers"; model.withFullDisk { model.browsers.scan() }
-        default: model.section = id
+        case "Worktrees": model.openPage("Worktrees"); model.scan(only: [.worktrees])
+        case "Duplicates": model.openPage("Duplicates"); model.scanDuplicates()
+        case "System": model.openPage("System"); model.checkSystem()
+        case "Leftovers": model.openPage("Leftovers"); model.leftovers.scan()
+        case "Login & background items": model.openPage(id); model.startup.scan()
+        case "Trash bins": model.openPage("Trash bins"); model.withFullDisk { model.trashBins.scan() }
+        case "Browser data": model.openPage("Browsers"); model.withFullDisk { model.browsers.scan() }
+        default: model.openPage(id)
         }
     }
 }

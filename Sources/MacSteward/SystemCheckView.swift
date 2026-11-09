@@ -151,7 +151,7 @@ struct SystemCheckView: View {
         }
     }
     @ViewBuilder private var backgroundRows: some View {
-        Button("Manage startup items…") { m.section = "Login & background items" }.buttonStyle(CleanupGlassButtonStyle(compact: true)).frame(maxWidth: .infinity, alignment: .trailing)
+        Button("Manage startup items…") { m.openPage("Login & background items") }.buttonStyle(CleanupGlassButtonStyle(compact: true)).frame(maxWidth: .infinity, alignment: .trailing)
         // Broken ones first, then by maker.
         ForEach(m.agents.sorted { ($0.programMissing ? 0 : 1, $0.maker.name.lowercased()) < ($1.programMissing ? 0 : 1, $1.maker.name.lowercased()) }) { item in
             row(icon: item.programMissing ? "exclamationmark.circle" : "gearshape", tint: item.programMissing ? .orange : .white.opacity(0.6), title: item.maker.name.displaySafe, detail: item.programMissing ? String(localized: "Its program is gone. \(item.summary.displaySafe) · \(item.scopeTitle)") : item.summary.displaySafe + " · " + item.scopeTitle) {

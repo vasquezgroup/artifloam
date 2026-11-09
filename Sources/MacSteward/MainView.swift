@@ -194,7 +194,8 @@ struct MainView: View {
         .onChange(of: isStage) { _, _ in windowPointer = nil }
         .onChange(of: m.scanning) { _, scanning in if scanning { storageMap.cancel(); cleanupReviewing = false; runCleanup = true; runDuplicates = true; runBrowsers = false; runLeftovers = false; runQuitApps = false } }
         .onChange(of: m.section) { _, section in
-            if section != "Overview" { overviewDetail = nil }
+            // Coming back from a page opened inside Overview's detail returns to that detail.
+            if section != "Overview" && m.cameFrom?.from != "Overview" { overviewDetail = nil }
             if section == "iPhone" { m.iphone.watch() }
         }
         .onChange(of: m.report == nil) { _, empty in if empty { overviewDetail = nil } }
@@ -415,14 +416,18 @@ struct MainView: View {
         return CategoryTile(amount: value, found: false, name: sectionTitle(module), tagline: detail, art: "", module: module, chooseLabel: "Include in Run", status: status, chosen: shown, canChoose: canChoose, review: review)
     }
     /// A module opened from Overview: the shared back button, a breadcrumb, then the module itself.
+    /// The shared way back: the back button, where you came from, then where you are.
+    private func breadcrumb(from: String, to: String, back: @escaping () -> Void) -> some View {
+        HStack(spacing: 10) {
+            BackSquareButton(action: back)
+            Text(from).stewardFont(.body).foregroundStyle(muted)
+            Image(systemName: "chevron.compact.right").flipsForRightToLeftLayoutDirection(true).foregroundStyle(muted)
+            Text(to).stewardFont(.body, weight: .semibold)
+        }
+    }
     @ViewBuilder private func overviewDetailView(_ detail: String) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 10) {
-                BackSquareButton { overviewDetail = nil }
-                Text("Overview").stewardFont(.body).foregroundStyle(muted)
-                Image(systemName: "chevron.compact.right").flipsForRightToLeftLayoutDirection(true).foregroundStyle(muted)
-                Text(sectionTitle(detail == "System" ? "Status" : detail)).stewardFont(.body, weight: .semibold)
-            }
+            breadcrumb(from: sectionTitle("Overview"), to: sectionTitle(detail == "System" ? "Status" : detail)) { overviewDetail = nil }
             if detail == "Cleanup" { cleanupDetails.frame(maxWidth: .infinity, maxHeight: .infinity) }
             else { ScrollView { content(detail).padding(.bottom, 28).frame(maxWidth: .infinity, alignment: .leading) } }
         }.padding(.horizontal, 24).padding(.top, 16).padding(.bottom, 16).frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -442,17 +447,17 @@ struct MainView: View {
                 Image(systemName: "info.circle").foregroundStyle(.orange)
                 Text(firstSentence(note)).stewardFont(.caption).foregroundStyle(muted).lineLimit(2).help(note)
                 Spacer(minLength: 8)
-                if settingsFixes(note) { Button("Settings") { m.section = "Settings" }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)) }
+                if settingsFixes(note) { Button("Settings") { m.openPage("Settings") }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)) }
             }.padding(.horizontal, 14).padding(.vertical, 8).frame(maxWidth: 620)
             .background(panel, in: RoundedRectangle(cornerRadius: 12))
         }
     }
     @ViewBuilder private var extraScanResults: some View {
         if m.duplicateChecked {
-            summaryPill(sectionTitle("Duplicates"), icon: "square.on.square", value: String(localized: "\(m.duplicates.count) duplicate groups")) { m.section = "Duplicates" }
+            summaryPill(sectionTitle("Duplicates"), icon: "square.on.square", value: String(localized: "\(m.duplicates.count) duplicate groups")) { m.openPage("Duplicates") }
         }
         if !m.checks.isEmpty {
-            summaryPill(sectionTitle("System"), icon: "checkmark.shield", value: String(localized: "\(m.protections.on) of \(m.protections.total) protections on")) { m.section = "System" }
+            summaryPill(sectionTitle("System"), icon: "checkmark.shield", value: String(localized: "\(m.protections.on) of \(m.protections.total) protections on")) { m.openPage("System") }
         }
     }
     static let modules = [("Overview", "sparkles"), ("Cleanup", "externaldrive.fill"), ("My Clutter", "doc.on.doc"), ("Applications", "checkmark.shield"), ("Browsers", "globe"), ("Space Map", "circle.dotted"), ("Photos", "photo.on.rectangle"), ("iPhone", "iphone")]
@@ -679,6 +684,12 @@ struct MainView: View {
             ForEach([leaving, m.section].compactMap { $0 }, id: \.self) { section in
                 let current = section == m.section
                 page(section)
+                    .safeAreaInset(edge: .top, spacing: 0) {
+                        if let back = m.cameFrom, back.to == section, !m.scanning, m.cleaning == nil, stageRemoval == nil {
+                            breadcrumb(from: sectionTitle(back.from), to: sectionTitle(back.to)) { m.goBack() }
+                                .padding(.horizontal, 24).padding(.top, 16).frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
                     .modifier(PageSlide(progress: current ? slide : 1 - slide, offset: (current ? 1 : -1) * navDirection * slideDistance, leaving: !current))
                     .transition(.identity)
             }
@@ -776,16 +787,16 @@ struct MainView: View {
     var cleanupDetails: some View {
         VStack(alignment: .leading, spacing: 16) {
             // From Overview, the breadcrumb above already goes back.
-            if overviewDetail == nil { Button { cleanupReviewing = false } label: { Label("Summary", systemImage: "chevron.backward").stewardFont(.callout) }.buttonStyle(.plain).foregroundStyle(muted) }
+            if overviewDetail == nil { breadcrumb(from: sectionTitle("Cleanup"), to: String(localized: "Review", comment: "Button: open the details and choose what goes")) { cleanupReviewing = false } }
             HStack(alignment: .top) {
                 title(String(localized: "Review your cleanup"), String(localized: "Choose what goes. Keep what matters."))
                 Spacer()
                 // Trash bins are part of Cleanup, as a compact row.
-                Button { m.section = "Trash bins" } label: {
+                Button { m.openPage("Trash bins") } label: {
                     Label(trashPillTitle, systemImage: "trash")
                         .stewardFont(.callout).padding(.horizontal, 14).padding(.vertical, 9).background(panel, in: Capsule())
                 }.buttonStyle(.plain).help("Open Trash bins to empty the Trash")
-                Button { m.section = "Browsers" } label: {
+                Button { m.openPage("Browsers") } label: {
                     Label(browsersPillTitle, systemImage: "globe")
                         .stewardFont(.callout).padding(.horizontal, 14).padding(.vertical, 9).background(panel, in: Capsule())
                 }.buttonStyle(.plain).help("Open Browser data")
@@ -1209,7 +1220,7 @@ struct MainView: View {
         let ticked = trashTicked && !empty
         let status = empty ? (report == nil ? String(localized: "Checking…") : String(localized: "Empty", comment: "The Trash holds nothing")) : !ticked ? String(localized: "Not selected") : report?.bytes.map { String(localized: "\(formattedBytes($0)) selected") } ?? String(localized: "Selected")
         return CategoryTile(amount: report?.bytes.map(formattedBytes), name: String(localized: "Trash"), tagline: String(localized: "Deleted files still using space"), art: "trash", status: status,
-                            chosen: Binding(get: { ticked }, set: { trashTicked = $0 }), canChoose: !empty, review: { m.section = "Trash bins" },
+                            chosen: Binding(get: { ticked }, set: { trashTicked = $0 }), canChoose: !empty, review: { m.openPage("Trash bins") },
                             clean: ticked ? { confirmRemoval([], trash: true) } : nil)
     }
     private var browsersTile: some View {
@@ -1221,7 +1232,7 @@ struct MainView: View {
         let status = reports == nil ? String(localized: "Checking…") : closed.isEmpty ? (found > 0 ? String(localized: "Browser open") : String(localized: "Nothing to clean")) : ticked ? String(localized: "\(formattedBytes(bytes)) selected") : String(localized: "Not selected")
         return CategoryTile(amount: reports.map { _ in formattedBytes(found) }, name: String(localized: "Browser caches"), tagline: String(localized: "Rebuilt as you browse. You stay signed in."), art: "globe",
                             appIcons: CategoryArt.appIcons(bundleIDs: reports?.map(\.bundleID) ?? []), status: status,
-                            chosen: Binding(get: { ticked }, set: { browsersTicked = $0 }), canChoose: !closed.isEmpty, review: { m.section = "Browsers" },
+                            chosen: Binding(get: { ticked }, set: { browsersTicked = $0 }), canChoose: !closed.isEmpty, review: { m.openPage("Browsers") },
                             clean: ticked ? { confirmRemoval([], browsers: closed) } : nil)
     }
     /// A Cleanup category: a big amount, what it is, art or the apps behind it, one short line.
