@@ -8,6 +8,8 @@ import MacStewardCore
 /// so the leaf dot, notifications and the Overview stay current even when the dashboard is closed.
 @MainActor
 final class MacHealthMonitor: ObservableObject {
+    /// Set by the model: quits the idle apps on the stage. The monitor itself has no stage.
+    var quitIdleApps: (() -> Void)?
     @Published private(set) var health: MacHealth?
     /// Installers and archives in Downloads untouched for 30 days. Read when the dashboard opens.
     @Published private(set) var installers: (urls: [URL], bytes: UInt64)?
@@ -111,7 +113,8 @@ final class MacHealthMonitor: ObservableObject {
         case .quit(let pid): if let row = memory.reading?.apps.first(where: { $0.id == pid }) { memory.quit(row) }
         case .forceQuit(let pid): if let row = memory.reading?.apps.first(where: { $0.id == pid }) { memory.forceQuit(row) }
         case .freeSpace: openSection("Space Map")
-        case .quitIdleApps: openSection("Performance")
+        // Opens the window on Performance and quits right away, on the stage.
+        case .quitIdleApps: openSection("Performance"); quitIdleApps?()
         case .batterySettings: NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.Battery-Settings.extension")!)
         case .networkSettings: NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.Network-Settings.extension")!)
         case .none: break
@@ -122,10 +125,7 @@ final class MacHealthMonitor: ObservableObject {
     /// `prepare` loads what the opened page needs, so it arrives ready rather than filling in afterwards.
     func performOnStage(_ fix: MacIssue.Fix, prepare: @escaping @MainActor () async -> Void, openSection: @escaping (String) -> Void) {
         switch fix {
-        case .quitIdleApps:
-            stage(String(localized: "Seeing which apps you can quit…"), String(localized: "Reading what each app uses and what starts with your Mac…"), work: { [memory] in
-                await memory.refresh(); await prepare()
-            }, then: { openSection("Performance") })
+        case .quitIdleApps: openSection("Performance"); quitIdleApps?()
         case .quit(let pid), .forceQuit(let pid):
             guard let row = memory.reading?.apps.first(where: { $0.id == pid }) else { return }
             var asked = false

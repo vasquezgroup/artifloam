@@ -11,10 +11,14 @@ struct StageCopy: Equatable {
     let amount: String
     /// Shown after the result, e.g. how to undo.
     let note: String?
+    /// What is counted: files and folders, or apps being quit.
+    enum Unit: Equatable { case items, apps }
+    var unit = Unit.items
     // Computed so the words follow the app language each time a stage starts.
     static var trash: StageCopy { StageCopy(working: String(localized: "Moving to the Trash…"), done: String(localized: "Cleanup complete"), amount: String(localized: "moved to the Trash", comment: "Under a byte counter: how much was moved"), note: String(localized: "Put Back in Finder restores them.")) }
     static var emptyTrash: StageCopy { StageCopy(working: String(localized: "Emptying the Trash…"), done: String(localized: "Trash emptied"), amount: String(localized: "freed", comment: "Under a byte counter: how much space was freed"), note: nil) }
     static var browsers: StageCopy { StageCopy(working: String(localized: "Cleaning browser data…"), done: String(localized: "Browser data cleaned"), amount: String(localized: "freed", comment: "Under a byte counter: how much space was freed"), note: String(localized: "Browsers rebuild caches as you browse.")) }
+    static var quitApps: StageCopy { StageCopy(working: String(localized: "Quitting idle apps…"), done: String(localized: "Idle apps quit"), amount: String(localized: "memory freed", comment: "Under a byte counter: memory freed by quitting apps"), note: nil, unit: .apps) }
     static var worktrees: StageCopy { StageCopy(working: String(localized: "Deleting finished worktrees…"), done: String(localized: "Worktrees deleted"), amount: String(localized: "freed", comment: "Under a byte counter: how much space was freed"), note: String(localized: "Restore a branch with git branch <name> <commit>.")) }
 }
 
@@ -97,6 +101,30 @@ extension StewardModel {
             return StageOutcome(completed: results.count, bytes: moved.withLock { $0 }, failures: results.compactMap { outcome in outcome.error.map { String(localized: "\(URL(fileURLWithPath: outcome.path).lastPathComponent) · \($0)") } })
         }, completed: { _ in completed(box.value) })
     }
+    /// Quits the idle apps Performance suggests, on the stage: every app is asked at once, then each one counts as it goes.
+    /// Nothing is forced. An app asking to save stays open and is listed, so the person can answer it.
+    func quitIdleAppsOnStage() {
+        guard removal == nil, !busy, !scanning, cleaning == nil, let reading = memory.reading else { return }
+        let apps = MemoryVerdict.suggestions(reading.apps, recentlyUsed: memory.recentlyUsed, canQuit: memory.canQuit)
+        guard !apps.isEmpty else { memory.message = String(localized: "No idle apps"); return }
+        let memory = memory
+        runStage(.quitApps, total: apps.count, first: apps.map(\.app.name.displaySafe).joined(separator: ", "), stoppable: false, work: { report, _ in
+            let asked = await MainActor.run { apps.filter { memory.quit($0) } }
+            var gone = [MemoryAppUsage]()
+            // Up to 10 s: most apps are gone in one. Waiting longer would only hold the stage for one asking to save.
+            for _ in 0..<40 {
+                let still = await MainActor.run { asked.filter { NSRunningApplication(processIdentifier: $0.id) != nil } }
+                gone = asked.filter { app in !still.contains { $0.id == app.id } }
+                report(gone.count, gone.reduce(0) { $0 + $1.bytes }, still.map(\.app.name.displaySafe).joined(separator: ", "))
+                if still.isEmpty { break }
+                try? await Task.sleep(for: .milliseconds(250))
+            }
+            await memory.refresh()
+            let open = apps.filter { app in !gone.contains { $0.id == app.id } }
+            return StageOutcome(completed: apps.count, bytes: gone.reduce(0) { $0 + $1.bytes },
+                                failures: open.map { String(localized: "\($0.app.name.displaySafe) is still open. It may be asking you to save.") })
+        }, completed: { _ in })
+    }
     func stopRemoval() { removalStop?.set() }
     func finishRemoval() {
         if removal?.stopped == true { removalQueue = [] } // Stop means stop, including what was queued after this.
@@ -143,9 +171,9 @@ struct RemovalStage: View {
                     HStack(spacing: 30) {
                         if !(progress.indeterminate && !progress.finished) {
                             metric(formattedBytes(progress.bytes), progress.finished ? progress.copy.amount : String(localized: "so far", comment: "Under a byte counter: amount handled until now"), tint: theme.accent)
-                            metric(progress.indeterminate ? progress.completed.formatted() : String(localized: "\(progress.completed) of \(progress.total)"), String(localized: "items", comment: "Label under a count of items"))
+                            metric(progress.indeterminate ? progress.completed.formatted() : String(localized: "\(progress.completed) of \(progress.total)"), progress.copy.unit == .apps ? String(localized: "apps", comment: "Label under a count of apps") : String(localized: "items", comment: "Label under a count of items"))
                         }
-                        if !progress.failures.isEmpty { metric(progress.failures.count.formatted(), String(localized: "not moved", comment: "Label under a count of items that could not be moved"), tint: .orange) }
+                        if !progress.failures.isEmpty { metric(progress.failures.count.formatted(), progress.copy.unit == .apps ? String(localized: "still open", comment: "Label under a count of apps that did not quit") : String(localized: "not moved", comment: "Label under a count of items that could not be moved"), tint: .orange) }
                     }.padding(.top, 4)
                     if !progress.finished {
                         if progress.indeterminate { ProgressView().progressViewStyle(.linear).tint(theme.accent).frame(maxWidth: 360) }
@@ -158,7 +186,7 @@ struct RemovalStage: View {
                     HStack(spacing: 12) {
                         if progress.finished {
                             if !progress.failures.isEmpty {
-                                Button(showingDetails ? String(localized: "Hide details") : String(localized: "Show \(progress.failures.count) not moved")) { showingDetails.toggle() }
+                                Button(showingDetails ? String(localized: "Hide details") : progress.copy.unit == .apps ? String(localized: "Show \(progress.failures.count) still open") : String(localized: "Show \(progress.failures.count) not moved")) { showingDetails.toggle() }
                                     .buttonStyle(CleanupGlassButtonStyle(secondary: true))
                             }
                             Button("Done", action: done).buttonStyle(CleanupGlassButtonStyle()).keyboardShortcut(.defaultAction)
@@ -181,7 +209,7 @@ struct RemovalStage: View {
     }
     private var summary: String {
         let moved = progress.completed - progress.failures.count
-        let count = progress.stopped ? String(localized: "\(moved) items before you stopped.") : String(localized: "\(moved) items.")
+        let count = progress.copy.unit == .apps ? String(localized: "\(moved) apps quit.") : progress.stopped ? String(localized: "\(moved) items before you stopped.") : String(localized: "\(moved) items.")
         return count + (progress.copy.note.map { " " + $0 } ?? "")
     }
 }

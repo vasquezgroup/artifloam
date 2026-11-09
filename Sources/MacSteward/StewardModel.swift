@@ -46,6 +46,7 @@ final class StewardModel: ObservableObject {
             guard let self else { return }
             self.keeper.consider(disk: disk, configuration: self.configuration, busy: self.busy || self.scanning || self.cleaning != nil || self.removal != nil)
         })
+        health.quitIdleApps = { [weak self] in self?.quitIdleAppsOnStage() }
         forwarding.append(memory.objectWillChange.throttle(for: .seconds(5), scheduler: RunLoop.main, latest: true).sink { [weak self] _ in self?.objectWillChange.send() })
     }
     @Published var uninstall: UninstallFlow?
