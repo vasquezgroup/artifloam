@@ -11,6 +11,8 @@ import SwiftUI
     static var working: Bool { library.working }
     /// The start screen until a scan has something to say. No access has its own message on the page.
     static var onStage: Bool {
+        // A connected iPhone or iPad is shown straight away, without scanning this Mac first.
+        if DevicePhotos.shared.device != nil && !library.working { return false }
         if library.working { return true }
         if library.status == .denied || library.status == .restricted { return false }
         return library.phase == .idle
@@ -46,10 +48,21 @@ struct PhotosModuleView: View {
     @State private var hovered: String?
     @FocusState private var gridFocused: Bool
     private struct Viewing: Identifiable { let id: String }
+    /// A connected iPhone or iPad is what the person most likely came for, so it's shown first.
+    @State private var thisMac = false
+    private var onDevice: Bool { DevicePhotos.shared.device != nil && !thisMac }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            if library.status == .denied || library.status == .restricted {
+            if DevicePhotos.shared.device != nil {
+                Picker("Library", selection: $thisMac) {
+                    Text(DevicePhotos.shared.name).tag(false)
+                    Text("This Mac").tag(true)
+                }.pickerStyle(.segmented).labelsHidden().fixedSize()
+            }
+            if onDevice {
+                DevicePhotosView()
+            } else if library.status == .denied || library.status == .restricted {
                 noAccess
             } else if let page {
                 detail(page)

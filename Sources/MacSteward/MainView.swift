@@ -197,6 +197,8 @@ struct MainView: View {
             // Coming back from a page opened inside Overview's detail returns to that detail.
             if section != "Overview" && m.cameFrom?.from != "Overview" { overviewDetail = nil }
             if section == "iPhone" { m.iphone.watch() }
+            // Image Capture keeps a session open on the device, so it only looks while Photos is open.
+            if section == "Photos" { DevicePhotos.shared.watch() } else { DevicePhotos.shared.stopWatching() }
         }
         .onChange(of: m.report == nil) { _, empty in if empty { overviewDetail = nil } }
         .animation(reduceMotion ? .easeOut(duration: 0.18) : .spring(response: 0.58, dampingFraction: 0.88), value: focusedScan)
