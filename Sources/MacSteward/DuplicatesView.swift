@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import QuickLook
 import MacStewardCore
 
 /// Duplicates as an overview plus one compact row per group. Files are matched by content (SHA-256), not by name.
@@ -9,6 +10,8 @@ struct DuplicatesView: View {
     let trash: ([String]) -> Void
     @State private var expanded = Set<String>()
     @State private var query = ""
+    /// Shown with Quick Look, so copies can be compared without opening Finder.
+    @State private var preview: URL?
     /// Groups whose file names or folders match the search; all groups when it's empty.
     private var shown: [DuplicateGroup] {
         let needle = query.trimmingCharacters(in: .whitespaces)
@@ -40,6 +43,7 @@ struct DuplicatesView: View {
                 if shown.isEmpty { Text("No duplicates match “\(query)”.").stewardFont(.body).foregroundStyle(muted).padding(.vertical, 8) }
             }
         }
+        .quickLookPreview($preview, in: m.duplicates.flatMap(\.files).map { URL(fileURLWithPath: $0) })
     }
 
     private var overview: some View {
@@ -141,6 +145,7 @@ struct DuplicatesView: View {
             }.toggleStyle(.stewardCheckbox).disabled(lastKept).help(lastKept ? "One copy always stays" : ticked ? "Moves to the Trash" : "Kept")
             Spacer(minLength: 8)
             if lastKept { Text("Kept").stewardFont(.caption, weight: .semibold).foregroundStyle(.mint) }
+            Button("Preview") { preview = URL(fileURLWithPath: path) }.buttonStyle(.plain).stewardFont(.caption, weight: .semibold).foregroundStyle(muted)
             Button("Reveal") { m.reveal(path) }.buttonStyle(.plain).stewardFont(.caption, weight: .semibold).foregroundStyle(muted)
         }
     }

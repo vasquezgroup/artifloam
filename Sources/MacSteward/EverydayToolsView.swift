@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import QuickLook
 import MacStewardCore
 
 @MainActor
@@ -52,6 +53,8 @@ struct LargeFilesView: View {
     @ObservedObject var state: LargeFilesState
     @State private var trashRequest: TrashRequest?
     @State private var note: String?
+    /// Shown with Quick Look, so a video, photo, PDF, song or document opens here, without Finder.
+    @State private var preview: URL?
     private var files: [LargeFileItem] { state.files }
     private var task: Task<LargeFileReport, Error>? { state.task }
     private var selection: Set<String> { state.selection }
@@ -96,6 +99,7 @@ struct LargeFilesView: View {
                             }
                             Spacer()
                             VStack(alignment: .trailing) { Text(formattedBytes(file.localBytes)).monospacedDigit(); Text("\(formattedBytes(file.logicalBytes)) file size").stewardFont(.caption).foregroundStyle(.secondary) }
+                            Button("Preview") { preview = file.url }
                             Button("Reveal") { NSWorkspace.shared.activateFileViewerSelecting([file.url]) }
                         }.padding(14).background(.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 12))
                     }
@@ -109,6 +113,8 @@ struct LargeFilesView: View {
                 state.selection.removeAll(); scan()
             }
         }.onChange(of: location.url) { _, _ in state.reset() }
+        // The arrow keys move through the list inside Quick Look.
+        .quickLookPreview($preview, in: files.map(\.url))
     }
     private func partialNote(_ report: LargeFileReport) -> String {
         let entries = String(localized: "\(report.examined) entries checked"), folders = String(localized: "\(report.unreadable) unreadable folders")

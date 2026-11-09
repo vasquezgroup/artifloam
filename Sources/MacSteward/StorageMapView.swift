@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import QuickLook
 import MacStewardCore
 
 @MainActor
@@ -157,6 +158,8 @@ struct StorageMapView: View {
     @State private var selection = Set<String>()
     @State private var trashRequest: TrashRequest?
     @State private var trashNote: String?
+    /// A file opens in Quick Look; a folder opens in the map.
+    @State private var preview: URL?
     private var rows: [StorageMapEntry] {
         let values = largestFiles ? (cloudSizing ? map.snapshot?.largestCloudFiles : map.snapshot?.largestFiles) : map.snapshot?.entries
         return (values ?? []).filter { !cloudSizing || $0.cloudFileCount > 0 }.sorted { cloudSizing ? $0.cloudLogicalBytes > $1.cloudLogicalBytes : $0.bytes > $1.bytes }
@@ -179,7 +182,7 @@ struct StorageMapView: View {
         }
             .disabled(!map.canStart)
     }
-    private func open(_ entry: StorageMapEntry) { if entry.isDirectory { map.navigate(entry.url) } else { model.reveal(entry.url.path) } }
+    private func open(_ entry: StorageMapEntry) { if entry.isDirectory { map.navigate(entry.url) } else { preview = entry.url } }
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             if !stage {
@@ -221,6 +224,7 @@ struct StorageMapView: View {
         .onAppear { map.setActive(scenePhase == .active) }
         .onDisappear { map.setActive(false) }
         .onChange(of: scenePhase) { _, phase in map.setActive(phase == .active) }
+        .quickLookPreview($preview)
     }
     @ViewBuilder private var mapIntro: some View {
         if map.busy { mappingStage } else { mapStart }
@@ -280,6 +284,7 @@ struct StorageMapView: View {
                 .toggleStyle(.stewardCheckboxOnly).help("Select for review")
             Button { open(entry) } label: { mapRowLabel(entry) }.buttonStyle(.plain).disabled(!map.canStart).help(rowHelp(entry))
         }.contextMenu {
+            if !entry.isDirectory { Button("Preview") { preview = entry.url } }
             Button("Reveal in Finder") { model.reveal(entry.url.path) }
             Button("Review Move to Trash…", role: .destructive) { trashRequest = TrashRequest(urls: [entry.url]) }.disabled(map.busy)
         }
