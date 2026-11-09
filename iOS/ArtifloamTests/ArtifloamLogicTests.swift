@@ -156,6 +156,8 @@ final class ArtifloamLogicTests: XCTestCase {
     }
 
     func testEdgeDirectionOnlyScrollsAtTheEdges() {
+        XCTAssertTrue(swipeStarts(CGSize(width: 15, height: 4)))
+        XCTAssertFalse(swipeStarts(CGSize(width: 6, height: 14)))
         XCTAssertEqual(edgeDirection(y: 50, height: 800), -1)
         XCTAssertEqual(edgeDirection(y: 400, height: 800), 0)
         XCTAssertEqual(edgeDirection(y: 700, height: 800), 1)

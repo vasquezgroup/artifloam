@@ -333,9 +333,18 @@ func edgeDirection(y: CGFloat, height: CGFloat) -> Int {
     y < 130 ? -1 : y > height - 210 ? 1 : 0
 }
 
+/// A drag selects only if it starts sideways, on the screen. Decided once, at the start, as in Photos.
+func swipeStarts(_ translation: CGSize) -> Bool {
+    abs(translation.width) > abs(translation.height)
+}
+
 /// Where cells are, for finding what's under a finger. Not SwiftUI state: updating state from every cell redid the whole grid constantly.
 private final class GridLayout {
     var frames: [String: CGRect] = [:]
+    /// Where the grid is on screen. Changes on every frame of a scroll, so not state either: that redrew the grid the whole time.
+    var origin = CGPoint.zero
+    /// The current drag started up or down, so it stays a scroll even if the thumb drifts sideways.
+    var scrolling = false
     private(set) var ids: [String] = []
     private var positions: [String: Int] = [:]
 
@@ -347,6 +356,7 @@ private final class GridLayout {
         // Deleted pictures leave their old place behind. Finding one of those first stopped swipes from starting after a delete.
         frames = frames.filter { positions[$0.key] != nil }
     }
+    func index(atScreen point: CGPoint) -> Int? { index(at: CGPoint(x: point.x - origin.x, y: point.y - origin.y)) }
     func index(at point: CGPoint) -> Int? {
         frames.first { positions[$0.key] != nil && $0.value.contains(point) }.flatMap { positions[$0.key] }
     }
@@ -366,7 +376,7 @@ struct PhotoGrid: View {
     @State private var locked = false
     @State private var swipeCurrent = 0
     @State private var fingerY: CGFloat = 0
-    @State private var gridTop: CGFloat = 0
+    @GestureState private var dragging = false
     @State private var edgeScroll: Task<Void, Never>?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -406,12 +416,20 @@ struct PhotoGrid: View {
             }
             .onAppear { layout.use(groups) }
             .onChange(of: groups.reduce(0) { $0 + $1.items.count }) { _, _ in layout.use(groups) }
-            .onGeometryChange(for: CGFloat.self) { $0.frame(in: .global).minY } action: {
-                gridTop = $0
+            .onGeometryChange(for: CGPoint.self) { $0.frame(in: .global).origin } action: {
+                layout.origin = $0
                 // The page opens scrolled to the top, so the first reading is where the grid rests.
-                if zoom.restTop == nil, columnCount > 2 { zoom.restTop = $0 }
+                if zoom.restTop == nil, columnCount > 2 { zoom.restTop = $0.y }
             }
             .simultaneousGesture(swipeGesture(proxy))
+            // Runs when a drag ends and also when it's cancelled, which skips onEnded and once left scrolling switched off.
+            .onChange(of: dragging) { _, now in
+                guard !now else { return }
+                layout.scrolling = false
+                swipe = nil
+                locked = false
+                edgeScroll?.cancel()
+            }
             .simultaneousGesture(pinchGesture(proxy))
             .scrollDisabled(locked)
             .accessibilityAction(named: "Bigger pictures") { columnCount = ZoomLevels.columns(zoom.viewport.width).last { $0 < columnCount } ?? columnCount }
@@ -421,30 +439,32 @@ struct PhotoGrid: View {
 
     /// A swipe that starts sideways selects. One that starts up or down is left to scroll, as in Photos.
     private func swipeGesture(_ proxy: ScrollViewProxy) -> some Gesture {
-        DragGesture(minimumDistance: 14, coordinateSpace: .named("photoGrid"))
+        // Measured on the screen. In the grid's own space the pictures move with the finger while scrolling,
+        // so a scroll barely moved at all there, a little sideways drift looked like a swipe, and it stopped the scroll.
+        DragGesture(minimumDistance: 14, coordinateSpace: .global)
+            .updating($dragging) { _, state, _ in state = true }
             .onChanged { drag in
                 // A pinch is two fingers, and either one alone looks like a swipe. It must never select anything.
                 guard !zoom.active, !Fingers.multiTouch else {
                     cancelSwipe()
                     return
                 }
+                if layout.scrolling { return }
                 if swipe == nil {
                     layout.use(groups)
-                    guard abs(drag.translation.width) > abs(drag.translation.height), let anchor = layout.index(at: drag.startLocation) else { return }
+                    guard swipeStarts(drag.translation), let anchor = layout.index(atScreen: drag.startLocation) else {
+                        layout.scrolling = true
+                        return
+                    }
                     swipe = (anchor, !selection.contains(layout.ids[anchor]), selection)
                     swipeCurrent = anchor
                     locked = true
                     startEdgeScroll(proxy)
                 }
-                fingerY = gridTop + drag.location.y
-                guard let swipe, let current = layout.index(at: drag.location), current != swipeCurrent else { return }
+                fingerY = drag.location.y
+                guard let swipe, let current = layout.index(atScreen: drag.location), current != swipeCurrent else { return }
                 swipeCurrent = current
                 selection = swipeSelection(base: swipe.base, ids: layout.ids, anchor: swipe.anchor, current: current, selecting: swipe.selecting)
-            }
-            .onEnded { _ in
-                swipe = nil
-                locked = false
-                edgeScroll?.cancel()
             }
     }
 
@@ -480,8 +500,8 @@ struct PhotoGrid: View {
                     cancelSwipe()
                     let point = value.startLocation
                     guard let hit = layout.frames.first(where: { $0.value.contains(point) }) ?? layout.frames.min(by: { distance($0.value, point) < distance($1.value, point) }) else { return }
-                    let global = hit.value.offsetBy(dx: 0, dy: gridTop)
-                    zoom.begin(groups: groups, columns: columnCount, finger: CGPoint(x: point.x, y: point.y + gridTop), anchorID: hit.key, anchorFrame: global, width: zoom.viewport.width, selection: before)
+                    let global = hit.value.offsetBy(dx: 0, dy: layout.origin.y)
+                    zoom.begin(groups: groups, columns: columnCount, finger: CGPoint(x: point.x, y: point.y + layout.origin.y), anchorID: hit.key, anchorFrame: global, width: zoom.viewport.width, selection: before)
                 }
                 var quiet = Transaction()
                 quiet.disablesAnimations = true
