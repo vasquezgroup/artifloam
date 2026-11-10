@@ -378,7 +378,7 @@ struct RowActionButtonStyle: ButtonStyle {
                 .background(.white.opacity(configuration.isPressed ? 0.34 : lit ? 0.24 : 0.10), in: RoundedRectangle(cornerRadius: 7))
                 .overlay(RoundedRectangle(cornerRadius: 7).strokeBorder(.white.opacity(lit ? 0.35 : 0.08)))
                 .contentShape(RoundedRectangle(cornerRadius: 7))
-                .onHover { inside in withAnimation(reduceMotion ? nil : .easeOut(duration: 0.12)) { hovered = inside } }
+                .trackingHover { inside in withAnimation(reduceMotion ? nil : .easeOut(duration: 0.12)) { hovered = inside } }
         }
     }
 }

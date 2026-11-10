@@ -76,7 +76,7 @@ public struct Finding: Codable, Identifiable, Sendable {
     /// The running app that owns a held cache; Artifloam quits it normally before cleaning.
     public let owner: String?
     /// Cleaned without asking (`automatic`), held only by recency or a running owner the user can quit, or an Xcode folder the user may move to the Trash.
-    public var userCleanable: Bool { safety == .automatic || hold == .recent || (hold == .inUse && owner != nil) || ([XcodeStorageInventory.trashRule, XcodeStorageInventory.simulatorRule].contains(rule) && safety == .review) }
+    public var userCleanable: Bool { safety == .automatic || hold == .recent || (hold == .inUse && owner != nil) || ([XcodeStorageInventory.trashRule, XcodeStorageInventory.simulatorRule, XcodeStorageInventory.runtimeRule].contains(rule) && safety == .review) }
     /// Ticked by a category checkbox or "Select ready": ready items plus unflagged choices. Flagged and held ones stay one-by-one.
     /// What Smart select ticks: passed every check and loses nothing. A worktree must also be merged, clean and not used lately.
     public var certain: Bool { group == .worktrees || rule == XcodeStorageInventory.simulatorRule ? safety == .review && finished == true : safety == .automatic }

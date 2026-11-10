@@ -22,7 +22,7 @@ public final class Cleaner {
         let before = DiskSpace.read(at: configuration.home.path); var items = [CleanupItem]()
         let policy = SafetyPolicy(configuration: configuration)
         // A simulator or a reviewed Xcode folder goes last: caches inside it may be ticked too, and they are cleaned first.
-        let containers: Set<String> = [XcodeStorageInventory.simulatorRule, XcodeStorageInventory.trashRule]
+        let containers: Set<String> = [XcodeStorageInventory.simulatorRule, XcodeStorageInventory.trashRule, XcodeStorageInventory.runtimeRule]
         let selected = report.findings.filter { selectedIDs.contains($0.id) }.sorted { !containers.contains($0.rule) && containers.contains($1.rule) }
         // Parent/child overlap can double count and invalidate plans; reject it.
         for first in selected { for second in selected where first.id != second.id && !containers.contains(second.rule) {
@@ -49,6 +49,11 @@ public final class Cleaner {
                     guard approvedIDs.contains(finding.id) else { throw StewardError.blocked(String(localized: "Only folders you ticked are deleted")) }
                     try XcodeStorageInventory.trash(finding, configuration: configuration, activity: activity)
                     items.append(CleanupItem(path: finding.path, outcome: "removed", detail: finding.reason, bytes: finding.bytes)); continue
+                }
+                if finding.rule == XcodeStorageInventory.runtimeRule {
+                    guard approvedIDs.contains(finding.id) else { throw StewardError.blocked(String(localized: "Only simulators you ticked are removed")) }
+                    try XcodeStorageInventory.removeRuntime(finding, configuration: configuration)
+                    items.append(CleanupItem(path: finding.path, outcome: "removed", detail: String(localized: "\(finding.title). \(finding.reason)"), bytes: finding.bytes)); continue
                 }
                 if finding.rule == XcodeStorageInventory.simulatorRule {
                     guard approvedIDs.contains(finding.id) else { throw StewardError.blocked(String(localized: "Only simulators you ticked are removed")) }

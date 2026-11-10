@@ -995,7 +995,7 @@ struct MainView: View {
                 else { ForEach(finding.warnings ?? [], id: \.self) { Label($0, systemImage: "exclamationmark.triangle").stewardFont(.caption).foregroundStyle(.orange) } }
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Modified \(finding.modifiedAt.formatted(date: .abbreviated, time: .shortened))").stewardFont(.caption).foregroundStyle(muted)
-                    HStack { Button("Finder") { m.reveal(finding.path) }; if finding.rule == "xcode-managed-review" { Button("Open Xcode") { m.openXcode() } }; if finding.rule == BroadCaches.brewOldVersionsRule { Button("Run brew cleanup in Terminal") { m.runBrewCleanup(cellar: finding.path) }.help("Opens Terminal and runs Homebrew's own cleanup there") }; Button { m.ignore(finding) } label: { Text("Keep", comment: "Button: keep this item and never suggest it again") } }
+                    HStack { Button("Finder") { m.reveal(finding.path) }; if finding.rule == XcodeStorageInventory.runtimeRule { Button("Open Xcode") { m.openXcode() } }; if finding.rule == BroadCaches.brewOldVersionsRule { Button("Run brew cleanup in Terminal") { m.runBrewCleanup(cellar: finding.path) }.help("Opens Terminal and runs Homebrew's own cleanup there") }; Button { m.ignore(finding) } label: { Text("Keep", comment: "Button: keep this item and never suggest it again") } }
                         .buttonStyle(RowActionButtonStyle()).stewardFont(.body)
                 }
             }
@@ -1455,7 +1455,7 @@ struct UnlockButton: View {
                 .frame(width: 22, height: 22).contentShape(Rectangle())
         }
         .buttonStyle(.plain).disabled(disabled)
-        .onHover { inside in withAnimation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.6)) { hovered = inside } }
+        .trackingHover { inside in withAnimation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.6)) { hovered = inside } }
         .help("Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder.")
         .accessibilityLabel("Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder.")
     }

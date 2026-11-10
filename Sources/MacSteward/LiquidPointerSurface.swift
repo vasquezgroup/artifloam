@@ -38,3 +38,30 @@ struct LiquidPointerSurface: NSViewRepresentable {
         override func accessibilityIsIgnored() -> Bool { true }
     }
 }
+
+/// Hover from an AppKit tracking area. SwiftUI's `onHover` stays silent for buttons deep inside the review lists;
+/// a tracking area always reports, in active and inactive windows alike.
+private struct HoverTracker: NSViewRepresentable {
+    var changed: (Bool) -> Void
+    func makeNSView(context: Context) -> Tracker { let view = Tracker(); view.changed = changed; return view }
+    func updateNSView(_ view: Tracker, context: Context) { view.changed = changed }
+    final class Tracker: NSView {
+        var changed: ((Bool) -> Void)?
+        private var area: NSTrackingArea?
+        override func hitTest(_ point: NSPoint) -> NSView? { nil }
+        override func updateTrackingAreas() {
+            super.updateTrackingAreas()
+            if let area { removeTrackingArea(area) }
+            let next = NSTrackingArea(rect: .zero, options: [.activeAlways, .inVisibleRect, .mouseEnteredAndExited], owner: self)
+            addTrackingArea(next); area = next
+        }
+        override func mouseEntered(with event: NSEvent) { changed?(true) }
+        override func mouseExited(with event: NSEvent) { changed?(false) }
+        override func viewDidMoveToWindow() { super.viewDidMoveToWindow(); if window == nil { changed?(false) } }
+        override func accessibilityIsIgnored() -> Bool { true }
+    }
+}
+extension View {
+    /// Like `onHover`, but reliable inside nested scroll views.
+    func trackingHover(_ changed: @escaping (Bool) -> Void) -> some View { background(HoverTracker(changed: changed)) }
+}

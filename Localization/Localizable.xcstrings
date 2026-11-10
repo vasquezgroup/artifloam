@@ -179789,6 +179789,154 @@
         }
       }
     },
+    "Not a simulator runtime Artifloam can delete." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ليس بيئة تشغيل محاكي يمكن لـ Artifloam حذفها."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No és un entorn d’execució de simulador que Artifloam pugui esborrar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Simulator-Laufzeit, die Artifloam löschen kann."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not a simulator runtime Artifloam can delete."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not a simulator runtime Artifloam can delete."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not a simulator runtime Artifloam can delete."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No es un entorno de ejecución de simulador que Artifloam pueda borrar."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No es un entorno de ejecución de simulador que Artifloam pueda borrar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce n’est pas un environnement d’exécution de simulateur qu’Artifloam peut supprimer."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kei Simulator-Laufziit, wo Artifloam cha lösche."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "यह ऐसा सिम्युलेटर रनटाइम नहीं है जिसे Artifloam डिलीट कर सके।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije okruženje simulatora koje Artifloam može izbrisati."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non è un runtime del simulatore che Artifloam può eliminare."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloamが削除できるシミュレータランタイムではありません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam이 삭제할 수 있는 시뮬레이터 런타임이 아닙니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tā nav simulatora izpildvide, ko Artifloam var izdzēst."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To nie jest środowisko symulatora, które Artifloam może usunąć."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não é um runtime de simulador que o Artifloam possa eliminar."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuk është mjedis simulatori që Artifloam mund ta fshijë."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Није окружење симулатора које Artifloam може да обрише."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije okruženje simulatora koje Artifloam može da obriše."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inte en simulatormiljö som Artifloam kan radera."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artifloam’ın silebileceği bir simülatör çalışma ortamı değil."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不是 Artifloam 可以删除的模拟器运行时。"
+          }
+        }
+      }
+    },
     "Not allowed" : {
       "localizations" : {
         "ar" : {
@@ -243882,150 +244030,150 @@
         }
       }
     },
-    "Simulator OS runtime. Manage removal in Xcode > Settings > Components (Platforms on older Xcode). Simulators Xcode can still run, and their data, are not cleaned automatically." : {
+    "Simulator system for one OS version. Xcode downloads it again when a project needs it." : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "نظام تشغيل المحاكي. أدِر الإزالة في Xcode > Settings > Components (Platforms في إصدارات Xcode الأقدم). المحاكيات التي لا يزال Xcode قادرًا على تشغيلها وبياناتها لا تُنظَّف تلقائيًا."
+            "value" : "نظام محاكي لإصدار واحد من نظام التشغيل. ينزّله Xcode مرة أخرى عندما يحتاجه مشروع."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Runtime del sistema operatiu del simulador. Gestiona’n l’eliminació a Xcode > Configuració > Components (Plataformes en versions antigues de Xcode). Els simuladors que Xcode encara pot executar, i les seves dades, no es netegen automàticament."
+            "value" : "Sistema de simulador per a una versió del sistema. Xcode el torna a baixar quan un projecte el necessita."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Simulator-Laufzeit des Betriebssystems. Verwalte das Entfernen in Xcode > Settings > Components (Platforms in älteren Xcode-Versionen). Simulatoren, die Xcode noch ausführen kann, und ihre Daten werden nicht automatisch bereinigt."
+            "value" : "Simulator-System für eine Betriebssystemversion. Xcode lädt es erneut, wenn ein Projekt es braucht."
           }
         },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Simulator OS runtime. Manage removal in Xcode > Settings > Components (Platforms on older Xcode). Simulators Xcode can still run, and their data, are not cleaned automatically."
+            "value" : "Simulator system for one OS version. Xcode downloads it again when a project needs it."
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Simulator OS runtime. Manage removal in Xcode > Settings > Components (Platforms on older Xcode). Simulators Xcode can still run, and their data, are not cleaned automatically."
+            "value" : "Simulator system for one OS version. Xcode downloads it again when a project needs it."
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Simulator OS runtime. Manage removal in Xcode > Settings > Components (Platforms on older Xcode). Simulators Xcode can still run, and their data, are not cleaned automatically."
+            "value" : "Simulator system for one OS version. Xcode downloads it again when a project needs it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Runtime del sistema del simulador. Gestiona su eliminación en Xcode > Settings > Components (Platforms en Xcode más antiguos). Los simuladores que Xcode aún puede ejecutar, y sus datos, no se limpian automáticamente."
+            "value" : "Sistema de simulador para una versión del sistema. Xcode lo vuelve a descargar cuando un proyecto lo necesita."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Runtime del sistema del simulador. Gestiona su eliminación en Xcode > Settings > Components (Platforms en Xcode más antiguos). Los simuladores que Xcode aún puede ejecutar, y sus datos, no se limpian automáticamente."
+            "value" : "Sistema de simulador para una versión del sistema. Xcode lo vuelve a descargar cuando un proyecto lo necesita."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Runtime de système du simulateur. Gérez le retrait dans Xcode > Réglages > Composants (Plateformes sur les anciennes versions de Xcode). Les simulateurs que Xcode peut encore exécuter, et leurs données, ne sont pas nettoyés automatiquement."
+            "value" : "Système de simulateur pour une version de l’OS. Xcode le retélécharge quand un projet en a besoin."
           }
         },
         "gsw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Simulator-OS-Runtime. S Entferne verwaltisch du i Xcode > Settings > Components (bi älterem Xcode: Platforms). Simulatore, wo Xcode na cha uusfüere, und ihri Date werded nöd automatisch ufgruumt."
+            "value" : "Simulator-System för ei Betriebssystemversion. Xcode ladet s neu abe, wänn es Projekt s bruucht."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "सिम्युलेटर OS रनटाइम। हटाना Xcode > सेटिंग > कंपोनेंट (पुराने Xcode पर प्लेटफ़ॉर्म) में प्रबंधित करें। जिन सिम्युलेटर को Xcode अब भी चला सकता है, और उनका डेटा, अपने आप साफ़ नहीं किए जाते।"
+            "value" : "एक OS संस्करण के लिए सिम्युलेटर सिस्टम। किसी प्रोजेक्ट को ज़रूरत होने पर Xcode इसे फिर डाउनलोड करता है।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Runtime OS-a simulatora. Uklanjanjem upravljaj u Xcode > Settings > Components (Platforms u starijem Xcodeu). Simulatori koje Xcode još može pokrenuti i njihovi podaci ne čiste se automatski."
+            "value" : "Sustav simulatora za jednu verziju OS-a. Xcode ga ponovno preuzima kad ga projekt treba."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Runtime del sistema operativo del simulatore. Gestisci la rimozione in Xcode > Impostazioni > Componenti (Piattaforme nelle versioni precedenti di Xcode). I simulatori che Xcode può ancora eseguire, e i loro dati, non vengono puliti automaticamente."
+            "value" : "Sistema del simulatore per una versione del sistema operativo. Xcode lo riscarica quando un progetto ne ha bisogno."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "シミュレータのOSランタイム。削除は Xcode > Settings > Components(古いXcodeではPlatforms)で管理します。Xcodeがまだ実行できるシミュレータとそのデータは、自動ではクリーンアップされません。"
+            "value" : "1つのOSバージョン用のシミュレータシステムです。プロジェクトで必要になるとXcodeが再ダウンロードします。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "시뮬레이터 OS 런타임. 제거는 Xcode > 설정 > 구성요소(이전 Xcode에서는 플랫폼)에서 관리하세요. Xcode에서 아직 실행할 수 있는 시뮬레이터와 그 데이터는 자동으로 정리되지 않습니다."
+            "value" : "한 OS 버전용 시뮬레이터 시스템입니다. 프로젝트에 필요하면 Xcode가 다시 다운로드합니다."
           }
         },
         "lv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Simulatora OS izpildlaiks. Noņemšanu pārvaldi sadaļā Xcode > Settings > Components (vecākā Xcode — Platforms). Simulatori, ko Xcode vēl var palaist, un to dati netiek tīrīti automātiski."
+            "value" : "Simulatora sistēma vienai OS versijai. Xcode to lejupielādē no jauna, kad projektam tā vajadzīga."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Środowisko uruchomieniowe systemu symulatora. Zarządzaj usuwaniem w Xcode > Settings > Components (Platforms w starszym Xcode). Symulatory, które Xcode nadal może uruchomić, i ich dane nie są czyszczone automatycznie."
+            "value" : "System symulatora dla jednej wersji systemu. Xcode pobierze go ponownie, gdy projekt będzie go potrzebował."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Runtime do SO do simulador. Gira a remoção em Xcode > Settings > Components (Platforms em versões mais antigas do Xcode). Os simuladores que o Xcode ainda consegue executar, e os seus dados, não são limpos automaticamente."
+            "value" : "Sistema de simulador para uma versão do sistema. O Xcode volta a transferi-lo quando um projeto precisar."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Runtime i sistemit operativ të simulatorit. Menaxho heqjen te Xcode > Settings > Components (Platforms në Xcode më të vjetër). Simulatorët që Xcode mund t'i ekzekutojë ende, dhe të dhënat e tyre, nuk pastrohen automatikisht."
+            "value" : "Sistem simulatori për një version të sistemit. Xcode e shkarkon sërish kur një projekt ka nevojë."
           }
         },
         "sr-Cyrl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Окружење оперативног система симулатора. Уклањањем управљајте у Xcode > Settings > Components (Platforms у старијим верзијама Xcode-а). Симулатори које Xcode још може да покрене и њихови подаци не чисте се аутоматски."
+            "value" : "Систем симулатора за једну верзију ОС-а. Xcode га поново преузима када пројекту затреба."
           }
         },
         "sr-Latn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Okruženje operativnog sistema simulatora. Uklanjanjem upravljajte u Xcode > Settings > Components (Platforms u starijim verzijama Xcode-a). Simulatori koje Xcode još može da pokrene i njihovi podaci ne čiste se automatski."
+            "value" : "Sistem simulatora za jednu verziju OS-a. Xcode ga ponovo preuzima kada projektu zatreba."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Simulatorns OS-körmiljö. Hantera borttagning i Xcode > Settings > Components (Platforms i äldre Xcode). Simulatorer som Xcode fortfarande kan köra, och deras data, rensas inte automatiskt."
+            "value" : "Simulatorsystem för en OS-version. Xcode laddar ned det igen när ett projekt behöver det."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Simülatör işletim sistemi çalışma zamanı. Kaldırmayı Xcode > Ayarlar > Bileşenler’de (eski Xcode’da Platformlar) yönetin. Xcode’un hâlâ çalıştırabildiği simülatörler ve verileri kendiliğinden temizlenmez."
+            "value" : "Bir işletim sistemi sürümü için simülatör sistemi. Bir proje gerektirdiğinde Xcode bunu yeniden indirir."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "模拟器操作系统运行时。请在 Xcode > 设置 > 组件（旧版 Xcode 中为“平台”）中管理移除。Xcode 仍可运行的模拟器及其数据不会被自动清理。"
+            "value" : "一个系统版本的模拟器系统。项目需要时，Xcode 会重新下载。"
           }
         }
       }
@@ -244175,6 +244323,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "模拟器"
+          }
+        }
+      }
+    },
+    "Simulators on this version stop working. Running ones are shut down first." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تتوقف المحاكيات التي تعمل بهذا الإصدار عن العمل. تُغلق المحاكيات العاملة أولاً."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Els simuladors d’aquesta versió deixen de funcionar. Els que estan en marxa s’aturen primer."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatoren mit dieser Version funktionieren nicht mehr. Laufende werden zuerst beendet."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulators on this version stop working. Running ones are shut down first."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulators on this version stop working. Running ones are shut down first."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulators on this version stop working. Running ones are shut down first."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los simuladores de esta versión dejan de funcionar. Los que están en marcha se apagan primero."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los simuladores de esta versión dejan de funcionar. Los que están en marcha se apagan primero."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les simulateurs de cette version cessent de fonctionner. Ceux en cours d’exécution sont d’abord arrêtés."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatore mit dere Version laufed nüme. Laufendi werded zerscht abgstellt."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "इस संस्करण वाले सिम्युलेटर काम करना बंद कर देंगे। चल रहे सिम्युलेटर पहले बंद किए जाते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatori s ovom verzijom prestaju raditi. Pokrenuti se najprije isključuju."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I simulatori con questa versione smettono di funzionare. Quelli in esecuzione vengono prima spenti."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このバージョンのシミュレータは動かなくなります。起動中のものは先にシャットダウンされます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 버전의 시뮬레이터는 더 이상 작동하지 않습니다. 실행 중인 시뮬레이터는 먼저 종료됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatori ar šo versiju pārstāj darboties. Palaistie vispirms tiek izslēgti."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Symulatory z tą wersją przestaną działać. Uruchomione zostaną najpierw wyłączone."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Os simuladores desta versão deixam de funcionar. Os que estão em execução são desligados primeiro."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatorët me këtë version nuk punojnë më. Ata që po punojnë fiken së pari."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Симулатори са овом верзијом престају да раде. Покренути се прво гасе."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatori sa ovom verzijom prestaju da rade. Pokrenuti se prvo gase."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatorer med den här versionen slutar fungera. De som körs stängs av först."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu sürümdeki simülatörler çalışmayı bırakır. Çalışanlar önce kapatılır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用此版本的模拟器将无法运行。正在运行的模拟器会先被关闭。"
           }
         }
       }
@@ -285304,6 +285600,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Xcode 无法提供完整的模拟器运行时清单。请在 Xcode 设置 > 组件中查看已安装的运行时。"
+          }
+        }
+      }
+    },
+    "Xcode doesn't let this runtime be deleted. Remove it in Xcode > Settings > Components." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يسمح Xcode بحذف بيئة التشغيل هذه. أزلها من Xcode > الإعدادات > المكونات."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode no permet esborrar aquest entorn d’execució. Elimina’l a Xcode > Configuració > Components."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode erlaubt nicht, diese Laufzeit zu löschen. Entferne sie in Xcode > Einstellungen > Komponenten."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode doesn't let this runtime be deleted. Remove it in Xcode > Settings > Components."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode doesn't let this runtime be deleted. Remove it in Xcode > Settings > Components."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode doesn't let this runtime be deleted. Remove it in Xcode > Settings > Components."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode no permite borrar este entorno de ejecución. Elimínalo en Xcode > Ajustes > Componentes."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode no permite borrar este entorno de ejecución. Elimínalo en Xcode > Ajustes > Componentes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode ne permet pas de supprimer cet environnement d’exécution. Retirez-le dans Xcode > Réglages > Composants."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode laht die Laufziit nöd lösche. Entfern sie i Xcode > Iistellige > Komponente."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode इस रनटाइम को डिलीट नहीं करने देता। इसे Xcode > सेटिंग्ज़ > कंपोनेंट्स में हटाएँ।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode ne dopušta brisanje ovog okruženja. Uklonite ga u Xcode > Postavke > Komponente."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode non consente di eliminare questo runtime. Rimuovilo in Xcode > Impostazioni > Componenti."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcodeではこのランタイムを削除できません。Xcode > 設定 > コンポーネント で削除してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode에서 이 런타임을 삭제할 수 없습니다. Xcode > 설정 > 구성 요소에서 제거하세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode neļauj izdzēst šo izpildvidi. Noņem to Xcode > Iestatījumi > Komponenti."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode nie pozwala usunąć tego środowiska. Usuń je w Xcode > Ustawienia > Komponenty."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Xcode não permite eliminar este runtime. Remova-o em Xcode > Definições > Componentes."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode nuk lejon që ky mjedis të fshihet. Hiqe te Xcode > Cilësimet > Komponentët."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode не дозвољава брисање овог окружења. Уклоните га у Xcode > Подешавања > Компоненте."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode ne dozvoljava brisanje ovog okruženja. Uklonite ga u Xcode > Podešavanja > Komponente."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode låter inte den här miljön raderas. Ta bort den i Xcode > Inställningar > Komponenter."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode bu çalışma ortamının silinmesine izin vermiyor. Xcode > Ayarlar > Bileşenler’den kaldırın."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode 不允许删除此运行时。请在 Xcode >“设置”>“组件”中移除。"
           }
         }
       }

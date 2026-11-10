@@ -111,17 +111,18 @@ struct IssuePoint: View {
         }.transition(.asymmetric(insertion: .move(edge: .leading).combined(with: .opacity), removal: .scale(scale: 0.9).combined(with: .opacity)))
     }
     private var row: some View {
-        HStack(spacing: 14) {
+        HStack(alignment: .center, spacing: 14) {
             GlossyPoint(icon: icon, text: "", accent: .orange).fixedSize()
-            // One line, like the bullets it replaces, so the copy never grows into the controls below.
-            Text(issue.title).font(.system(size: 16 * textScale, weight: .semibold)).foregroundStyle(.white.opacity(0.95)).lineLimit(1)
+            // Up to two lines, never cut; the icon stays centred on the text and the pill keeps its single line.
+            Text(issue.title).font(.system(size: 16 * textScale, weight: .semibold)).foregroundStyle(.white.opacity(0.95)).lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true).layoutPriority(1)
                 .help(issue.flag)
             Text("+\(issue.points)").font(.system(size: 12 * textScale, weight: .semibold)).monospacedDigit()
                 .foregroundStyle(Color(red: 0.98, green: 0.78, blue: 0.46)).padding(.horizontal, 7).padding(.vertical, 2)
-                .background(Color.orange.opacity(0.18), in: Capsule()).help("Health points you get back by fixing this")
+                .background(Color.orange.opacity(0.18), in: Capsule()).fixedSize().help("Health points you get back by fixing this")
             if let label = issue.fixLabel {
                 Spacer(minLength: 8)
-                Text(label).font(.system(size: 13 * textScale, weight: .semibold))
+                Text(label).font(.system(size: 13 * textScale, weight: .semibold)).lineLimit(1).fixedSize()
                     .foregroundStyle(Color(red: 0.02, green: 0.2, blue: 0.17)).padding(.horizontal, 11).padding(.vertical, 5)
                     .background(Color.mint.opacity(hovered ? 1 : 0.88), in: Capsule())
             }

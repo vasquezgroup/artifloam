@@ -8,6 +8,9 @@ public enum XcodeStorageInventory {
     public static let trashRule = "xcode-reviewed-trash"
     /// Ticked by the person one at a time and deleted by `simctl`; never part of automatic cleanup.
     public static let simulatorRule = "unused-simulator"
+    /// A simulator OS runtime, ticked by the person one at a time and deleted by `simctl runtime delete`.
+    /// The finding's fingerprint holds "runtime:" and the runtime identifier.
+    public static let runtimeRule = "simulator-runtime"
     /// Shut-down simulators worth asking about: anything holding at least 100 MB. Running ones are never listed.
     public static func deletableSimulators(_ all: [SimulatorDevice]) -> [SimulatorDevice] { all.filter { !$0.running && $0.bytes >= 100_000_000 } }
     /// Plain words for someone who doesn't know simulators: why it's listed and whether deleting it is a sure thing.
@@ -41,10 +44,32 @@ public enum XcodeStorageInventory {
         let result = run("/usr/bin/xcrun", ["simctl", "delete", udid], timeout: 120)
         guard result.code == 0 else { throw StewardError.blocked(String(localized: "simctl could not delete it: \(result.error.trimmingCharacters(in: .whitespacesAndNewlines))")) }
     }
+    /// Shuts down the simulators running on this runtime, then has `simctl` delete its disk images.
+    /// Only runtimes `simctl` itself marks deletable; anything else stays with Xcode.
+    static func removeRuntime(_ finding: Finding, configuration: Configuration) throws {
+        guard finding.rule == runtimeRule, finding.fingerprint.hasPrefix("runtime:") else { throw StewardError.blocked(String(localized: "Not a simulator runtime Artifloam can delete.")) }
+        guard !configuration.ignoredPaths.contains(where: { finding.path == $0 || finding.path.hasPrefix($0 + "/") }) else { throw StewardError.blocked(String(localized: "Path is on the ignore list")) }
+        let runtime = String(finding.fingerprint.dropFirst("runtime:".count))
+        func json(_ arguments: [String]) -> [String: Any] {
+            let result = run("/usr/bin/xcrun", ["simctl"] + arguments, timeout: 30)
+            return result.code == 0 ? (result.output.data(using: .utf8).flatMap { try? JSONSerialization.jsonObject(with: $0) } as? [String: Any] ?? [:]) : [:]
+        }
+        let images = json(["runtime", "list", "-j"]).values.compactMap { $0 as? [String: Any] }
+            .filter { $0["runtimeIdentifier"] as? String == runtime && $0["deletable"] as? Bool == true }.compactMap { $0["identifier"] as? String }
+        guard !images.isEmpty else { throw StewardError.blocked(String(localized: "Xcode doesn't let this runtime be deleted. Remove it in Xcode > Settings > Components.")) }
+        let devices = (json(["list", "devices", "-j"])["devices"] as? [String: Any])?[runtime] as? [[String: Any]] ?? []
+        for device in devices where device["state"] as? String == "Booted" {
+            if let udid = device["udid"] as? String { _ = run("/usr/bin/xcrun", ["simctl", "shutdown", udid], timeout: 60) }
+        }
+        for image in images {
+            let result = run("/usr/bin/xcrun", ["simctl", "runtime", "delete", image], timeout: 300)
+            guard result.code == 0 else { throw StewardError.blocked(String(localized: "simctl could not delete it: \(result.error.trimmingCharacters(in: .whitespacesAndNewlines))")) }
+        }
+    }
     static func inspect(home: URL, ignoredPaths: [String] = []) -> (findings: [Finding], notices: [String]) {
         var rows: [Finding] = [], notices: [String] = []
         let excluded = ignoredPaths.map { URL(fileURLWithPath: $0).resolvingSymlinksInPath().standardizedFileURL.path }
-        func add(_ url: URL, safety: Safety = .review, reason: String, immutable: Bool = false, rule: String = trashRule, flag: String? = nil) {
+        func add(_ url: URL, safety: Safety = .review, reason: String, immutable: Bool = false, rule: String = trashRule, flag: String? = nil, fingerprint: String = "review-only") {
             let path = url.resolvingSymlinksInPath().standardizedFileURL.path
             guard !Task.isCancelled,
                   !excluded.contains(where: { path == $0 || path.hasPrefix($0 + "/") }),
@@ -55,7 +80,7 @@ public enum XcodeStorageInventory {
             let modified = value.contentModificationDate ?? Date()
             // "in use" = modified in the last 30 days; Xcode records no last-used date for these folders.
             let warnings = ([flag] + [rule == trashRule && Date().timeIntervalSince(modified) < 30 * 86_400 ? String(localized: "Used in the last 30 days.") : nil]).compactMap { $0 }
-            rows.append(Finding(path: url.path, group: .xcode, bytes: bytes, modifiedAt: modified, safety: safety, reason: reason, rule: rule, fingerprint: "review-only", warnings: warnings.isEmpty ? nil : warnings))
+            rows.append(Finding(path: url.path, group: .xcode, bytes: bytes, modifiedAt: modified, safety: safety, reason: reason, rule: rule, fingerprint: fingerprint, warnings: warnings.isEmpty ? nil : warnings))
         }
         for url in children(home.appendingPathComponent("Library/Developer/Xcode/Archives")) {
             add(url, reason: String(localized: "Release archives from Xcode Organizer. Deleted permanently."), flag: String(localized: "May hold the only signed build and debug symbols of a release."))
@@ -79,7 +104,9 @@ public enum XcodeStorageInventory {
                 for runtime in object["runtimes"] as? [[String: Any]] ?? [] {
                     guard let path = runtime["bundlePath"] as? String, path.hasPrefix("/"), path.hasSuffix(".simruntime"),
                           path.hasPrefix("/Library/Developer/CoreSimulator/") || path.hasPrefix("/private/var/run/com.apple.security.cryptexd/mnt/") else { continue }
-                    add(URL(fileURLWithPath: path), reason: String(localized: "Simulator OS runtime. Manage removal in Xcode > Settings > Components (Platforms on older Xcode). Simulators Xcode can still run, and their data, are not cleaned automatically."), immutable: true, rule: "xcode-managed-review")
+                    guard let identifier = runtime["identifier"] as? String, !identifier.isEmpty else { continue }
+                    add(URL(fileURLWithPath: path), reason: String(localized: "Simulator system for one OS version. Xcode downloads it again when a project needs it."), immutable: true, rule: runtimeRule,
+                        flag: String(localized: "Simulators on this version stop working. Running ones are shut down first."), fingerprint: "runtime:" + identifier)
                 }
             }
             if result.code != 0 || !result.error.isEmpty {
