@@ -996,7 +996,7 @@ struct MainView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Modified \(finding.modifiedAt.formatted(date: .abbreviated, time: .shortened))").stewardFont(.caption).foregroundStyle(muted)
                     HStack { Button("Finder") { m.reveal(finding.path) }; if finding.rule == "xcode-managed-review" { Button("Open Xcode") { m.openXcode() } }; if finding.rule == BroadCaches.brewOldVersionsRule { Button("Run brew cleanup in Terminal") { m.runBrewCleanup(cellar: finding.path) }.help("Opens Terminal and runs Homebrew's own cleanup there") }; Button { m.ignore(finding) } label: { Text("Keep", comment: "Button: keep this item and never suggest it again") } }
-                        .buttonStyle(.bordered).stewardFont(.body).foregroundStyle(mint)
+                        .buttonStyle(RowActionButtonStyle()).stewardFont(.body)
                 }
             }
         }.padding(14).background(panel, in: RoundedRectangle(cornerRadius: 12))
