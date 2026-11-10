@@ -25,7 +25,7 @@ struct MainView: View {
     @State private var cleanupReviewing = false
     /// What Run on the Overview summary includes. Only the safe parts start ticked.
     @State private var runCleanup = true
-    @State private var runDuplicates = true
+    @State private var runDuplicates = false
     @State private var runBrowsers = false
     @State private var runLeftovers = false
     @State private var runQuitApps = false
@@ -192,7 +192,7 @@ struct MainView: View {
         }
         .onChange(of: focusedScan) { _, _ in windowPointer = nil }
         .onChange(of: isStage) { _, _ in windowPointer = nil }
-        .onChange(of: m.scanning) { _, scanning in if scanning { storageMap.cancel(); cleanupReviewing = false; runCleanup = true; runDuplicates = true; runBrowsers = false; runLeftovers = false; runQuitApps = false } }
+        .onChange(of: m.scanning) { _, scanning in if scanning { storageMap.cancel(); cleanupReviewing = false; runCleanup = true; runDuplicates = false; runBrowsers = false; runLeftovers = false; runQuitApps = false } }
         // Also at launch: the window can open straight on Photos or iPhone, and they look for devices.
         .onChange(of: m.section, initial: true) { _, section in
             // Coming back from a page opened inside Overview's detail returns to that detail.
@@ -240,7 +240,7 @@ struct MainView: View {
                 }
             }.frame(maxHeight: 380)
             HStack {
-                Button("Cancel") { m.worktreeBatch = nil; m.runNextRemoval() }; Spacer()
+                Button("Cancel") { m.worktreeBatch = nil; m.runNextRemoval() }.keyboardShortcut(.cancelAction); Spacer()
                 let chosen = batch.candidates.filter { m.worktreeChoice.contains($0.id) }
                 Button("Delete \(chosen.count) · \(formattedBytes(chosen.reduce(0) { $0 + $1.finding.bytes }))", role: .destructive) { m.trashChosenWorktrees() }
                     .buttonStyle(.borderedProminent).tint(.red).disabled(chosen.isEmpty)
@@ -607,7 +607,7 @@ struct MainView: View {
         case "Worktrees":
             title = String(localized: "Room for your next idea.")
             subtitle = String(localized: "See which checkouts are finished and which still hold your work.")
-            points = [("arrow.triangle.branch", String(localized: "Git status & unmerged commits")), ("person.crop.circle", String(localized: "Active sessions protected")), ("eye", String(localized: "Review before archiving"))]
+            points = [("arrow.triangle.branch", String(localized: "Git status & unmerged commits")), ("person.crop.circle", String(localized: "Active sessions protected")), ("eye", String(localized: "Review before deleting"))]
         case "Duplicates":
             title = String(localized: "Same file. Extra space.")
             subtitle = String(localized: "Find exact copies across your home folder. Decide which one to keep.")

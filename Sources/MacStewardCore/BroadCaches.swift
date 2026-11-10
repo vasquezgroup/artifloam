@@ -7,7 +7,7 @@ public enum BroadCaches {
     /// Browsers have their own tool; the rest hold data that is slow or impossible to rebuild,
     /// or belong to the system and its sync services.
     static let skippedAppCaches: Set<String> = ["Arc", "Google", "BraveSoftware", "Microsoft Edge", "Dia", "Comet", "Firefox", "Vivaldi", "com.operasoftware.Opera",
-                                                "CloudKit", "FamilyCircle", "Homebrew", "pip", "pnpm", "ms-playwright", "ms-playwright-go", "JetBrains", "Cypress", StewardPreferences.domain, StewardPreferences.legacyDomain, "MacSteward"]
+                                                "CloudKit", "FamilyCircle", "Homebrew", "pip", "pnpm", "pypoetry", "ms-playwright", "ms-playwright-go", "JetBrains", "Cypress", StewardPreferences.domain, StewardPreferences.legacyDomain, "MacSteward"]
     static let skippedXDGCaches: Set<String> = ["huggingface", "torch", "lm-studio", "ms-playwright", "mole", "whisper"]
 
     /// Caches their own tools document as disposable. The broad scan offers any folder for review, because it can't know

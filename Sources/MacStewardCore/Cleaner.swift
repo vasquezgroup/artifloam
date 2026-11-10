@@ -45,7 +45,7 @@ public final class Cleaner {
                 if snapshot == nil || Date().timeIntervalSince(snapshot!.taken) > 5 { snapshot = (Date(), activityOverride ?? ActivitySnapshot.capture()) }
                 let activity = snapshot!.activity
                 if finding.rule == XcodeStorageInventory.trashRule {
-                    guard approvedIDs.contains(finding.id) else { throw StewardError.blocked(String(localized: "Only folders you ticked are moved")) }
+                    guard approvedIDs.contains(finding.id) else { throw StewardError.blocked(String(localized: "Only folders you ticked are deleted")) }
                     try XcodeStorageInventory.trash(finding, configuration: configuration, activity: activity)
                     items.append(CleanupItem(path: finding.path, outcome: "removed", detail: finding.reason, bytes: finding.bytes)); continue
                 }

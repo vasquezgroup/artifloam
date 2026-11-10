@@ -173,7 +173,7 @@ struct RemovalStage: View {
                             metric(formattedBytes(progress.bytes), progress.finished ? progress.copy.amount : String(localized: "so far", comment: "Under a byte counter: amount handled until now"), tint: theme.accent)
                             metric(progress.indeterminate ? progress.completed.formatted() : String(localized: "\(progress.completed) of \(progress.total)"), progress.copy.unit == .apps ? String(localized: "apps", comment: "Label under a count of apps") : String(localized: "items", comment: "Label under a count of items"))
                         }
-                        if !progress.failures.isEmpty { metric(progress.failures.count.formatted(), progress.copy.unit == .apps ? String(localized: "still open", comment: "Label under a count of apps that did not quit") : String(localized: "not moved", comment: "Label under a count of items that could not be moved"), tint: .orange) }
+                        if !progress.failures.isEmpty { metric(progress.failures.count.formatted(), progress.copy.unit == .apps ? String(localized: "still open", comment: "Label under a count of apps that did not quit") : String(localized: "not deleted", comment: "Label under a count of items that could not be deleted"), tint: .orange) }
                     }.padding(.top, 4)
                     if !progress.finished {
                         if progress.indeterminate { ProgressView().progressViewStyle(.linear).tint(theme.accent).frame(maxWidth: 360) }
@@ -186,7 +186,7 @@ struct RemovalStage: View {
                     HStack(spacing: 12) {
                         if progress.finished {
                             if !progress.failures.isEmpty {
-                                Button(showingDetails ? String(localized: "Hide details") : progress.copy.unit == .apps ? String(localized: "Show \(progress.failures.count) still open") : String(localized: "Show \(progress.failures.count) not moved")) { showingDetails.toggle() }
+                                Button(showingDetails ? String(localized: "Hide details") : progress.copy.unit == .apps ? String(localized: "Show \(progress.failures.count) still open") : String(localized: "Show \(progress.failures.count) not deleted")) { showingDetails.toggle() }
                                     .buttonStyle(CleanupGlassButtonStyle(secondary: true))
                             }
                             Button("Done", action: done).buttonStyle(CleanupGlassButtonStyle()).keyboardShortcut(.defaultAction)

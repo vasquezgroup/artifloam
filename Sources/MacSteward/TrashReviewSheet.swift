@@ -44,7 +44,7 @@ struct TrashReviewSheet: View {
             }.frame(maxHeight: 240)
             if let error { Text(error).stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true) }
             HStack {
-                Button(outcomes == nil ? "Cancel" : "Done") { dismiss() }.disabled(busy)
+                Button(outcomes == nil ? "Cancel" : "Done") { dismiss() }.keyboardShortcut(.cancelAction).disabled(busy)
                 Spacer()
                 if outcomes == nil {
                     Button(busy ? String(localized: "Deleting…") : String(localized: "Delete \(candidates.count) permanently"), role: .destructive) { move() }

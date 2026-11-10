@@ -175,7 +175,7 @@ final class BroadCacheTests: XCTestCase {
     func testSystemBrowserAndPersistentCachesAreNeverCandidates() {
         XCTAssertTrue(BroadCaches.allowedAppCache("com.spotify.client"))
         XCTAssertTrue(BroadCaches.allowedAppCache("Adobe"))
-        for name in ["com.apple.Safari", "CloudKit", "Arc", "Google", "ms-playwright", ".DS_Store", "local.macsteward.app", "com.vasquezgroup.artifloam"] { XCTAssertFalse(BroadCaches.allowedAppCache(name), name) }
+        for name in ["com.apple.Safari", "CloudKit", "Arc", "Google", "ms-playwright", "pypoetry", ".DS_Store", "local.macsteward.app", "com.vasquezgroup.artifloam"] { XCTAssertFalse(BroadCaches.allowedAppCache(name), name) }
     }
     func testOwnerMatchingByBundleIdentifierAndName() {
         let running = [(id: "com.spotify.client", name: "Spotify"), (id: "com.readdle.SparkDesktop", name: "Spark Mail")]

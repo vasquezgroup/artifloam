@@ -191143,150 +191143,150 @@
         }
       }
     },
-    "Only folders you ticked are moved" : {
+    "Only folders you ticked are deleted" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تُنقل المجلدات التي حدّدتها فقط"
+            "value" : "تُحذف المجلدات التي حدّدتها فقط"
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Només es mouen les carpetes que has marcat"
+            "value" : "Només s’esborren les carpetes que has marcat"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nur Ordner, die du angehakt hast, werden verschoben"
+            "value" : "Nur Ordner, die du angehakt hast, werden gelöscht"
           }
         },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Only folders you ticked are moved"
+            "value" : "Only folders you ticked are deleted"
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Only folders you ticked are moved"
+            "value" : "Only folders you ticked are deleted"
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Only folders you ticked are moved"
+            "value" : "Only folders you ticked are deleted"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Solo se mueven las carpetas que marcaste"
+            "value" : "Solo se borran las carpetas que marcaste"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Solo se mueven las carpetas que marcaste"
+            "value" : "Solo se borran las carpetas que marcaste"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seuls les dossiers que vous avez cochés sont déplacés"
+            "value" : "Seuls les dossiers que vous avez cochés sont supprimés"
           }
         },
         "gsw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Es werded nume Ordner verschobe, wo du aagchrüüzlet häsch"
+            "value" : "Es werded nume Ordner glöscht, wo du aagchrüüzlet häsch"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "केवल वही फ़ोल्डर ले जाए जाते हैं जिन्हें आपने चुना"
+            "value" : "केवल वही फ़ोल्डर डिलीट होते हैं जिन्हें आपने चुना"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Premještaju se samo označene mape"
+            "value" : "Brišu se samo označene mape"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vengono spostate solo le cartelle che hai selezionato"
+            "value" : "Vengono eliminate solo le cartelle che hai selezionato"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "選択したフォルダのみが移動されます"
+            "value" : "選択したフォルダのみが削除されます"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "선택한 폴더만 이동합니다"
+            "value" : "선택한 폴더만 삭제합니다"
           }
         },
         "lv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tiek pārvietotas tikai tavas atzīmētās mapes"
+            "value" : "Tiek izdzēstas tikai tavas atzīmētās mapes"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Przenoszone są tylko zaznaczone foldery"
+            "value" : "Usuwane są tylko zaznaczone foldery"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Só as pastas que assinalou são movidas"
+            "value" : "Só as pastas que assinalou são eliminadas"
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zhvendosen vetëm dosjet që ke zgjedhur"
+            "value" : "Fshihen vetëm dosjet që ke zgjedhur"
           }
         },
         "sr-Cyrl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Премештају се само фасцикле које сте означили"
+            "value" : "Бришу се само фасцикле које сте означили"
           }
         },
         "sr-Latn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Premeštaju se samo fascikle koje ste označili"
+            "value" : "Brišu se samo fascikle koje ste označili"
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bara mappar du markerade flyttas"
+            "value" : "Bara mappar du markerade raderas"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yalnızca işaretlediğiniz klasörler taşınır"
+            "value" : "Yalnızca işaretlediğiniz klasörler silinir"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "只移动你勾选的文件夹"
+            "value" : "只删除你勾选的文件夹"
           }
         }
       }
@@ -223571,154 +223571,6 @@
         }
       }
     },
-    "Review before archiving" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "راجع قبل الأرشفة"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revisa abans d’arxivar"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vor dem Archivieren durchsehen"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review before archiving"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review before archiving"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review before archiving"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revisar antes de archivar"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revisar antes de archivar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Examiner avant d’archiver"
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vor em Archiviere prüefe"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "आर्काइव करने से पहले समीक्षा करें"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pregledaj prije arhiviranja"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rivedi prima di archiviare"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "アーカイブ前に確認"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "보관하기 전에 검토"
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pārskatīt pirms arhivēšanas"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Przejrzyj przed archiwizacją"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rever antes de arquivar"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rishiko para arkivimit"
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Прегледај пре архивирања"
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pregledaj pre arhiviranja"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Granska före arkivering"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arşivlemeden önce incele"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "归档前审阅"
-          }
-        }
-      }
-    },
     "Review before deleting" : {
       "localizations" : {
         "ar" : {
@@ -240738,150 +240590,150 @@
         }
       }
     },
-    "Show %lld not moved" : {
+    "Show %lld not deleted" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "عرض %lld لم تُنقل"
+            "value" : "عرض %lld لم تُحذف"
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mostra els %lld que no s’han mogut"
+            "value" : "Mostra els %lld que no s’han esborrat"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld nicht verschobene anzeigen"
+            "value" : "%lld nicht gelöschte anzeigen"
           }
         },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show %lld not moved"
+            "value" : "Show %lld not deleted"
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show %lld not moved"
+            "value" : "Show %lld not deleted"
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show %lld not moved"
+            "value" : "Show %lld not deleted"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mostrar %lld no movidos"
+            "value" : "Mostrar %lld no borrados"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mostrar %lld no movidos"
+            "value" : "Mostrar %lld no borrados"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Afficher les %lld non déplacés"
+            "value" : "Afficher les %lld non supprimés"
           }
         },
         "gsw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld nöd verschobeni zeige"
+            "value" : "%lld nöd glöschti zeige"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "न ले जाए गए %lld दिखाएँ"
+            "value" : "डिलीट नहीं हुए %lld दिखाएँ"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prikaži nepremještene (%lld)"
+            "value" : "Prikaži neizbrisane (%lld)"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mostra %lld non spostati"
+            "value" : "Mostra %lld non eliminati"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "移動されなかった%lld件を表示"
+            "value" : "削除されなかった%lld件を表示"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이동하지 않은 %lld개 보기"
+            "value" : "삭제하지 않은 %lld개 보기"
           }
         },
         "lv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rādīt %lld nepārvietotos"
+            "value" : "Rādīt %lld neizdzēstos"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pokaż nieprzeniesione: %lld"
+            "value" : "Pokaż nieusunięte: %lld"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mostrar %lld não movidos"
+            "value" : "Mostrar %lld não eliminados"
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Shfaq %lld të pazhvendosurat"
+            "value" : "Shfaq %lld të pafshirat"
           }
         },
         "sr-Cyrl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Прикажи %lld непремештених"
+            "value" : "Прикажи %lld необрисаних"
           }
         },
         "sr-Latn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prikaži %lld nepremeštenih"
+            "value" : "Prikaži %lld neobrisanih"
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Visa %lld som inte flyttades"
+            "value" : "Visa %lld som inte raderades"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Taşınmayanları göster: %lld"
+            "value" : "Silinmeyenleri göster: %lld"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "显示未移动的 %lld 项"
+            "value" : "显示未删除的 %lld 项"
           }
         }
       }
@@ -297366,154 +297218,154 @@
         }
       }
     },
-    "not moved" : {
-      "comment" : "Label under a count of items that could not be moved",
+    "not deleted" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "لم تُنقل"
+            "value" : "لم تُحذف"
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "no moguts"
+            "value" : "no esborrats"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "nicht verschoben"
+            "value" : "nicht gelöscht"
           }
         },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "not moved"
+            "value" : "not deleted"
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "not moved"
+            "value" : "not deleted"
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "not moved"
+            "value" : "not deleted"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "no movidos"
+            "value" : "no borrados"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "no movidos"
+            "value" : "no borrados"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "non déplacés"
+            "value" : "non supprimés"
           }
         },
         "gsw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "nöd verschobe"
+            "value" : "nöd glöscht"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "न ले जाए गए"
+            "value" : "डिलीट नहीं हुए"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "nije premješteno"
+            "value" : "nije izbrisano"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "non spostati"
+            "value" : "non eliminati"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未移動"
+            "value" : "未削除"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이동하지 않음"
+            "value" : "삭제하지 않음"
           }
         },
         "lv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "nepārvietoti"
+            "value" : "neizdzēsti"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "nieprzeniesione"
+            "value" : "nieusunięte"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "não movidos"
+            "value" : "não eliminados"
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "të pazhvendosura"
+            "value" : "të pafshira"
           }
         },
         "sr-Cyrl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "није премештено"
+            "value" : "није обрисано"
           }
         },
         "sr-Latn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "nije premešteno"
+            "value" : "nije obrisano"
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ej flyttat"
+            "value" : "ej raderat"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "taşınmadı"
+            "value" : "silinmedi"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未移动"
+            "value" : "未删除"
           }
         }
-      }
+      },
+      "comment" : "Label under a count of items that could not be deleted"
     },
     "npm's download cache, unused for at least 30 days. npm downloads packages again when needed; projects keep what they installed." : {
       "localizations" : {

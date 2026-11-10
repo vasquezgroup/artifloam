@@ -85,12 +85,13 @@ struct CleanConfirmSheet: View {
             }
             Label("Each item is checked again right before removal. Anything in use is skipped. Removed caches are rebuilt by their apps when needed.", systemImage: "checkmark.shield")
                 .stewardFont(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            Label("Deleted permanently after you confirm", systemImage: "exclamationmark.triangle")
+                .stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
             HStack(spacing: 12) {
                 Button("Cancel") { dismiss() }.keyboardShortcut(.cancelAction)
                     .buttonStyle(CleanupGlassButtonStyle(secondary: true))
                 Spacer()
                 Button { dismiss(); confirm() } label: { Label(extras.isEmpty ? String(localized: "Delete \(findings.count) items · \(formattedBytes(total))") : total > 0 ? String(localized: "Delete · \(formattedBytes(total))") : String(localized: "Delete", comment: "Button: confirm deleting the selected items"), systemImage: "trash.fill").stewardFont(.body, weight: .semibold) }
-                    .keyboardShortcut(.defaultAction)
                     .buttonStyle(DestructiveCapsuleStyle())
             }
         }.padding(26).frame(width: 520).preferredColorScheme(.dark)
