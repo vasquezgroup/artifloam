@@ -79,7 +79,7 @@ struct DuplicatesView: View {
             HStack(spacing: 6) {
                 Image(systemName: "magnifyingglass").foregroundStyle(muted)
                 TextField("Search file names or folders", text: $query).textFieldStyle(.plain)
-                if !query.isEmpty { Button { query = "" } label: { Image(systemName: "xmark.circle.fill") }.buttonStyle(.plain).foregroundStyle(muted).help("Clear search") }
+                if !query.isEmpty { Button { query = "" } label: { Image(systemName: "xmark.circle.fill") }.buttonStyle(.plain).foregroundStyle(muted).help("Clear search").accessibilityLabel("Clear search") }
             }.padding(.horizontal, 10).frame(height: 32).frame(maxWidth: 360).background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 9))
             SmartSelectButton(enabled: !m.busy && groups.contains { $0.extraCount > 0 }, help: String(localized: "Ticks the extra copies outside your projects and keeps one copy of each. Copies inside a project stay unticked.")) {
                 groups.forEach { setTicked($0, $0.extraCount > 0) }

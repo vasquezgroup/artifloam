@@ -321,7 +321,7 @@ struct BrowserDataView: View {
     @State private var confirming = false
     private var chosen: [BrowserItem] { reports.flatMap(\.items).filter { state.selection.contains($0.id) } }
     private func toggle(_ item: BrowserItem) -> some View {
-        Toggle("Select", isOn: Binding(get: { state.selection.contains(item.id) }, set: { if $0 { state.selection.insert(item.id) } else { state.selection.remove(item.id) } })).toggleStyle(.stewardCheckboxOnly)
+        Toggle(String(localized: "Select \((item.site ?? item.kindTitle))"), isOn: Binding(get: { state.selection.contains(item.id) }, set: { if $0 { state.selection.insert(item.id) } else { state.selection.remove(item.id) } })).toggleStyle(.stewardCheckboxOnly)
     }
     private func row(_ item: BrowserItem, title: String, detail: String) -> some View {
         HStack(spacing: 12) {

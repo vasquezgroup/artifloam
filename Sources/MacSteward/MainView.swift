@@ -348,7 +348,8 @@ struct MainView: View {
                 browsersCard
                 applicationsCard
                 performanceCard
-                toolCard("Status", value: m.checks.isEmpty ? String(localized: "Not checked") : String(localized: "\(m.protections.on) of \(m.protections.total) on"), detail: String(localized: "Protection, updates and remote access"), review: { overviewDetail = "System" })
+                // Titled "System", like the page it opens: "Status" is the live-readings page in the corner.
+                toolCard("System", value: m.checks.isEmpty ? String(localized: "Not checked") : String(localized: "\(m.protections.on) of \(m.protections.total) on"), detail: String(localized: "Protection, updates and remote access"), review: { overviewDetail = "System" })
             }.frame(maxWidth: 1000)
             if let note = m.report?.notices.first {
                 HStack(spacing: 8) {
@@ -402,15 +403,18 @@ struct MainView: View {
         let found = (reports ?? []).flatMap(\.items).filter(\.recommended).reduce(UInt64(0)) { $0 + $1.bytes }
         let bytes = chosenBrowserCaches.reduce(UInt64(0)) { $0 + $1.bytes }
         let open = (reports ?? []).filter { report in BrowserData.isRunning(report.bundleID) && report.items.contains(where: \.recommended) }.map(\.name).joined(separator: ", ")
-        let status = reports == nil ? String(localized: "Checking…") : bytes == 0 && !open.isEmpty ? String(localized: "Quit \(open) to clean") : runStatus(ticked: runBrowsers, bytes: bytes, found: found)
-        return toolCard("Browsers", value: reports == nil ? String(localized: "Checking…") : formattedBytes(found), detail: String(localized: "Rebuilt as you browse. You stay signed in."), status: status, chosen: $runBrowsers, canChoose: bytes > 0, review: { overviewDetail = "Browsers" })
+        // Only a scan that runs every tool fills this tile; without one it says so instead of "Checking…" forever.
+        let waiting = m.browsers.busy ? String(localized: "Checking…") : String(localized: "Not checked")
+        let status = reports == nil ? waiting : bytes == 0 && !open.isEmpty ? String(localized: "Quit \(open) to clean") : runStatus(ticked: runBrowsers, bytes: bytes, found: found)
+        return toolCard("Browsers", value: reports == nil ? waiting : formattedBytes(found), detail: String(localized: "Rebuilt as you browse. You stay signed in."), status: status, chosen: $runBrowsers, canChoose: bytes > 0, review: { overviewDetail = "Browsers" })
     }
     private var applicationsCard: some View {
         let bytes = chosenLeftovers.reduce(UInt64(0)) { $0 + $1.bytes }
         let leftovers = m.leftovers.items?.reduce(UInt64(0)) { $0 + $1.bytes }
-        return toolCard("Applications", value: m.unusedApps.map { String(localized: "\($0) unused apps") } ?? String(localized: "Checking…"),
-                        detail: leftovers.map { String(localized: "Unused 6+ months · \(formattedBytes($0)) leftovers") } ?? String(localized: "Finding leftovers…"),
-                        status: leftovers == nil ? String(localized: "Checking…") : runStatus(ticked: runLeftovers, bytes: bytes, found: leftovers ?? 0), chosen: $runLeftovers, canChoose: bytes > 0, review: { overviewDetail = "Applications" })
+        let checking = m.leftovers.busy, waiting = checking ? String(localized: "Checking…") : String(localized: "Not checked")
+        return toolCard("Applications", value: m.unusedApps.map { String(localized: "\($0) unused apps") } ?? waiting,
+                        detail: leftovers.map { String(localized: "Unused 6+ months · \(formattedBytes($0)) leftovers") } ?? (checking ? String(localized: "Finding leftovers…") : ""),
+                        status: leftovers == nil ? waiting : runStatus(ticked: runLeftovers, bytes: bytes, found: leftovers ?? 0), chosen: $runLeftovers, canChoose: bytes > 0, review: { overviewDetail = "Applications" })
     }
     private var performanceCard: some View {
         let apps = idleApps
@@ -434,7 +438,7 @@ struct MainView: View {
     }
     @ViewBuilder private func overviewDetailView(_ detail: String) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            breadcrumb(from: sectionTitle("Overview"), to: sectionTitle(detail == "System" ? "Status" : detail)) { overviewDetail = nil }
+            breadcrumb(from: sectionTitle("Overview"), to: sectionTitle(detail)) { overviewDetail = nil }
             if detail == "Cleanup" { cleanupDetails.frame(maxWidth: .infinity, maxHeight: .infinity) }
             else { ScrollView { content(detail).padding(.bottom, 28).frame(maxWidth: .infinity, alignment: .leading) } }
         }.padding(.horizontal, 24).padding(.top, 16).padding(.bottom, 16).frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -683,6 +687,8 @@ struct MainView: View {
     }
     private var showsFooter: Bool {
         !isStage && m.cleaning == nil && stageRemoval == nil && !["Space Map", "Memory", "Tools", "Settings", "Large & old files", "App removal", "Login & background items", "Performance", "Applications", "Trash bins", "Leftovers", "Browser data", "Status", "Browsers", "iPhone"].contains(m.section) && !(m.section == "My Clutter" && clutterTab != "Duplicates")
+            // The Cleanup summary has its own Remove selected, which also takes browsers and the Trash: one button, not two.
+            && !(m.section == "Cleanup" && !cleanupReviewing)
     }
     /// A carousel driven by hand: during a change the leaving page and the current page are both ordinary,
     /// live pages moved by one `slide` value. SwiftUI's removal transitions only move a leaving page; they never blur or fade it.
@@ -971,9 +977,9 @@ struct MainView: View {
     func findingRow(_ finding: Finding) -> some View {
         HStack(alignment: .top, spacing: 12) {
             if finding.group == .worktrees && (finding.safety == .review || m.unlockedWorktrees.contains(finding.id)) {
-                Toggle("Select", isOn: Binding(get: { m.worktreeSelection.contains(finding.id) }, set: { if $0 { m.worktreeSelection.insert(finding.id) } else { m.worktreeSelection.remove(finding.id) } })).toggleStyle(.stewardCheckboxOnly)
+                Toggle(String(localized: "Select \(finding.title)"), isOn: Binding(get: { m.worktreeSelection.contains(finding.id) }, set: { if $0 { m.worktreeSelection.insert(finding.id) } else { m.worktreeSelection.remove(finding.id) } })).toggleStyle(.stewardCheckboxOnly)
             } else if finding.userCleanable {
-                Toggle("Select", isOn: Binding(get: { m.selected.contains(finding.id) }, set: { if $0 { m.selected.insert(finding.id) } else { m.selected.remove(finding.id) } })).toggleStyle(.stewardCheckboxOnly)
+                Toggle(String(localized: "Select \(finding.title)"), isOn: Binding(get: { m.selected.contains(finding.id) }, set: { if $0 { m.selected.insert(finding.id) } else { m.selected.remove(finding.id) } })).toggleStyle(.stewardCheckboxOnly)
             } else if finding.group == .worktrees && finding.hold == .inUse { unlockButton(finding) }
             else { Image(systemName: finding.safety == .protected ? "lock.fill" : "eye").stewardFont(.body).foregroundStyle(muted).frame(width: 15).help(finding.safety == .protected ? "Protected: Artifloam never removes this" : "") }
             VStack(alignment: .leading, spacing: 6) {
@@ -1060,7 +1066,7 @@ struct MainView: View {
     private func worktreeRow(_ finding: Finding) -> some View {
         HStack(spacing: 12) {
             if finding.safety == .review || m.unlockedWorktrees.contains(finding.id) {
-                Toggle("Select", isOn: Binding(get: { m.worktreeSelection.contains(finding.id) }, set: { if $0 { m.worktreeSelection.insert(finding.id) } else { m.worktreeSelection.remove(finding.id) } })).toggleStyle(.stewardCheckboxOnly)
+                Toggle(String(localized: "Select \(finding.title)"), isOn: Binding(get: { m.worktreeSelection.contains(finding.id) }, set: { if $0 { m.worktreeSelection.insert(finding.id) } else { m.worktreeSelection.remove(finding.id) } })).toggleStyle(.stewardCheckboxOnly)
             } else if finding.hold == .inUse { unlockButton(finding) }
             else { Image(systemName: "lock.fill").foregroundStyle(muted).frame(width: 15) }
             VStack(alignment: .leading, spacing: 3) {
@@ -1250,6 +1256,8 @@ struct MainView: View {
             extras.append(CleanExtra(icon: "memorychip", title: sectionTitle("Performance"), bytes: nil, warning: String(localized: "\(names) will be asked to quit. Save your work if they ask.")))
             steps.append { quitting.forEach { m.memory.quit($0) }; runQuitApps = false; m.runNextRemoval() }
         }
+        // Only worktrees: their own sheet confirms each one with Git's findings, so a first sheet would only ask twice.
+        if items.isEmpty, steps.count == 1, !worktrees.isEmpty { m.requestWorktreeRemoval(worktrees); return }
         pendingRemoval = PendingRemoval(findings: items, extras: extras, steps: steps)
     }
     /// Recommended caches of closed browsers: the only ones that can go right now.

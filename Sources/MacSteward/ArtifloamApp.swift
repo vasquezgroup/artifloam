@@ -148,7 +148,12 @@ final class StewardApplicationDelegate: NSObject, NSApplicationDelegate, NSPopov
         NSApp.activate(ignoringOtherApps: true)
     }
     @objc private func settings() { model.section = "Settings"; showWindow() }
-    @objc private func scan() { model.scan() }
+    /// The same scan as the Overview orb: on Overview, where its results appear, and through the Full Disk Access gate.
+    @objc private func scan() {
+        guard !model.scanning else { return }
+        model.section = "Overview"; showWindow()
+        model.withFullDisk { [model] in model.scan(allTools: true) }
+    }
     @objc private func checkForUpdates() { Task { await model.updates.check(reportResult: true) } }
     @objc private func uninstall() { showWindow(); model.requestUninstall() }
     @objc private func biggerText() { model.changeTextScale(0.15) }

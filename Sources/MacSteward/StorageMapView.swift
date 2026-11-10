@@ -198,8 +198,8 @@ struct StorageMapView: View {
                     Button("Applications") { map.navigate(URL(fileURLWithPath: "/Applications")) }
                     Button("Choose Folder or Drive…") { map.chooseFolder() }
                 } label: { Label("Location", systemImage: "folder") }.disabled(!map.canStart)
-                Button { map.chooseFolder() } label: { Image(systemName: "folder.badge.plus") }.help("Map a folder or drive").disabled(!map.canStart)
-                if map.busy { Button { map.cancel() } label: { Text("Stop", comment: "Button: stop mapping the disk") } }
+                Button { map.chooseFolder() } label: { Image(systemName: "folder.badge.plus") }.help("Map a folder or drive").accessibilityLabel("Map a folder or drive").disabled(!map.canStart)
+                if map.busy { Button { map.cancel() } label: { Text("Stop", comment: "Button: stop mapping the disk") }.keyboardShortcut(.cancelAction) }
                 else if map.snapshot == nil { Button { map.map() } label: { Text("Map Storage", comment: "Button: start mapping the disk") }.disabled(!map.canStart) }
                 else { Button { map.map() } label: { Text("Refresh", comment: "Button: map the folder again") }.disabled(!map.canStart) }
             }
@@ -316,7 +316,7 @@ struct StorageMapView: View {
         let start = parts.starts(with: home) ? home.count - 1 : 0
         return HStack(spacing: 6) {
             BackSquareButton { map.goBack() }.disabled(map.backStack.isEmpty || !map.canStart)
-            Button { map.goForward() } label: { Image(systemName: "chevron.right").flipsForRightToLeftLayoutDirection(true) }.disabled(map.forwardStack.isEmpty || !map.canStart).help("Forward")
+            Button { map.goForward() } label: { Image(systemName: "chevron.right").flipsForRightToLeftLayoutDirection(true) }.disabled(map.forwardStack.isEmpty || !map.canStart).help("Forward").accessibilityLabel("Forward")
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 2) {
                     ForEach(start..<parts.count, id: \.self) { index in
@@ -332,7 +332,7 @@ struct StorageMapView: View {
                 }
             }
             Button { map.navigate(map.root.deletingLastPathComponent()) } label: { Image(systemName: "arrow.turn.left.up") }
-                .disabled(!map.canStart || map.root.path == "/").help("Up to the enclosing folder")
+                .disabled(!map.canStart || map.root.path == "/").help("Up to the enclosing folder").accessibilityLabel("Up to the enclosing folder")
         }.buttonStyle(.bordered).padding(6).background(.white.opacity(0.04), in: RoundedRectangle(cornerRadius: 10))
     }
     private func storageMetric(_ label: LocalizedStringKey, _ value: String, explanation: LocalizedStringKey, color: Color) -> some View {
@@ -366,7 +366,7 @@ struct StorageMapView: View {
                     Button("Current folder") { model.reveal(map.root.path) }
                     Button("Full rescan") { map.map(full: true) }.disabled(!map.canStart)
                     Button("Find eligible caches") { model.section = "Overview"; model.scan() }
-                } label: { Image(systemName: "ellipsis.circle") }.help("Map actions")
+                } label: { Image(systemName: "ellipsis.circle") }.help("Map actions").accessibilityLabel("Map actions")
             }
             HStack(spacing: 10) {
                 storageMetric("Stored on this Mac", formattedBytes(snapshot.bytes), explanation: "Space these files occupy on your disk.", color: StewardTheme.space.accent)

@@ -83,6 +83,8 @@ struct SystemCheckView: View {
     private var missingAgents: [BackgroundItem] { m.agents.filter(\.programMissing) }
     private var toReview: Int { attention.count + (missingAgents.isEmpty ? 0 : 1) + (m.appFindings.isEmpty ? 0 : 1) }
     private var heading: String {
+        // No checks read yet: never claim the Mac is protected.
+        if m.checks.isEmpty { return m.busy ? String(localized: "Checking…") : String(localized: "Not checked") }
         if toReview > 0 { return String(localized: "\(toReview) things to review.") }
         return m.checks.contains { $0.status == .unknown } ? String(localized: "Some checks couldn't be read.") : String(localized: "Your Mac is well protected.")
     }
@@ -96,7 +98,7 @@ struct SystemCheckView: View {
     }
     private var summary: some View {
         VStack(alignment: .leading, spacing: 22) {
-            ResultHero(theme: theme, title: heading, subtitle: String(localized: "\(m.protections.on) of \(m.protections.total) protections on.")) {
+            ResultHero(theme: theme, title: heading, subtitle: m.protections.total == 0 ? "" : String(localized: "\(m.protections.on) of \(m.protections.total) protections on.")) {
                 Button("Check again") { m.checkSystem() }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).disabled(m.busy)
             }
             if toReview > 0 {

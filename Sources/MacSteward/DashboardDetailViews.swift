@@ -17,7 +17,7 @@ struct DashboardDetailView: View {
     }
     @ViewBuilder private var content: some View {
         switch kind {
-        case .memory: CompactMemoryView(monitor: memory, openWindow: { openWindow("Memory") })
+        case .memory: CompactMemoryView(monitor: memory, openWindow: { openWindow("Performance") })
         case .cpu: CPUDetailView(dashboard: dashboard, memory: memory)
         case .battery: BatteryDetailView(dashboard: dashboard, memory: memory)
         case .storage: StorageDetailView(dashboard: dashboard, openWindow: openWindow)

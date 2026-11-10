@@ -159,7 +159,7 @@ struct CleaningStage: View {
                 metric(progress.skipped.formatted(), String(localized: "kept, in use", comment: "Under a counter: items skipped because an app is using them"))
             }.padding(.top, 6)
             Button(action: stop) { Label(stopping ? "Stopping…" : "Stop", systemImage: "stop.fill") }
-                .buttonStyle(CleanupGlassButtonStyle(secondary: true)).disabled(stopping).padding(.top, 8)
+                .buttonStyle(CleanupGlassButtonStyle(secondary: true)).keyboardShortcut(.cancelAction).disabled(stopping).padding(.top, 8)
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     private func metric(_ value: String, _ label: String) -> some View {
@@ -227,6 +227,6 @@ struct CleaningStage: View {
 struct BackSquareButton: View {
     let action: () -> Void
     var body: some View {
-        Button(action: action) { Image(systemName: "chevron.left").flipsForRightToLeftLayoutDirection(true) }.buttonStyle(.bordered).help("Back")
+        Button(action: action) { Image(systemName: "chevron.left").flipsForRightToLeftLayoutDirection(true) }.buttonStyle(.bordered).help("Back").accessibilityLabel("Back")
     }
 }

@@ -133,9 +133,9 @@ struct MemoryView: View {
                 ToolHeading(title: "Memory", detail: "See at a glance whether your Mac has room, and choose what to close.")
                 Spacer()
                 if !compact {
-                    Button { (NSApp.delegate as? StewardApplicationDelegate)?.openMemoryMonitor() } label: { Image(systemName: "menubar.rectangle") }.help("Open the Mac dashboard")
+                    Button { (NSApp.delegate as? StewardApplicationDelegate)?.openMemoryMonitor() } label: { Image(systemName: "menubar.rectangle") }.help("Open the Mac dashboard").accessibilityLabel("Open the Mac dashboard")
                 }
-                Button { Task { await monitor.refresh() } } label: { Image(systemName: "arrow.clockwise") }.help("Refresh memory readings")
+                Button { Task { await monitor.refresh() } } label: { Image(systemName: "arrow.clockwise") }.help("Refresh memory readings").accessibilityLabel("Refresh memory readings")
             }
             if let reading = monitor.reading {
                 let verdict = MemoryVerdict.evaluate(pressure: reading.pressure, swap: reading.swap, total: reading.total, loginItems: loginItems)
@@ -316,7 +316,7 @@ struct CompactMemoryView: View {
             HStack {
                 Label("Memory", systemImage: "memorychip.fill").font(.system(size: 22, weight: .semibold))
                 Spacer()
-                Button { Task { await monitor.refresh() } } label: { Image(systemName: "arrow.clockwise") }.help("Refresh readings")
+                Button { Task { await monitor.refresh() } } label: { Image(systemName: "arrow.clockwise") }.help("Refresh readings").accessibilityLabel("Refresh readings")
             }
             FlyoutWarningBanner()
             if let reading = monitor.reading {

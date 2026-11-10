@@ -71,7 +71,7 @@ struct LargeFilesView: View {
                 Picker("Show", selection: $state.installersOnly) { Text("Any file").tag(false); Text("Installers").tag(true) }.frame(width: 170).disabled(task != nil)
                     .help(Text(verbatim: ".dmg, .pkg, .xip, .iso, .ipsw"))
                 Spacer()
-                if task != nil { Button("Stop") { state.cancel() } }
+                if task != nil { Button("Stop") { state.cancel() }.keyboardShortcut(.cancelAction) }
                 else { Button("Find files") { scan() }.buttonStyle(CleanupGlassButtonStyle()) }
             }
             Text("‘Old’ means last modified before the chosen date; it does not prove a file is unused. File contents are never opened or downloaded. Hidden folders, Library and app bundles are excluded.").stewardFont(.caption).foregroundStyle(.secondary)
@@ -403,8 +403,8 @@ struct BackgroundItemsView: View {
             HStack(spacing: 10) {
                 TextField("Find an item", text: $search).stewardInput()
                 Button { addApps() } label: { Label("Add app…", systemImage: "plus") }.buttonStyle(CleanupGlassButtonStyle(compact: true)).help("Choose an app to open each time you sign in")
-                Button { state.refresh() } label: { Image(systemName: "arrow.clockwise") }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).help("Check again")
-                Button { openSettings() } label: { Image(systemName: "gearshape") }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).help("Open Login Items settings")
+                Button { state.refresh() } label: { Image(systemName: "arrow.clockwise") }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).help("Check again").accessibilityLabel("Check again")
+                Button { openSettings() } label: { Image(systemName: "gearshape") }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).help("Open Login Items settings").accessibilityLabel("Open Login Items settings")
             }
             if let error = state.error { Text(error).stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true) }
             if !logins.isEmpty {

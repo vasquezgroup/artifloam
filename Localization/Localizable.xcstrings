@@ -264525,6 +264525,154 @@
         }
       }
     },
+    "This step can't be stopped. It finishes on its own." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يمكن إيقاف هذه الخطوة. ستنتهي من تلقاء نفسها."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aquest pas no es pot aturar. S’acaba sol."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Schritt lässt sich nicht stoppen. Er endet von selbst."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This step can't be stopped. It finishes on its own."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This step can't be stopped. It finishes on its own."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This step can't be stopped. It finishes on its own."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este paso no se puede detener. Termina por sí solo."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este paso no se puede detener. Termina por sí solo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette étape ne peut pas être arrêtée. Elle se termine d’elle-même."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De Schritt cha mer nöd stoppe. Er hört vo sälber uf."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "यह चरण रोका नहीं जा सकता। यह अपने आप पूरा हो जाएगा।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ovaj se korak ne može zaustaviti. Završit će sam od sebe."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questo passaggio non si può interrompere. Termina da solo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この手順は停止できません。自動的に完了します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 단계는 멈출 수 없습니다. 저절로 끝납니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šo soli nevar apturēt. Tas beigsies pats."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tego kroku nie można zatrzymać. Zakończy się sam."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este passo não pode ser parado. Termina sozinho."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ky hap nuk mund të ndalet. Përfundon vetë."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Овај корак не може да се заустави. Завршиће се сам."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ovaj korak ne može da se zaustavi. Završiće se sam."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Det här steget kan inte stoppas. Det blir klart av sig självt."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu adım durdurulamaz. Kendiliğinden tamamlanır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此步骤无法停止，会自行完成。"
+          }
+        }
+      }
+    },
     "This video can't be compressed." : {
       "localizations" : {
         "ar" : {

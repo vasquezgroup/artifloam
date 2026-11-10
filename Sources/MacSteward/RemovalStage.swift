@@ -191,7 +191,10 @@ struct RemovalStage: View {
                             }
                             Button("Done", action: done).buttonStyle(CleanupGlassButtonStyle()).keyboardShortcut(.defaultAction)
                         } else if progress.stoppable {
-                            Button(action: stop) { Label("Stop", systemImage: "stop.fill") }.buttonStyle(CleanupGlassButtonStyle(secondary: true))
+                            Button(action: stop) { Label("Stop", systemImage: "stop.fill") }.buttonStyle(CleanupGlassButtonStyle(secondary: true)).keyboardShortcut(.cancelAction)
+                        } else {
+                            // Emptying the Trash, cleaning browsers or quitting apps runs as one step: say why there's no Stop.
+                            Text("This step can't be stopped. It finishes on its own.").stewardFont(.callout).foregroundStyle(.secondary)
                         }
                     }.stewardFont(.body, weight: .semibold).padding(.top, 10)
                 }.padding(.horizontal, 45).padding(.bottom, 8)

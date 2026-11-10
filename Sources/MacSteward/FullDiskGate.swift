@@ -82,9 +82,13 @@ struct FullDiskGate: View {
                             }
                             HStack(spacing: 10) {
                                 Button(waiting ? "Open Settings again" : "Allow access") { waiting = true; NSWorkspace.shared.open(FullDiskAccess.settingsURL) }.buttonStyle(CleanupGlassButtonStyle()).keyboardShortcut(.defaultAction)
-                                Button("Scan without it") { m.finishAccessGate() }.buttonStyle(CleanupGlassButtonStyle(secondary: true)).keyboardShortcut(.cancelAction)
+                                Button("Scan without it") { m.finishAccessGate() }.buttonStyle(CleanupGlassButtonStyle(secondary: true))
                             }
-                            Button("Don't ask again") { m.finishAccessGate(forever: true) }.buttonStyle(.plain).stewardFont(.caption).foregroundStyle(.white.opacity(0.6))
+                            HStack(spacing: 18) {
+                                // Esc closes without scanning; it used to start the scan.
+                                Button("Cancel") { m.accessGate = nil }.keyboardShortcut(.cancelAction)
+                                Button("Don't ask again") { m.finishAccessGate(forever: true) }
+                            }.buttonStyle(.plain).stewardFont(.caption).foregroundStyle(.white.opacity(0.6))
                         }
                     }.frame(maxWidth: 440, alignment: .leading)
                 }.padding(34).frame(maxWidth: .infinity, alignment: .center)

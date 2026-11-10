@@ -58,7 +58,7 @@ struct MacDashboardView: View {
                         .padding(.horizontal, 9).padding(.vertical, 4)
                         .foregroundStyle(clear ? Color.mint : .orange).background((clear ? Color.mint : .orange).opacity(0.16), in: Capsule())
                 }
-                Button { Task { await monitor.refresh(); await memory.refresh() } } label: { Image(systemName: "arrow.clockwise") }.help("Refresh system readings").disabled(monitor.refreshing)
+                Button { Task { await monitor.refresh(); await memory.refresh() } } label: { Image(systemName: "arrow.clockwise") }.help("Refresh system readings").accessibilityLabel("Refresh system readings").disabled(monitor.refreshing)
             }.frame(height: 48).padding(.bottom, 4)
             HStack(spacing: 12) {
                 let disk = monitor.sample?.disk
@@ -96,7 +96,7 @@ struct MacDashboardView: View {
                 Button("Open Artifloam") { openWindow("Overview") }
                 Spacer()
                 Button { NSApp.terminate(nil) } label: { Label("Quit Artifloam", systemImage: "power") }.help("Closes Artifloam completely, including this menu bar icon. Automatic cleanup you turned on still runs on its schedule.")
-                Button { openWindow("Settings") } label: { Image(systemName: "gearshape.fill") }.padding(.leading, 10).help("Artifloam settings")
+                Button { openWindow("Settings") } label: { Image(systemName: "gearshape.fill") }.padding(.leading, 10).help("Artifloam settings").accessibilityLabel("Artifloam settings")
             }.font(.system(size: 14, weight: .medium)).buttonStyle(.plain).foregroundStyle(.white.opacity(0.85))
         }.padding(18).frame(width: 460, height: 700)
             .background(LinearGradient(colors: [Color(red: 0.19, green: 0.075, blue: 0.34), Color(red: 0.055, green: 0.04, blue: 0.12)], startPoint: .topLeading, endPoint: .bottomTrailing))

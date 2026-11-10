@@ -17,7 +17,7 @@ enum CategoryArt {
     /// The big 3D sculpture of each tool on the Overview cards. The sidebar's small symbols stay its navigation.
     static let toolSculptures: [String: NSImage] = {
         let files = ["Cleanup": "sculpture-motion-cleanup-look-poster", "My Clutter": "sculpture-motion-files-look-poster", "Browsers": "sculpture-motion-browsers-look-poster",
-                     "Applications": "sculpture-motion-system-look-poster", "Performance": "sculpture-card-performance", "Status": "sculpture-card-status"]
+                     "Applications": "sculpture-motion-system-look-poster", "Performance": "sculpture-card-performance", "System": "sculpture-card-status"]
         return files.compactMapValues { file in StewardResources.bundle.url(forResource: file, withExtension: "heic").flatMap(NSImage.init(contentsOf:)) }
     }()
     static func name(for group: CleanupGroup) -> String {
