@@ -153,6 +153,8 @@ final class MacHealthMonitor: ObservableObject {
     func readInstallers() {
         Task {
             installers = await Task.detached(priority: .utility) { () -> (urls: [URL], bytes: UInt64)? in
+                // Opening the dashboard must not set off macOS's Downloads prompt: only read with Full Disk Access.
+                guard FullDiskAccess.status() == .granted else { return nil }
                 let downloads = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Downloads")
                 let keys: [URLResourceKey] = [.contentModificationDateKey, .totalFileAllocatedSizeKey, .isRegularFileKey]
                 guard let items = try? FileManager.default.contentsOfDirectory(at: downloads, includingPropertiesForKeys: keys, options: [.skipsHiddenFiles]) else { return nil }

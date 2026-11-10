@@ -86,7 +86,15 @@ public enum DuplicateFinder {
         guard let data = try? handle.read(upToCount: 65_536) else { return nil }
         return SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
     }
-    public static func scan(folder: URL) throws -> [DuplicateGroup] {
+    /// Folders a background search of the home folder leaves out. Apple Music's library always: Music manages the copies
+    /// there, and reading it asks for Media access. Without Full Disk Access, also the folders macOS asks about one by one,
+    /// so a scan the person started for something else doesn't set off a row of permission prompts.
+    public static func backgroundSkips(home: URL, fullDiskAccess: Bool) -> Set<String> {
+        let protected = fullDiskAccess ? [] : ["Desktop", "Documents", "Downloads"]
+        return Set((["Music/Music"] + protected).map { canonical(home.appendingPathComponent($0)).path })
+    }
+    /// `skipping`: absolute folder paths that are not entered.
+    public static func scan(folder: URL, skipping: Set<String> = []) throws -> [DuplicateGroup] {
         let folder = canonical(folder)
         // iCloud status is slow to read (most of the walk), so it is asked only for files that share a size.
         _ = try FileManager.default.contentsOfDirectory(atPath: folder.path) // surface permission errors
@@ -103,7 +111,7 @@ public enum DuplicateFinder {
             for entry in entries where !entry.name.hasPrefix(".") && entry.flags & UInt32(UF_HIDDEN) == 0 {
                 let child = path + "/" + entry.name
                 if entry.isDirectory {
-                    guard !skipped.contains(entry.name.lowercased()) else { continue }
+                    guard !skipped.contains(entry.name.lowercased()), !skipping.contains(child) else { continue }
                     // Only a folder with an extension can be a package, so only those pay for the lookup.
                     if entry.name.contains("."), (try? URL(fileURLWithPath: child).resourceValues(forKeys: [.isPackageKey]).isPackage) == true { continue }
                     // An unreadable folder is skipped: one locked folder must not end the whole search.

@@ -284567,6 +284567,154 @@
         }
       }
     },
+    "Without Full Disk Access, the duplicate search left out Desktop, Documents and Downloads." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بدون الوصول الكامل إلى القرص، تخطّى البحث عن النسخ المكررة سطح المكتب والمستندات والتنزيلات."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sense accés complet al disc, la cerca de duplicats ha deixat fora Escriptori, Documents i Descàrregues."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ohne Festplattenvollzugriff hat die Duplikatsuche Schreibtisch, Dokumente und Downloads ausgelassen."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Without Full Disk Access, the duplicate search left out Desktop, Documents and Downloads."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Without Full Disk Access, the duplicate search left out Desktop, Documents and Downloads."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Without Full Disk Access, the duplicate search left out Desktop, Documents and Downloads."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin acceso total al disco, la búsqueda de duplicados ha omitido Escritorio, Documentos y Descargas."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin acceso total al disco, la búsqueda de duplicados ha omitido Escritorio, Documentos y Descargas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans accès complet au disque, la recherche de doublons a laissé de côté Bureau, Documents et Téléchargements."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ohni Festplattevollzuegriff het d Duplikatsuechi Schriibtisch, Dokument und Downloads uusglah."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "फ़ुल डिस्क ऐक्सेस के बिना, डुप्लिकेट खोज ने डेस्कटॉप, डॉक्यूमेंट्स और डाउनलोड को छोड़ दिया।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bez potpunog pristupa disku pretraga duplikata izostavila je Radnu površinu, Dokumente i Preuzimanja."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Senza accesso completo al disco, la ricerca dei duplicati ha escluso Scrivania, Documenti e Download."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フルディスクアクセスがないため、重複の検索ではデスクトップ、書類、ダウンロードを除外しました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전체 디스크 접근 권한이 없어 중복 항목 검색에서 데스크탑, 문서, 다운로드를 제외했습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bez pilnas piekļuves diskam dublikātu meklēšana izlaida Darbvirsmu, Dokumentus un Lejupielādes."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bez pełnego dostępu do dysku wyszukiwanie duplikatów pominęło Biurko, Dokumenty i Pobrane rzeczy."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem acesso total ao disco, a pesquisa de duplicados deixou de fora Secretária, Documentos e Descargas."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pa qasje të plotë në disk, kërkimi i dublikatave la jashtë Desktop, Documents dhe Downloads."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Без пуног приступа диску, претрага дупликата је изоставила Радну површину, Документе и Преузимања."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bez punog pristupa disku, pretraga duplikata je izostavila Radnu površinu, Dokumente i Preuzimanja."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utan full skivåtkomst hoppade dubblettsökningen över Skrivbord, Dokument och Hämtade filer."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tam Disk Erişimi olmadığından kopya araması Masaüstü, Belgeler ve İndirilenler’i dışarıda bıraktı."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "由于没有完全磁盘访问权限，重复项搜索跳过了桌面、文稿和下载。"
+          }
+        }
+      }
+    },
     "Worktrees" : {
       "comment" : "Section: Git worktrees, the developer term",
       "localizations" : {

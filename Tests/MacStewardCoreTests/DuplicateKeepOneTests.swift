@@ -29,4 +29,18 @@ final class DuplicateKeepOneTests: XCTestCase {
         XCTAssertEqual(groups.count, 1)
         XCTAssertEqual(groups.first?.files.map { URL(fileURLWithPath: $0).lastPathComponent }, ["one.mov", "two.mov"])
     }
+    /// A background search never enters Apple Music's library, and without Full Disk Access it stays out of the folders
+    /// macOS asks about one by one.
+    func testBackgroundSearchSkipsMusicAndGuardedFolders() throws {
+        let home = FileManager.default.temporaryDirectory.resolvingSymlinksInPath().appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: home) }
+        let copy = Data(repeating: 5, count: 1_100_000)
+        for folder in ["Music/Music/Media", "Documents", "Projects"] { try FileManager.default.createDirectory(at: home.appendingPathComponent(folder), withIntermediateDirectories: true) }
+        for path in ["Music/Music/Media/song.m4a", "Documents/a.mov", "Projects/b.mov", "Projects/c.mov"] { try copy.write(to: home.appendingPathComponent(path)) }
+        func names(_ access: Bool) throws -> [String] {
+            try DuplicateFinder.scan(folder: home, skipping: DuplicateFinder.backgroundSkips(home: home, fullDiskAccess: access)).flatMap(\.files).map { URL(fileURLWithPath: $0).lastPathComponent }.sorted()
+        }
+        XCTAssertEqual(try names(false), ["b.mov", "c.mov"])
+        XCTAssertEqual(try names(true), ["a.mov", "b.mov", "c.mov"], "with access, Documents is searched; Music's library never is")
+    }
 }

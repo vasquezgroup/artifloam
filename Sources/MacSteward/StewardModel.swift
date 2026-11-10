@@ -250,8 +250,11 @@ final class StewardModel: ObservableObject {
             // The system checks and the duplicate search run alongside project discovery and the main scan.
             // Duplicates are searched across the whole home folder; macOS and app bundles hold intentional copies.
             let downloads: URL? = allTools ? config.home : nil
+            // Full Disk Access is the one permission this scan asks for; without it, folders macOS guards one by one are left out.
+            let limited = allTools && FullDiskAccess.status(home: config.home) != .granted
+            let skips = DuplicateFinder.backgroundSkips(home: config.home, fullDiskAccess: !limited)
             async let system = allTools ? (SystemAudit.checks(), BackgroundInventory.scan()) : nil
-            async let duplicateSearch = downloads.map { folder in Result { try DuplicateFinder.scan(folder: folder) } }
+            async let duplicateSearch = downloads.map { folder in Result { try DuplicateFinder.scan(folder: folder, skipping: skips) } }
             let known = KnownProjectDiscovery.discover(home: config.home, claudeHome: config.claudeHome, codexHome: config.codexHome)
             try Task.checkCancellation()
             await MainActor.run { if receiver.scanRunID == runID { receiver.access.acceptKnownProjects(known) } }
@@ -280,6 +283,7 @@ final class StewardModel: ObservableObject {
                     await MainActor.run { receiver.receiveScanProgress(relay.extra(completed: 2, message: String(localized: "Duplicate search finished with an access notice.")), runID: runID) }
                     return ScanReport(home: report.home, findings: report.findings, notices: report.notices + [String(localized: "Duplicate search: \(error.localizedDescription)")])
                 }
+                if limited { return ScanReport(home: report.home, findings: report.findings, notices: report.notices + [String(localized: "Without Full Disk Access, the duplicate search left out Desktop, Documents and Downloads.")]) }
             }
             return report
         }

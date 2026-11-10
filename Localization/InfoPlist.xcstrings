@@ -468,151 +468,151 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "العثور على الملفات الكبيرة والنسخ المكررة المطابقة تمامًا في التنزيلات. أنت من يختار ما يُنقل إلى سلة المهملات."
+            "value" : "العثور على الملفات الكبيرة والنسخ المكررة المطابقة تمامًا في التنزيلات. لا يُحذف شيء حتى تختاره."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Troba arxius grans i duplicats exactes a Descàrregues. Tries què es mou a la paperera."
+            "value" : "Troba arxius grans i duplicats exactes a Descàrregues. No s’esborra res fins que ho triïs."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Findet große Dateien und exakte Duplikate in „Downloads“. Du wählst, was in den Papierkorb kommt."
+            "value" : "Findet große Dateien und exakte Duplikate in „Downloads“. Nichts wird gelöscht, bevor du es auswählst."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Find large files and exact duplicates in Downloads. You choose what moves to Trash."
+            "value" : "Find large files and exact duplicates in Downloads. Nothing is deleted until you choose it."
           }
         },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Find large files and exact duplicates in Downloads. You choose what moves to Bin."
+            "value" : "Find large files and exact duplicates in Downloads. Nothing is deleted until you choose it."
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Find large files and exact duplicates in Downloads. You choose what moves to Trash."
+            "value" : "Find large files and exact duplicates in Downloads. Nothing is deleted until you choose it."
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Find large files and exact duplicates in Downloads. You choose what moves to Bin."
+            "value" : "Find large files and exact duplicates in Downloads. Nothing is deleted until you choose it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Encuentra archivos grandes y duplicados exactos en Descargas. Tú eliges lo que se mueve a la Papelera."
+            "value" : "Encuentra archivos grandes y duplicados exactos en Descargas. No se borra nada hasta que lo elijas."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Encuentra archivos grandes y duplicados exactos en Descargas. Tú eliges lo que se mueve al Basurero."
+            "value" : "Encuentra archivos grandes y duplicados exactos en Descargas. No se borra nada hasta que lo elijas."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trouve les gros fichiers et les doublons exacts dans Téléchargements. Vous choisissez ce qui est placé dans la Corbeille."
+            "value" : "Trouve les gros fichiers et les doublons exacts dans Téléchargements. Rien n’est supprimé tant que vous ne l’avez pas choisi."
           }
         },
         "gsw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Findet grossi Dateie und exakti Duplikat i Downloads. Du wählsch uus, was id Papierkorb chunnt."
+            "value" : "Findet grossi Dateie und exakti Duplikat i Downloads. Nüt wird glöscht, bevor du s uuswählsch."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "डाउनलोड में बड़ी फ़ाइलें और बिल्कुल एक जैसे डुप्लिकेट खोजता है। रद्दी में क्या जाए, यह आप चुनते हैं।"
+            "value" : "डाउनलोड में बड़ी फ़ाइलें और बिल्कुल एक जैसे डुप्लिकेट खोजता है। जब तक आप न चुनें, कुछ भी डिलीट नहीं होता।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pronalazi velike datoteke i točne duplikate u Preuzimanjima. Ti biraš što ide u Smeće."
+            "value" : "Pronalazi velike datoteke i točne duplikate u Preuzimanjima. Ništa se ne briše dok to ne odabereš."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trova file grandi e duplicati esatti in Download. Scegli tu cosa va nel Cestino."
+            "value" : "Trova file grandi e duplicati esatti in Download. Non viene eliminato nulla finché non lo scegli tu."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ダウンロード内の大きなファイルと完全な重複を見つけます。ゴミ箱に移動するものはご自身で選びます。"
+            "value" : "ダウンロード内の大きなファイルと完全な重複を見つけます。選ぶまで何も削除されません。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "다운로드 폴더에서 큰 파일과 완전히 같은 중복 파일을 찾습니다. 휴지통으로 이동할 항목은 직접 선택합니다."
+            "value" : "다운로드 폴더에서 큰 파일과 완전히 같은 중복 파일을 찾습니다. 직접 선택하기 전에는 아무것도 삭제되지 않습니다."
           }
         },
         "lv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Atrod lielus failus un precīzus dublikātus mapē Lejupielādes. Tu izvēlies, ko pārvietot uz Atkritni."
+            "value" : "Atrod lielus failus un precīzus dublikātus mapē Lejupielādes. Nekas netiek dzēsts, kamēr tu to neizvēlies."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Znajduje duże pliki i dokładne duplikaty w folderze Pobrane rzeczy. To Ty wybierasz, co trafi do Kosza."
+            "value" : "Znajduje duże pliki i dokładne duplikaty w folderze Pobrane rzeczy. Nic nie zostanie usunięte, dopóki tego nie wybierzesz."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Encontra ficheiros grandes e duplicados exatos em Descargas. Escolhe o que vai para o Lixo."
+            "value" : "Encontra ficheiros grandes e duplicados exatos em Descargas. Nada é eliminado até o escolher."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gjen skedarë të mëdhenj dhe dublikata të sakta te Downloads. Ti zgjedh çfarë zhvendoset në Kosh."
+            "value" : "Gjen skedarë të mëdhenj dhe dublikata të sakta te Downloads. Asgjë nuk fshihet derisa ta zgjedhësh."
           }
         },
         "sr-Cyrl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Проналази велике фајлове и тачне дупликате у Преузимањима. Ви бирате шта се премешта у Отпад."
+            "value" : "Проналази велике фајлове и тачне дупликате у Преузимањима. Ништа се не брише док то не изаберете."
           }
         },
         "sr-Latn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pronalazi velike fajlove i tačne duplikate u Preuzimanjima. Vi birate šta se premešta u Otpad."
+            "value" : "Pronalazi velike fajlove i tačne duplikate u Preuzimanjima. Ništa se ne briše dok to ne izaberete."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hitta stora filer och exakta dubbletter i Hämtade filer. Du väljer vad som flyttas till papperskorgen."
+            "value" : "Hitta stora filer och exakta dubbletter i Hämtade filer. Inget raderas förrän du väljer det."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "İndirilenler’deki büyük dosyaları ve birebir kopyaları bulur. Neyin Çöp Sepeti’ne taşınacağını siz seçersiniz."
+            "value" : "İndirilenler’deki büyük dosyaları ve birebir kopyaları bulur. Siz seçmeden hiçbir şey silinmez."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在“下载”中查找大文件和完全相同的重复项。由你选择将什么移到废纸篓。"
+            "value" : "在“下载”中查找大文件和完全相同的重复项。在你选择之前，不会删除任何内容。"
           }
         }
       }
