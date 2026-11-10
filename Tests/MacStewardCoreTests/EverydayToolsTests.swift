@@ -105,6 +105,9 @@ final class EverydayToolsTests: XCTestCase {
         let aged = try LargeFileAudit.scan(root:root,minimumBytes:4096,modifiedBefore:Date(timeIntervalSince1970:2000))
         XCTAssertEqual(aged.files.count,1);XCTAssertEqual(aged.files[0].logicalBytes,8192)
         XCTAssertTrue(try LargeFileAudit.scan(root:root,maximumEntries:1).limited)
+        try Data(repeating:4,count:8192).write(to:root.appendingPathComponent("Setup.DMG"))
+        let installers = try LargeFileAudit.scan(root:root,minimumBytes:4096,extensions:LargeFileAudit.installerExtensions)
+        XCTAssertEqual(installers.files.map(\.url.lastPathComponent),["Setup.DMG"],"extension match ignores case; other files are left out")
     }
     func testLargeFileSearchCancellation() async throws {
         let root = try fixture()

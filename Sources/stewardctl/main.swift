@@ -45,7 +45,7 @@ do {
             if args.contains("--scheduled") && !Scheduler.isInstalled { throw StewardError.blocked("Automatic cleanup has not been enabled") }
             // Project dependencies need a person's choice; scheduled and CLI cleanup skip them.
             // Broad cache rules and tool commands need a person's choice in the app; the schedule keeps to the narrow allowlist.
-            let eligible = Set(report.findings.filter { $0.safety == .automatic && $0.group != .inactiveDependencies && !["app-cache", "xdg-cache", "simulator-cache", "homebrew-cache"].contains($0.rule) }.map(\.id))
+            let eligible = Set(report.findings.filter { $0.safety == .automatic && $0.group != .inactiveDependencies && !["app-cache", "xdg-cache", "simulator-cache", "homebrew-cache", "package-store-cache"].contains($0.rule) }.map(\.id))
             let receipt = try Cleaner(configuration: configuration).clean(report, selectedIDs: eligible)
             try emit(receipt)
         }

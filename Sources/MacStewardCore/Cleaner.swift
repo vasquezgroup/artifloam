@@ -21,10 +21,11 @@ public final class Cleaner {
         defer { _ = flock(lock, LOCK_UN) }
         let before = DiskSpace.read(at: configuration.home.path); var items = [CleanupItem]()
         let policy = SafetyPolicy(configuration: configuration)
-        // A simulator goes last: caches inside it may be ticked too, and they are cleaned first.
-        let selected = report.findings.filter { selectedIDs.contains($0.id) }.sorted { $0.rule != XcodeStorageInventory.simulatorRule && $1.rule == XcodeStorageInventory.simulatorRule }
+        // A simulator or a reviewed Xcode folder goes last: caches inside it may be ticked too, and they are cleaned first.
+        let containers: Set<String> = [XcodeStorageInventory.simulatorRule, XcodeStorageInventory.trashRule]
+        let selected = report.findings.filter { selectedIDs.contains($0.id) }.sorted { !containers.contains($0.rule) && containers.contains($1.rule) }
         // Parent/child overlap can double count and invalidate plans; reject it.
-        for first in selected { for second in selected where first.id != second.id && second.rule != XcodeStorageInventory.simulatorRule {
+        for first in selected { for second in selected where first.id != second.id && !containers.contains(second.rule) {
             if first.path.hasPrefix(second.path + "/") { throw StewardError.blocked(String(localized: "Overlapping cleanup targets; scan again")) }
         } }
         var snapshot: (taken: Date, activity: ActivitySnapshot)?

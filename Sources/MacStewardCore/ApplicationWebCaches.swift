@@ -6,7 +6,12 @@ enum ApplicationWebCaches {
         ("Library/Caches/Google/Chrome/Default/Cache/Cache_Data", "Google Chrome.app/"),
         ("Library/Caches/Microsoft Edge/Default/Cache/Cache_Data", "Microsoft Edge.app/"),
         ("Library/Application Support/Claude/Cache/Cache_Data", "Claude.app/"),
-        ("Library/Application Support/ChatGPT/Cache/Cache_Data", "ChatGPT.app/")
+        ("Library/Application Support/ChatGPT/Cache/Cache_Data", "ChatGPT.app/"),
+        // Electron apps use the same Chromium cache layout under their own support folder.
+        ("Library/Application Support/Code/Cache/Cache_Data", "Visual Studio Code.app/"),
+        ("Library/Application Support/Cursor/Cache/Cache_Data", "Cursor.app/"),
+        ("Library/Application Support/Slack/Cache/Cache_Data", "Slack.app/"),
+        ("Library/Application Support/discord/Cache/Cache_Data", "Discord.app/")
     ]
     static func valid(_ url: URL, home: URL) -> Bool {
         guard !url.lastPathComponent.hasPrefix("index"), url.pathExtension != "lock",

@@ -18,11 +18,11 @@ public enum XcodeStorageInventory {
         if days >= SimulatorDevice.idleDays { return String(localized: "Not used for \(days) days. Safe to delete.") }
         return String(localized: "Used \(used.formatted(.relative(presentation: .named))). Delete it only if you're done testing on it.")
     }
-    /// A simulator's caches are also listed on their own, for automatic cleanup. Its row counts only the rest, so totals add up.
+    /// Caches inside a simulator or an orphaned DerivedData folder are also listed on their own, for automatic cleanup. The outer row counts only the rest, so totals add up.
     static func countingNestedCachesOnce(_ findings: [Finding]) -> [Finding] {
-        let caches = findings.filter { $0.rule == "simulator-cache" }
+        let caches = findings.filter { ["simulator-cache", "xcode-intermediates"].contains($0.rule) }
         return findings.map { finding in
-            guard finding.rule == simulatorRule else { return finding }
+            guard [simulatorRule, trashRule].contains(finding.rule) else { return finding }
             var counted = finding
             let nested = caches.filter { $0.path.hasPrefix(finding.path + "/") }.reduce(0) { $0 + $1.bytes }
             counted.bytes = finding.bytes > nested ? finding.bytes - nested : 0
@@ -60,12 +60,17 @@ public enum XcodeStorageInventory {
         for url in children(home.appendingPathComponent("Library/Developer/Xcode/Archives")) {
             add(url, reason: String(localized: "Release archives from Xcode Organizer. Deleted permanently."), flag: String(localized: "May hold the only signed build and debug symbols of a release."))
         }
-        for url in children(home.appendingPathComponent("Library/Developer/Xcode/iOS DeviceSupport")) {
-            add(url, reason: String(localized: "Device support for one iOS version. Xcode rebuilds it the next time you connect a device with it."))
+        for platform in deviceSupportPlatforms {
+            for url in children(home.appendingPathComponent("Library/Developer/Xcode/\(platform) DeviceSupport")) {
+                add(url, reason: String(localized: "Device support for one \(platform) version. Xcode rebuilds it the next time you connect a device with it."))
+            }
         }
         for project in children(home.appendingPathComponent("Library/Developer/Xcode/DerivedData")) where project.lastPathComponent != "ModuleCache.noindex" {
+            // A project that is gone needs none of its build data: one row for the whole folder.
+            if orphaned(project) { add(project, reason: String(localized: "Build data for a project Xcode can no longer find. Xcode rebuilds it if the project comes back.")); continue }
             add(project.appendingPathComponent("Build/Products"), reason: String(localized: "Built apps and frameworks. Xcode builds them again."), flag: String(localized: "May include signed builds you still need."))
             add(project.appendingPathComponent("SourcePackages"), reason: String(localized: "Downloaded Swift packages. Xcode fetches them again when you open the project."))
+            add(project.appendingPathComponent("Index.noindex"), reason: String(localized: "Xcode's search index for one project. Xcode rebuilds it when you open the project again."))
         }
         let hasXcodeStorage = [home.appendingPathComponent("Library/Developer/CoreSimulator").path, "/Library/Developer/CoreSimulator", "/Applications/Xcode.app"].contains { FileManager.default.fileExists(atPath: $0) }
         if hasXcodeStorage, home.standardizedFileURL == FileManager.default.homeDirectoryForCurrentUser.standardizedFileURL, DeveloperTools.gitExecutable != nil {
@@ -90,14 +95,24 @@ public enum XcodeStorageInventory {
         }
         return (rows, notices)
     }
-    /// Only the folders `inspect` lists: one level inside Archives or iOS DeviceSupport, or a project's Build/Products or SourcePackages.
+    static let deviceSupportPlatforms = ["iOS", "watchOS", "tvOS", "visionOS"]
+    /// A DerivedData folder whose project file is gone. Without a readable WorkspacePath it is never called orphaned.
+    static func orphaned(_ project: URL) -> Bool {
+        guard let data = BoundedFile.read(project.appendingPathComponent("info.plist")),
+              let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any],
+              let workspace = plist["WorkspacePath"] as? String, workspace.hasPrefix("/") else { return false }
+        return !FileManager.default.fileExists(atPath: workspace)
+    }
+    /// Only the folders `inspect` lists: one level inside Archives or a DeviceSupport folder, a project's Build/Products,
+    /// SourcePackages or Index.noindex, or a whole DerivedData folder whose project is gone (checked again here).
     static func trashable(_ url: URL, home: URL) -> Bool {
         let path = url.standardizedFileURL
         guard path.resolvingSymlinksInPath().path == path.path else { return false }
         let xcode = home.standardizedFileURL.resolvingSymlinksInPath().appendingPathComponent("Library/Developer/Xcode").path
         let parent = path.deletingLastPathComponent()
-        if [xcode + "/Archives", xcode + "/iOS DeviceSupport"].contains(parent.path) { return true }
-        if path.lastPathComponent == "SourcePackages" { return parent.deletingLastPathComponent().path == xcode + "/DerivedData" }
+        if ([xcode + "/Archives"] + deviceSupportPlatforms.map { xcode + "/\($0) DeviceSupport" }).contains(parent.path) { return true }
+        if parent.path == xcode + "/DerivedData" { return path.lastPathComponent != "ModuleCache.noindex" && orphaned(path) }
+        if ["SourcePackages", "Index.noindex"].contains(path.lastPathComponent) { return parent.deletingLastPathComponent().path == xcode + "/DerivedData" }
         if path.lastPathComponent == "Products", parent.lastPathComponent == "Build" { return parent.deletingLastPathComponent().deletingLastPathComponent().path == xcode + "/DerivedData" }
         return false
     }

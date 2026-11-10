@@ -32,6 +32,7 @@ final class LargeFilesState: ObservableObject {
     @Published var report: LargeFileReport?
     @Published var minimum = 100_000_000 { didSet { reset() } }
     @Published var months = 0 { didSet { reset() } }
+    @Published var installersOnly = false { didSet { reset() } }
     @Published var selection = Set<String>()
     @Published private(set) var task: Task<LargeFileReport, Error>?
     @Published var error: String?
@@ -41,7 +42,8 @@ final class LargeFilesState: ObservableObject {
         guard task == nil else { return }
         selection.removeAll(); error = nil
         let size = UInt64(minimum), before = months == 0 ? nil : Calendar.current.date(byAdding: .month, value: -months, to: Date())
-        let work = Task.detached(priority: .utility) { try LargeFileAudit.scan(root: folder, minimumBytes: size, modifiedBefore: before) }
+        let kinds = installersOnly ? LargeFileAudit.installerExtensions : nil
+        let work = Task.detached(priority: .utility) { try LargeFileAudit.scan(root: folder, minimumBytes: size, modifiedBefore: before, extensions: kinds) }
         task = work
         Task { defer { task = nil }; do { report = try await work.value } catch is CancellationError { error = String(localized: "Search stopped. Run Find files to search again.") } catch { self.error = error.localizedDescription } }
     }
@@ -66,6 +68,8 @@ struct LargeFilesView: View {
                 Button("Choose folder…") { choose() }.disabled(task != nil)
                 Picker("At least", selection: $state.minimum) { Text("10 MB").tag(10_000_000); Text("100 MB").tag(100_000_000); Text("1 GB").tag(1_000_000_000) }.frame(width: 175).disabled(task != nil)
                 Picker("Modified", selection: $state.months) { Text("Any time").tag(0); Text("Over 6 months ago").tag(6); Text("Over a year ago").tag(12) }.frame(width: 230).disabled(task != nil)
+                Picker("Show", selection: $state.installersOnly) { Text("Any file").tag(false); Text("Installers").tag(true) }.frame(width: 170).disabled(task != nil)
+                    .help(Text(verbatim: ".dmg, .pkg, .xip, .iso, .ipsw"))
                 Spacer()
                 if task != nil { Button("Stop") { state.cancel() } }
                 else { Button("Find files") { scan() }.buttonStyle(CleanupGlassButtonStyle()) }

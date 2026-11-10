@@ -74,6 +74,27 @@ final class DeveloperJunkTests: XCTestCase {
             XCTAssertFalse(XcodeStorageInventory.trashable(xcode.appendingPathComponent(path), home: home), path)
         }
     }
+    func testOtherDeviceSupportIndexAndOrphanedDerivedDataAreReviewable() throws {
+        let home = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString).resolvingSymlinksInPath()
+        defer { try? FileManager.default.removeItem(at: home) }
+        let xcode = home.appendingPathComponent("Library/Developer/Xcode"), fm = FileManager.default
+        func project(_ name: String, workspace: String) throws -> URL {
+            let folder = xcode.appendingPathComponent("DerivedData/\(name)")
+            try fm.createDirectory(at: folder.appendingPathComponent("Build/Products"), withIntermediateDirectories: true)
+            try Data(repeating: 1, count: 1_100_000).write(to: folder.appendingPathComponent("Build/Products/app.bin"))
+            try PropertyListSerialization.data(fromPropertyList: ["WorkspacePath": workspace], format: .xml, options: 0).write(to: folder.appendingPathComponent("info.plist"))
+            return folder
+        }
+        let gone = try project("Gone-abc", workspace: "/nonexistent/Gone.xcodeproj")
+        let alive = try project("Alive-abc", workspace: home.path)
+        XCTAssertTrue(XcodeStorageInventory.trashable(gone, home: home), "project is gone")
+        XCTAssertFalse(XcodeStorageInventory.trashable(alive, home: home), "project still exists")
+        XCTAssertTrue(XcodeStorageInventory.trashable(alive.appendingPathComponent("Index.noindex"), home: home))
+        XCTAssertTrue(XcodeStorageInventory.trashable(xcode.appendingPathComponent("watchOS DeviceSupport/Watch 11.0"), home: home))
+        let rows = XcodeStorageInventory.inspect(home: home).findings.map(\.path)
+        XCTAssertTrue(rows.contains(gone.path)); XCTAssertFalse(rows.contains(gone.appendingPathComponent("Build/Products").path), "one row for the whole orphaned folder")
+        XCTAssertTrue(rows.contains(alive.appendingPathComponent("Build/Products").path)); XCTAssertFalse(rows.contains(alive.path))
+    }
     func testTrackedFilesInGlobalDeveloperCacheAreProtected() throws {
         let (home, path, configuration) = try fixture(); defer { try? FileManager.default.removeItem(at: home) }
         let repo = home.appendingPathComponent(".gradle")

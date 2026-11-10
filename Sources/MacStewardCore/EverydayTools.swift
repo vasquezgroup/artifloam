@@ -16,8 +16,10 @@ public struct LargeFileReport: Sendable {
     public let limited: Bool
 }
 public enum LargeFileAudit {
-    /// Metadata only: old means modified before the threshold, never proof of disuse.
-    public static func scan(root: URL, minimumBytes: UInt64 = 100_000_000, modifiedBefore: Date? = nil, maximumEntries: Int = 300_000, maximumDuration: TimeInterval = 45) throws -> LargeFileReport {
+    /// Disk images and installer packages: once the app is installed, the download is rarely needed again.
+    public static let installerExtensions: Set<String> = ["dmg", "pkg", "mpkg", "xip", "iso", "ipsw"]
+    /// Metadata only: old means modified before the threshold, never proof of disuse. `extensions`: only these kinds, lowercase.
+    public static func scan(root: URL, minimumBytes: UInt64 = 100_000_000, modifiedBefore: Date? = nil, extensions: Set<String>? = nil, maximumEntries: Int = 300_000, maximumDuration: TimeInterval = 45) throws -> LargeFileReport {
         let root = root.standardizedFileURL.resolvingSymlinksInPath(), deadline = Date().addingTimeInterval(maximumDuration)
         var files = [LargeFileItem](), examined = 0, unreadable = 0, limited = false, identities = Set<String>()
         var rootStat = stat(); guard lstat(root.path, &rootStat) == 0 else { throw StewardError.blocked(String(localized: "Folder is not accessible.")) }
@@ -41,7 +43,7 @@ public enum LargeFileAudit {
                     let identity = "\(value.st_dev):\(value.st_ino)"
                     guard identities.insert(identity).inserted else { continue }
                     let size = UInt64(max(0, value.st_size)), date = Date(timeIntervalSince1970: TimeInterval(value.st_mtimespec.tv_sec))
-                    guard size >= minimumBytes, modifiedBefore == nil || date < modifiedBefore! else { continue }
+                    guard size >= minimumBytes, modifiedBefore == nil || date < modifiedBefore!, extensions?.contains(child.pathExtension.lowercased()) ?? true else { continue }
                     files.append(LargeFileItem(url: child, localBytes: UInt64(max(0, value.st_blocks)) * 512, logicalBytes: size, modified: date))
                     if files.count > 2000 { files.sort { $0.localBytes > $1.localBytes }; files = Array(files.prefix(1000)); limited = true }
                 }

@@ -32,7 +32,7 @@ struct TreeInventory {
     /// `dependencies` is for installed packages (node_modules…): symlinks are recorded, never followed, and registry files
     /// such as test certificates are allowed. Secure removal unlinks a symlink itself, not its target.
     /// Rules whose targets are rebuilt by their owner, so URL-cache databases and symlinks inside are expected.
-    static let regenerableRules: Set<String> = ["inactive-dependencies", "app-cache", "xdg-cache", "simulator-cache", "homebrew-cache"]
+    static let regenerableRules: Set<String> = ["inactive-dependencies", "app-cache", "xdg-cache", "simulator-cache", "homebrew-cache", "package-store-cache"]
     static func read(_ root: URL, dependencies: Bool = false) throws -> TreeInventory {
         var nodes = [String: Node](); var bytes: UInt64 = 0; var newest = Date.distantPast; var lastAccessed = Date.distantPast
         func record(_ url: URL, _ relative: String) throws {
@@ -109,6 +109,7 @@ public struct SafetyPolicy {
             safe = configuration.includeDeveloperCaches && p.deletingLastPathComponent().path == home.appendingPathComponent("Library/Developer/Xcode/DerivedData/ModuleCache.noindex").path && (try? p.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true && (10...64).contains(p.lastPathComponent.count) && p.lastPathComponent.contains(where: \.isNumber) && p.lastPathComponent.allSatisfy { $0.isASCII && ($0.isLetter || $0.isNumber) }
         case "homebrew-cache": safe = configuration.includeDeveloperCaches && relative == "Library/Caches/Homebrew"
         case "npm-cache": safe = configuration.includeDeveloperCaches && relative == ".npm/_cacache"
+        case "package-store-cache": safe = configuration.includeDeveloperCaches && DeveloperJunk.packageStores.contains { $0.path == relative }
         case "old-user-log": safe = DeveloperJunk.validLog(relative: relative) && (relative.hasPrefix("Library/Logs/CoreSimulator/") || configuration.includeAdditionalLogs)
         case "app-cache": safe = p.deletingLastPathComponent().path == home.appendingPathComponent("Library/Caches").path && BroadCaches.allowedAppCache(p.lastPathComponent)
         case "xdg-cache": safe = p.deletingLastPathComponent().path == home.appendingPathComponent(".cache").path && BroadCaches.xdgCandidates(home: home).contains { $0.standardizedFileURL.path == p.path }

@@ -4,17 +4,29 @@ import Foundation
 enum DeveloperJunk {
     static func minimumAge(rule: String, configured: Int) -> Int {
         if ["app-cache", "xdg-cache"].contains(rule) { return 2 }
-        return ["old-user-log", "gradle-generated-cache", "xcode-module-cache", "npm-cache", "homebrew-cache", "inactive-dependencies"].contains(rule) ? max(30, configured) : configured
+        return ["old-user-log", "gradle-generated-cache", "xcode-module-cache", "npm-cache", "homebrew-cache", "package-store-cache", "inactive-dependencies"].contains(rule) ? max(30, configured) : configured
     }
     static func producerActive(rule: String, path: String, activity: ActivitySnapshot) -> Bool {
         func running(_ names: [String]) -> Bool { names.contains { activity.commandsContain($0, ignoringCase: true) } }
         if rule == "gradle-generated-cache" { return running(["gradledaemon", "org.gradle", "kotlincompiledaemon"]) }
         if rule == "homebrew-cache" { return running(["homebrew/brew."]) }
+        if rule == "package-store-cache", let store = packageStores.first(where: { path.hasSuffix("/" + $0.path) }) { return running(store.producers) }
         if rule == "xcode-module-cache" { return running(["xcodebuild", "swift-frontend", "/clang", "sourcekit"]) }
         if rule == "old-user-log" && path.contains("/Logs/NGL/") { return running(["adobe", "coresync", "cclibrary", "creative cloud", "acrobat"]) }
         if rule == "old-user-log" && path.contains("/Logs/Diagnostics/") { return running(["microsoft word", "microsoft excel", "microsoft powerpoint"]) }
         return false
     }
+    /// Download stores package managers refill on their own: deleting one costs a download, never a project's files.
+    /// Exact paths only. Maven's repository and Go's module cache stay out: Maven keeps artifacts you installed
+    /// yourself there, and Go marks its modules read-only.
+    static let packageStores: [(path: String, tool: String, producers: [String])] = [
+        (".cargo/registry/cache", "Cargo", ["cargo", "rustc"]),
+        (".cargo/registry/src", "Cargo", ["cargo", "rustc"]),
+        (".bun/install/cache", "Bun", ["bin/bun"]),
+        (".yarn/berry/cache", "Yarn", ["yarn"]),
+        (".npm/_npx", "npx", ["npm", "npx"]),
+        ("Library/Caches/pip", "pip", ["bin/pip", "-m pip"])
+    ]
     static func hasGradleMarker(home: URL) -> Bool {
         let marker = home.appendingPathComponent(".gradle/caches/CACHEDIR.TAG")
         guard (try? marker.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == false,

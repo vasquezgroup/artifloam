@@ -95,6 +95,18 @@ final class SpaceKeeperTests: XCTestCase {
         XCTAssertThrowsError(try SafetyPolicy(configuration: Configuration(home: home, includeDeveloperCaches: false)).validatePath(cache, rule: "npm-cache"))
         XCTAssertEqual(DeveloperJunk.minimumAge(rule: "npm-cache", configured: 7), 30)
     }
+    func testPackageStoreRuleMatchesOnlyListedFolders() throws {
+        let home = FileManager.default.temporaryDirectory.resolvingSymlinksInPath().appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: home) }
+        let policy = SafetyPolicy(configuration: Configuration(home: home, includeDeveloperCaches: true))
+        for path in [".cargo/registry/cache", ".bun/install/cache", "Library/Caches/pip", ".cargo/registry", ".cargo/bin", ".m2/repository"] {
+            try FileManager.default.createDirectory(at: home.appendingPathComponent(path), withIntermediateDirectories: true)
+        }
+        for allowed in [".cargo/registry/cache", ".bun/install/cache", "Library/Caches/pip"] { XCTAssertNoThrow(try policy.validatePath(home.appendingPathComponent(allowed), rule: "package-store-cache"), allowed) }
+        for blocked in [".cargo/registry", ".cargo/bin", ".m2/repository"] { XCTAssertThrowsError(try policy.validatePath(home.appendingPathComponent(blocked), rule: "package-store-cache"), blocked) }
+        XCTAssertThrowsError(try SafetyPolicy(configuration: Configuration(home: home, includeDeveloperCaches: false)).validatePath(home.appendingPathComponent(".bun/install/cache"), rule: "package-store-cache"))
+        XCTAssertFalse(SpaceKeeper.unattendedRules.contains("package-store-cache"), "never cleaned without the person")
+    }
 }
 
 final class BulkSelectionTests: XCTestCase {

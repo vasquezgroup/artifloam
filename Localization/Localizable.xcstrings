@@ -56057,6 +56057,154 @@
         }
       }
     },
+    "Any file" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أي ملف"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qualsevol fitxer"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Dateien"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Any file"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Any file"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Any file"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cualquier archivo"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cualquier archivo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous les fichiers"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alli Dateie"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कोई भी फ़ाइल"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilo koja datoteka"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qualsiasi file"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのファイル"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 파일"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jebkurš fails"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dowolny plik"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qualquer ficheiro"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çdo skedar"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Било која датотека"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilo koja datoteka"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alla filer"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tüm dosyalar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任何文件"
+          }
+        }
+      }
+    },
     "Any time" : {
       "localizations" : {
         "ar" : {
@@ -73380,6 +73528,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "构建数据和模拟器。有些无法重新生成，所以由你选择。"
+          }
+        }
+      }
+    },
+    "Build data for a project Xcode can no longer find. Xcode rebuilds it if the project comes back." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بيانات بناء لمشروع لم يعد Xcode يجده. يعيد Xcode إنشاءها إذا عاد المشروع."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dades de compilació d’un projecte que Xcode ja no troba. Xcode les torna a crear si el projecte torna."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Build-Daten für ein Projekt, das Xcode nicht mehr findet. Xcode erstellt sie neu, falls das Projekt zurückkommt."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Build data for a project Xcode can no longer find. Xcode rebuilds it if the project comes back."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Build data for a project Xcode can no longer find. Xcode rebuilds it if the project comes back."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Build data for a project Xcode can no longer find. Xcode rebuilds it if the project comes back."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos de compilación de un proyecto que Xcode ya no encuentra. Xcode los vuelve a crear si el proyecto vuelve."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos de compilación de un proyecto que Xcode ya no encuentra. Xcode los vuelve a crear si el proyecto vuelve."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Données de compilation d’un projet que Xcode ne trouve plus. Xcode les recrée si le projet revient."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Build-Date för es Projekt, wo Xcode nüme findet. Xcode baut sie neu uf, wänn s Projekt zrugg chunnt."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ऐसे प्रोजेक्ट का बिल्ड डेटा जिसे Xcode अब नहीं ढूँढ पाता। प्रोजेक्ट वापस आने पर Xcode इसे फिर बना लेता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podaci izgradnje za projekt koji Xcode više ne može pronaći. Xcode ih ponovno gradi ako se projekt vrati."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dati di compilazione di un progetto che Xcode non trova più. Xcode li ricrea se il progetto torna."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcodeが見つけられなくなったプロジェクトのビルドデータです。プロジェクトが戻れば、Xcodeが再作成します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode가 더 이상 찾을 수 없는 프로젝트의 빌드 데이터입니다. 프로젝트가 돌아오면 Xcode가 다시 만듭니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Būvējuma dati projektam, ko Xcode vairs nevar atrast. Xcode tos izveido no jauna, ja projekts atgriežas."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dane kompilacji projektu, którego Xcode już nie znajduje. Xcode odtworzy je, jeśli projekt wróci."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dados de compilação de um projeto que o Xcode já não encontra. O Xcode volta a criá-los se o projeto voltar."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Të dhëna ndërtimi për një projekt që Xcode nuk e gjen më. Xcode i rindërton nëse projekti kthehet."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подаци изградње за пројекат који Xcode више не може да пронађе. Xcode их поново прави ако се пројекат врати."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podaci izgradnje za projekat koji Xcode više ne može da pronađe. Xcode ih ponovo pravi ako se projekat vrati."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Byggdata för ett projekt som Xcode inte längre hittar. Xcode bygger upp dem igen om projektet kommer tillbaka."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode’un artık bulamadığı bir projenin derleme verileri. Proje geri gelirse Xcode bunları yeniden oluşturur."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode 已找不到的项目的构建数据。如果项目回来，Xcode 会重新生成。"
           }
         }
       }
@@ -106768,150 +107064,150 @@
         }
       }
     },
-    "Device support for one iOS version. Xcode rebuilds it the next time you connect a device with it." : {
+    "Device support for one %@ version. Xcode rebuilds it the next time you connect a device with it." : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "دعم الجهاز لإصدار واحد من iOS. يعيد Xcode بناءه في المرة التالية التي توصّل فيها جهازًا به."
+            "value" : "دعم الجهاز لإصدار واحد من %@. يعيد Xcode بناءه في المرة التالية التي توصّل فيها جهازًا به."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Suport de dispositiu per a una versió d’iOS. Xcode el torna a crear la propera vegada que hi connectis un dispositiu."
+            "value" : "Suport de dispositiu per a una versió d’%@. Xcode el torna a crear la propera vegada que hi connectis un dispositiu."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gerätesupport für eine iOS-Version. Xcode baut ihn neu auf, wenn du das nächste Mal ein Gerät damit verbindest."
+            "value" : "Gerätesupport für eine %@-Version. Xcode baut ihn neu auf, wenn du das nächste Mal ein Gerät damit verbindest."
           }
         },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Device support for one iOS version. Xcode rebuilds it the next time you connect a device with it."
+            "value" : "Device support for one %@ version. Xcode rebuilds it the next time you connect a device with it."
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Device support for one iOS version. Xcode rebuilds it the next time you connect a device with it."
+            "value" : "Device support for one %@ version. Xcode rebuilds it the next time you connect a device with it."
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Device support for one iOS version. Xcode rebuilds it the next time you connect a device with it."
+            "value" : "Device support for one %@ version. Xcode rebuilds it the next time you connect a device with it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Soporte de dispositivo para una versión de iOS. Xcode lo reconstruye la próxima vez que conectes un dispositivo con ella."
+            "value" : "Soporte de dispositivo para una versión de %@. Xcode lo reconstruye la próxima vez que conectes un dispositivo con ella."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Soporte de dispositivo para una versión de iOS. Xcode lo reconstruye la próxima vez que conectes un dispositivo con ella."
+            "value" : "Soporte de dispositivo para una versión de %@. Xcode lo reconstruye la próxima vez que conectes un dispositivo con ella."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prise en charge d’appareils pour une version d’iOS. Xcode la recrée la prochaine fois que vous connectez un appareil avec cette version."
+            "value" : "Prise en charge d’appareils pour une version d’%@. Xcode la recrée la prochaine fois que vous connectez un appareil avec cette version."
           }
         },
         "gsw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gräteunterstützig für e iOS-Version. Xcode baut si neu uf, wenn du s nächscht Mal es Grät mit dere Version aaschliessisch."
+            "value" : "Gräteunterstützig für e %@-Version. Xcode baut si neu uf, wenn du s nächscht Mal es Grät mit dere Version aaschliessisch."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "एक iOS संस्करण के लिए डिवाइस सपोर्ट। अगली बार उस संस्करण वाला डिवाइस कनेक्ट करने पर Xcode इसे दोबारा बनाता है।"
+            "value" : "एक %@ संस्करण के लिए डिवाइस सपोर्ट। अगली बार उस संस्करण वाला डिवाइस कनेक्ट करने पर Xcode इसे दोबारा बनाता है।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Podrška uređaja za jednu verziju iOS-a. Xcode je ponovno gradi sljedeći put kad spojiš uređaj s njom."
+            "value" : "Podrška uređaja za jednu verziju %@-a. Xcode je ponovno gradi sljedeći put kad spojiš uređaj s njom."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Supporto dispositivo per una versione di iOS. Xcode lo ricostruisce la prossima volta che colleghi un dispositivo con quella versione."
+            "value" : "Supporto dispositivo per una versione di %@. Xcode lo ricostruisce la prossima volta che colleghi un dispositivo con quella versione."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iOSの1つのバージョン用のデバイスサポート。そのバージョンのデバイスを次に接続したとき、Xcodeが再作成します。"
+            "value" : "%@の1つのバージョン用のデバイスサポート。そのバージョンのデバイスを次に接続したとき、Xcodeが再作成します。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iOS 한 버전용 기기 지원 파일. 해당 기기를 다음에 연결하면 Xcode가 다시 만듭니다."
+            "value" : "%@ 한 버전용 기기 지원 파일. 해당 기기를 다음에 연결하면 Xcode가 다시 만듭니다."
           }
         },
         "lv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ierīces atbalsts vienai iOS versijai. Xcode to izveido no jauna nākamreiz, kad pievieno ierīci ar to."
+            "value" : "Ierīces atbalsts vienai %@ versijai. Xcode to izveido no jauna nākamreiz, kad pievieno ierīci ar to."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obsługa urządzenia dla jednej wersji iOS. Xcode odbudowuje ją przy następnym podłączeniu urządzenia z tą wersją."
+            "value" : "Obsługa urządzenia dla jednej wersji %@. Xcode odbudowuje ją przy następnym podłączeniu urządzenia z tą wersją."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Suporte de dispositivo para uma versão do iOS. O Xcode recria-o da próxima vez que ligar um dispositivo com essa versão."
+            "value" : "Suporte de dispositivo para uma versão do %@. O Xcode recria-o da próxima vez que ligar um dispositivo com essa versão."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mbështetje pajisjeje për një version iOS. Xcode e rindërton herën tjetër që lidh një pajisje me të."
+            "value" : "Mbështetje pajisjeje për një version %@. Xcode e rindërton herën tjetër që lidh një pajisje me të."
           }
         },
         "sr-Cyrl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Подршка за уређај за једну iOS верзију. Xcode је поново прави следећи пут када повежете уређај са њом."
+            "value" : "Подршка за уређај за једну %@ верзију. Xcode је поново прави следећи пут када повежете уређај са њом."
           }
         },
         "sr-Latn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Podrška za uređaj za jednu iOS verziju. Xcode je ponovo pravi sledeći put kada povežete uređaj sa njom."
+            "value" : "Podrška za uređaj za jednu %@ verziju. Xcode je ponovo pravi sledeći put kada povežete uređaj sa njom."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enhetsstöd för en iOS-version. Xcode bygger upp det igen nästa gång du ansluter en enhet med den."
+            "value" : "Enhetsstöd för en %@-version. Xcode bygger upp det igen nästa gång du ansluter en enhet med den."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bir iOS sürümü için aygıt desteği. Onunla bir aygıtı bir sonraki bağlayışınızda Xcode bunu yeniden oluşturur."
+            "value" : "Bir %@ sürümü için aygıt desteği. Onunla bir aygıtı bir sonraki bağlayışınızda Xcode bunu yeniden oluşturur."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "某个 iOS 版本的设备支持文件。下次你连接使用它的设备时，Xcode 会重新生成。"
+            "value" : "某个 %@ 版本的设备支持文件。下次你连接使用它的设备时，Xcode 会重新生成。"
           }
         }
       }
@@ -109184,6 +109480,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "下载"
+          }
+        }
+      }
+    },
+    "Download cache of %@, unused for at least 30 days. It downloads again when needed; projects keep what they installed." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ذاكرة التنزيل المؤقتة لـ %@، غير مستخدمة منذ 30 يومًا على الأقل. يُعاد تنزيلها عند الحاجة؛ وتحتفظ المشاريع بما ثبّتته."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memòria cau de baixades de %@, sense ús des de fa almenys 30 dies. Es torna a baixar quan cal; els projectes conserven el que han instal·lat."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download-Cache von %@, seit mindestens 30 Tagen unbenutzt. Er wird bei Bedarf neu geladen; Projekte behalten, was sie installiert haben."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download cache of %@, unused for at least 30 days. It downloads again when needed; projects keep what they installed."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download cache of %@, unused for at least 30 days. It downloads again when needed; projects keep what they installed."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download cache of %@, unused for at least 30 days. It downloads again when needed; projects keep what they installed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caché de descargas de %@, sin usar desde hace al menos 30 días. Se vuelve a descargar cuando hace falta; los proyectos conservan lo que instalaron."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caché de descargas de %@, sin usar desde hace al menos 30 días. Se vuelve a descargar cuando hace falta; los proyectos conservan lo que instalaron."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cache de téléchargement de %@, inutilisé depuis au moins 30 jours. Il est retéléchargé si besoin ; les projets gardent ce qu’ils ont installé."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download-Cache vo %@, sit mindestens 30 Täg nöd bruucht. Er wird bi Bedarf neu glade; Projekt bhalted, was sie installiert händ."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ का डाउनलोड कैश, कम से कम 30 दिनों से इस्तेमाल नहीं हुआ। ज़रूरत पड़ने पर यह फिर डाउनलोड होता है; प्रोजेक्ट में इंस्टॉल की गई चीज़ें बनी रहती हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Predmemorija preuzimanja za %@, nekorištena najmanje 30 dana. Ponovno se preuzima kad zatreba; projekti zadržavaju ono što su instalirali."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cache dei download di %@, inutilizzata da almeno 30 giorni. Viene riscaricata quando serve; i progetti mantengono ciò che hanno installato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@のダウンロードキャッシュで、30日以上使われていません。必要なときに再ダウンロードされます。プロジェクトにインストール済みのものは残ります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30일 이상 사용하지 않은 %@ 다운로드 캐시입니다. 필요할 때 다시 다운로드되며, 프로젝트에 설치된 항목은 유지됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ lejupielāžu kešatmiņa, nav lietota vismaz 30 dienas. Vajadzības gadījumā tā tiek lejupielādēta no jauna; projekti patur to, ko instalējuši."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pamięć podręczna pobrań %@, nieużywana od co najmniej 30 dni. W razie potrzeby zostanie pobrana ponownie; projekty zachowują to, co zainstalowały."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cache de transferências de %@, sem uso há pelo menos 30 dias. Volta a ser transferida quando necessário; os projetos mantêm o que instalaram."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cache-i i shkarkimeve të %@, i papërdorur prej të paktën 30 ditësh. Shkarkohet sërish kur nevojitet; projektet mbajnë atë që kanë instaluar."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Кеш преузимања за %@, некоришћен најмање 30 дана. Поново се преузима када затреба; пројекти задржавају оно што су инсталирали."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keš preuzimanja za %@, nekorišćen najmanje 30 dana. Ponovo se preuzima kada zatreba; projekti zadržavaju ono što su instalirali."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedladdningscache för %@, oanvänd i minst 30 dagar. Den laddas ned igen vid behov; projekt behåller det de har installerat."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ indirme önbelleği, en az 30 gündür kullanılmadı. Gerektiğinde yeniden indirilir; projeler yüklediklerini korur."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 的下载缓存，至少 30 天未使用。需要时会重新下载；项目已安装的内容会保留。"
           }
         }
       }
@@ -147800,6 +148244,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已安装的 App"
+          }
+        }
+      }
+    },
+    "Installers" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أدوات التثبيت"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instal·ladors"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installationsdateien"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installers"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installers"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installers"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instaladores"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instaladores"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Programmes d’installation"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installationsdateie"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "इंस्टॉलर"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instalacijske datoteke"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Programmi di installazione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "インストーラ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설치 파일"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instalētāji"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instalatory"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instaladores"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instaluesit"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Инсталатери"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instalateri"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installationsfiler"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yükleyiciler"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安装器"
           }
         }
       }
@@ -284120,6 +284712,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Xcode 储存空间"
+          }
+        }
+      }
+    },
+    "Xcode's search index for one project. Xcode rebuilds it when you open the project again." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فهرس البحث في Xcode لمشروع واحد. يعيد Xcode إنشاءه عند فتح المشروع مرة أخرى."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Índex de cerca de Xcode per a un projecte. Xcode el torna a crear quan tornes a obrir el projecte."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Suchindex von Xcode für ein Projekt. Xcode baut ihn neu auf, wenn du das Projekt wieder öffnest."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode's search index for one project. Xcode rebuilds it when you open the project again."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode's search index for one project. Xcode rebuilds it when you open the project again."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode's search index for one project. Xcode rebuilds it when you open the project again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Índice de búsqueda de Xcode para un proyecto. Xcode lo vuelve a crear cuando abres el proyecto de nuevo."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Índice de búsqueda de Xcode para un proyecto. Xcode lo vuelve a crear cuando abres el proyecto de nuevo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Index de recherche de Xcode pour un projet. Xcode le recrée quand vous rouvrez le projet."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De Suechindex vo Xcode för es Projekt. Xcode baut en neu uf, wänn du s Projekt wieder uftuesch."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "एक प्रोजेक्ट के लिए Xcode का सर्च इंडेक्स। प्रोजेक्ट फिर खोलने पर Xcode इसे दोबारा बना लेता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcodeov indeks pretraživanja za jedan projekt. Xcode ga ponovno gradi kad ponovno otvorite projekt."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice di ricerca di Xcode per un progetto. Xcode lo ricrea quando riapri il progetto."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1つのプロジェクト用のXcode検索インデックスです。プロジェクトを再び開くとXcodeが再作成します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "프로젝트 하나에 대한 Xcode 검색 색인입니다. 프로젝트를 다시 열면 Xcode가 다시 만듭니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode meklēšanas indekss vienam projektam. Xcode to izveido no jauna, kad atkal atver projektu."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indeks wyszukiwania Xcode dla jednego projektu. Xcode odtworzy go, gdy ponownie otworzysz projekt."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Índice de pesquisa do Xcode para um projeto. O Xcode volta a criá-lo quando abrir o projeto novamente."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indeksi i kërkimit të Xcode për një projekt. Xcode e rindërton kur e hap sërish projektin."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode индекс претраге за један пројекат. Xcode га поново прави када поново отворите пројекат."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode indeks pretrage za jedan projekat. Xcode ga ponovo pravi kada ponovo otvorite projekat."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcodes sökindex för ett projekt. Xcode bygger upp det igen när du öppnar projektet på nytt."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir proje için Xcode arama dizini. Projeyi yeniden açtığınızda Xcode bunu yeniden oluşturur."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一个项目的 Xcode 搜索索引。再次打开项目时，Xcode 会重新生成。"
           }
         }
       }

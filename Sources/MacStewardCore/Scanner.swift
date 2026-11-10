@@ -176,6 +176,10 @@ public final class Scanner: @unchecked Sendable {
             let homebrew = configuration.home.appendingPathComponent("Library/Caches/Homebrew")
             if FileManager.default.fileExists(atPath: homebrew.path) { add(homebrew, group: .developerCaches, rule: "homebrew-cache", reason: String(localized: "Homebrew's download cache, unused for at least 30 days. Installed formulae stay; Homebrew downloads again when needed.")) }
             if FileManager.default.fileExists(atPath: npm.path) { add(npm, group: .developerCaches, rule: "npm-cache", reason: String(localized: "npm's download cache, unused for at least 30 days. npm downloads packages again when needed; projects keep what they installed.")) }
+            for store in DeveloperJunk.packageStores {
+                let url = configuration.home.appendingPathComponent(store.path)
+                if FileManager.default.fileExists(atPath: url.path) { add(url, group: .developerCaches, rule: "package-store-cache", reason: String(localized: "Download cache of \(store.tool), unused for at least 30 days. It downloads again when needed; projects keep what they installed.")) }
+            }
         }
         let sessions = wants(.inactiveDependencies) ? AgentSessionIndex.load(claudeHome: configuration.claudeHome, codexHome: configuration.codexHome) : AgentSessionIndex()
         progress(String(localized: "Inspecting project caches…"))
