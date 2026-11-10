@@ -13,6 +13,8 @@ struct ProcessesView: View {
     @StateObject private var state = ProcessesState()
     @State private var search = ""
     @State private var onlyMine = true
+    @State private var grouped = false
+    @State private var expanded = Set<String>()
     @State private var order = "Memory"
     @State private var ending: (process: RunningProcess, force: Bool)?
     @State private var error: String?
@@ -20,11 +22,24 @@ struct ProcessesView: View {
         let query = search.trimmingCharacters(in: .whitespaces)
         let found = state.processes.filter { process in
             (!onlyMine || process.mine) && (query.isEmpty || String(process.pid).hasPrefix(query) || process.path.localizedCaseInsensitiveContains(query)
-                || title(process).localizedCaseInsensitiveContains(query))
+                || title(process).localizedCaseInsensitiveContains(query) || group(of: process).localizedCaseInsensitiveContains(query))
         }
         switch order {
         case "CPU": return found.sorted { $0.cpu > $1.cpu }
         case "Name": return found.sorted { title($0).localizedStandardCompare(title($1)) == .orderedAscending }
+        default: return found.sorted { $0.memory > $1.memory }
+        }
+    }
+    /// The app a process belongs to; processes outside any app go under macOS or their own name.
+    private func group(of process: RunningProcess) -> String { process.appName ?? (process.isSystem ? "macOS" : process.name) }
+    struct ProcessGroup: Identifiable { let id: String; let members: [RunningProcess]; var cpu: Double { members.reduce(0) { $0 + $1.cpu } }; var memory: UInt64 { members.reduce(0) { $0 + $1.memory } } }
+    /// Groups in the chosen order, by their totals; members keep the same order inside.
+    private var groups: [ProcessGroup] {
+        let list = shown
+        let found = Dictionary(grouping: list, by: group(of:)).map { ProcessGroup(id: $0.key, members: $0.value) }
+        switch order {
+        case "CPU": return found.sorted { $0.cpu > $1.cpu }
+        case "Name": return found.sorted { $0.id.localizedStandardCompare($1.id) == .orderedAscending }
         default: return found.sorted { $0.memory > $1.memory }
         }
     }
@@ -44,12 +59,20 @@ struct ProcessesView: View {
             HStack(spacing: 12) {
                 TextField("Find by name or PID", text: $search).stewardInput()
                 Toggle("Only mine", isOn: $onlyMine).toggleStyle(.checkbox)
+                Toggle("Group by app", isOn: $grouped).toggleStyle(.checkbox)
                 Picker("Sort", selection: $order) { Text("Memory").tag("Memory"); Text("CPU").tag("CPU"); Text("Name").tag("Name") }.frame(width: 170)
                 Button("Refresh") { Task { await state.refresh() } }.buttonStyle(RowActionButtonStyle())
             }
             if let error { Text(error).stewardFont(.callout).foregroundStyle(.orange) }
             LazyVStack(spacing: 6) {
-                ForEach(shown) { process in row(process) }
+                if grouped {
+                    ForEach(groups) { group in
+                        groupRow(group)
+                        if expanded.contains(group.id) { ForEach(group.members) { process in row(process).padding(.leading, 34) } }
+                    }
+                } else {
+                    ForEach(shown) { process in row(process) }
+                }
             }
         }
         // Live while the page is open; it stops with the page.
@@ -62,6 +85,28 @@ struct ProcessesView: View {
         } message: {
             if let ending { Text(ending.force ? "Unsaved work in it is lost." : "It's asked to quit and can save its work first.") }
         }
+    }
+    /// One line per app: its icon, how many processes, and their totals. A click opens it; Quit quits the app itself.
+    private func groupRow(_ group: ProcessGroup) -> some View {
+        let open = expanded.contains(group.id)
+        let main = group.members.first { app($0)?.activationPolicy == .regular }
+        return HStack(spacing: 12) {
+            Image(systemName: "chevron.right").font(.system(size: 11, weight: .semibold)).foregroundStyle(.secondary)
+                .rotationEffect(.degrees(open ? 90 : 0)).frame(width: 12)
+            Image(nsImage: icon(main ?? group.members[0])).resizable().frame(width: 28, height: 28)
+            Text(group.id).stewardFont(.body, weight: .semibold).lineLimit(1)
+            Text(verbatim: "\(group.members.count)").stewardFont(.caption, weight: .semibold).monospacedDigit()
+                .padding(.horizontal, 7).padding(.vertical, 2).background(.white.opacity(0.12), in: Capsule())
+            Spacer(minLength: 12)
+            Text(verbatim: String(format: "%.1f %%", group.cpu)).stewardFont(.caption).monospacedDigit().frame(width: 60, alignment: .trailing)
+            Text(formattedBytes(group.memory)).stewardFont(.callout, weight: .medium).monospacedDigit().frame(width: 80, alignment: .trailing)
+            if let main { Button("Quit") { ending = (main, false) }.buttonStyle(RowActionButtonStyle()).stewardFont(.caption).disabled(!ProcessList.endable(main)) }
+        }
+        .padding(.horizontal, 14).padding(.vertical, 9)
+        .background(.white.opacity(open ? 0.09 : 0.06), in: RoundedRectangle(cornerRadius: 10))
+        .contentShape(RoundedRectangle(cornerRadius: 10))
+        .onTapGesture { withAnimation(.easeOut(duration: 0.18)) { if open { expanded.remove(group.id) } else { expanded.insert(group.id) } } }
+        .accessibilityElement(children: .contain).accessibilityAddTraits(.isButton)
     }
     private func row(_ process: RunningProcess) -> some View {
         HStack(spacing: 12) {
