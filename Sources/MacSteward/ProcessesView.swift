@@ -75,8 +75,8 @@ struct ProcessesView: View {
                 }
             }
         }
-        // Live while the page is open; it stops with the page.
-        .task { while !Task.isCancelled { await state.refresh(); try? await Task.sleep(for: .seconds(5)) } }
+        // Read on open, on Refresh and after a quit, never on a timer: a live re-sort moves rows under the pointer.
+        .task { await state.refresh() }
         .confirmationDialog(ending.map { String(localized: "Quit \(title($0.process))?") } ?? "", isPresented: Binding(get: { ending != nil }, set: { if !$0 { ending = nil } }), titleVisibility: .visible) {
             if let ending {
                 Button(ending.force ? "Force Quit" : "Quit", role: .destructive) { end(ending.process, force: ending.force) }
