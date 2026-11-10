@@ -124,12 +124,14 @@ final class StewardModel: ObservableObject {
     private var accessGateAnswered = false
     /// Scans that would miss protected folders ask first, once per launch. Without access they still run.
     func withFullDisk(_ start: @escaping () -> Void) {
-        guard !accessGateAnswered, !UserDefaults.standard.bool(forKey: "fullDiskAccessBannerDismissed"), FullDiskAccess.status() == .denied else { start(); return }
+        guard !accessGateAnswered, !UserDefaults.standard.bool(forKey: Self.accessGateDismissedKey), FullDiskAccess.status() == .denied else { start(); return }
         accessGate = start
     }
+    /// Its own key: closing the small Full Disk Access banner used to switch this prompt off for good too.
+    static let accessGateDismissedKey = "fullDiskAccessGateDismissed"
     func finishAccessGate(forever: Bool = false) {
         accessGateAnswered = true
-        if forever { UserDefaults.standard.set(true, forKey: "fullDiskAccessBannerDismissed") }
+        if forever { UserDefaults.standard.set(true, forKey: Self.accessGateDismissedKey) }
         let start = accessGate; accessGate = nil; start?()
     }
     @Published var fixing = false
