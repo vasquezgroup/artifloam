@@ -1,6 +1,7 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {},
     "  " : {},
     "% CPU" : {
       "localizations" : {
@@ -2539,6 +2540,24 @@
             "value" : "%1$@ von %2$@. Sie werden endgültig gelöscht, sobald du bestätigst."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ from %@. They're deleted permanently after you confirm."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ from %@. They're deleted permanently after you confirm."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ from %@. They're deleted permanently after you confirm."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2645,24 +2664,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "来自 %2$@ 的 %1$@。确认后会被永久删除。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ from %@. They're deleted permanently after you confirm."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ from %@. They're deleted permanently after you confirm."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ from %@. They're deleted permanently after you confirm."
           }
         }
       }
@@ -7706,6 +7707,154 @@
       }
     },
     "%@ · %@" : {},
+    "%@ · %@ selected" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · المحدد %2$@"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ seleccionats"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ ausgewählt"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %@ selected"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %@ selected"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %@ selected"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ seleccionados"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ seleccionados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ sélectionnés"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ usgwählt"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ चुने गए"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · odabrano %2$@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ selezionati"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@を選択中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ 선택됨"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · atlasīti %2$@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · zaznaczono %2$@"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ selecionados"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ të zgjedhura"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · изабрано %2$@"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · izabrano %2$@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ valda"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ seçildi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · 已选 %2$@"
+          }
+        }
+      }
+    },
     "%@ · %@ · changed %@" : {
       "localizations" : {
         "ar" : {
@@ -56822,6 +56971,24 @@
             "value" : "Gelöschte App-Bundles: %lld."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App bundles deleted: %lld."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App bundles deleted: %lld."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App bundles deleted: %lld."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -56928,24 +57095,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已删除的 App 包:%lld。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "App bundles deleted: %lld."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "App bundles deleted: %lld."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "App bundles deleted: %lld."
           }
         }
       }
@@ -87361,502 +87510,6 @@
         }
       }
     },
-    "Clean %lld caches · %@" : {
-      "localizations" : {
-        "ar" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "تنظيف %lld ذاكرات مؤقتة · %@"
-                }
-              },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "تنظيف %lld ذاكرة مؤقتة · %@"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "تنظيف %lld ذاكرة مؤقتة · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "تنظيف %lld ذاكرة مؤقتة · %@"
-                }
-              },
-              "two" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "تنظيف %lld ذاكرتان مؤقتتان · %@"
-                }
-              },
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "تنظيف %lld ذاكرات مؤقتة · %@"
-                }
-              }
-            }
-          }
-        },
-        "ca" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Neteja %lld memòria cau · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Neteja %lld memòries cau · %@"
-                }
-              }
-            }
-          }
-        },
-        "de" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld Cache bereinigen · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld Caches bereinigen · %@"
-                }
-              }
-            }
-          }
-        },
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Clean %lld cache · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Clean %lld caches · %@"
-                }
-              }
-            }
-          }
-        },
-        "en-AU" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Clean %lld cache · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Clean %lld caches · %@"
-                }
-              }
-            }
-          }
-        },
-        "en-CA" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Clean %lld cache · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Clean %lld caches · %@"
-                }
-              }
-            }
-          }
-        },
-        "en-GB" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Clean %lld cache · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Clean %lld caches · %@"
-                }
-              }
-            }
-          }
-        },
-        "es" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Limpiar %lld caché · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Limpiar %lld cachés · %@"
-                }
-              }
-            }
-          }
-        },
-        "es-419" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Limpiar %lld caché · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Limpiar %lld cachés · %@"
-                }
-              }
-            }
-          }
-        },
-        "fr" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Nettoyer %lld cache · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Nettoyer %lld caches · %@"
-                }
-              }
-            }
-          }
-        },
-        "gsw" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld Cache ufruume · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld Caches ufruume · %@"
-                }
-              }
-            }
-          }
-        },
-        "hi" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld कैश साफ़ करें · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld कैश साफ़ करें · %@"
-                }
-              }
-            }
-          }
-        },
-        "hr" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Očisti %lld predmemorije · %@"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Očisti %lld predmemoriju · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Očisti %lld predmemorija · %@"
-                }
-              }
-            }
-          }
-        },
-        "it" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Pulisci %lld cache · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Pulisci %lld cache · %@"
-                }
-              }
-            }
-          }
-        },
-        "ja" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "キャッシュ%lld個をクリーンアップ · %@"
-                }
-              }
-            }
-          }
-        },
-        "ko" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "캐시 %1$lld개 정리 · %2$@"
-                }
-              }
-            }
-          }
-        },
-        "lv" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Tīrīt %lld kešatmiņu · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Tīrīt %lld kešatmiņas · %@"
-                }
-              },
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Tīrīt %lld kešatmiņas · %@"
-                }
-              }
-            }
-          }
-        },
-        "pl" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Wyczyść %lld pamięci podręczne · %@"
-                }
-              },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Wyczyść %lld pamięci podręcznych · %@"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Wyczyść %lld pamięć podręczną · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Wyczyść %lld pamięci podręcznej · %@"
-                }
-              }
-            }
-          }
-        },
-        "pt" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Limpar %lld cache · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Limpar %lld caches · %@"
-                }
-              }
-            }
-          }
-        },
-        "sq" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Pastro %lld cache · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Pastro %lld cache · %@"
-                }
-              }
-            }
-          }
-        },
-        "sr-Cyrl" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Очисти %lld кеша · %@"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Очисти %lld кеш · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Очисти %lld кешева · %@"
-                }
-              }
-            }
-          }
-        },
-        "sr-Latn" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Očisti %lld keša · %@"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Očisti %lld keš · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Očisti %lld keševa · %@"
-                }
-              }
-            }
-          }
-        },
-        "sv" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Rensa %lld cache · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Rensa %lld cachar · %@"
-                }
-              }
-            }
-          }
-        },
-        "tr" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Temizle: %lld önbellek · %@"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Temizle: %lld önbellek · %@"
-                }
-              }
-            }
-          }
-        },
-        "zh-Hans" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "清理 %lld 个缓存 · %@"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "Clean %lld…" : {
       "localizations" : {
         "ar" : {
@@ -100712,6 +100365,24 @@
             "value" : "%lld endgültig löschen"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete %lld permanently"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete %lld permanently"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete %lld permanently"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -100818,24 +100489,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "永久删除 %lld 项"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete %lld permanently"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete %lld permanently"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete %lld permanently"
           }
         }
       }
@@ -102100,6 +101753,24 @@
             "value" : "Alle zusätzlichen Kopien löschen · %@"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete all extra copies · %@"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete all extra copies · %@"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete all extra copies · %@"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -102207,172 +101878,6 @@
             "state" : "translated",
             "value" : "删除所有多余副本 · %@"
           }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete all extra copies · %@"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete all extra copies · %@"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete all extra copies · %@"
-          }
-        }
-      }
-    },
-    "Delete anyway…" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "احذف على أي حال…"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elimina igualment…"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trotzdem löschen …"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete anyway…"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete anyway…"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete anyway…"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eliminar de todos modos…"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eliminar de todos modos…"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Supprimer quand même…"
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Glich lösche …"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "फिर भी हटाएँ…"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ipak izbriši…"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elimina comunque…"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "それでも削除…"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "그래도 삭제…"
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tomēr dzēst…"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usuń mimo to…"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apagar mesmo assim…"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fshije gjithsesi…"
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ипак обриши…"
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ipak obriši…"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Radera ändå…"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yine de sil…"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "仍然删除…"
-          }
         }
       }
     },
@@ -102394,6 +101899,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lösche Apps, die du nicht mehr verwendest. Deine Dokumente und Support-Daten bleiben, wo sie sind."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete apps you no longer use. Your documents and support data stay in place."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete apps you no longer use. Your documents and support data stay in place."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete apps you no longer use. Your documents and support data stay in place."
           }
         },
         "es" : {
@@ -102502,24 +102025,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "删除你不再使用的 App。你的文稿和支持数据会保留在原处。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete apps you no longer use. Your documents and support data stay in place."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete apps you no longer use. Your documents and support data stay in place."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete apps you no longer use. Your documents and support data stay in place."
           }
         }
       }
@@ -103284,6 +102789,24 @@
             "value" : "Gelöscht"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -103390,24 +102913,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已删除"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted"
           }
         }
       }
@@ -103876,6 +103381,24 @@
             "value" : "Endgültig gelöscht, sobald du bestätigst"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted permanently after you confirm"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted permanently after you confirm"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted permanently after you confirm"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -103983,24 +103506,6 @@
             "state" : "translated",
             "value" : "确认后永久删除"
           }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted permanently after you confirm"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted permanently after you confirm"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted permanently after you confirm"
-          }
         }
       }
     },
@@ -104022,6 +103527,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gelöscht: %1$lld · Übersprungen: %2$lld."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted: %lld · Skipped: %lld."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted: %lld · Skipped: %lld."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted: %lld · Skipped: %lld."
           }
         },
         "es" : {
@@ -104131,24 +103654,6 @@
             "state" : "translated",
             "value" : "已删除:%1$lld · 已跳过:%2$lld。"
           }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted: %lld · Skipped: %lld."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted: %lld · Skipped: %lld."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted: %lld · Skipped: %lld."
-          }
         }
       }
     },
@@ -104170,6 +103675,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gelöscht: %lld."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted: %lld."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted: %lld."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted: %lld."
           }
         },
         "es" : {
@@ -104278,24 +103801,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已删除:%lld。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted: %lld."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted: %lld."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted: %lld."
           }
         }
       }
@@ -104468,6 +103973,24 @@
             "value" : "Löscht sie endgültig. Sie lassen sich nicht zurücklegen, prüfe also zuerst die Liste."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deletes them permanently. They can't be put back, so check the list first."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deletes them permanently. They can't be put back, so check the list first."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deletes them permanently. They can't be put back, so check the list first."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -104574,24 +104097,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "将它们永久删除。删除后无法恢复，请先检查列表。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deletes them permanently. They can't be put back, so check the list first."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deletes them permanently. They can't be put back, so check the list first."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deletes them permanently. They can't be put back, so check the list first."
           }
         }
       }
@@ -105504,6 +105009,24 @@
             "value" : "Wird gelöscht …"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting…"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting…"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting…"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -105610,24 +105133,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在删除…"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleting…"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleting…"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleting…"
           }
         }
       }
@@ -117313,6 +116818,24 @@
             "value" : "Alles, was hier aufgeführt ist. Du prüfst jedes Objekt, bevor es gelöscht wird."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everything listed here. You review each item before it's deleted."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everything listed here. You review each item before it's deleted."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everything listed here. You review each item before it's deleted."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -117419,24 +116942,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "此处列出的所有内容。每个项目在删除前都会先由你审阅。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Everything listed here. You review each item before it's deleted."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Everything listed here. You review each item before it's deleted."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Everything listed here. You review each item before it's deleted."
           }
         }
       }
@@ -124327,6 +123832,24 @@
             "value" : "Finde exakte Kopien in deinem Benutzerordner nach Inhalt. Behalte eine, lösche den Rest."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find exact copies across your home folder by content. Keep one, delete the rest."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find exact copies across your home folder by content. Keep one, delete the rest."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find exact copies across your home folder by content. Keep one, delete the rest."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -124433,24 +123956,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "按内容在个人文件夹中查找完全相同的副本。保留一个，删除其余的。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Find exact copies across your home folder by content. Keep one, delete the rest."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Find exact copies across your home folder by content. Keep one, delete the rest."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Find exact copies across your home folder by content. Keep one, delete the rest."
           }
         }
       }
@@ -125067,6 +124572,24 @@
             "value" : "Finde große Dateien und ältere Downloads. Prüfe Größen und Daten, bevor du deine Auswahl löschst."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find large files and older downloads. Review sizes and dates before deleting your selection."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find large files and older downloads. Review sizes and dates before deleting your selection."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find large files and older downloads. Review sizes and dates before deleting your selection."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -125173,24 +124696,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "查找大文件和较早的下载项。删除所选内容前先查看大小和日期。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Find large files and older downloads. Review sizes and dates before deleting your selection."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Find large files and older downloads. Review sizes and dates before deleting your selection."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Find large files and older downloads. Review sizes and dates before deleting your selection."
           }
         }
       }
@@ -125659,6 +125164,24 @@
             "value" : "Finde, was am meisten Platz belegt, und prüfe es, bevor etwas gelöscht wird."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find what takes the most room, then review it before anything is deleted."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find what takes the most room, then review it before anything is deleted."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find what takes the most room, then review it before anything is deleted."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -125765,24 +125288,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "找出占用空间最多的内容，并在删除任何内容前先审阅。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Find what takes the most room, then review it before anything is deleted."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Find what takes the most room, then review it before anything is deleted."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Find what takes the most room, then review it before anything is deleted."
           }
         }
       }
@@ -135711,154 +135216,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "接下来 Git 会重新检查每个 worktree，你还需再确认一次。"
-          }
-        }
-      }
-    },
-    "Git rechecks it first. The processes keep running, but lose this folder." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يعيد Git فحصه أولًا. تستمر العمليات في العمل، لكنها تفقد هذا المجلد."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "El Git ho torna a comprovar primer. Els processos continuen funcionant, però perden aquesta carpeta."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git prüft ihn zuerst erneut. Die Prozesse laufen weiter, verlieren aber diesen Ordner."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git rechecks it first. The processes keep running, but lose this folder."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git rechecks it first. The processes keep running, but lose this folder."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git rechecks it first. The processes keep running, but lose this folder."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git lo vuelve a comprobar primero. Los procesos siguen funcionando, pero pierden esta carpeta."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git lo vuelve a revisar primero. Los procesos siguen funcionando, pero pierden esta carpeta."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git le revérifie d’abord. Les processus continuent de tourner, mais perdent ce dossier."
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git prüeft en zerscht nomal. D Prozess laufed wiiter, verlüüred aber dä Ordner."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git पहले इसे फिर से जाँचता है। प्रक्रियाएँ चलती रहती हैं, लेकिन यह फ़ोल्डर खो देती हैं।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git ga najprije ponovno provjerava. Procesi nastavljaju raditi, ali gube ovu mapu."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git lo ricontrolla prima. I processi continuano a funzionare, ma perdono questa cartella."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gitがまず再確認します。プロセスは動き続けますが、このフォルダは失われます。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git이 먼저 다시 확인합니다. 프로세스는 계속 실행되지만 이 폴더를 잃게 됩니다."
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git to vispirms pārbauda vēlreiz. Procesi turpina darboties, bet zaudē šo mapi."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git najpierw sprawdza go ponownie. Procesy działają dalej, ale tracą ten folder."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Git volta a verificá-lo primeiro. Os processos continuam a funcionar, mas perdem esta pasta."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git e rikontrollon së pari. Proceset vazhdojnë, por e humbasin këtë dosje."
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git га прво поново проверава. Процеси настављају да раде, али губе ову фасциклу."
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git ga prvo ponovo proverava. Procesi nastavljaju da rade, ali gube ovu fasciklu."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git kontrollerar den igen först. Processerna fortsätter köra men förlorar den här mappen."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git önce yeniden denetler. İşlemler çalışmaya devam eder, ancak bu klasörü kaybeder."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git 会先重新检查。进程会继续运行，但会失去这个文件夹。"
           }
         }
       }
@@ -149948,6 +149305,24 @@
             "value" : "1 behalten, %lld löschen"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep 1, delete %lld"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep 1, delete %lld"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep 1, delete %lld"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -150054,24 +149429,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "保留 1 个，删除 %lld 个"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keep 1, delete %lld"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keep 1, delete %lld"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keep 1, delete %lld"
           }
         }
       }
@@ -152760,6 +152117,24 @@
             "value" : "Behält die älteste Kopie und zeigt die anderen zur Durchsicht, bevor sie gelöscht werden."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keeps the oldest copy and reviews the others before they're deleted."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keeps the oldest copy and reviews the others before they're deleted."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keeps the oldest copy and reviews the others before they're deleted."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -152867,24 +152242,6 @@
             "state" : "translated",
             "value" : "保留最旧的副本，其余副本在删除前先供你审阅。"
           }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keeps the oldest copy and reviews the others before they're deleted."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keeps the oldest copy and reviews the others before they're deleted."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keeps the oldest copy and reviews the others before they're deleted."
-          }
         }
       }
     },
@@ -152906,6 +152263,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Behält in jeder Gruppe die älteste Kopie und zeigt den Rest zur Durchsicht, bevor er gelöscht wird."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keeps the oldest copy in every group and reviews the rest before they're deleted."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keeps the oldest copy in every group and reviews the rest before they're deleted."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keeps the oldest copy in every group and reviews the rest before they're deleted."
           }
         },
         "es" : {
@@ -153014,24 +152389,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "保留每组中最旧的副本，其余副本在删除前先供你审阅。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keeps the oldest copy in every group and reviews the rest before they're deleted."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keeps the oldest copy in every group and reviews the rest before they're deleted."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keeps the oldest copy in every group and reviews the rest before they're deleted."
           }
         }
       }
@@ -163621,6 +162978,24 @@
             "value" : "Nach Inhalt (SHA-256) abgeglichen, nicht nach Dateiname. Eine Kopie bleibt immer; die anderen werden endgültig gelöscht."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matched by content (SHA-256), not by file name. One copy always stays; the others are deleted permanently."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matched by content (SHA-256), not by file name. One copy always stays; the others are deleted permanently."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matched by content (SHA-256), not by file name. One copy always stays; the others are deleted permanently."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -163727,24 +163102,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "按内容(SHA-256)而非文件名匹配。始终保留一个副本，其余副本会被永久删除。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Matched by content (SHA-256), not by file name. One copy always stays; the others are deleted permanently."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Matched by content (SHA-256), not by file name. One copy always stays; the others are deleted permanently."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Matched by content (SHA-256), not by file name. One copy always stays; the others are deleted permanently."
           }
         }
       }
@@ -182504,6 +181861,154 @@
         }
       }
     },
+    "Nothing here passed every check. Tick what you want yourself." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم يجتز أي شيء هنا كل الفحوصات. حدّد ما تريده بنفسك."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Res d’aquí no ha superat totes les comprovacions. Marca tu el que vulguis."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hier hat nichts jede Prüfung bestanden. Wähle selbst aus, was du möchtest."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing here passed every check. Tick what you want yourself."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing here passed every check. Tick what you want yourself."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing here passed every check. Tick what you want yourself."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada de aquí superó todas las comprobaciones. Marca tú lo que quieras."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada de aquí superó todas las comprobaciones. Marca tú lo que quieras."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rien ici n’a passé toutes les vérifications. Cochez vous-même ce que vous voulez."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Da het nüt jedi Prüefig bestande. Wähl sälber us, was du wotsch."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "यहाँ किसी ने हर जाँच पास नहीं की। जो चाहें, खुद चुनें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ovdje ništa nije prošlo sve provjere. Sam označi što želiš."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qui niente ha superato tutti i controlli. Seleziona tu ciò che vuoi."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ここにはすべてのチェックを通過した項目がありません。必要なものを自分で選んでください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "여기에는 모든 검사를 통과한 항목이 없습니다. 원하는 항목을 직접 선택하세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šeit nekas nav izturējis visas pārbaudes. Atzīmē pats, ko vēlies."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nic tutaj nie przeszło wszystkich kontroli. Zaznacz sam, co chcesz."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada aqui passou em todas as verificações. Assinale o que quiser."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asgjë këtu nuk i kaloi të gjitha kontrollet. Shëno vetë çfarë do."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ништа овде није прошло све провере. Сами означите шта желите."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ništa ovde nije prošlo sve provere. Sami označite šta želite."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inget här klarade alla kontroller. Markera själv det du vill."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buradaki hiçbir şey tüm denetimlerden geçmedi. İstediklerinizi kendiniz işaretleyin."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这里没有任何项目通过所有检查。请自行勾选想要的项目。"
+          }
+        }
+      }
+    },
     "Nothing here." : {
       "localizations" : {
         "ar" : {
@@ -190622,6 +190127,24 @@
             "value" : "Hier lassen sich nur normale Dateien und Ordner löschen."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only ordinary files and folders can be deleted here."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only ordinary files and folders can be deleted here."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only ordinary files and folders can be deleted here."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -190728,24 +190251,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "这里只能删除普通文件和文件夹。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only ordinary files and folders can be deleted here."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only ordinary files and folders can be deleted here."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only ordinary files and folders can be deleted here."
           }
         }
       }
@@ -191046,6 +190551,154 @@
         }
       }
     },
+    "Only selected" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المحدد فقط"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Només els seleccionats"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur ausgewählte"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only selected"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only selected"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only selected"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo los seleccionados"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo los seleccionados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélection uniquement"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nume usgwählti"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "केवल चुने गए"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Samo odabrano"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo selezionati"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択した項目のみ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택한 항목만"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tikai atlasītie"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tylko zaznaczone"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Só os selecionados"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vetëm të zgjedhurat"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Само изабрано"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Samo izabrano"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endast valda"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca seçilenler"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅显示已选"
+          }
+        }
+      }
+    },
     "Only simulators you ticked are removed" : {
       "localizations" : {
         "ar" : {
@@ -191214,6 +190867,24 @@
             "value" : "Nur das App-Bundle wird gelöscht. Dokumente, Abos und Support-Daten bleiben erhalten. Laufende Apps musst du zuerst selbst beenden."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only the application bundle is deleted. Documents, subscriptions and support data are kept. Running apps must be quit by you first."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only the application bundle is deleted. Documents, subscriptions and support data are kept. Running apps must be quit by you first."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only the application bundle is deleted. Documents, subscriptions and support data are kept. Running apps must be quit by you first."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -191320,24 +190991,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "只删除 App 包。文稿、订阅和支持数据会保留。正在运行的 App 需要你先自行退出。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only the application bundle is deleted. Documents, subscriptions and support data are kept. Running apps must be quit by you first."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only the application bundle is deleted. Documents, subscriptions and support data are kept. Running apps must be quit by you first."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only the application bundle is deleted. Documents, subscriptions and support data are kept. Running apps must be quit by you first."
           }
         }
       }
@@ -206738,6 +206391,154 @@
         }
       }
     },
+    "Protected: Artifloam never removes this" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "محمي: لا يزيله Artifloam أبدًا"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protegit: l’Artifloam no ho elimina mai"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschützt: Artifloam entfernt das nie"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protected: Artifloam never removes this"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protected: Artifloam never removes this"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protected: Artifloam never removes this"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protegido: Artifloam nunca lo elimina"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protegido: Artifloam nunca lo elimina"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protégé : Artifloam ne le supprime jamais"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gschützt: Artifloam entfernt das nie"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सुरक्षित: Artifloam इसे कभी नहीं हटाता"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaštićeno: Artifloam ovo nikad ne uklanja"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protetto: Artifloam non lo rimuove mai"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保護:Artifloamがこれを削除することはありません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보호됨: Artifloam은 이 항목을 절대 제거하지 않습니다"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aizsargāts: Artifloam to nekad nenoņem"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chronione: Artifloam nigdy tego nie usuwa"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protegido: o Artifloam nunca remove isto"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E mbrojtur: Artifloam nuk e heq kurrë"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Заштићено: Artifloam ово никад не уклања"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaštićeno: Artifloam ovo nikad ne uklanja"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skyddat: Artifloam tar aldrig bort detta"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korumalı: Artifloam bunu asla kaldırmaz"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "受保护:Artifloam 绝不会移除此项"
+          }
+        }
+      }
+    },
     "Protected: process inspection is incomplete." : {
       "localizations" : {
         "ar" : {
@@ -216087,6 +215888,24 @@
             "value" : "Release-Archive aus dem Xcode Organizer. Werden endgültig gelöscht."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Release archives from Xcode Organizer. Deleted permanently."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Release archives from Xcode Organizer. Deleted permanently."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Release archives from Xcode Organizer. Deleted permanently."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -216193,24 +216012,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "来自 Xcode Organizer 的发布归档。会被永久删除。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Release archives from Xcode Organizer. Deleted permanently."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Release archives from Xcode Organizer. Deleted permanently."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Release archives from Xcode Organizer. Deleted permanently."
           }
         }
       }
@@ -218781,6 +218582,154 @@
         }
       }
     },
+    "Removes everything ticked in every category, after one confirmation" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يزيل كل ما حددته في كل الفئات بعد تأكيد واحد"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina tot el que has marcat a totes les categories, amb una sola confirmació"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entfernt alles Ausgewählte aus allen Kategorien nach einer Bestätigung"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removes everything ticked in every category, after one confirmation"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removes everything ticked in every category, after one confirmation"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removes everything ticked in every category, after one confirmation"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina todo lo marcado en todas las categorías tras una sola confirmación"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina todo lo marcado en todas las categorías tras una sola confirmación"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprime tout ce qui est coché dans toutes les catégories, après une seule confirmation"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entfernt alles Usgwählte us allne Kategorie nach ere Bestätigung"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "एक पुष्टि के बाद हर श्रेणी में चुना गया सब कुछ हटाता है"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uklanja sve označeno u svim kategorijama nakon jedne potvrde"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rimuove tutto ciò che è selezionato in ogni categoria, dopo una sola conferma"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1回の確認で、すべてのカテゴリで選択した項目を削除します"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "한 번 확인하면 모든 카테고리에서 선택한 항목을 제거합니다"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pēc viena apstiprinājuma noņem visu atzīmēto visās kategorijās"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuwa wszystko zaznaczone we wszystkich kategoriach po jednym potwierdzeniu"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove tudo o que está assinalado em todas as categorias, após uma confirmação"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heq gjithçka të shënuar në çdo kategori, pas një konfirmimi"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Уклања све означено у свим категоријама после једне потврде"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uklanja sve označeno u svim kategorijama posle jedne potvrde"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tar bort allt markerat i alla kategorier efter en bekräftelse"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tek onaydan sonra tüm kategorilerde işaretlenenlerin hepsini kaldırır"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认一次后，移除所有类别中勾选的项目"
+          }
+        }
+      }
+    },
     "Removing %@ from your %@. Keep it unlocked and connected." : {
       "localizations" : {
         "ar" : {
@@ -221273,6 +221222,24 @@
             "value" : "Ergebnisse"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Results"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Results"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Results"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -221379,24 +221346,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "结果"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Results"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Results"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Results"
           }
         }
       }
@@ -221994,154 +221943,6 @@
         }
       }
     },
-    "Review and delete this merged worktree" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "راجع هذا الـ worktree المدموج واحذفه"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revisa i esborra aquest worktree fusionat"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diesen zusammengeführten Worktree durchsehen und löschen"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review and delete this merged worktree"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review and delete this merged worktree"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review and delete this merged worktree"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revisa y borra este worktree fusionado"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revisa y borra este worktree fusionado"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Examiner et supprimer ce worktree fusionné"
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dä gmergt Worktree prüefe und lösche"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "मर्ज हो चुके इस worktree की समीक्षा करें और डिलीट करें"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pregledaj i izbriši ovaj spojeni worktree"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rivedi ed elimina questo worktree unito"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このマージ済みworktreeを確認して削除"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "병합된 이 워크트리를 검토하고 삭제"
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pārskatīt un dzēst šo sapludināto worktree"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Przejrzyj i usuń ten scalony worktree"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reveja e elimine este worktree integrado"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rishiko dhe fshi këtë worktree të bashkuar"
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Прегледај и обриши овај спојени worktree"
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pregledaj i obriši ovaj spojeni worktree"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Granska och radera denna mergade worktree"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bu birleştirilmiş worktree’yi inceleyin ve silin"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "审阅并删除此已合并的 worktree"
-          }
-        }
-      }
-    },
     "Review apps" : {
       "localizations" : {
         "ar" : {
@@ -222606,6 +222407,24 @@
             "value" : "Vor dem Löschen prüfen"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review before deleting"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review before deleting"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review before deleting"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -222712,24 +222531,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "删除前审阅"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review before deleting"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review before deleting"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review before deleting"
           }
         }
       }
@@ -223346,6 +223147,24 @@
             "value" : "Prüfe installierte Apps und lösche die, die du auswählst. Laufende und System-Apps bleiben geschützt."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review installed apps and delete the ones you choose. Running and system apps stay protected."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review installed apps and delete the ones you choose. Running and system apps stay protected."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review installed apps and delete the ones you choose. Running and system apps stay protected."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -223452,24 +223271,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "查看已安装的 App，并删除你选择的 App。正在运行的 App 和系统 App 受到保护。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review installed apps and delete the ones you choose. Running and system apps stay protected."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review installed apps and delete the ones you choose. Running and system apps stay protected."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review installed apps and delete the ones you choose. Running and system apps stay protected."
           }
         }
       }
@@ -233170,6 +232971,24 @@
             "value" : "Sieh, welche Checkouts von Claude Code und Codex verwendet werden. Lösche fertige, gemergte."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See which Claude Code and Codex checkouts are in use. Delete finished, merged ones."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See which Claude Code and Codex checkouts are in use. Delete finished, merged ones."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See which Claude Code and Codex checkouts are in use. Delete finished, merged ones."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -233276,24 +233095,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "查看哪些 Claude Code 和 Codex checkout 正在使用。删除已完成并已合并的。"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "See which Claude Code and Codex checkouts are in use. Delete finished, merged ones."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "See which Claude Code and Codex checkouts are in use. Delete finished, merged ones."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "See which Claude Code and Codex checkouts are in use. Delete finished, merged ones."
           }
         }
       }
@@ -235459,154 +235260,6 @@
         }
       }
     },
-    "Select caches to clean" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "حدّد الذاكرات المؤقتة للتنظيف"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selecciona memòries cau per netejar"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Caches zum Bereinigen auswählen"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select caches to clean"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select caches to clean"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select caches to clean"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selecciona cachés para limpiar"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selecciona cachés para limpiar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sélectionner les caches à nettoyer"
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Caches zum Ufruume uuswähle"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "साफ़ करने के लिए कैश चुनें"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Odaberi predmemorije za čišćenje"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seleziona le cache da pulire"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "クリーンアップするキャッシュを選択"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "정리할 캐시 선택"
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atlasi kešatmiņas, ko notīrīt"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zaznacz pamięci podręczne do wyczyszczenia"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selecione caches para limpar"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zgjidh cache për t'i pastruar"
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Изабери кешеве за чишћење"
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Izaberi keševe za čišćenje"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Välj cachar att rensa"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Temizlenecek önbellekleri seçin"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择要清理的缓存"
-          }
-        }
-      }
-    },
     "Select every category's ready items" : {
       "localizations" : {
         "ar" : {
@@ -236935,154 +236588,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "选择所显示的项"
-          }
-        }
-      }
-    },
-    "Select to clean" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "حدّد للتنظيف"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selecciona per netejar"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zum Bereinigen auswählen"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select to clean"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select to clean"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select to clean"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seleccionar para limpiar"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seleccionar para limpiar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sélectionner pour nettoyer"
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zum Ufruume uuswähle"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "साफ़ करने के लिए चुनें"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Odaberi za čišćenje"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seleziona da pulire"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "クリーンアップするものを選択"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "정리할 항목 선택"
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atlasīt tīrīšanai"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zaznacz do wyczyszczenia"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selecionar para limpar"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zgjidh për t'i pastruar"
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Изабери за чишћење"
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Izaberi za čišćenje"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Välj för att rensa"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Temizlemek için seç"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择以清理"
           }
         }
       }
@@ -243783,6 +243288,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "排序"
+          }
+        }
+      }
+    },
+    "Sort by size, last change or name, or show only what's selected" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رتّب حسب الحجم أو آخر تغيير أو الاسم، أو اعرض المحدد فقط"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordena per mida, darrer canvi o nom, o mostra només el que has seleccionat"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach Größe, letzter Änderung oder Name sortieren oder nur Ausgewähltes zeigen"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort by size, last change or name, or show only what's selected"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort by size, last change or name, or show only what's selected"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort by size, last change or name, or show only what's selected"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordena por tamaño, último cambio o nombre, o muestra solo lo seleccionado"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordena por tamaño, último cambio o nombre, o muestra solo lo seleccionado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trier par taille, dernière modification ou nom, ou n’afficher que la sélection"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach Grössi, letschter Änderig oder Name sortiere oder nume Usgwählts zeige"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आकार, पिछले बदलाव या नाम से क्रमबद्ध करें, या केवल चुने गए दिखाएँ"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poredaj po veličini, zadnjoj promjeni ili nazivu ili prikaži samo odabrano"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordina per dimensione, ultima modifica o nome, o mostra solo la selezione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サイズ、最終変更日、名前で並べ替えるか、選択した項目だけを表示します"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "크기, 마지막 변경 또는 이름순으로 정렬하거나 선택한 항목만 표시합니다"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kārtot pēc izmēra, pēdējām izmaiņām vai nosaukuma, vai rādīt tikai atlasīto"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortuj według rozmiaru, ostatniej zmiany lub nazwy albo pokaż tylko zaznaczone"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordenar por tamanho, última alteração ou nome, ou mostrar só o selecionado"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rendit sipas madhësisë, ndryshimit të fundit ose emrit, ose shfaq vetëm të zgjedhurat"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поређај по величини, последњој промени или називу, или прикажи само изабрано"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poređaj po veličini, poslednjoj promeni ili nazivu, ili prikaži samo izabrano"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortera efter storlek, senaste ändring eller namn, eller visa bara det valda"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Boyuta, son değişikliğe veya ada göre sıralayın ya da yalnızca seçilenleri gösterin"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按大小、上次更改或名称排序，或仅显示已选项目"
           }
         }
       }
@@ -268873,6 +268526,154 @@
         }
       }
     },
+    "Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "افتح القفل لحذفه على أي حال. يعيد Git فحصه أولًا. تستمر العمليات في العمل، لكنها تفقد هذا المجلد."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloqueja-ho per esborrar-ho igualment. El Git ho torna a comprovar primer. Els processos continuen funcionant, però perden aquesta carpeta."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entsperren, um es trotzdem zu löschen. Git prüft es vorher erneut. Die Prozesse laufen weiter, verlieren aber diesen Ordner."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquéalo para borrarlo de todos modos. Git lo vuelve a comprobar primero. Los procesos siguen en marcha, pero pierden esta carpeta."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquéalo para borrarlo de todos modos. Git lo vuelve a comprobar primero. Los procesos siguen en marcha, pero pierden esta carpeta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déverrouillez pour le supprimer quand même. Git le revérifie d’abord. Les processus continuent, mais perdent ce dossier."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entsperre, zum s trotzdem z lösche. Git prüeft s vorher nomal. D Prozess laufed wiiter, verlüüred aber dä Ordner."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "फिर भी डिलीट करने के लिए अनलॉक करें। Git पहले इसे दोबारा जाँचता है। प्रक्रियाएँ चलती रहती हैं, पर यह फ़ोल्डर खो देती हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otključaj da ga ipak izbrišeš. Git ga prvo ponovno provjerava. Procesi nastavljaju raditi, ali gube ovu mapu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sblocca per eliminarlo comunque. Git lo ricontrolla prima. I processi continuano, ma perdono questa cartella."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ロックを解除すると、それでも削除できます。Gitが先に再確認します。プロセスは動き続けますが、このフォルダを失います。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "잠금을 해제하면 그래도 삭제할 수 있습니다. Git이 먼저 다시 확인합니다. 프로세스는 계속 실행되지만 이 폴더를 잃습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atbloķē, lai tomēr to dzēstu. Git vispirms to pārbauda vēlreiz. Procesi turpina darboties, bet zaudē šo mapi."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odblokuj, aby i tak usunąć. Git najpierw sprawdzi to ponownie. Procesy działają dalej, ale tracą ten folder."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloqueie para o eliminar mesmo assim. O Git verifica-o primeiro. Os processos continuam, mas perdem esta pasta."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zhbllokoje për ta fshirë gjithsesi. Git e rikontrollon më parë. Proceset vazhdojnë, por e humbin këtë dosje."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откључајте да бисте га ипак обрисали. Git га прво поново проверава. Процеси настављају да раде, али губе ову фасциклу."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otključajte da biste ga ipak obrisali. Git ga prvo ponovo proverava. Procesi nastavljaju da rade, ali gube ovu fasciklu."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lås upp för att radera den ändå. Git kontrollerar den först igen. Processerna fortsätter, men förlorar den här mappen."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yine de silmek için kilidi açın. Git önce yeniden denetler. İşlemler çalışmaya devam eder ama bu klasörü kaybeder."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解锁后仍可删除。Git 会先重新检查。进程会继续运行，但会失去此文件夹。"
+          }
+        }
+      }
+    },
     "Unlock your %@" : {
       "localizations" : {
         "ar" : {
@@ -279754,6 +279555,24 @@
             "value" : "Wird gelöscht"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Will be deleted"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Will be deleted"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Will be deleted"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -279860,24 +279679,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "将被删除"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Will be deleted"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Will be deleted"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Will be deleted"
           }
         }
       }

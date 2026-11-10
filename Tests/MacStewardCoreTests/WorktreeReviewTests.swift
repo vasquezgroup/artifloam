@@ -144,13 +144,13 @@ final class WorktreeReviewTests: XCTestCase {
         XCTAssertEqual(snapshot.holders(URL(fileURLWithPath: "/private/tmp/tree")), ["java", "python3", "zsh"])
     }
     func testSmartSelectTakesOnlyCertainItems() {
-        func item(_ group: CleanupGroup, _ safety: Safety, warnings: [String]? = nil) -> Finding {
-            Finding(path: "/x/\(UUID())", group: group, bytes: 1, modifiedAt: Date(), safety: safety, reason: "", rule: "r", fingerprint: "f", warnings: warnings)
+        func item(_ group: CleanupGroup, _ safety: Safety, warnings: [String]? = nil, finished: Bool? = nil) -> Finding {
+            Finding(path: "/x/\(UUID())", group: group, bytes: 1, modifiedAt: Date(), safety: safety, reason: "", rule: "r", fingerprint: "f", warnings: warnings, finished: finished)
         }
         XCTAssertTrue(item(.projectCaches, .automatic).certain)
         XCTAssertFalse(item(.projectCaches, .protected).certain, "a recent or busy cache is the person's call")
-        XCTAssertTrue(item(.worktrees, .review).certain)
-        XCTAssertFalse(item(.worktrees, .review, warnings: ["Committed in the last 6 hours"]).certain)
+        XCTAssertTrue(item(.worktrees, .review, warnings: ["Committed in the last 6 hours"], finished: true).certain, "merged and losing nothing: a recent commit alone doesn't hold it")
+        XCTAssertFalse(item(.worktrees, .review, finished: false).certain)
         XCTAssertFalse(item(.worktrees, .protected).certain)
     }
 }

@@ -481,17 +481,19 @@ struct BulkBar<Actions: View>: View {
 struct StewardCheckboxStyle: ToggleStyle {
     /// false: only the box is drawn; the label still names it for VoiceOver (what `.labelsHidden()` did before).
     var showsLabel = true
+    /// Some, not all, of what it stands for is ticked: drawn filled with a dash. Clicking ticks all of it.
+    var mixed = false
     @Environment(\.isEnabled) private var isEnabled
     func makeBody(configuration: Configuration) -> some View {
         Button { configuration.isOn.toggle() } label: {
             HStack(spacing: 8) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 5, style: .continuous)
-                        .fill(configuration.isOn ? AnyShapeStyle(Color.mint) : AnyShapeStyle(Color.white.opacity(0.08)))
+                        .fill(configuration.isOn || mixed ? AnyShapeStyle(Color.mint) : AnyShapeStyle(Color.white.opacity(0.08)))
                     RoundedRectangle(cornerRadius: 5, style: .continuous)
-                        .stroke(configuration.isOn ? Color.clear : Color.white.opacity(0.5), lineWidth: 1.2)
-                    if configuration.isOn {
-                        Image(systemName: "checkmark").font(.system(size: 10.5, weight: .heavy)).foregroundStyle(Color(red: 0.02, green: 0.2, blue: 0.17))
+                        .stroke(configuration.isOn || mixed ? Color.clear : Color.white.opacity(0.5), lineWidth: 1.2)
+                    if configuration.isOn || mixed {
+                        Image(systemName: configuration.isOn ? "checkmark" : "minus").font(.system(size: 10.5, weight: .heavy)).foregroundStyle(Color(red: 0.02, green: 0.2, blue: 0.17))
                     }
                 }
                 .frame(width: 18, height: 18)
@@ -509,4 +511,5 @@ struct StewardCheckboxStyle: ToggleStyle {
 extension ToggleStyle where Self == StewardCheckboxStyle {
     static var stewardCheckbox: StewardCheckboxStyle { StewardCheckboxStyle() }
     static var stewardCheckboxOnly: StewardCheckboxStyle { StewardCheckboxStyle(showsLabel: false) }
+    static func stewardCheckboxOnly(mixed: Bool) -> StewardCheckboxStyle { StewardCheckboxStyle(showsLabel: false, mixed: mixed) }
 }

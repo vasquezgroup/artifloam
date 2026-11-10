@@ -308,7 +308,8 @@ public final class Scanner: @unchecked Sendable {
             // Kept only for a running process: still say what Git found, since the person may delete it anyway.
             let reason = verdict.overridable ? ([verdict.blocker!] + merged).joined(separator: " ") : verdict.blocker ?? (merged + verdict.warnings).joined(separator: " ")
             let values = try? url.resourceValues(forKeys: [.contentModificationDateKey])
-            return Finding(path: path, group: .worktrees, bytes: directoryBytes(url), modifiedAt: values?.contentModificationDate ?? Date(), safety: verdict.blocker == nil ? .review : .protected, reason: reason, rule: "worktree-review-only", fingerprint: verdict.fingerprint, lastUsedAt: verdict.lastUsed, warnings: verdict.warnings, hold: verdict.overridable ? .inUse : nil)
+            return Finding(path: path, group: .worktrees, bytes: directoryBytes(url), modifiedAt: values?.contentModificationDate ?? Date(), safety: verdict.blocker == nil ? .review : .protected, reason: reason, rule: "worktree-review-only", fingerprint: verdict.fingerprint, lastUsedAt: verdict.lastUsed, warnings: verdict.warnings, hold: verdict.overridable ? .inUse : nil,
+                           finished: verdict.blocker == nil && verdict.unmerged == 0 && !verdict.losesWork && !verdict.inUse && (verdict.lastUsed.map { Date().timeIntervalSince($0) >= WorktreeReview.sessionInterval } ?? true))
         }
     }
 }

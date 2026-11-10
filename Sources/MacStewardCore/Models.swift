@@ -79,13 +79,15 @@ public struct Finding: Codable, Identifiable, Sendable {
     public var userCleanable: Bool { safety == .automatic || hold == .recent || (hold == .inUse && owner != nil) || ([XcodeStorageInventory.trashRule, XcodeStorageInventory.simulatorRule].contains(rule) && safety == .review) }
     /// Ticked by a category checkbox or "Select ready": ready items plus unflagged choices. Flagged and held ones stay one-by-one.
     /// What Smart select ticks: passed every check and loses nothing. A worktree must also be merged, clean and not used lately.
-    public var certain: Bool { group == .worktrees ? safety == .review && (warnings ?? []).isEmpty : safety == .automatic }
+    public var certain: Bool { group == .worktrees ? safety == .review && finished == true : safety == .automatic }
+    /// Worktrees only: merged, loses nothing Git can't restore, not open and no agent session in 24 hours. A recent commit alone doesn't count against it.
+    public var finished: Bool? = nil
     public var tickable: Bool { safety == .automatic || (userCleanable && hold == nil && (warnings ?? []).isEmpty) }
     /// A readable name when the folder has none, such as a simulator's UUID.
     public var label: String? = nil
     public var title: String { (label ?? URL(fileURLWithPath: path).lastPathComponent).displaySafe }
-    public init(path: String, group: CleanupGroup, bytes: UInt64, modifiedAt: Date, safety: Safety, reason: String, rule: String, fingerprint: String, lastUsedAt: Date? = nil, warnings: [String]? = nil, hold: Hold? = nil, owner: String? = nil, label: String? = nil) {
-        self.label = label
+    public init(path: String, group: CleanupGroup, bytes: UInt64, modifiedAt: Date, safety: Safety, reason: String, rule: String, fingerprint: String, lastUsedAt: Date? = nil, warnings: [String]? = nil, hold: Hold? = nil, owner: String? = nil, label: String? = nil, finished: Bool? = nil) {
+        self.label = label; self.finished = finished
         self.path = path; self.id = path; self.group = group; self.bytes = bytes; self.modifiedAt = modifiedAt; self.safety = safety; self.reason = reason; self.rule = rule; self.fingerprint = fingerprint; self.lastUsedAt = lastUsedAt; self.warnings = warnings
         self.hold = hold; self.owner = owner
     }

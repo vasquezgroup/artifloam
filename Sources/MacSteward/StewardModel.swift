@@ -91,11 +91,11 @@ final class StewardModel: ObservableObject {
     /// Overview's light checks of the other modules: apps unused 6+ months and background agents.
     @Published var unusedApps: Int?
     @Published var agentCount: Int?
-    /// Leaving the success screen clears the old result, so kept leftovers are not offered again as new.
+    /// Leaving the success screen keeps the scan: cleaned items are already gone from it, so the person carries on with the rest.
     func finishCleaning(thenShow next: String? = nil) {
         if let done = cleaning { lastFreed = done.freedBytes }
         if stoppingClean { removalQueue = [] } // Stop means stop, including what was queued after this.
-        cleaning = nil; stoppingClean = false; report = nil; selected.removeAll(); worktreeSelection.removeAll()
+        cleaning = nil; stoppingClean = false
         if let next { section = next }
         runNextRemoval()
     }
@@ -201,12 +201,26 @@ final class StewardModel: ObservableObject {
     var selectedFindings: [Finding] { report?.findings.filter { selected.contains($0.id) && $0.userCleanable && (showAllFindings || $0.group == group) } ?? [] }
     /// Apps that must quit before their ticked caches can be cleaned.
     /// The same list `quitOwners` acts on, so the confirmation names every app that will be asked to quit.
-    var appsToQuit: [String] {
-        let caches = selectedFindings.filter { $0.hold == .inUse && $0.owner != nil }.map { URL(fileURLWithPath: $0.path).lastPathComponent }
+    func appsToQuit(_ items: [Finding]) -> [String] {
+        let caches = items.filter { $0.hold == .inUse && $0.owner != nil }.map { URL(fileURLWithPath: $0.path).lastPathComponent }
         return caches.isEmpty ? [] : Array(Set(Self.appsOwning(caches: caches).compactMap(\.localizedName))).sorted()
     }
-    var selectedBytes: UInt64 { selectedFindings.reduce(0) { $0 + $1.bytes } }
-    var groupFindings: [Finding] { report?.findings.filter { (showAllFindings || $0.group == group) && (search.isEmpty || $0.path.localizedCaseInsensitiveContains(search)) } ?? [] }
+    /// Everything ticked on every page: the one Remove selected button takes all of it, whichever category is open.
+    var chosenCaches: [Finding] { report?.findings.filter { selected.contains($0.id) && $0.userCleanable && $0.group != .worktrees } ?? [] }
+    var chosenWorktrees: [Finding] { reviewableWorktrees.filter { worktreeSelection.contains($0.id) } }
+    enum FindingOrder: String, CaseIterable { case largest, newest, oldest, name }
+    @Published var findingOrder = FindingOrder.largest
+    @Published var onlySelected = false
+    var groupFindings: [Finding] {
+        let shown = report?.findings.filter { (showAllFindings || $0.group == group) && (search.isEmpty || $0.path.localizedCaseInsensitiveContains(search))
+            && (!onlySelected || ($0.group == .worktrees ? worktreeSelection : selected).contains($0.id)) } ?? []
+        switch findingOrder {
+        case .largest: return shown // The scan already sorts by size.
+        case .newest: return shown.sorted { $0.modifiedAt > $1.modifiedAt }
+        case .oldest: return shown.sorted { $0.modifiedAt < $1.modifiedAt }
+        case .name: return shown.sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+        }
+    }
     /// Folder totals reused between scans in this session while FSEvents shows them unchanged.
     nonisolated static let treeSummaries = TreeSummaryCache()
     static let junkGroups: Set<CleanupGroup> = Set(CleanupGroup.allCases).subtracting([.worktrees])
@@ -288,7 +302,7 @@ final class StewardModel: ObservableObject {
                 }
                 // Dependencies of idle projects are offered, never pre-ticked.
                 selected = Set(report?.findings.filter { $0.safety == .automatic && $0.group != .inactiveDependencies }.map(\.id) ?? []); disk = .read()
-                worktreeSelection = [] // Worktrees are offered, never pre-ticked: deleting one is permanent.
+                worktreeSelection = []; unlockedWorktrees = [] // Worktrees are offered, never pre-ticked: deleting one is permanent.
                 progress = String(localized: "Scan complete. Nothing has been removed.")
             } catch is CancellationError {
                 guard scanRunID == runID else { scanTask = nil; return }
@@ -316,7 +330,6 @@ final class StewardModel: ObservableObject {
         scanRunID = nil; busy = false
         progress = String(localized: "Scan cancelled. Nothing was removed.")
     }
-    var scopeEligible: [Finding] { report?.findings.filter { $0.tickable && (showAllFindings || $0.group == group) } ?? [] }
     func setCategory(_ group: CleanupGroup?, selected: Bool) { setSelected(choosable(group), selected) }
     func categorySelected(_ group: CleanupGroup?) -> Bool { allSelected(choosable(group)) }
     /// What a checkbox takes. A worktree in use is never bulk-selected; each chosen one is rechecked with Git before it goes.
@@ -333,7 +346,13 @@ final class StewardModel: ObservableObject {
         setSelected(items, false)
         setSelected(items.filter(\.certain), true)
     }
-    var reviewableWorktrees: [Finding] { report?.findings.filter { $0.group == .worktrees && $0.safety == .review } ?? [] }
+    var reviewableWorktrees: [Finding] { report?.findings.filter { $0.group == .worktrees && ($0.safety == .review || unlockedWorktrees.contains($0.id)) } ?? [] }
+    /// Worktrees kept only because a process has them open, which the person unlocked to delete anyway. Git still rechecks them first.
+    @Published var unlockedWorktrees = Set<String>()
+    func unlock(_ finding: Finding) {
+        guard finding.group == .worktrees, finding.hold == .inUse else { return }
+        unlockedWorktrees.insert(finding.id); worktreeSelection.insert(finding.id)
+    }
     /// Rechecks each worktree, then opens one sheet. Clean ones start ticked; ones with warnings start unticked.
     func requestWorktreeRemoval(_ findings: [Finding]) {
         guard !busy, !findings.isEmpty else { return }; busy = true; progress = String(localized: "Rechecking worktrees with Git…")
@@ -384,21 +403,23 @@ final class StewardModel: ObservableObject {
             }
         }
         if let report { self.report = ScanReport(home: report.home, findings: report.findings.filter { !moved.contains($0.id) }, notices: report.notices) }
-        worktreeSelection.subtract(moved)
+        worktreeSelection.subtract(moved); unlockedWorktrees.subtract(moved)
         let deleted = String(localized: "\(moved.count) worktrees deleted.")
         progress = branches.isEmpty ? deleted : deleted + " " + String(localized: "Branches: \(branches.joined(separator: ", ")). Restore one with git branch <name> <commit>.")
         if !kept.isEmpty { error = String(localized: "Kept because they changed or could not be verified:\n\(kept.joined(separator: "\n"))") }
         disk = .read(); busy = false
     }
 
-    func clean() {
-        guard !busy, let report, !selectedFindings.isEmpty else { return }
+    /// Cleans `items`, or what's ticked in the open category. Other ticks stay, so the person can carry on afterwards.
+    func clean(_ items: [Finding]? = nil) {
+        let chosen = items ?? selectedFindings
+        guard !busy, let report, !chosen.isEmpty else { return }
         busy = true; progress = String(localized: "Rechecking each selected item before removal…"); error = nil
-        let config = configuration; let ids = Set(selectedFindings.map(\.id))
+        let config = configuration; let ids = Set(chosen.map(\.id))
         // Held items are cleaned only because the user ticked them; the cleaner still rechecks each one.
-        let approved = Set(selectedFindings.filter { $0.safety != .automatic }.map(\.id))
-        let quitting = selectedFindings.filter { $0.hold == .inUse && $0.owner != nil }.map { URL(fileURLWithPath: $0.path).lastPathComponent }
-        cleaning = CleanProgress(completed: 0, total: ids.count, current: quitting.isEmpty ? String(localized: "Preparing…") : String(localized: "Quitting \(appsToQuit.joined(separator: ", "))…"), group: nil, freedBytes: 0, removed: 0, skipped: 0)
+        let approved = Set(chosen.filter { $0.safety != .automatic }.map(\.id))
+        let quitting = chosen.filter { $0.hold == .inUse && $0.owner != nil }.map { URL(fileURLWithPath: $0.path).lastPathComponent }
+        cleaning = CleanProgress(completed: 0, total: ids.count, current: quitting.isEmpty ? String(localized: "Preparing…") : String(localized: "Quitting \(appsToQuit(chosen).joined(separator: ", "))…"), group: nil, freedBytes: 0, removed: 0, skipped: 0)
         StewardSound.start.play()
         let receiver = self
         Task {
