@@ -49540,6 +49540,154 @@
         }
       }
     },
+    "A simulator is a virtual iPhone, iPad or Watch that Xcode uses to test apps. Deleting one removes only the test apps and data inside it, never your projects, and Xcode makes a new one in a minute." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المحاكي هو iPhone أو iPad أو Watch افتراضي يستخدمه Xcode لاختبار التطبيقات. حذفه يزيل تطبيقات الاختبار وبياناتها داخله فقط، ولا يمس مشاريعك أبدًا، ويُنشئ Xcode واحدًا جديدًا خلال دقيقة."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un simulador és un iPhone, iPad o Watch virtual que el Xcode fa servir per provar apps. Esborrar-ne un només elimina les apps de prova i les dades que conté, mai els teus projectes, i el Xcode en crea un de nou en un minut."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Simulator ist ein virtuelles iPhone, iPad oder eine Watch, mit der Xcode Apps testet. Beim Löschen verschwinden nur die Test-Apps und ihre Daten darin, nie deine Projekte, und Xcode erstellt in einer Minute einen neuen."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A simulator is a virtual iPhone, iPad or Watch that Xcode uses to test apps. Deleting one removes only the test apps and data inside it, never your projects, and Xcode makes a new one in a minute."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A simulator is a virtual iPhone, iPad or Watch that Xcode uses to test apps. Deleting one removes only the test apps and data inside it, never your projects, and Xcode makes a new one in a minute."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A simulator is a virtual iPhone, iPad or Watch that Xcode uses to test apps. Deleting one removes only the test apps and data inside it, never your projects, and Xcode makes a new one in a minute."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un simulador es un iPhone, iPad o Watch virtual que Xcode usa para probar apps. Borrar uno elimina solo las apps de prueba y los datos que contiene, nunca tus proyectos, y Xcode crea uno nuevo en un minuto."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un simulador es un iPhone, iPad o Watch virtual que Xcode usa para probar apps. Borrar uno elimina solo las apps de prueba y los datos que contiene, nunca tus proyectos, y Xcode crea uno nuevo en un minuto."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un simulateur est un iPhone, iPad ou Watch virtuel qu’Xcode utilise pour tester des apps. En supprimer un retire seulement les apps de test et leurs données, jamais vos projets, et Xcode en recrée un en une minute."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En Simulator isch es virtuells iPhone, iPad oder e Watch, wo Xcode zum Apps teschte bruucht. Bim Lösche verschwinded nume d Test-Apps und ihri Date drin, nie dini Projekt, und Xcode macht i ere Minute en neue."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सिम्युलेटर एक वर्चुअल iPhone, iPad या Watch है जिससे Xcode ऐप्स की जाँच करता है। इसे डिलीट करने से सिर्फ़ इसके अंदर के टेस्ट ऐप और उनका डेटा हटता है, आपके प्रोजेक्ट कभी नहीं, और Xcode एक मिनट में नया बना देता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulator je virtualni iPhone, iPad ili Watch kojim Xcode testira aplikacije. Brisanjem uklanjaš samo testne aplikacije i podatke u njemu, nikad svoje projekte, a Xcode za minutu napravi novi."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un simulatore è un iPhone, iPad o Watch virtuale che Xcode usa per provare le app. Eliminarne uno rimuove solo le app di prova e i dati al suo interno, mai i tuoi progetti, e Xcode ne crea uno nuovo in un minuto."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "シミュレータは、Xcodeがアプリのテストに使う仮想のiPhone、iPad、Watchです。削除しても消えるのは中のテスト用アプリとデータだけで、プロジェクトは消えません。Xcodeは1分ほどで新しいものを作れます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시뮬레이터는 Xcode가 앱을 테스트할 때 쓰는 가상 iPhone, iPad, Watch입니다. 삭제하면 그 안의 테스트 앱과 데이터만 지워지고 프로젝트는 그대로이며, Xcode가 1분이면 새로 만듭니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulators ir virtuāls iPhone, iPad vai Watch, ar ko Xcode testē lietotnes. Dzēšot to, tiek noņemtas tikai testa lietotnes un dati tajā, nekad tavi projekti, un Xcode minūtē izveido jaunu."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Symulator to wirtualny iPhone, iPad lub Watch, na którym Xcode testuje aplikacje. Usunięcie go kasuje tylko aplikacje testowe i ich dane, nigdy Twoje projekty, a Xcode utworzy nowy w minutę."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Um simulador é um iPhone, iPad ou Watch virtual que o Xcode usa para testar apps. Eliminar um remove apenas as apps de teste e os dados que contém, nunca os seus projetos, e o Xcode cria um novo num minuto."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatori është një iPhone, iPad ose Watch virtual që Xcode përdor për të testuar aplikacione. Fshirja e tij heq vetëm aplikacionet provë dhe të dhënat brenda, kurrë projektet e tua, dhe Xcode krijon një të ri brenda një minute."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Симулатор је виртуелни iPhone, iPad или Watch на ком Xcode тестира апликације. Брисањем се уклањају само тестне апликације и подаци у њему, никад ваши пројекти, а Xcode за минут прави нови."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulator je virtuelni iPhone, iPad ili Watch na kom Xcode testira aplikacije. Brisanjem se uklanjaju samo testne aplikacije i podaci u njemu, nikad vaši projekti, a Xcode za minut pravi novi."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En simulator är en virtuell iPhone, iPad eller Watch som Xcode använder för att testa appar. Att radera en tar bara bort testapparna och deras data i den, aldrig dina projekt, och Xcode skapar en ny på en minut."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simülatör, Xcode’un uygulamaları test etmek için kullandığı sanal bir iPhone, iPad veya Watch’tur. Silmek yalnızca içindeki test uygulamalarını ve verilerini kaldırır, projelerinizi asla; Xcode bir dakikada yenisini oluşturur."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模拟器是 Xcode 用来测试 App 的虚拟 iPhone、iPad 或 Watch。删除后只会移除其中的测试 App 和数据，绝不会影响你的项目，Xcode 一分钟就能新建一个。"
+          }
+        }
+      }
+    },
     "A simulator is running" : {
       "localizations" : {
         "ar" : {
@@ -76047,6 +76195,302 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "缓存 · 保持登录状态"
+          }
+        }
+      }
+    },
+    "Can't be deleted. Shut down to free memory." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يمكن حذفها. أوقف تشغيلها لتحرير الذاكرة."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No es poden esborrar. Atura’ls per alliberar memòria."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht löschbar. Herunterfahren gibt Speicher frei."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can't be deleted. Shut down to free memory."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can't be deleted. Shut down to free memory."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can't be deleted. Shut down to free memory."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pueden borrar. Apágalos para liberar memoria."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pueden borrar. Apágalos para liberar memoria."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible à supprimer. Éteignez-les pour libérer de la mémoire."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nöd löschbar. Abeschalte git Speicher frei."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "डिलीट नहीं हो सकते। मेमोरी खाली करने के लिए बंद करें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ne mogu se izbrisati. Ugasi ih da oslobodiš memoriju."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non si possono eliminare. Spegnili per liberare memoria."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除できません。終了するとメモリが空きます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제할 수 없습니다. 종료하면 메모리가 확보됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nevar dzēst. Izslēdz, lai atbrīvotu atmiņu."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie można ich usunąć. Wyłącz je, aby zwolnić pamięć."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não podem ser eliminados. Desligue-os para libertar memória."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuk mund të fshihen. Fiki për të liruar memorie."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не могу се обрисати. Угасите их да ослободите меморију."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ne mogu se obrisati. Ugasite ih da oslobodite memoriju."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan inte raderas. Stäng av för att frigöra minne."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silinemez. Bellek açmak için kapatın."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法删除。关闭以释放内存。"
+          }
+        }
+      }
+    },
+    "Can't start anymore" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم تعد تعمل"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ja no s’inicien"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starten nicht mehr"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can't start anymore"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can't start anymore"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can't start anymore"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya no arrancan"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya no arrancan"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ne démarrent plus"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startet nüme"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अब शुरू नहीं होते"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Više se ne pokreću"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non si avviano più"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "起動できなくなったもの"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "더 이상 시작 안 됨"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vairs nestartē"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Już się nie uruchamiają"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Já não arrancam"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuk nisin më"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Више се не покрећу"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Više se ne pokreću"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startar inte längre"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artık başlamıyor"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已无法启动"
           }
         }
       }
@@ -103805,150 +104249,150 @@
         }
       }
     },
-    "Deletes the apps and data inside this simulator for good." : {
+    "Deletes the test apps and their data inside it, never your projects. Xcode makes a new simulator in a minute." : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "يحذف التطبيقات والبيانات الموجودة داخل هذا المحاكي نهائيًا."
+            "value" : "يحذف تطبيقات الاختبار وبياناتها داخله، ولا يمس مشاريعك أبدًا. يُنشئ Xcode محاكيًا جديدًا خلال دقيقة."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Esborra definitivament les apps i les dades d’aquest simulador."
+            "value" : "Esborra les apps de prova i les seves dades, mai els teus projectes. El Xcode crea un simulador nou en un minut."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Löscht die Apps und Daten in diesem Simulator endgültig."
+            "value" : "Löscht die Test-Apps und ihre Daten darin, nie deine Projekte. Xcode erstellt in einer Minute einen neuen Simulator."
           }
         },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deletes the apps and data inside this simulator for good."
+            "value" : "Deletes the test apps and their data inside it, never your projects. Xcode makes a new simulator in a minute."
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deletes the apps and data inside this simulator for good."
+            "value" : "Deletes the test apps and their data inside it, never your projects. Xcode makes a new simulator in a minute."
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deletes the apps and data inside this simulator for good."
+            "value" : "Deletes the test apps and their data inside it, never your projects. Xcode makes a new simulator in a minute."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Borra definitivamente las apps y los datos de este simulador."
+            "value" : "Borra las apps de prueba y sus datos, nunca tus proyectos. Xcode crea un simulador nuevo en un minuto."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Borra definitivamente las apps y los datos de este simulador."
+            "value" : "Borra las apps de prueba y sus datos, nunca tus proyectos. Xcode crea un simulador nuevo en un minuto."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Supprime définitivement les apps et les données de ce simulateur."
+            "value" : "Supprime les apps de test et leurs données, jamais vos projets. Xcode recrée un simulateur en une minute."
           }
         },
         "gsw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Löscht d Apps und Date i däm Simulator für immer."
+            "value" : "Löscht d Test-Apps und ihri Date drin, nie dini Projekt. Xcode macht i ere Minute en neue Simulator."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "इस सिम्युलेटर के अंदर के ऐप और डेटा हमेशा के लिए डिलीट कर देता है।"
+            "value" : "इसके अंदर के टेस्ट ऐप और उनका डेटा डिलीट करता है, आपके प्रोजेक्ट कभी नहीं। Xcode एक मिनट में नया सिम्युलेटर बना देता है।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trajno briše aplikacije i podatke unutar ovog simulatora."
+            "value" : "Briše testne aplikacije i njihove podatke u njemu, nikad tvoje projekte. Xcode za minutu napravi novi simulator."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elimina definitivamente le app e i dati all'interno di questo simulatore."
+            "value" : "Elimina le app di prova e i loro dati, mai i tuoi progetti. Xcode crea un nuovo simulatore in un minuto."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このシミュレータ内のアプリとデータを完全に削除します。"
+            "value" : "中のテスト用アプリとデータを削除します。プロジェクトは消えません。Xcodeは1分ほどで新しいシミュレータを作れます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 시뮬레이터 안의 앱과 데이터를 영구적으로 삭제합니다."
+            "value" : "그 안의 테스트 앱과 데이터를 삭제하며 프로젝트는 건드리지 않습니다. Xcode가 1분이면 새 시뮬레이터를 만듭니다."
           }
         },
         "lv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Neatgriezeniski dzēš šajā simulatorā esošās lietotnes un datus."
+            "value" : "Dzēš testa lietotnes un to datus tajā, nekad tavus projektus. Xcode minūtē izveido jaunu simulatoru."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usuwa na stałe aplikacje i dane w tym symulatorze."
+            "value" : "Usuwa aplikacje testowe i ich dane, nigdy Twoje projekty. Xcode utworzy nowy symulator w minutę."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elimina de forma definitiva as apps e os dados deste simulador."
+            "value" : "Elimina as apps de teste e os respetivos dados, nunca os seus projetos. O Xcode cria um novo simulador num minuto."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fshin përgjithmonë aplikacionet dhe të dhënat brenda këtij simulatori."
+            "value" : "Fshin aplikacionet provë dhe të dhënat e tyre brenda, kurrë projektet e tua. Xcode krijon një simulator të ri brenda një minute."
           }
         },
         "sr-Cyrl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Трајно брише апликације и податке у овом симулатору."
+            "value" : "Брише тестне апликације и њихове податке у њему, никад ваше пројекте. Xcode за минут прави нови симулатор."
           }
         },
         "sr-Latn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trajno briše aplikacije i podatke u ovom simulatoru."
+            "value" : "Briše testne aplikacije i njihove podatke u njemu, nikad vaše projekte. Xcode za minut pravi novi simulator."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Raderar apparna och data i den här simulatorn för gott."
+            "value" : "Raderar testapparna och deras data i den, aldrig dina projekt. Xcode skapar en ny simulator på en minut."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bu simülatörün içindeki uygulamaları ve verileri kalıcı olarak siler."
+            "value" : "İçindeki test uygulamalarını ve verilerini siler, projelerinizi asla. Xcode bir dakikada yeni simülatör oluşturur."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "彻底删除此模拟器中的 App 和数据。"
+            "value" : "删除其中的测试 App 及其数据，绝不会影响你的项目。Xcode 一分钟就能新建一个模拟器。"
           }
         }
       }
@@ -150025,6 +150469,154 @@
         }
       }
     },
+    "Keep them unless you're done testing." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "احتفظ بها ما لم تنتهِ من الاختبار."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conserva’ls si encara no has acabat de provar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Behalte sie, solange du noch testest."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep them unless you're done testing."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep them unless you're done testing."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep them unless you're done testing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consérvalos si aún no terminaste de probar."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consérvalos si aún no terminaste de probar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gardez-les si vous n’avez pas fini de tester."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bhalt si, solang du no teschtisch."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "जब तक जाँच पूरी न हो, इन्हें रखें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadrži ih ako još testiraš."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tienili se non hai finito di provare."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テストが終わるまでは残しておきましょう。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "테스트가 끝나지 않았다면 유지하세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Patur tos, ja vēl testē."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zachowaj je, jeśli jeszcze testujesz."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantenha-os se ainda não terminou os testes."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mbaji nëse nuk ke mbaruar testimet."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Задржите их ако још тестирате."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadržite ih ako još testirate."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Behåll dem om du inte är klar med testerna."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teste devam ediyorsanız saklayın."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "测试未完成就保留它们。"
+          }
+        }
+      }
+    },
     "Keep: Git marks this worktree locked." : {
       "localizations" : {
         "ar" : {
@@ -161175,6 +161767,302 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Macintosh HD"
+          }
+        }
+      }
+    },
+    "Made for an iOS version this Xcode no longer has, so it can't start anymore. Safe to delete." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مصمم لإصدار iOS لم يعد موجودًا في Xcode هذا، لذا لم يعد يعمل. يمكن حذفه بأمان."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fet per a una versió d’iOS que aquest Xcode ja no té, així que ja no s’inicia. Es pot esborrar amb seguretat."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für eine iOS-Version gemacht, die dieses Xcode nicht mehr hat, darum startet er nicht mehr. Kann sicher gelöscht werden."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made for an iOS version this Xcode no longer has, so it can't start anymore. Safe to delete."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made for an iOS version this Xcode no longer has, so it can't start anymore. Safe to delete."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made for an iOS version this Xcode no longer has, so it can't start anymore. Safe to delete."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hecho para una versión de iOS que este Xcode ya no tiene, así que ya no arranca. Se puede borrar con seguridad."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hecho para una versión de iOS que este Xcode ya no tiene, así que ya no arranca. Se puede borrar con seguridad."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conçu pour une version d’iOS que cet Xcode n’a plus : il ne démarre plus. Peut être supprimé sans risque."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für e iOS-Version gmacht, wo das Xcode nüme het, drum startet er nüme. Cha sicher glöscht werde."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ऐसे iOS संस्करण के लिए बना है जो इस Xcode में अब नहीं है, इसलिए शुरू नहीं होता। सुरक्षित रूप से डिलीट किया जा सकता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Napravljen za verziju iOS-a koju ovaj Xcode više nema, pa se više ne pokreće. Može se sigurno izbrisati."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creato per una versione di iOS che questo Xcode non ha più, quindi non si avvia più. Si può eliminare in sicurezza."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このXcodeにはもうないiOSバージョン用なので、起動できません。安全に削除できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 Xcode에 더 이상 없는 iOS 버전용이라 시작되지 않습니다. 안전하게 삭제할 수 있습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veidots iOS versijai, kuras šim Xcode vairs nav, tāpēc vairs nestartē. Var droši dzēst."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utworzony dla wersji iOS, której ten Xcode już nie ma, więc się nie uruchamia. Można bezpiecznie usunąć."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feito para uma versão do iOS que este Xcode já não tem, por isso já não arranca. Pode ser eliminado em segurança."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Krijuar për një version iOS që ky Xcode nuk e ka më, ndaj nuk niset më. Mund të fshihet pa rrezik."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Направљен за верзију iOS-а коју овај Xcode више нема, па се више не покреће. Може безбедно да се обрише."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Napravljen za verziju iOS-a koju ovaj Xcode više nema, pa se više ne pokreće. Može bezbedno da se obriše."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gjord för en iOS-version som denna Xcode inte längre har, så den startar inte. Säker att radera."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu Xcode’da artık olmayan bir iOS sürümü için yapıldığından başlamıyor. Güvenle silinebilir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "为此 Xcode 已不再包含的 iOS 版本创建，因此无法再启动。可以放心删除。"
+          }
+        }
+      }
+    },
+    "Made for an older iOS. Safe to delete." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لإصدار iOS أقدم. يمكن حذفها بأمان."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fets per a un iOS antic. Es poden esborrar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für ein älteres iOS. Sicher löschbar."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made for an older iOS. Safe to delete."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made for an older iOS. Safe to delete."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made for an older iOS. Safe to delete."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para un iOS antiguo. Se pueden borrar."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para un iOS antiguo. Se pueden borrar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour un iOS plus ancien. Suppression sans risque."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für es älters iOS. Sicher löschbar."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "पुराने iOS के लिए। सुरक्षित रूप से डिलीट करें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Za stariji iOS. Sigurno za brisanje."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per un iOS precedente. Eliminabili in sicurezza."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "古いiOS用。安全に削除できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이전 iOS용. 안전하게 삭제 가능."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vecākai iOS. Droši dzēšami."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dla starszego iOS. Bezpieczne do usunięcia."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para um iOS antigo. Seguros de eliminar."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Për iOS më të vjetër. Të sigurt për fshirje."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "За старији iOS. Безбедно за брисање."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Za stariji iOS. Bezbedno za brisanje."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "För en äldre iOS. Säkra att radera."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eski iOS için. Güvenle silinebilir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "适用于旧版 iOS。可放心删除。"
           }
         }
       }
@@ -176236,6 +177124,154 @@
         }
       }
     },
+    "No record of when it was last used. Delete it only if you're done testing on it." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يوجد سجل لآخر استخدام. احذفه فقط إذا انتهيت من الاختبار عليه."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No consta quan es va fer servir per última vegada. Esborra’l només si has acabat de provar-hi."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Eintrag, wann er zuletzt benutzt wurde. Lösche ihn nur, wenn du mit dem Testen darauf fertig bist."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No record of when it was last used. Delete it only if you're done testing on it."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No record of when it was last used. Delete it only if you're done testing on it."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No record of when it was last used. Delete it only if you're done testing on it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No consta cuándo se usó por última vez. Bórralo solo si terminaste de probar en él."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No consta cuándo se usó por última vez. Bórralo solo si terminaste de probar en él."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune trace de sa dernière utilisation. Supprimez-le seulement si vous avez fini de tester dessus."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kei Iitrag, wänn er zletscht bruucht worde isch. Lösch en nume, wänn du fertig teschtet häsch."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आख़िरी बार कब इस्तेमाल हुआ, इसका रिकॉर्ड नहीं है। इसे तभी डिलीट करें जब इस पर जाँच पूरी हो गई हो।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nema zapisa o zadnjem korištenju. Izbriši ga samo ako si završio testiranje na njemu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nessuna traccia dell’ultimo utilizzo. Eliminalo solo se hai finito di provarci."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最後に使われた記録がありません。テストが終わっている場合のみ削除してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마지막 사용 기록이 없습니다. 테스트가 끝난 경우에만 삭제하세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nav ieraksta, kad tas pēdējo reizi izmantots. Dzēs to tikai tad, ja testēšana ir pabeigta."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak zapisu ostatniego użycia. Usuń go tylko, jeśli skończyłeś na nim testy."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não há registo da última utilização. Elimine-o só se já terminou os testes nele."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuk ka shënim kur u përdor së fundi. Fshije vetëm nëse ke mbaruar testimet në të."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нема записа о последњем коришћењу. Обришите га само ако сте завршили тестирање на њему."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nema zapisa o poslednjem korišćenju. Obrišite ga samo ako ste završili testiranje na njemu."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingen uppgift om när den senast användes. Radera den bara om du är klar med testerna på den."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son ne zaman kullanıldığına dair kayıt yok. Yalnızca üzerinde testleriniz bittiyse silin."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有上次使用的记录。仅在你已完成测试时删除。"
+          }
+        }
+      }
+    },
     "No removable findings in this group." : {
       "localizations" : {
         "ar" : {
@@ -180825,150 +181861,298 @@
         }
       }
     },
-    "Not used since %@. Removed by Xcode's own simctl." : {
+    "Not used for %lld days. Safe to delete." : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "غير مستخدم منذ %@. يزيله simctl الخاص بـ Xcode."
+            "value" : "لم يُستخدم منذ %lld يومًا. يمكن حذفه بأمان."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No s’ha usat des de %@. L’elimina el simctl propi de Xcode."
+            "value" : "Fa %lld dies que no es fa servir. Es pot esborrar amb seguretat."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seit %@ nicht verwendet. Wird durch Xcodes eigenes simctl entfernt."
+            "value" : "Seit %lld Tagen nicht benutzt. Kann sicher gelöscht werden."
           }
         },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not used since %@. Removed by Xcode's own simctl."
+            "value" : "Not used for %lld days. Safe to delete."
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not used since %@. Removed by Xcode's own simctl."
+            "value" : "Not used for %lld days. Safe to delete."
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not used since %@. Removed by Xcode's own simctl."
+            "value" : "Not used for %lld days. Safe to delete."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sin usar desde %@. Se elimina con el propio simctl de Xcode."
+            "value" : "Sin usar desde hace %lld días. Se puede borrar con seguridad."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sin usar desde %@. Se elimina con el propio simctl de Xcode."
+            "value" : "Sin usar desde hace %lld días. Se puede borrar con seguridad."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inutilisé depuis %@. Retiré par la commande simctl de Xcode."
+            "value" : "Inutilisé depuis %lld jours. Peut être supprimé sans risque."
           }
         },
         "gsw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sit %@ nöd bruucht. Wird vo simctl vo Xcode sälber entfernt."
+            "value" : "Sit %lld Täg nöd bruucht. Cha sicher glöscht werde."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ से उपयोग नहीं हुआ। Xcode के अपने simctl से हटाया गया।"
+            "value" : "%lld दिनों से इस्तेमाल नहीं हुआ। सुरक्षित रूप से डिलीट किया जा सकता है।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ne koristi se od %@. Uklanja ga Xcodeov vlastiti simctl."
+            "value" : "Nije korišten već %lld dana. Može se sigurno izbrisati."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Non usato dal %@. Rimosso con simctl di Xcode."
+            "value" : "Non usato da %lld giorni. Si può eliminare in sicurezza."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@以降は使われていません。Xcode自身のsimctlで削除されます。"
+            "value" : "%lld日間使われていません。安全に削除できます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ 이후 사용하지 않았습니다. Xcode의 simctl로 제거됩니다."
+            "value" : "%lld일 동안 사용되지 않았습니다. 안전하게 삭제할 수 있습니다."
           }
         },
         "lv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nav lietots kopš %@. Noņem pats Xcode simctl."
+            "value" : "Nav izmantots jau %lld dienas. Var droši dzēst."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nieużywany od %@. Usuwany przez simctl z Xcode."
+            "value" : "Nieużywany od %lld dni. Można bezpiecznie usunąć."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Não usado desde %@. Removido pelo próprio simctl do Xcode."
+            "value" : "Sem uso há %lld dias. Pode ser eliminado em segurança."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nuk është përdorur që nga %@. Hiqet nga simctl i vetë Xcode."
+            "value" : "Nuk është përdorur prej %lld ditësh. Mund të fshihet pa rrezik."
           }
         },
         "sr-Cyrl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Није коришћен од %@. Уклања га Xcode-ов simctl."
+            "value" : "Није коришћен већ %lld дана. Може безбедно да се обрише."
           }
         },
         "sr-Latn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nije korišćen od %@. Uklanja ga Xcode-ov simctl."
+            "value" : "Nije korišćen već %lld dana. Može bezbedno da se obriše."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inte använd sedan %@. Tas bort av Xcodes egen simctl."
+            "value" : "Inte använd på %lld dagar. Säker att radera."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Şu tarihten beri kullanılmadı: %@. Xcode’un kendi simctl aracıyla kaldırılır."
+            "value" : "%lld gündür kullanılmadı. Güvenle silinebilir."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "自 %@ 起未使用。由 Xcode 自带的 simctl 移除。"
+            "value" : "已 %lld 天未使用。可以放心删除。"
+          }
+        }
+      }
+    },
+    "Not used for 30 days" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غير مستخدمة منذ 30 يومًا"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sense ús des de fa 30 dies"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 Tage nicht benutzt"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not used for 30 days"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not used for 30 days"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not used for 30 days"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin usar en 30 días"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin usar en 30 días"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inutilisés depuis 30 jours"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 Täg nöd bruucht"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 दिनों से इस्तेमाल नहीं"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nekorišteni 30 dana"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non usati da 30 giorni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30日間未使用"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30일 동안 미사용"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 dienas neizmantoti"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieużywane od 30 dni"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem uso há 30 dias"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pa përdorur prej 30 ditësh"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Некоришћени 30 дана"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nekorišćeni 30 dana"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oanvända i 30 dagar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 gündür kullanılmıyor"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 天未使用"
           }
         }
       }
@@ -181117,154 +182301,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "自 Artifloam 打开以来未使用"
-          }
-        }
-      }
-    },
-    "Not used since it was set up. Removed by Xcode's own simctl." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "غير مستخدم منذ إعداده. يزيله simctl الخاص بـ Xcode."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No s’ha usat des que es va configurar. L’elimina el simctl propi de Xcode."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seit der Einrichtung nicht verwendet. Wird durch Xcodes eigenes simctl entfernt."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not used since it was set up. Removed by Xcode's own simctl."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not used since it was set up. Removed by Xcode's own simctl."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not used since it was set up. Removed by Xcode's own simctl."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sin usar desde que se configuró. Se elimina con el propio simctl de Xcode."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sin usar desde que se configuró. Se elimina con el propio simctl de Xcode."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inutilisé depuis sa configuration. Retiré par la commande simctl de Xcode."
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sit dr Iirichtig nöd bruucht. Wird vo simctl vo Xcode sälber entfernt."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "सेट अप होने के बाद से उपयोग नहीं हुआ। Xcode के अपने simctl से हटाया गया।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ne koristi se otkad je postavljen. Uklanja ga Xcodeov vlastiti simctl."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Non usato da quando è stato configurato. Rimosso con simctl di Xcode."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "セットアップ以降使われていません。Xcode自身のsimctlで削除されます。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "설정한 이후 사용하지 않았습니다. Xcode의 simctl로 제거됩니다."
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nav lietots kopš iestatīšanas. Noņem pats Xcode simctl."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nieużywany od czasu skonfigurowania. Usuwany przez simctl z Xcode."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Não usado desde que foi configurado. Removido pelo próprio simctl do Xcode."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nuk është përdorur që kur u konfigurua. Hiqet nga simctl i vetë Xcode."
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Није коришћен од подешавања. Уклања га Xcode-ов simctl."
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nije korišćen od podešavanja. Uklanja ga Xcode-ov simctl."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inte använd sedan den konfigurerades. Tas bort av Xcodes egen simctl."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kurulduğundan beri kullanılmadı. Xcode’un kendi simctl aracıyla kaldırılır."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "自设置以来未使用。由 Xcode 自带的 simctl 移除。"
           }
         }
       }
@@ -182597,6 +183633,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在你选择之前不会移除任何内容"
+          }
+        }
+      }
+    },
+    "Nothing is sure to delete" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا شيء مؤكد للحذف"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Res no és segur d’esborrar"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts ist sicher löschbar"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing is sure to delete"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing is sure to delete"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing is sure to delete"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada es seguro de borrar"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada es seguro de borrar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rien n’est sûr à supprimer"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nüt isch sicher löschbar"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कुछ भी पक्के तौर पर डिलीट करने लायक नहीं"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ništa nije sigurno za brisanje"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niente è sicuro da eliminare"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確実に削除できるものはありません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확실히 삭제할 항목 없음"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nekas nav droši dzēšams"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nic nie jest pewne do usunięcia"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada é seguro para eliminar"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asgjë nuk është e sigurt për fshirje"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ништа није сигурно за брисање"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ništa nije sigurno za brisanje"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inget är säkert att radera"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kesin silinecek bir şey yok"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有可放心删除的项目"
           }
         }
       }
@@ -193803,6 +194987,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "打开登录项设置"
+          }
+        }
+      }
+    },
+    "Open Performance" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فتح الأداء"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obre Rendiment"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leistung öffnen"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Performance"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Performance"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Performance"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir Rendimiento"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir Rendimiento"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir Performances"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leischtig öffne"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "परफ़ॉर्मेंस खोलें"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvori Performanse"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apri Prestazioni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "パフォーマンスを開く"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "성능 열기"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atvērt Veiktspēju"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwórz Wydajność"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir Desempenho"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hap Performancën"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отвори Перформансе"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvori Performanse"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öppna Prestanda"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Performansı aç"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开性能"
           }
         }
       }
@@ -225794,6 +227126,302 @@
         }
       }
     },
+    "Running now" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قيد التشغيل الآن"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En marxa ara"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laufen gerade"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running now"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running now"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running now"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En ejecución"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En ejecución"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En cours"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laufed grad"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अभी चल रहे"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trenutno rade"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In esecuzione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "実行中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "실행 중"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pašlaik darbojas"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uruchomione teraz"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em execução"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Në punë tani"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тренутно раде"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trenutno rade"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Körs nu"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu an çalışıyor"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在运行"
+          }
+        }
+      }
+    },
+    "Running simulators" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المحاكيات قيد التشغيل"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simuladors en marxa"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laufende Simulatoren"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running simulators"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running simulators"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running simulators"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simuladores en ejecución"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simuladores en ejecución"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulateurs en cours"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laufendi Simulatore"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "चल रहे सिम्युलेटर"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokrenuti simulatori"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatori in esecuzione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "実行中のシミュレータ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "실행 중인 시뮬레이터"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palaistie simulatori"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uruchomione symulatory"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simuladores em execução"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatorë në punë"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Покренути симулатори"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokrenuti simulatori"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatorer som körs"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışan simülatörler"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在运行的模拟器"
+          }
+        }
+      }
+    },
     "Running well" : {
       "localizations" : {
         "ar" : {
@@ -227174,6 +228802,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Safari、邮件和其他浏览器数据"
+          }
+        }
+      }
+    },
+    "Safe to delete." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يمكن حذفها بأمان."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es poden esborrar amb seguretat."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicher löschbar."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safe to delete."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safe to delete."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safe to delete."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se pueden borrar con seguridad."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se pueden borrar con seguridad."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suppression sans risque."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicher löschbar."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सुरक्षित रूप से डिलीट करें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sigurno za brisanje."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminabili in sicurezza."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安全に削除できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "안전하게 삭제 가능."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Droši dzēšami."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bezpieczne do usunięcia."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seguros de eliminar."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Të sigurt për fshirje."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Безбедно за брисање."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bezbedno za brisanje."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Säkra att radera."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güvenle silinebilir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可放心删除。"
           }
         }
       }
@@ -236592,6 +238368,154 @@
         }
       }
     },
+    "Select the safe ones · %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تحديد الآمنة · %@"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona els segurs · %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sichere auswählen · %@"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the safe ones · %@"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the safe ones · %@"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the safe ones · %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar los seguros · %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar los seguros · %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionner les sûrs · %@"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sicheri uswähle · %@"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सुरक्षित चुनें · %@"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odaberi sigurne · %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleziona quelli sicuri · %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安全なものを選択 · %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "안전한 항목 선택 · %@"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atlasīt drošos · %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaznacz bezpieczne · %@"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecionar os seguros · %@"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zgjidh të sigurtit · %@"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изабери безбедне · %@"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izaberi bezbedne · %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Välj de säkra · %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güvenli olanları seç · %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择可放心删除的 · %@"
+          }
+        }
+      }
+    },
     "Select to quit" : {
       "localizations" : {
         "ar" : {
@@ -240330,6 +242254,598 @@
         }
       }
     },
+    "Shut down" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إيقاف التشغيل"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atura"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herunterfahren"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagar"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éteindre"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abeschalte"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "बंद करें"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ugasi"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spegni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "終了"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "종료"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izslēgt"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyłącz"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desligar"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fik"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Угаси"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ugasi"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stäng av"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapat"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
+    "Shut down %lld simulators?" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إيقاف تشغيل المحاكيات (%lld)؟"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vols aturar els simuladors (%lld)?"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Simulatoren herunterfahren?"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down %lld simulators?"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down %lld simulators?"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down %lld simulators?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Apagar los simuladores (%lld)?"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Apagar los simuladores (%lld)?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éteindre les simulateurs (%lld) ?"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Simulatore abeschalte?"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सिम्युलेटर बंद करें (%lld)?"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ugasiti simulatore (%lld)?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spegnere i simulatori (%lld)?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "シミュレータ(%lld台)を終了しますか?"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시뮬레이터 %lld개를 종료할까요?"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izslēgt simulatorus (%lld)?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyłączyć symulatory (%lld)?"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desligar os simuladores (%lld)?"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Të fiken simulatorët (%lld)?"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Угасити симулаторе (%lld)?"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ugasiti simulatore (%lld)?"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stänga av simulatorerna (%lld)?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simülatörler kapatılsın mı (%lld)?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要关闭 %lld 个模拟器吗？"
+          }
+        }
+      }
+    },
+    "Shut down all" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إيقاف الكل"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atura-ho tot"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle herunterfahren"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down all"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down all"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down all"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagar todos"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagar todos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout éteindre"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alli abeschalte"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सब बंद करें"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ugasi sve"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spegni tutti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべて終了"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모두 종료"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izslēgt visus"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyłącz wszystkie"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desligar todos"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fik të gjithë"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Угаси све"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ugasi sve"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stäng av alla"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tümünü kapat"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部关闭"
+          }
+        }
+      }
+    },
+    "Shut down all · %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إيقاف الكل · %@"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atura-ho tot · %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle herunterfahren · %@"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down all · %@"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down all · %@"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down all · %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagar todos · %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagar todos · %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout éteindre · %@"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alli abeschalte · %@"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सब बंद करें · %@"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ugasi sve · %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spegni tutti · %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべて終了 · %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모두 종료 · %@"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izslēgt visus · %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyłącz wszystkie · %@"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desligar todos · %@"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fik të gjithë · %@"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Угаси све · %@"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ugasi sve · %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stäng av alla · %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tümünü kapat · %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部关闭 · %@"
+          }
+        }
+      }
+    },
     "Similar photos" : {
       "localizations" : {
         "ar" : {
@@ -240919,6 +243435,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "模拟器"
+          }
+        }
+      }
+    },
+    "Simulators: %lld · %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المحاكيات: %lld · %@"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simuladors: %lld · %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatoren: %lld · %@"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulators: %lld · %@"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulators: %lld · %@"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulators: %lld · %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simuladores: %lld · %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simuladores: %lld · %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulateurs : %lld · %@"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatore: %lld · %@"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सिम्युलेटर: %lld · %@"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatori: %lld · %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatori: %lld · %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "シミュレータ：%lld · %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시뮬레이터: %lld · %@"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatori: %lld · %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Symulatory: %lld · %@"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simuladores: %lld · %@"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatorë: %lld · %@"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Симулатори: %lld · %@"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatori: %lld · %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatorer: %lld · %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simülatörler: %lld · %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模拟器：%lld · %@"
           }
         }
       }
@@ -255047,6 +257711,154 @@
         }
       }
     },
+    "Their apps and data stay. Tests running on them stop." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تبقى تطبيقاتها وبياناتها. تتوقف الاختبارات الجارية عليها."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les apps i les dades es mantenen. Les proves que s’hi executen s’aturen."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps und Daten bleiben. Laufende Tests darauf stoppen."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Their apps and data stay. Tests running on them stop."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Their apps and data stay. Tests running on them stop."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Their apps and data stay. Tests running on them stop."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sus apps y datos se mantienen. Las pruebas en curso se detienen."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sus apps y datos se mantienen. Las pruebas en curso se detienen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leurs apps et données restent. Les tests en cours s’arrêtent."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps und Date blibed. Laufendi Tests druf höred uf."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "इनके ऐप और डेटा बने रहते हैं। इन पर चल रहे टेस्ट रुक जाते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacije i podaci ostaju. Testovi koji se na njima izvode prestaju."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App e dati restano. I test in corso si fermano."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリとデータは残ります。実行中のテストは止まります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱과 데이터는 유지됩니다. 실행 중인 테스트는 중지됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lietotnes un dati paliek. Testi, kas tajos darbojas, apstājas."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacje i dane zostają. Trwające na nich testy się zatrzymają."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As apps e os dados mantêm-se. Os testes em curso param."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacionet dhe të dhënat mbeten. Testet që po ekzekutohen ndalen."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Апликације и подаци остају. Тестови који се на њима изводе стају."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacije i podaci ostaju. Testovi koji se na njima izvode staju."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appar och data finns kvar. Tester som körs på dem stoppas."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulamaları ve verileri kalır. Üzerlerinde çalışan testler durur."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "其中的 App 和数据会保留。正在运行的测试会停止。"
+          }
+        }
+      }
+    },
     "Then choose App Store & Known Developers." : {
       "localizations" : {
         "ar" : {
@@ -260677,6 +263489,154 @@
         }
       }
     },
+    "This simulator is running. Shut it down first." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هذا المحاكي قيد التشغيل. أوقفه أولًا."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aquest simulador està en marxa. Atura’l primer."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Simulator läuft. Fahre ihn zuerst herunter."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This simulator is running. Shut it down first."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This simulator is running. Shut it down first."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This simulator is running. Shut it down first."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este simulador está en ejecución. Apágalo primero."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este simulador está en ejecución. Apágalo primero."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce simulateur est en cours. Éteignez-le d’abord."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dä Simulator lauft. Schalt en zerscht ab."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "यह सिम्युलेटर चल रहा है। पहले इसे बंद करें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ovaj simulator radi. Prvo ga ugasi."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questo simulatore è in esecuzione. Prima spegnilo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このシミュレータは実行中です。先に終了してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 시뮬레이터가 실행 중입니다. 먼저 종료하세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šis simulators darbojas. Vispirms izslēdz to."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten symulator działa. Najpierw go wyłącz."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este simulador está em execução. Desligue-o primeiro."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ky simulator është në punë. Fike më parë."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Овај симулатор ради. Прво га угасите."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ovaj simulator radi. Prvo ga ugasite."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulatorn körs. Stäng av den först."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu simülatör çalışıyor. Önce kapatın."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此模拟器正在运行。请先关闭它。"
+          }
+        }
+      }
+    },
     "This simulator was used or changed; scan again" : {
       "localizations" : {
         "ar" : {
@@ -262005,6 +264965,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "只勾选你已不再拥有的 App 的残留，并取消勾选可能与仍在使用的 App 共享的内容。"
+          }
+        }
+      }
+    },
+    "Ticks only simulators that can't start anymore or that nothing used for 30 days. Recent ones stay unticked." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يحدد فقط المحاكيات التي لم تعد تعمل أو التي لم تُستخدم منذ 30 يومًا. تبقى الحديثة غير محددة."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Només marca els simuladors que ja no s’inicien o que fa 30 dies que no es fan servir. Els recents queden sense marcar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählt nur Simulatoren aus, die nicht mehr starten oder 30 Tage nicht benutzt wurden. Kürzlich benutzte bleiben abgewählt."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ticks only simulators that can't start anymore or that nothing used for 30 days. Recent ones stay unticked."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ticks only simulators that can't start anymore or that nothing used for 30 days. Recent ones stay unticked."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ticks only simulators that can't start anymore or that nothing used for 30 days. Recent ones stay unticked."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca solo los simuladores que ya no arrancan o que nadie usó en 30 días. Los recientes quedan sin marcar."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca solo los simuladores que ya no arrancan o que nadie usó en 30 días. Los recientes quedan sin marcar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coche uniquement les simulateurs qui ne démarrent plus ou inutilisés depuis 30 jours. Les récents restent décochés."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählt nume Simulatore us, wo nüme startet oder 30 Täg nöd bruucht worde sind. Neui blibed abgwählt."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "केवल वे सिम्युलेटर चुनता है जो अब शुरू नहीं होते या 30 दिनों से इस्तेमाल नहीं हुए। हाल के अचयनित रहते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Označava samo simulatore koji se više ne pokreću ili nisu korišteni 30 dana. Nedavni ostaju neoznačeni."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleziona solo i simulatori che non si avviano più o non usati da 30 giorni. Quelli recenti restano deselezionati."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "起動できなくなったものと30日間使われていないものだけを選択します。最近使ったものは選択しません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "더 이상 시작되지 않거나 30일 동안 사용되지 않은 시뮬레이터만 선택합니다. 최근 것은 선택하지 않습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atzīmē tikai simulatorus, kas vairs nestartē vai nav izmantoti 30 dienas. Nesenie paliek neatzīmēti."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaznacza tylko symulatory, które już się nie uruchamiają lub nieużywane od 30 dni. Ostatnio używane zostają odznaczone."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assinala só os simuladores que já não arrancam ou sem uso há 30 dias. Os recentes ficam por assinalar."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shënon vetëm simulatorët që nuk nisin më ose që nuk janë përdorur prej 30 ditësh. Të fundit mbeten pa shënuar."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Означава само симулаторе који се више не покрећу или нису коришћени 30 дана. Недавни остају неозначени."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Označava samo simulatore koji se više ne pokreću ili nisu korišćeni 30 dana. Nedavni ostaju neoznačeni."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markerar bara simulatorer som inte startar längre eller inte använts på 30 dagar. Nyligen använda förblir omarkerade."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca artık başlamayan veya 30 gündür kullanılmayan simülatörleri işaretler. Yeniler işaretsiz kalır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只勾选已无法启动或 30 天未使用的模拟器。最近使用的保持不勾选。"
           }
         }
       }
@@ -272230,6 +275338,154 @@
         }
       }
     },
+    "Used %@. Delete it only if you're done testing on it." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استُخدم %@. احذفه فقط إذا انتهيت من الاختبار عليه."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fet servir %@. Esborra’l només si has acabat de provar-hi."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzt %@. Lösche ihn nur, wenn du mit dem Testen darauf fertig bist."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used %@. Delete it only if you're done testing on it."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used %@. Delete it only if you're done testing on it."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used %@. Delete it only if you're done testing on it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usado %@. Bórralo solo si terminaste de probar en él."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usado %@. Bórralo solo si terminaste de probar en él."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisé %@. Supprimez-le seulement si vous avez fini de tester dessus."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bruucht %@. Lösch en nume, wänn du fertig teschtet häsch."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "इस्तेमाल हुआ: %@। इसे तभी डिलीट करें जब इस पर जाँच पूरी हो गई हो।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korišten %@. Izbriši ga samo ako si završio testiranje na njemu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usato %@. Eliminalo solo se hai finito di provarci."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最終使用:%@。テストが終わっている場合のみ削除してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 사용됨. 테스트가 끝난 경우에만 삭제하세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izmantots %@. Dzēs to tikai tad, ja testēšana ir pabeigta."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Używany %@. Usuń go tylko, jeśli skończyłeś na nim testy."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usado %@. Elimine-o só se já terminou os testes nele."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Përdorur %@. Fshije vetëm nëse ke mbaruar testimet në të."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Коришћен %@. Обришите га само ако сте завршили тестирање на њему."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korišćen %@. Obrišite ga samo ako ste završili testiranje na njemu."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Använd %@. Radera den bara om du är klar med testerna på den."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanıldı: %@. Yalnızca üzerinde testleriniz bittiyse silin."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次使用：%@。仅在你已完成测试时删除。"
+          }
+        }
+      }
+    },
     "Used estimate" : {
       "localizations" : {
         "ar" : {
@@ -273166,6 +276422,154 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Used recently" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مستخدمة مؤخرًا"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fets servir fa poc"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kürzlich benutzt"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used recently"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used recently"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used recently"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usados hace poco"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usados hace poco"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisés récemment"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Churzlich bruucht"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "हाल में इस्तेमाल"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedavno korišteni"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usati di recente"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近使用"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최근 사용"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nesen izmantoti"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Używane niedawno"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usados recentemente"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Përdorur së fundi"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Недавно коришћени"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedavno korišćeni"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nyligen använda"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yakın zamanda kullanıldı"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近使用过"
           }
         }
       }
@@ -274794,6 +278198,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "查看回执"
+          }
+        }
+      }
+    },
+    "Virtual iPhones and iPads from Xcode. Shutting one down frees its memory and keeps its apps and data; Xcode starts it again when needed. A test running on it stops." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أجهزة iPhone وiPad افتراضية من Xcode. إيقاف أحدها يحرر ذاكرته ويحتفظ بتطبيقاته وبياناته، ويشغّله Xcode مجددًا عند الحاجة. يتوقف أي اختبار يعمل عليه."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPhone i iPad virtuals del Xcode. Aturar-ne un allibera la memòria i en conserva les apps i les dades; el Xcode el torna a iniciar quan cal. Una prova que s’hi executi s’atura."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuelle iPhones und iPads aus Xcode. Herunterfahren gibt Speicher frei und behält Apps und Daten; Xcode startet ihn bei Bedarf wieder. Ein laufender Test darauf stoppt."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtual iPhones and iPads from Xcode. Shutting one down frees its memory and keeps its apps and data; Xcode starts it again when needed. A test running on it stops."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtual iPhones and iPads from Xcode. Shutting one down frees its memory and keeps its apps and data; Xcode starts it again when needed. A test running on it stops."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtual iPhones and iPads from Xcode. Shutting one down frees its memory and keeps its apps and data; Xcode starts it again when needed. A test running on it stops."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPhone y iPad virtuales de Xcode. Apagar uno libera su memoria y conserva sus apps y datos; Xcode lo vuelve a arrancar cuando hace falta. Una prueba en curso se detiene."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPhone y iPad virtuales de Xcode. Apagar uno libera su memoria y conserva sus apps y datos; Xcode lo vuelve a arrancar cuando hace falta. Una prueba en curso se detiene."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPhone et iPad virtuels d’Xcode. En éteindre un libère sa mémoire et garde ses apps et données ; Xcode le redémarre au besoin. Un test en cours s’arrête."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuelli iPhones und iPads us Xcode. Abeschalte git Speicher frei und bhaltet Apps und Date; Xcode startet en bi Bedarf wieder. En laufende Test druf hört uf."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode के वर्चुअल iPhone और iPad। किसी को बंद करने से उसकी मेमोरी खाली होती है और ऐप व डेटा बने रहते हैं; ज़रूरत पर Xcode उसे फिर शुरू करता है। उस पर चल रहा टेस्ट रुक जाता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtualni iPhonei i iPadi iz Xcodea. Gašenjem jednog oslobađa se memorija, a aplikacije i podaci ostaju; Xcode ga po potrebi ponovno pokreće. Test koji na njemu radi prestaje."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPhone e iPad virtuali di Xcode. Spegnerne uno libera la memoria e mantiene app e dati; Xcode lo riavvia quando serve. Un test in corso si ferma."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcodeの仮想iPhoneとiPadです。終了するとメモリが空き、アプリとデータは残ります。必要になればXcodeがまた起動します。実行中のテストは止まります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode의 가상 iPhone과 iPad입니다. 종료하면 메모리가 확보되고 앱과 데이터는 유지되며, 필요하면 Xcode가 다시 시작합니다. 실행 중인 테스트는 중지됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuāli iPhone un iPad no Xcode. Izslēdzot to, atbrīvojas atmiņa, bet lietotnes un dati paliek; Xcode to vajadzības gadījumā palaiž no jauna. Tajā strādājošs tests apstājas."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wirtualne iPhone’y i iPady z Xcode. Wyłączenie zwalnia pamięć i zachowuje aplikacje i dane; Xcode uruchomi go ponownie, gdy trzeba. Trwający na nim test się zatrzyma."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPhone e iPad virtuais do Xcode. Desligar um liberta a memória e mantém as apps e os dados; o Xcode volta a arrancá-lo quando for preciso. Um teste em curso para."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPhone dhe iPad virtualë nga Xcode. Fikja e njërit liron memorien dhe ruan aplikacionet e të dhënat; Xcode e nis sërish kur duhet. Testi që po ekzekutohet ndalet."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Виртуелни iPhone и iPad уређаји из Xcode-а. Гашење ослобађа меморију, а апликације и подаци остају; Xcode га поново покреће по потреби. Тест који ради на њему стаје."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuelni iPhone i iPad uređaji iz Xcode-a. Gašenje oslobađa memoriju, a aplikacije i podaci ostaju; Xcode ga ponovo pokreće po potrebi. Test koji radi na njemu staje."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuella iPhone och iPad från Xcode. Att stänga av en frigör minne och behåller appar och data; Xcode startar den igen vid behov. Ett test som körs på den stoppas."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode’un sanal iPhone ve iPad’leri. Birini kapatmak belleğini boşaltır, uygulamalarını ve verilerini korur; Xcode gerektiğinde yeniden başlatır. Üzerinde çalışan test durur."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "来自 Xcode 的虚拟 iPhone 和 iPad。关闭后会释放内存，App 和数据会保留；需要时 Xcode 会再次启动它。正在运行的测试会停止。"
           }
         }
       }
@@ -280420,154 +283972,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "值得一看"
-          }
-        }
-      }
-    },
-    "Xcode can no longer run it. Removed by Xcode's own simctl." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "لم يعد Xcode قادرًا على تشغيله. يزيله simctl الخاص بـ Xcode."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode ja no el pot executar. L’elimina el simctl propi de Xcode."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode kann ihn nicht mehr ausführen. Wird durch Xcodes eigenes simctl entfernt."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode can no longer run it. Removed by Xcode's own simctl."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode can no longer run it. Removed by Xcode's own simctl."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode can no longer run it. Removed by Xcode's own simctl."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode ya no puede ejecutarlo. Se elimina con el propio simctl de Xcode."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode ya no puede ejecutarlo. Se elimina con el propio simctl de Xcode."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode ne peut plus l’exécuter. Retiré par la commande simctl de Xcode."
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode cha ihn nüme uusfüere. Wird vo simctl vo Xcode sälber entfernt."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode अब इसे नहीं चला सकता। Xcode के अपने simctl से हटाया गया।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode ga više ne može pokrenuti. Uklanja ga Xcodeov vlastiti simctl."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode non può più eseguirlo. Rimosso con simctl di Xcode."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcodeはもう実行できません。Xcode自身のsimctlで削除されます。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode에서 더 이상 실행할 수 없습니다. Xcode의 simctl로 제거됩니다."
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode to vairs nevar palaist. Noņem pats Xcode simctl."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode nie może go już uruchomić. Usuwany przez simctl z Xcode."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Xcode já não o consegue executar. Removido pelo próprio simctl do Xcode."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode nuk mund ta ekzekutojë më. Hiqet nga simctl i vetë Xcode."
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode га више не може покренути. Уклања га Xcode-ов simctl."
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode ga više ne može pokrenuti. Uklanja ga Xcode-ov simctl."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode kan inte längre köra den. Tas bort av Xcodes egen simctl."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode artık bunu çalıştıramıyor. Xcode’un kendi simctl aracıyla kaldırılır."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xcode 已无法运行它。由 Xcode 自带的 simctl 移除。"
           }
         }
       }

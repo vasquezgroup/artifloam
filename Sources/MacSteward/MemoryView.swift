@@ -143,6 +143,7 @@ struct MemoryView: View {
                 hero(reading, verdict, suggested)
                 progressRow(verdict)
                 appList(reading)
+                if !compact { RunningSimulatorsCard() }
                 DisclosureGroup(isExpanded: $showDetails) {
                     VStack(alignment: .leading, spacing: 14) {
                         ViewThatFits(in: .horizontal) {

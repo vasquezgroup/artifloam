@@ -8,24 +8,15 @@ public enum XcodeStorageInventory {
     public static let trashRule = "xcode-reviewed-trash"
     /// Ticked by the person one at a time and deleted by `simctl`; never part of automatic cleanup.
     public static let simulatorRule = "unused-simulator"
-    static let simulatorIdleDays = 90
-    struct UnusedSimulator: Equatable { let udid: String; let name: String; let bytes: UInt64; let available: Bool; let lastUsed: Date? }
-    /// Shut-down simulators holding real data that Xcode can no longer run, or that nothing has used for 90 days.
-    /// A simulator with no recorded use counts as used, so a missing date never makes it removable.
-    static func unusedSimulators(listJSON data: Data, now: Date = Date()) -> [UnusedSimulator] {
-        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any], let groups = json["devices"] as? [String: [[String: Any]]] else { return [] }
-        let dates = ISO8601DateFormatter(); dates.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return groups.flatMap { runtime, devices in
-            devices.compactMap { device -> UnusedSimulator? in
-                guard let udid = device["udid"] as? String, UUID(uuidString: udid) != nil, device["state"] as? String == "Shutdown" else { return nil }
-                let bytes = (device["dataPathSize"] as? NSNumber)?.uint64Value ?? 0, available = device["isAvailable"] as? Bool ?? true
-                let used = (device["lastUsedAt"] as? String).flatMap { dates.date(from: $0) ?? ISO8601DateFormatter().date(from: $0) }
-                let idle = used.map { now.timeIntervalSince($0) >= Double(simulatorIdleDays) * 86_400 } ?? false
-                guard bytes >= 100_000_000, !available || idle else { return nil }
-                let os = runtime.components(separatedBy: "SimRuntime.").last?.replacingOccurrences(of: "-", with: ".").replacingOccurrences(of: "iOS.", with: "iOS ") ?? ""
-                return UnusedSimulator(udid: udid, name: [device["name"] as? String ?? String(localized: "Simulator"), os].filter { !$0.isEmpty }.joined(separator: " · "), bytes: bytes, available: available, lastUsed: used)
-            }
-        }
+    /// Shut-down simulators worth asking about: anything holding at least 100 MB. Running ones are never listed.
+    public static func deletableSimulators(_ all: [SimulatorDevice]) -> [SimulatorDevice] { all.filter { !$0.running && $0.bytes >= 100_000_000 } }
+    /// Plain words for someone who doesn't know simulators: why it's listed and whether deleting it is a sure thing.
+    static func simulatorReason(_ simulator: SimulatorDevice, now: Date = Date()) -> String {
+        if !simulator.available { return String(localized: "Made for an iOS version this Xcode no longer has, so it can't start anymore. Safe to delete.") }
+        guard let used = simulator.lastUsed else { return String(localized: "No record of when it was last used. Delete it only if you're done testing on it.") }
+        let days = Int(now.timeIntervalSince(used) / 86_400)
+        if days >= SimulatorDevice.idleDays { return String(localized: "Not used for \(days) days. Safe to delete.") }
+        return String(localized: "Used \(used.formatted(.relative(presentation: .named))). Delete it only if you're done testing on it.")
     }
     /// A simulator's caches are also listed on their own, for automatic cleanup. Its row counts only the rest, so totals add up.
     static func countingNestedCachesOnce(_ findings: [Finding]) -> [Finding] {
@@ -38,18 +29,15 @@ public enum XcodeStorageInventory {
             return counted
         }
     }
-    private static func listSimulators() -> [UnusedSimulator]? {
-        let result = run("/usr/bin/xcrun", ["simctl", "list", "devices", "-j"], timeout: 12)
-        return result.code == 0 ? unusedSimulators(listJSON: Data(result.output.utf8)) : nil
-    }
-    /// Rechecks right before deleting: still a known, shut-down, unused simulator, and no simulator is running.
+    /// Rechecks right before deleting: still there, shut down, and not used since the person saw it. Other simulators may keep running.
     static func removeSimulator(_ finding: Finding, configuration: Configuration, activity: ActivitySnapshot) throws {
         let udid = URL(fileURLWithPath: finding.path).lastPathComponent
         let base = configuration.home.appendingPathComponent("Library/Developer/CoreSimulator/Devices/\(udid)").path
         guard finding.rule == simulatorRule, finding.path == base else { throw StewardError.blocked(String(localized: "Not a simulator Artifloam can remove.")) }
         guard !configuration.ignoredPaths.contains(where: { base == $0 || base.hasPrefix($0 + "/") }) else { throw StewardError.blocked(String(localized: "Path is on the ignore list")) }
-        guard activity.reliable, !BroadCaches.simulatorRunning(activity) else { throw StewardError.blocked(String(localized: "A simulator is running")) }
-        guard listSimulators()?.contains(where: { $0.udid == udid }) == true else { throw StewardError.blocked(String(localized: "This simulator was used or changed; scan again")) }
+        guard let now = Simulators.list()?.first(where: { $0.id == udid }) else { throw StewardError.blocked(String(localized: "This simulator was used or changed; scan again")) }
+        guard !now.running else { throw StewardError.blocked(String(localized: "This simulator is running. Shut it down first.")) }
+        guard (now.lastUsed ?? .distantPast) <= finding.modifiedAt.addingTimeInterval(60) else { throw StewardError.blocked(String(localized: "This simulator was used or changed; scan again")) }
         let result = run("/usr/bin/xcrun", ["simctl", "delete", udid], timeout: 120)
         guard result.code == 0 else { throw StewardError.blocked(String(localized: "simctl could not delete it: \(result.error.trimmingCharacters(in: .whitespacesAndNewlines))")) }
     }
@@ -93,14 +81,11 @@ public enum XcodeStorageInventory {
                 notices.append(String(localized: "Xcode could not provide a complete simulator-runtime inventory. Review installed runtimes in Xcode Settings > Components."))
             }
             let devices = home.appendingPathComponent("Library/Developer/CoreSimulator/Devices")
-            for simulator in listSimulators() ?? [] {
-                let path = devices.appendingPathComponent(simulator.udid).path
+            for simulator in deletableSimulators(Simulators.list() ?? []) {
+                let path = devices.appendingPathComponent(simulator.id).path
                 guard !excluded.contains(where: { path == $0 || path.hasPrefix($0 + "/") }) else { continue }
-                let why: String
-                if !simulator.available { why = String(localized: "Xcode can no longer run it. Removed by Xcode's own simctl.") }
-                else if let used = simulator.lastUsed?.formatted(date: .abbreviated, time: .omitted) { why = String(localized: "Not used since \(used). Removed by Xcode's own simctl.") }
-                else { why = String(localized: "Not used since it was set up. Removed by Xcode's own simctl.") }
-                rows.append(Finding(path: path, group: .xcode, bytes: simulator.bytes, modifiedAt: simulator.lastUsed ?? Date(), safety: .review, reason: why, rule: simulatorRule, fingerprint: "review-only", warnings: [String(localized: "Deletes the apps and data inside this simulator for good.")], label: simulator.name))
+                rows.append(Finding(path: path, group: .xcode, bytes: simulator.bytes, modifiedAt: simulator.lastUsed ?? Date(), safety: .review, reason: simulatorReason(simulator), rule: simulatorRule, fingerprint: "review-only",
+                                    warnings: [String(localized: "Deletes the test apps and their data inside it, never your projects. Xcode makes a new simulator in a minute.")], label: simulator.name, finished: simulator.safeToDelete()))
             }
         }
         return (rows, notices)

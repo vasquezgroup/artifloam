@@ -79,8 +79,9 @@ public struct Finding: Codable, Identifiable, Sendable {
     public var userCleanable: Bool { safety == .automatic || hold == .recent || (hold == .inUse && owner != nil) || ([XcodeStorageInventory.trashRule, XcodeStorageInventory.simulatorRule].contains(rule) && safety == .review) }
     /// Ticked by a category checkbox or "Select ready": ready items plus unflagged choices. Flagged and held ones stay one-by-one.
     /// What Smart select ticks: passed every check and loses nothing. A worktree must also be merged, clean and not used lately.
-    public var certain: Bool { group == .worktrees ? safety == .review && finished == true : safety == .automatic }
-    /// Worktrees only: merged, loses nothing Git can't restore, not open and no agent session in 24 hours. A recent commit alone doesn't count against it.
+    public var certain: Bool { group == .worktrees || rule == XcodeStorageInventory.simulatorRule ? safety == .review && finished == true : safety == .automatic }
+    /// Worktrees: merged, loses nothing Git can't restore, not open and no agent session in 24 hours. A recent commit alone doesn't count against it.
+    /// Simulators: Xcode can't start it anymore, or nothing used it for 30 days.
     public var finished: Bool? = nil
     public var tickable: Bool { safety == .automatic || (userCleanable && hold == nil && (warnings ?? []).isEmpty) }
     /// A readable name when the folder has none, such as a simulator's UUID.

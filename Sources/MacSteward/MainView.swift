@@ -842,6 +842,10 @@ struct MainView: View {
                                     allCategoriesOverview
                                 } else {
                                     Text(m.group.explanation).stewardFont(.body).foregroundStyle(muted).fixedSize(horizontal: false, vertical: true)
+                                    if m.group == .xcode {
+                                        let simulators = (m.report?.findings ?? []).filter { $0.rule == XcodeStorageInventory.simulatorRule }
+                                        SimulatorOverview(findings: simulators, selectSafe: { m.smartSelect(simulators) }, openPerformance: { m.openPage("Performance") })
+                                    }
                                 }
                                 if m.groupFindings.isEmpty {
                                     if m.search.isEmpty { empty(String(localized: "No removable findings in this group."), String(localized: "Protected categories are intentionally excluded from automatic cleanup.")) }
