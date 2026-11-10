@@ -122036,6 +122036,302 @@
         }
       }
     },
+    "FileVault is off: deleted data can stay readable on the disk until macOS reuses the space. Turn on FileVault in System Settings to protect it." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault متوقف: قد تبقى البيانات المحذوفة قابلة للقراءة على القرص حتى يعيد macOS استخدام المساحة. شغّل FileVault في إعدادات النظام لحمايتها."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El FileVault està desactivat: les dades esborrades es poden llegir al disc fins que el macOS en reutilitzi l’espai. Activa el FileVault a la Configuració del Sistema per protegir-les."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault ist aus: Gelöschte Daten können auf dem Laufwerk lesbar bleiben, bis macOS den Platz wieder nutzt. Schalte FileVault in den Systemeinstellungen ein, um sie zu schützen."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault is off: deleted data can stay readable on the disk until macOS reuses the space. Turn on FileVault in System Settings to protect it."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault is off: deleted data can stay readable on the disk until macOS reuses the space. Turn on FileVault in System Settings to protect it."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault is off: deleted data can stay readable on the disk until macOS reuses the space. Turn on FileVault in System Settings to protect it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault está desactivado: los datos borrados pueden seguir siendo legibles en el disco hasta que macOS reutilice el espacio. Activa FileVault en Ajustes del Sistema para protegerlos."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault está desactivado: los datos borrados pueden seguir siendo legibles en el disco hasta que macOS reutilice el espacio. Activa FileVault en Ajustes del Sistema para protegerlos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault est désactivé : les données supprimées peuvent rester lisibles sur le disque jusqu’à ce que macOS réutilise l’espace. Activez FileVault dans Réglages Système pour les protéger."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault isch us: Glöschti Date chönd uf de Disk läsbar bliibe, bis macOS de Platz wieder bruucht. Schalt FileVault i de Systemiistellige ii, zum sie schütze."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault बंद है: macOS जगह दोबारा इस्तेमाल करने तक डिलीट किया गया डेटा डिस्क पर पढ़ा जा सकता है। इसे सुरक्षित रखने के लिए सिस्टम सेटिंग्ज़ में FileVault चालू करें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault je isključen: izbrisani podaci mogu ostati čitljivi na disku dok macOS ponovno ne iskoristi prostor. Uključite FileVault u Postavkama sustava da ih zaštitite."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault è disattivato: i dati eliminati possono restare leggibili sul disco finché macOS non riutilizza lo spazio. Attiva FileVault in Impostazioni di Sistema per proteggerli."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVaultはオフです。削除したデータは、macOSがその領域を再利用するまでディスク上で読める場合があります。保護するには、システム設定でFileVaultをオンにしてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault가 꺼져 있습니다. 삭제한 데이터는 macOS가 공간을 다시 사용할 때까지 디스크에서 읽힐 수 있습니다. 보호하려면 시스템 설정에서 FileVault를 켜세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault ir izslēgts: izdzēstie dati diskā var palikt nolasāmi, līdz macOS atkal izmanto šo vietu. Lai tos aizsargātu, ieslēdz FileVault sistēmas iestatījumos."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault jest wyłączony: usunięte dane mogą pozostać czytelne na dysku, dopóki macOS nie wykorzysta ponownie miejsca. Włącz FileVault w Ustawieniach systemowych, aby je chronić."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O FileVault está desativado: os dados eliminados podem continuar legíveis no disco até o macOS reutilizar o espaço. Ative o FileVault nas Definições do Sistema para os proteger."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault është joaktiv: të dhënat e fshira mund të mbeten të lexueshme në disk derisa macOS ta ripërdorë hapësirën. Aktivizo FileVault te Cilësimet e Sistemit për t’i mbrojtur."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault је искључен: обрисани подаци могу остати читљиви на диску док macOS поново не искористи простор. Укључите FileVault у Подешавањима система да их заштитите."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault je isključen: obrisani podaci mogu ostati čitljivi na disku dok macOS ponovo ne iskoristi prostor. Uključite FileVault u Podešavanjima sistema da ih zaštitite."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault är av: raderade data kan förbli läsbara på disken tills macOS använder utrymmet igen. Slå på FileVault i Systeminställningar för att skydda dem."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault kapalı: Silinen veriler, macOS alanı yeniden kullanana kadar diskte okunabilir kalabilir. Korumak için Sistem Ayarları’nda FileVault’u açın."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault 已关闭：在 macOS 重新使用这部分空间之前，删除的数据可能仍可在磁盘上被读取。请在“系统设置”中打开 FileVault 以保护数据。"
+          }
+        }
+      }
+    },
+    "FileVault is on: deleted data stays encrypted on the disk, so others can't read it." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault مفعّل: تبقى البيانات المحذوفة مشفّرة على القرص، فلا يستطيع الآخرون قراءتها."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El FileVault està activat: les dades esborrades es queden xifrades al disc, i ningú més les pot llegir."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault ist an: Gelöschte Daten bleiben auf dem Laufwerk verschlüsselt, andere können sie nicht lesen."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault is on: deleted data stays encrypted on the disk, so others can't read it."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault is on: deleted data stays encrypted on the disk, so others can't read it."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault is on: deleted data stays encrypted on the disk, so others can't read it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault está activado: los datos borrados siguen cifrados en el disco, así que nadie más puede leerlos."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault está activado: los datos borrados siguen cifrados en el disco, así que nadie más puede leerlos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault est activé : les données supprimées restent chiffrées sur le disque, personne d’autre ne peut les lire."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault isch aa: Glöschti Date bliibed uf de Disk verschlüsslet, anderi chönd sie nöd läse."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault चालू है: डिलीट किया गया डेटा डिस्क पर एन्क्रिप्टेड रहता है, इसलिए दूसरे इसे नहीं पढ़ सकते।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault je uključen: izbrisani podaci ostaju šifrirani na disku pa ih drugi ne mogu pročitati."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault è attivo: i dati eliminati restano cifrati sul disco, quindi nessun altro può leggerli."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVaultはオンです。削除したデータはディスク上で暗号化されたままなので、他の人は読めません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault가 켜져 있습니다. 삭제한 데이터는 디스크에 암호화된 채로 남아 다른 사람이 읽을 수 없습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault ir ieslēgts: izdzēstie dati diskā paliek šifrēti, tāpēc citi tos nevar nolasīt."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault jest włączony: usunięte dane pozostają zaszyfrowane na dysku, więc inni nie mogą ich odczytać."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O FileVault está ativado: os dados eliminados continuam encriptados no disco, por isso ninguém mais os pode ler."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault është aktiv: të dhënat e fshira mbeten të enkriptuara në disk, ndaj të tjerët nuk mund t’i lexojnë."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault је укључен: обрисани подаци остају шифровани на диску, па други не могу да их прочитају."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault je uključen: obrisani podaci ostaju šifrovani na disku, pa drugi ne mogu da ih pročitaju."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault är på: raderade data förblir krypterade på disken, så andra kan inte läsa dem."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault açık: Silinen veriler diskte şifreli kalır, bu yüzden başkaları okuyamaz."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FileVault 已打开：删除的数据在磁盘上仍保持加密，其他人无法读取。"
+          }
+        }
+      }
+    },
     "Files & Folders" : {
       "localizations" : {
         "ar" : {
@@ -179641,150 +179937,150 @@
         }
       }
     },
-    "Not an Xcode folder Artifloam moves. Use Finder." : {
+    "Not an Xcode folder Artifloam deletes. Use Finder." : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ليس مجلد Xcode ينقله Artifloam. استخدم فايندر."
+            "value" : "ليس مجلد Xcode يحذفه Artifloam. استخدم فايندر."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No és una carpeta de Xcode que Artifloam mogui. Fes servir el Finder."
+            "value" : "No és una carpeta de Xcode que Artifloam esborri. Fes servir el Finder."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kein Xcode-Ordner, den Artifloam verschiebt. Nutze den Finder."
+            "value" : "Kein Xcode-Ordner, den Artifloam löscht. Nutze den Finder."
           }
         },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not an Xcode folder Artifloam moves. Use Finder."
+            "value" : "Not an Xcode folder Artifloam deletes. Use Finder."
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not an Xcode folder Artifloam moves. Use Finder."
+            "value" : "Not an Xcode folder Artifloam deletes. Use Finder."
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not an Xcode folder Artifloam moves. Use Finder."
+            "value" : "Not an Xcode folder Artifloam deletes. Use Finder."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No es una carpeta de Xcode que Artifloam mueva. Usa el Finder."
+            "value" : "No es una carpeta de Xcode que Artifloam borre. Usa el Finder."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No es una carpeta de Xcode que Artifloam mueva. Usa el Finder."
+            "value" : "No es una carpeta de Xcode que Artifloam borre. Usa el Finder."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ce n’est pas un dossier Xcode qu’Artifloam déplace. Utilisez le Finder."
+            "value" : "Ce n’est pas un dossier Xcode qu’Artifloam supprime. Utilisez le Finder."
           }
         },
         "gsw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kei Xcode-Ordner, wo Artifloam verschiebt. Bruuch de Finder."
+            "value" : "Kei Xcode-Ordner, wo Artifloam löscht. Bruuch de Finder."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "यह Xcode का ऐसा फ़ोल्डर नहीं जिसे Artifloam ले जाता है। Finder का उपयोग करें।"
+            "value" : "यह Xcode का ऐसा फ़ोल्डर नहीं जिसे Artifloam डिलीट करता है। Finder का उपयोग करें।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nije Xcodeova mapa koju Artifloam premješta. Koristi Finder."
+            "value" : "Nije Xcodeova mapa koju Artifloam briše. Koristi Finder."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Non è una cartella di Xcode che Artifloam sposta. Usa il Finder."
+            "value" : "Non è una cartella di Xcode che Artifloam elimina. Usa il Finder."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Artifloamが移動するXcodeのフォルダではありません。Finderを使ってください。"
+            "value" : "Artifloamが削除するXcodeのフォルダではありません。Finderを使ってください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Artifloam이 이동하는 Xcode 폴더가 아닙니다. Finder를 사용하세요."
+            "value" : "Artifloam이 삭제하는 Xcode 폴더가 아닙니다. Finder를 사용하세요."
           }
         },
         "lv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nav Xcode mape, ko Artifloam pārvieto. Izmanto Finder."
+            "value" : "Nav Xcode mape, ko Artifloam dzēš. Izmanto Finder."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "To nie jest folder Xcode, który Artifloam przenosi. Użyj Findera."
+            "value" : "To nie jest folder Xcode, który Artifloam usuwa. Użyj Findera."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Não é uma pasta do Xcode que o Artifloam mova. Use o Finder."
+            "value" : "Não é uma pasta do Xcode que o Artifloam elimine. Use o Finder."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nuk është dosje e Xcode që Artifloam e zhvendos. Përdor Finder."
+            "value" : "Nuk është dosje e Xcode që Artifloam e fshin. Përdor Finder."
           }
         },
         "sr-Cyrl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Није Xcode фасцикла коју Artifloam премешта. Користите Finder."
+            "value" : "Није Xcode фасцикла коју Artifloam брише. Користите Finder."
           }
         },
         "sr-Latn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nije Xcode fascikla koju Artifloam premešta. Koristite Finder."
+            "value" : "Nije Xcode fascikla koju Artifloam briše. Koristite Finder."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inte en Xcode-mapp som Artifloam flyttar. Använd Finder."
+            "value" : "Inte en Xcode-mapp som Artifloam raderar. Använd Finder."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Artifloam’ın taşıdığı bir Xcode klasörü değil. Finder’ı kullanın."
+            "value" : "Artifloam’ın sildiği bir Xcode klasörü değil. Finder’ı kullanın."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "不是 Artifloam 会移动的 Xcode 文件夹。请使用访达。"
+            "value" : "不是 Artifloam 会删除的 Xcode 文件夹。请使用访达。"
           }
         }
       }
@@ -266445,6 +266741,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "时间机器尚未设置"
+          }
+        }
+      }
+    },
+    "Time Machine keeps local snapshots of this disk, so some space comes back only when they expire, usually within a day." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يحتفظ Time Machine بلقطات محلية لهذا القرص، لذا لا تعود بعض المساحة إلا عند انتهاء صلاحيتها، عادةً خلال يوم."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Time Machine guarda instantànies locals d’aquest disc, de manera que una part de l’espai només torna quan caduquen, normalment en un dia."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine behält lokale Schnappschüsse dieses Laufwerks. Ein Teil des Platzes wird erst frei, wenn sie ablaufen, meist innerhalb eines Tages."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine keeps local snapshots of this disk, so some space comes back only when they expire, usually within a day."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine keeps local snapshots of this disk, so some space comes back only when they expire, usually within a day."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine keeps local snapshots of this disk, so some space comes back only when they expire, usually within a day."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine guarda instantáneas locales de este disco, así que parte del espacio solo vuelve cuando caducan, normalmente en un día."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine guarda instantáneas locales de este disco, así que parte del espacio solo vuelve cuando caducan, normalmente en un día."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine conserve des instantanés locaux de ce disque : une partie de l’espace ne revient qu’à leur expiration, généralement en un jour."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine bhaltet lokali Schnappschüss vo dere Disk. En Teil vom Platz wird erst frei, wänn sie ablaufed, meistens innert eme Tag."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine इस डिस्क के लोकल स्नैपशॉट रखता है, इसलिए कुछ जगह उनके खत्म होने पर ही वापस मिलती है, आमतौर पर एक दिन में।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine čuva lokalne snimke ovog diska pa se dio prostora vraća tek kad isteknu, obično unutar jednog dana."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine conserva istantanee locali di questo disco, quindi parte dello spazio torna solo quando scadono, di solito entro un giorno."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machineがこのディスクのローカルスナップショットを保持しているため、一部の空き領域はスナップショットの期限が切れてから戻ります。通常は1日以内です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine이 이 디스크의 로컬 스냅샷을 보관하므로, 일부 공간은 스냅샷이 만료된 뒤에야 돌아옵니다. 보통 하루 이내입니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine glabā šī diska lokālos momentuzņēmumus, tāpēc daļa vietas atgriežas tikai tad, kad tie beidzas, parasti dienas laikā."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine przechowuje lokalne migawki tego dysku, więc część miejsca wróci dopiero po ich wygaśnięciu, zwykle w ciągu doby."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Time Machine mantém instantâneos locais deste disco, por isso algum espaço só volta quando expirarem, normalmente num dia."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine mban fotografi lokale të këtij disku, ndaj një pjesë e hapësirës kthehet vetëm kur ato skadojnë, zakonisht brenda një dite."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine чува локалне снимке овог диска, па се део простора враћа тек када истекну, обично у року од једног дана."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine čuva lokalne snimke ovog diska, pa se deo prostora vraća tek kada isteknu, obično u roku od jednog dana."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine sparar lokala ögonblicksbilder av den här disken, så en del utrymme kommer tillbaka först när de går ut, oftast inom ett dygn."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine bu diskin yerel anlık görüntülerini tutar; bu yüzden alanın bir kısmı ancak süreleri dolunca geri gelir, genellikle bir gün içinde."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Machine 会保留此磁盘的本地快照，因此部分空间要等快照过期后才会释放，通常在一天之内。"
           }
         }
       }

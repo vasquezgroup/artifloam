@@ -172,5 +172,17 @@ final class SafetyTests: XCTestCase {
         XCTAssertEqual(result.code, 130)
         XCTAssertLessThan(Date().timeIntervalSince(started), 3, "Cancellation must not wait for the subprocess timeout")
     }
-
+    func testOldReceiptsOfDeletedFilesArePruned() throws {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let old = folder.appendingPathComponent("old.json"), recent = folder.appendingPathComponent("recent.json"), other = folder.appendingPathComponent("notes.txt")
+        for file in [old, recent, other] { try Data("{}".utf8).write(to: file) }
+        try FileManager.default.setAttributes([.modificationDate: Date().addingTimeInterval(-91 * 86_400)], ofItemAtPath: old.path)
+        try FileManager.default.setAttributes([.modificationDate: Date().addingTimeInterval(-91 * 86_400)], ofItemAtPath: other.path)
+        ReviewedTrash.pruneReceipts(in: folder)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: old.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: recent.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: other.path), "only receipts are touched")
+    }
 }

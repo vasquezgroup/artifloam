@@ -96,11 +96,20 @@ public enum ReviewedTrash {
             return nil
         }
         let folder = home.appendingPathComponent("Library/Application Support/MacSteward/TrashReceipts")
+        pruneReceipts(in: folder)
         if (try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])) != nil {
             let record: [String: Any] = ["date": ISO8601DateFormatter().string(from: Date()), "items": results.map { ["path": $0.path, "trashPath": $0.trashPath ?? "", "error": $0.error ?? ""] }]
             if let data = try? JSONSerialization.data(withJSONObject: record, options: [.prettyPrinted, .sortedKeys]) { try? data.write(to: folder.appendingPathComponent(UUID().uuidString + ".json"), options: .atomic) }
         }
         return results
+    }
+    /// These receipts name personal files that were deleted, so after 90 days they are deleted too.
+    /// Cleanup receipts (caches) stay: Activity adds them up into the space freed over time.
+    static func pruneReceipts(in folder: URL, olderThanDays days: Double = 90, now: Date = Date()) {
+        for file in children(folder) where file.pathExtension == "json" {
+            guard let date = try? file.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate, now.timeIntervalSince(date) > days * 86_400 else { continue }
+            try? FileManager.default.removeItem(at: file)
+        }
     }
     static func move(_ candidates: [TrashCandidate], home: URL, allowApplications: Bool = false, allowLeftovers: Bool = false, duplicateGroups: [DuplicateGroup] = [],
                      progress: ((Int, UInt64, String) -> Void)? = nil, shouldStop: () -> Bool = { false }, operation: (URL) throws -> String?) -> [TrashOutcome] {

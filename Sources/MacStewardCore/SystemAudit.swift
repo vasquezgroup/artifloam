@@ -59,6 +59,12 @@ public enum SystemAudit {
         BoundedFile.read(URL(fileURLWithPath: path)).flatMap { (try? PropertyListSerialization.propertyList(from: $0, format: nil)) as? [String: Any] }
     }
     private static func text(_ result: CommandResult) -> String { result.output + result.error }
+    /// What deleting means on this disk: whether FileVault encrypts what stays behind, and whether
+    /// local Time Machine snapshots still hold deleted files (their space returns when the snapshots expire).
+    public static func deletionFacts() -> (fileVault: Bool?, localSnapshots: Bool) {
+        let snapshots = run("/usr/bin/tmutil", ["listlocalsnapshots", "/"], timeout: 5).output
+        return (fileVault(text(run("/usr/bin/fdesetup", ["status"], timeout: 5))), snapshots.contains("com.apple.TimeMachine."))
+    }
 
     static func gatekeeper(_ text: String) -> Bool? { text.contains("assessments enabled") ? true : text.contains("assessments disabled") ? false : nil }
     static func fileVault(_ text: String) -> Bool? { text.contains("FileVault is On") ? true : text.contains("FileVault is Off") ? false : nil }

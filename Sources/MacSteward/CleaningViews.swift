@@ -1,6 +1,22 @@
 import SwiftUI
 import MacStewardCore
 
+/// Under every permanent-delete confirmation: what is left on the disk afterwards. Overwriting files is not offered:
+/// on an SSD with APFS it doesn't reach the old blocks; FileVault is what keeps deleted data unreadable.
+struct DeletionNote: View {
+    @State private var facts: (fileVault: Bool?, localSnapshots: Bool)?
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if let facts {
+                if facts.fileVault == true { Label("FileVault is on: deleted data stays encrypted on the disk, so others can't read it.", systemImage: "lock.shield").foregroundStyle(.secondary) }
+                if facts.fileVault == false { Label("FileVault is off: deleted data can stay readable on the disk until macOS reuses the space. Turn on FileVault in System Settings to protect it.", systemImage: "lock.open").foregroundStyle(.orange) }
+                if facts.localSnapshots { Label("Time Machine keeps local snapshots of this disk, so some space comes back only when they expire, usually within a day.", systemImage: "clock.arrow.circlepath").foregroundStyle(.secondary) }
+            }
+        }.stewardFont(.callout).fixedSize(horizontal: false, vertical: true)
+        .task { facts = await Task.detached(priority: .userInitiated) { SystemAudit.deletionFacts() }.value }
+    }
+}
+
 /// Replaces the system dialog: readable on the dark glass window, with a summary of what goes.
 /// A ticked Cleanup tile that isn't a scan finding: the Trash, browser caches or worktrees.
 struct CleanExtra: Identifiable {
@@ -87,6 +103,7 @@ struct CleanConfirmSheet: View {
                 .stewardFont(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             Label("Deleted permanently after you confirm", systemImage: "exclamationmark.triangle")
                 .stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+            DeletionNote()
             HStack(spacing: 12) {
                 Button("Cancel") { dismiss() }.keyboardShortcut(.cancelAction)
                     .buttonStyle(CleanupGlassButtonStyle(secondary: true))

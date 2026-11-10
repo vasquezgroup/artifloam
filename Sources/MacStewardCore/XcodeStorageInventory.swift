@@ -119,7 +119,7 @@ public enum XcodeStorageInventory {
     /// Rechecks a ticked folder right before deleting it for good.
     static func trash(_ finding: Finding, configuration: Configuration, activity: ActivitySnapshot) throws {
         let url = URL(fileURLWithPath: finding.path)
-        guard finding.rule == trashRule, trashable(url, home: configuration.home) else { throw StewardError.blocked(String(localized: "Not an Xcode folder Artifloam moves. Use Finder.")) }
+        guard finding.rule == trashRule, trashable(url, home: configuration.home) else { throw StewardError.blocked(String(localized: "Not an Xcode folder Artifloam deletes. Use Finder.")) }
         guard !configuration.ignoredPaths.contains(where: { url.path == $0 || url.path.hasPrefix($0 + "/") }) else { throw StewardError.blocked(String(localized: "Path is on the ignore list")) }
         guard activity.reliable else { throw StewardError.blocked(String(localized: "Cannot verify running processes and open files")) }
         guard !activity.isActive(url) else { throw StewardError.blocked(String(localized: "A running process uses this folder")) }

@@ -26,6 +26,7 @@ struct TrashReviewSheet: View {
         VStack(alignment: .leading, spacing: 16) {
             Label(outcomes == nil ? "Review before deleting" : "Results", systemImage: "trash").stewardFont(.title2, weight: .semibold)
             Text("Deletes them permanently. They can't be put back, so check the list first.").stewardFont(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            if outcomes == nil { DeletionNote() }
             if cloudWarning { Label("Deleting cloud-backed files can also remove them from the cloud and your other devices. This does not mean ‘remove local download’.", systemImage: "icloud").stewardFont(.body).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true) }
             if candidates.contains(where: \.isDirectory) { Text("Selected folders include everything inside them, including files not shown in a partial map.").stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true) }
             if allowApplications { Text("Only the application bundle is deleted. Documents, subscriptions and support data are kept. Running apps must be quit by you first.").stewardFont(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true) }
