@@ -1003,9 +1003,7 @@ struct MainView: View {
     }
     /// Kept only because a process has it open: Git found nothing that would be lost, so a click unlocks and ticks it.
     private func unlockButton(_ finding: Finding) -> some View {
-        Button { m.unlock(finding) } label: { Image(systemName: "lock.fill").stewardFont(.body).foregroundStyle(.orange).frame(width: 15) }
-            .buttonStyle(.plain).disabled(m.busy)
-            .help("Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder.")
+        UnlockButton(disabled: m.busy) { m.unlock(finding) }
     }
     private func usage(_ finding: Finding) -> String {
         guard let used = finding.lastUsedAt else { return String(localized: "No agent session in 90 days") }
@@ -1440,4 +1438,25 @@ private func firstSentence(_ text: String) -> String {
         stop = true
     }
     return first
+}
+
+/// A lock that can be opened: on hover it morphs into an open lock with a small bounce, so it reads as a button.
+struct UnlockButton: View {
+    var disabled = false
+    let action: () -> Void
+    @State private var hovered = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: hovered && !disabled ? "lock.open.fill" : "lock.fill")
+                .font(.system(size: 17, weight: .semibold)).foregroundStyle(hovered && !disabled ? Color.mint : .orange)
+                .contentTransition(reduceMotion ? .identity : .symbolEffect(.replace.downUp.byLayer))
+                .symbolEffect(.bounce.up, options: .speed(1.4), value: reduceMotion ? false : hovered)
+                .frame(width: 22, height: 22).contentShape(Rectangle())
+        }
+        .buttonStyle(.plain).disabled(disabled)
+        .onHover { inside in withAnimation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.6)) { hovered = inside } }
+        .help("Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder.")
+        .accessibilityLabel("Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder.")
+    }
 }
