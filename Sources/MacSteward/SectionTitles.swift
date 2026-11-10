@@ -27,6 +27,7 @@ func sectionTitle(_ section: String) -> String {
     case "Automation": return String(localized: "Automation", comment: "Settings tab: scheduled cleanup")
     case "Activity": return String(localized: "Activity", comment: "Settings tab: receipts of past cleanups")
     case "Memory": return String(localized: "Memory", comment: "Section: RAM")
+    case "Processes": return String(localized: "Processes")
     case "Large & old files": return String(localized: "Large & old files")
     case "App removal": return String(localized: "App removal")
     case "Junk cleanup": return String(localized: "Junk cleanup")

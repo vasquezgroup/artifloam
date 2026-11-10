@@ -113,8 +113,8 @@ struct IssuePoint: View {
     private var row: some View {
         HStack(alignment: .center, spacing: 14) {
             GlossyPoint(icon: icon, text: "", accent: .orange).fixedSize()
-            // Up to two lines, never cut; the icon stays centred on the text and the pill keeps its single line.
-            Text(issue.title).font(.system(size: 16 * textScale, weight: .semibold)).foregroundStyle(.white.opacity(0.95)).lineLimit(2)
+            // Wraps instead of cutting; the icon stays centred on the text and the pill keeps its single line.
+            Text(issue.title).font(.system(size: 16 * textScale, weight: .semibold)).foregroundStyle(.white.opacity(0.95))
                 .fixedSize(horizontal: false, vertical: true).layoutPriority(1)
                 .help(issue.flag)
             Text("+\(issue.points)").font(.system(size: 12 * textScale, weight: .semibold)).monospacedDigit()

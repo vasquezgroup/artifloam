@@ -58,6 +58,8 @@ cat > "$steward_app/Contents/Info.plist" <<'PLIST'
 <key>NSDownloadsFolderUsageDescription</key><string>Find large files and exact duplicates in Downloads. Nothing is deleted until you choose it.</string>
 </dict></plist>
 PLIST
+# The commit, shown by local builds in the sidebar so a test copy is never mistaken for the installed one.
+/usr/libexec/PlistBuddy -c "Add :ArtifloamBuildCommit string $(git rev-parse --short HEAD 2>/dev/null || print unknown)$(git diff --quiet 2>/dev/null || print +)" "$steward_app/Contents/Info.plist"
 # Only an official release checks for updates; forks and local builds connect to nothing.
 if [[ "${ARTIFLOAM_OFFICIAL_BUILD:-}" == 1 ]]; then
   /usr/libexec/PlistBuddy -c 'Add :ArtifloamOfficialBuild bool true' "$steward_app/Contents/Info.plist"

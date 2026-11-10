@@ -185,4 +185,11 @@ final class SafetyTests: XCTestCase {
         XCTAssertTrue(FileManager.default.fileExists(atPath: recent.path))
         XCTAssertTrue(FileManager.default.fileExists(atPath: other.path), "only receipts are touched")
     }
+    func testProcessListParsesPathsWithSpacesAndNamesTheirApp() {
+        let rows = ProcessList.parse("  36718   501   2,5  10240 /Applications/Claude.app/Contents/Helpers/disclaimer\n    1     0   0.0   8192 /sbin/launchd\n  400   501   0.1   2048 /Applications/My Tool.app/Contents/MacOS/My Tool\ngarbage line\n")
+        XCTAssertEqual(rows.map(\.pid), [36718, 1, 400])
+        XCTAssertEqual(rows[0].appName, "Claude"); XCTAssertEqual(rows[0].memory, 10_485_760); XCTAssertEqual(rows[0].cpu, 2.5)
+        XCTAssertEqual(rows[2].path, "/Applications/My Tool.app/Contents/MacOS/My Tool"); XCTAssertEqual(rows[2].appName, "My Tool")
+        XCTAssertTrue(rows[1].isSystem); XCTAssertFalse(ProcessList.endable(rows[1]), "launchd and other users' processes stay")
+    }
 }

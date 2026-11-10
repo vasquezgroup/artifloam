@@ -552,6 +552,10 @@ struct MainView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("\(formattedBytes(m.disk.free)) free").stewardFont(.callout, weight: .medium)
                     Text("On your Mac").stewardFont(.caption).foregroundStyle(muted)
+                    // A local build names its commit, so it can't be mistaken for the installed copy.
+                    if Bundle.main.object(forInfoDictionaryKey: "ArtifloamOfficialBuild") as? Bool != true, let commit = Bundle.main.object(forInfoDictionaryKey: "ArtifloamBuildCommit") as? String {
+                        Text("Test build \(commit)").stewardFont(.caption, design: .monospaced).foregroundStyle(.orange)
+                    }
                 }.padding(.horizontal, 9).padding(.top, 23).transition(.opacity)
             }
         }.padding(.horizontal, 16).padding(.top, 20).padding(.bottom, 23)
@@ -686,7 +690,7 @@ struct MainView: View {
         }.frame(maxWidth: .infinity).padding(.bottom, isStage ? max(130 + (textScale - 1) * 50, stageControlsHeight - 60) : 0)
     }
     private var showsFooter: Bool {
-        !isStage && m.cleaning == nil && stageRemoval == nil && !["Space Map", "Memory", "Tools", "Settings", "Large & old files", "App removal", "Login & background items", "Performance", "Applications", "Trash bins", "Leftovers", "Browser data", "Status", "Browsers", "iPhone"].contains(m.section) && !(m.section == "My Clutter" && clutterTab != "Duplicates")
+        !isStage && m.cleaning == nil && stageRemoval == nil && !["Space Map", "Memory", "Processes", "Tools", "Settings", "Large & old files", "App removal", "Login & background items", "Performance", "Applications", "Trash bins", "Leftovers", "Browser data", "Status", "Browsers", "iPhone"].contains(m.section) && !(m.section == "My Clutter" && clutterTab != "Duplicates")
             // The Cleanup summary has its own Remove selected, which also takes browsers and the Trash: one button, not two.
             && !(m.section == "Cleanup" && !cleanupReviewing)
     }
@@ -766,6 +770,7 @@ struct MainView: View {
         case "Photos": PhotosModuleView()
         case "Status": StatusView(state: m.status, memory: m.memory)
         case "Memory": MemoryView(monitor: m.memory)
+        case "Processes": ProcessesView()
         case "My Clutter": module("My Clutter", String(localized: "Duplicates across your home folder and large, old files."), tabs: ["Duplicates", "Large & old files"], selection: $clutterTab, summary: clutterSummary, scanAll: scanClutter) {
             if clutterTab == "Duplicates" { duplicatesDetails } else { LargeFilesView(location: m.largeFileLocation, state: m.largeFiles) }
         }

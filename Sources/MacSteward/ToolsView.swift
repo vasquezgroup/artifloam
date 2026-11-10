@@ -13,6 +13,7 @@ struct ToolsView: View {
             case "Worktrees": return String(localized: "Worktrees")
             case "Duplicates": return String(localized: "Duplicates")
             case "Memory": return String(localized: "Memory")
+            case "Processes": return String(localized: "Processes")
             case "Space Map": return String(localized: "Space Map")
             case "Large & old files": return String(localized: "Large & old files")
             case "App removal": return String(localized: "App removal")
@@ -31,6 +32,7 @@ struct ToolsView: View {
         Tool(id: "Worktrees", icon: "arrow.triangle.branch", detail: String(localized: "See which Claude Code and Codex checkouts are in use. Delete finished, merged ones."), action: String(localized: "Scan", comment: "Button: scan with this tool")),
         Tool(id: "Duplicates", icon: "square.on.square", detail: String(localized: "Find exact copies across your home folder by content. Keep one, delete the rest."), action: String(localized: "Scan", comment: "Button: scan with this tool")),
         Tool(id: "Memory", icon: "memorychip", detail: String(localized: "Live pressure, swap and app footprints. Release RAM by quitting apps you choose."), action: String(localized: "Open memory")),
+        Tool(id: "Processes", icon: "list.bullet.rectangle", detail: String(localized: "See every program running on your Mac and the app it belongs to. Quit the ones you choose."), action: String(localized: "Show processes")),
         Tool(id: "Space Map", icon: "magnifyingglass", detail: String(localized: "Explore the folders and large files taking up space on your Mac."), action: String(localized: "Explore storage")),
         Tool(id: "Large & old files", icon: "doc.text.magnifyingglass", detail: String(localized: "Find large files and older downloads. Review sizes and dates before deleting your selection."), action: String(localized: "Find large files")),
         Tool(id: "App removal", icon: "app.badge", detail: String(localized: "Review installed apps and delete the ones you choose. Running and system apps stay protected."), action: String(localized: "Review apps")),
