@@ -12,7 +12,7 @@ struct FullDiskGate: View {
     private var perks: [(String, String)] { [("trash", String(localized: "The whole Trash, folders included")), ("safari", String(localized: "Safari, Mail and other browser data")), ("lock.open", String(localized: "Protected app folders"))] }
     private var glow: Color { unlocked ? .mint : theme.accent }
 
-    /// A slowly turning ring and sparks around the shield, like an item waiting to be unlocked.
+    /// The 3D shield, turning, inside a slowly turning ring and sparks, like an item waiting to be unlocked.
     private var artwork: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 30, paused: reduceMotion)) { timeline in
             let time = reduceMotion ? 0 : timeline.date.timeIntervalSinceReferenceDate
@@ -30,12 +30,9 @@ struct FullDiskGate: View {
                         .shadow(color: glow, radius: 6).opacity(0.55 + sin(time * 2 + Double(index)) * 0.4)
                         .offset(x: cos(angle) * reach, y: sin(angle) * reach)
                 }
-                if let shield = StewardArtwork.images["symbol-system"] {
-                    Image(nsImage: shield).resizable().interpolation(.high).frame(width: 156, height: 156)
-                        .shadow(color: glow.opacity(0.7), radius: 26).offset(y: sin(time * 1.1) * 4)
-                }
+                ScanMovieArtwork(animated: true, asset: "sculpture-motion-system").frame(width: 184, height: 184)
                 Image(systemName: unlocked ? "checkmark.circle.fill" : "lock.circle.fill").font(.system(size: 42)).symbolRenderingMode(.palette)
-                    .foregroundStyle(.white, unlocked ? Color.mint : theme.vivid).shadow(color: .black.opacity(0.4), radius: 6, y: 3).offset(x: 62, y: 58)
+                    .foregroundStyle(.white, unlocked ? Color.mint : theme.vivid).shadow(color: .black.opacity(0.4), radius: 6, y: 3).offset(x: 70, y: 66)
                     .scaleEffect(unlocked ? 1.15 : 1).animation(reduceMotion ? nil : .spring(response: 0.4, dampingFraction: 0.55), value: unlocked)
             }.frame(width: 300, height: 280)
         }.accessibilityHidden(true)
@@ -50,6 +47,7 @@ struct FullDiskGate: View {
         ZStack {
             LinearGradient(colors: [theme.backdrop.deep.opacity(0.96), theme.backdrop.mid.opacity(0.9)], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
                 .contentShape(Rectangle()).onTapGesture { }
+            GeometryReader { window in
             ScrollView {
                 HStack(alignment: .center, spacing: 34) {
                     artwork
@@ -91,8 +89,9 @@ struct FullDiskGate: View {
                             }.buttonStyle(.plain).stewardFont(.caption).foregroundStyle(.white.opacity(0.6))
                         }
                     }.frame(maxWidth: 440, alignment: .leading)
-                }.padding(34).frame(maxWidth: .infinity, alignment: .center)
+                }.padding(34).frame(maxWidth: .infinity, minHeight: window.size.height, alignment: .center)
             }.scrollBounceBehavior(.basedOnSize).defaultScrollAnchor(.center)
+            }
         }
         .transition(.opacity)
         .task(id: waiting) {
