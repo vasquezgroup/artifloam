@@ -57,13 +57,13 @@ struct DuplicatesView: View {
             }
             HStack(spacing: 10) {
                 Button { trash(DuplicateGroup.trashable(m.extraCopies(m.duplicates), in: m.duplicates)) } label: {
-                    Label("Trash all extra copies · \(formattedBytes(bytes))", systemImage: "trash")
+                    Label("Delete all extra copies · \(formattedBytes(bytes))", systemImage: "trash")
                 }.buttonStyle(CleanupGlassButtonStyle()).disabled(m.busy)
-                    .help("Keeps the oldest copy in every group and reviews the rest before they move to the Trash.")
+                    .help("Keeps the oldest copy in every group and reviews the rest before they're deleted.")
                 Spacer()
                 Button("Scan again") { m.scanDuplicates() }.buttonStyle(.plain).foregroundStyle(muted).disabled(m.busy)
             }.stewardFont(.body, weight: .semibold)
-            Label("Matched by content (SHA-256), not by file name. One copy always stays, and the Trash lets you put files back.", systemImage: "checkmark.shield")
+            Label("Matched by content (SHA-256), not by file name. One copy always stays; the others are deleted permanently.", systemImage: "checkmark.shield")
                 .stewardFont(.caption).foregroundStyle(muted)
         }
     }
@@ -84,7 +84,7 @@ struct DuplicatesView: View {
             SmartSelectButton(enabled: !m.busy && groups.contains { $0.extraCount > 0 }, help: String(localized: "Ticks the extra copies outside your projects and keeps one copy of each. Copies inside a project stay unticked.")) {
                 groups.forEach { setTicked($0, $0.extraCount > 0) }
             }
-            Button("Trash \(ticked.count)…") { trash(ticked) }
+            Button("Delete \(ticked.count)…") { trash(ticked) }
                 .buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(ticked.isEmpty || m.busy)
         }
     }
@@ -121,9 +121,9 @@ struct DuplicatesView: View {
                         Text(group.extraCount > 0 ? String(localized: "\(formattedBytes(group.potentialBytes)) extra") : String(localized: "Your choice")).stewardFont(.callout, weight: .semibold).foregroundStyle(.mint).monospacedDigit()
                     }.contentShape(Rectangle())
                 }.buttonStyle(.plain)
-                Button("Keep 1, trash \(group.extraCount)") { trash(DuplicateGroup.trashable(m.extraCopies([group]), in: [group])) }
+                Button("Keep 1, delete \(group.extraCount)") { trash(DuplicateGroup.trashable(m.extraCopies([group]), in: [group])) }
                     .buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).disabled(m.busy || group.extraCount == 0)
-                    .help("Keeps the oldest copy and reviews the others before they move to the Trash.")
+                    .help("Keeps the oldest copy and reviews the others before they're deleted.")
             }.padding(.horizontal, 14).frame(height: 56)
             if open {
                 Divider().overlay(.white.opacity(0.08))
@@ -145,7 +145,7 @@ struct DuplicatesView: View {
                     }
                     Text(path.replacingOccurrences(of: NSHomeDirectory(), with: "~").displaySafe).stewardFont(.caption, design: .monospaced).foregroundStyle(muted).lineLimit(1).truncationMode(.middle)
                 }
-            }.toggleStyle(.stewardCheckbox).disabled(lastKept).help(lastKept ? "One copy always stays" : ticked ? "Moves to the Trash" : "Kept")
+            }.toggleStyle(.stewardCheckbox).disabled(lastKept).help(lastKept ? "One copy always stays" : ticked ? "Will be deleted" : "Kept")
             Spacer(minLength: 8)
             if lastKept { Text("Kept").stewardFont(.caption, weight: .semibold).foregroundStyle(.mint) }
             Button("Preview") { preview = URL(fileURLWithPath: path) }.buttonStyle(.plain).stewardFont(.caption, weight: .semibold).foregroundStyle(muted)

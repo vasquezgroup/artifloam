@@ -3,11 +3,11 @@ import AppKit
 import os
 import MacStewardCore
 
-/// The words a stage uses: Trash moves, emptying the Trash, browser data and worktrees each have their own.
+/// The words a stage uses: deleting reviewed items, emptying the Trash, browser data and worktrees each have their own.
 struct StageCopy: Equatable {
     let working: String
     let done: String
-    /// Under the byte counter: "moved to the Trash", "freed"…
+    /// Under the byte counter: "freed", "memory freed"…
     let amount: String
     /// Shown after the result, e.g. how to undo.
     let note: String?
@@ -15,7 +15,7 @@ struct StageCopy: Equatable {
     enum Unit: Equatable { case items, apps }
     var unit = Unit.items
     // Computed so the words follow the app language each time a stage starts.
-    static var trash: StageCopy { StageCopy(working: String(localized: "Moving to the Trash…"), done: String(localized: "Cleanup complete"), amount: String(localized: "moved to the Trash", comment: "Under a byte counter: how much was moved"), note: String(localized: "Put Back in Finder restores them.")) }
+    static var trash: StageCopy { StageCopy(working: String(localized: "Deleting…"), done: String(localized: "Cleanup complete"), amount: String(localized: "freed", comment: "Under a byte counter: how much space was freed"), note: nil) }
     static var emptyTrash: StageCopy { StageCopy(working: String(localized: "Emptying the Trash…"), done: String(localized: "Trash emptied"), amount: String(localized: "freed", comment: "Under a byte counter: how much space was freed"), note: nil) }
     static var browsers: StageCopy { StageCopy(working: String(localized: "Cleaning browser data…"), done: String(localized: "Browser data cleaned"), amount: String(localized: "freed", comment: "Under a byte counter: how much space was freed"), note: String(localized: "Browsers rebuild caches as you browse.")) }
     static var quitApps: StageCopy { StageCopy(working: String(localized: "Quitting idle apps…"), done: String(localized: "Idle apps quit"), amount: String(localized: "memory freed", comment: "Under a byte counter: memory freed by quitting apps"), note: nil, unit: .apps) }
@@ -89,7 +89,7 @@ extension StewardModel {
             completed(outcome)
         }
     }
-    /// Moves reviewed items to the Trash on the stage.
+    /// Deletes reviewed items for good on the stage.
     func startRemoval(_ candidates: [TrashCandidate], allowApplications: Bool, allowLeftovers: Bool, duplicateGroups: [DuplicateGroup] = [], completed: @escaping ([TrashOutcome]) -> Void) {
         guard !candidates.isEmpty else { return }
         let box = OutcomeBox()

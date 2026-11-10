@@ -81,7 +81,7 @@ struct LargeFilesView: View {
                     let chosen = files.filter { selection.contains($0.id) }
                     BulkBar(title: String(localized: "Select all", comment: "Checkbox: select every item in the list"), isOn: Binding(get: { chosen.count == files.count }, set: { if $0 { state.selection.formUnion(files.map(\.id)) } else { state.selection.subtract(files.map(\.id)) } }), enabled: task == nil,
                             summary: String(localized: "\(chosen.count) selected · \(formattedBytes(chosen.reduce(0) { $0 + $1.localBytes }))")) {
-                        Button("Review \(chosen.count) for Trash…", role: .destructive) { trashRequest = TrashRequest(urls: chosen.map(\.url)) }
+                        Button("Delete \(chosen.count)…", role: .destructive) { trashRequest = TrashRequest(urls: chosen.map(\.url)) }
                             .buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(chosen.isEmpty || task != nil)
                     }
                 }
@@ -109,7 +109,7 @@ struct LargeFilesView: View {
             if let error = state.error { Text(error).stewardFont(.body).foregroundStyle(.orange) }
         }.sheet(item: $trashRequest) { request in
             TrashReviewSheet(urls: request.urls) { results in
-                note = String(localized: "\(results.filter { $0.error == nil }.count) moved to Trash. Restore in Finder with Put Back.")
+                note = String(localized: "Deleted: \(results.filter { $0.error == nil }.count).")
                 state.selection.removeAll(); scan()
             }
         }.onChange(of: location.url) { _, _ in state.reset() }
@@ -151,7 +151,7 @@ struct AppRemovalView: View {
         let shown = matches.filter { removable($0) && (!search.isEmpty || open.contains(AppUsageAge(lastUsed: $0.lastUsed))) }.map(\.id)
         let groups = Dictionary(grouping: matches) { AppUsageAge(lastUsed: $0.lastUsed) }
         return VStack(alignment: .leading, spacing: 16) {
-            ToolHeading(title: "Uninstaller", detail: "Move apps you no longer use to the Trash. Your documents and support data stay in place.")
+            ToolHeading(title: "Uninstaller", detail: "Delete apps you no longer use. Your documents and support data stay in place.")
             HStack(spacing: 12) {
                 ForEach(AppUsageAge.allCases) { age in
                     CountCard(count: groups[age]?.count ?? 0, title: age.title, active: open.contains(age), help: String(localized: "Show apps last used: \(age.title)")) { open = [age] }
@@ -164,7 +164,7 @@ struct AppRemovalView: View {
             if let note { Text(note).foregroundStyle(.mint) }
             BulkBar(title: String(localized: "Select all shown"), isOn: Binding(get: { !shown.isEmpty && selection.isSuperset(of: shown) }, set: { if $0 { selection.formUnion(shown) } else { selection.subtract(shown) } }), enabled: !shown.isEmpty,
                     help: String(localized: "Apps in the open sections. Running apps, Apple apps and Artifloam stay protected."), summary: String(localized: "\(selection.count) selected")) {
-                Button("Move \(selection.count) to Trash…", role: .destructive) { trashRequest = TrashRequest(urls: apps.filter { selection.contains($0.id) && removable($0) }.map(\.url)) }
+                Button("Delete \(selection.count)…", role: .destructive) { trashRequest = TrashRequest(urls: apps.filter { selection.contains($0.id) && removable($0) }.map(\.url)) }
                     .buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(selection.isEmpty)
             }
             if matches.isEmpty && !apps.isEmpty { Text("No apps match this search.").foregroundStyle(.secondary) }
@@ -175,7 +175,7 @@ struct AppRemovalView: View {
         }.onAppear { refresh() }
         .sheet(item: $trashRequest) { request in
             TrashReviewSheet(urls: request.urls, allowApplications: true) { results in
-                note = String(localized: "\(results.filter { $0.error == nil }.count) app bundles moved to Trash. Restore in Finder with Put Back."); refresh()
+                note = String(localized: "App bundles deleted: \(results.filter { $0.error == nil }.count)."); refresh()
             }
         }
     }

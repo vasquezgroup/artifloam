@@ -636,7 +636,7 @@ struct MainView: View {
             } else {
                 title = String(localized: "What removed apps left behind.")
                 subtitle = String(localized: "Support files, caches and settings from apps you no longer have.")
-                points = [("shippingbox", String(localized: "Grouped by app")), ("exclamationmark.triangle", String(localized: "Possibly shared files stay unticked")), ("arrow.uturn.backward", String(localized: "Everything goes to the Trash first"))]
+                points = [("shippingbox", String(localized: "Grouped by app")), ("exclamationmark.triangle", String(localized: "Possibly shared files stay unticked")), ("trash", String(localized: "Deleted permanently after you confirm"))]
             }
         case "System":
             title = String(localized: "Know where your Mac stands.")

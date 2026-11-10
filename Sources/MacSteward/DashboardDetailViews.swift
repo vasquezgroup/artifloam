@@ -252,7 +252,7 @@ private struct StorageDetailView: View {
                     StatTile(title: String(localized: "Used", comment: "Disk space in use"), value: formattedBytes(used), note: String(localized: "\(Int((fraction * 100).rounded()))% of the disk"))
                     StatTile(title: String(localized: "Available for apps"), value: important.map(formattedBytes) ?? "—", note: String(localized: "Includes space macOS can free on its own (purgeable)."))
                 }
-                Text(fraction > 0.9 ? "Under 10% free: macOS slows down and updates may fail. Start with the biggest items." : "Find what takes the most room, then review it before anything moves to the Trash.")
+                Text(fraction > 0.9 ? "Under 10% free: macOS slows down and updates may fail. Start with the biggest items." : "Find what takes the most room, then review it before anything is deleted.")
                     .font(.system(size: 13)).foregroundStyle(fraction > 0.9 ? .orange : .white.opacity(0.65)).fixedSize(horizontal: false, vertical: true)
                 VStack(spacing: 6) {
                     action("See what uses space", icon: "chart.pie.fill", section: "Space Map")

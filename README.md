@@ -41,7 +41,7 @@ So I built Artifloam. It started as a small tool for my own Mac, and it's still 
 | Area | What it does |
 | --- | --- |
 | **Cleanup** | Caches, logs, build output, finished worktrees and the Trash |
-| **My Clutter** | Exact duplicates and large or old files, moved to the Trash after review |
+| **My Clutter** | Exact duplicates and large or old files, deleted permanently after review |
 | **Performance** | Memory use, choosing which idle apps to quit, login and background items |
 | **Applications** | Uninstalling apps and finding their leftovers |
 | **Browsers** | Rebuildable browser caches, kept separate from sign-ins and history |

@@ -4,7 +4,7 @@ import Foundation
 /// cleanup. Folders in ~/Library/Developer/Xcode can be ticked by the person, flagged when risky or
 /// recently used, and go to the Trash. Simulator runtimes stay with Xcode.
 public enum XcodeStorageInventory {
-    /// Ticked by the person and moved to the Trash; see `trash`.
+    /// Ticked by the person and deleted for good; see `trash`.
     public static let trashRule = "xcode-reviewed-trash"
     /// Ticked by the person one at a time and deleted by `simctl`; never part of automatic cleanup.
     public static let simulatorRule = "unused-simulator"
@@ -70,7 +70,7 @@ public enum XcodeStorageInventory {
             rows.append(Finding(path: url.path, group: .xcode, bytes: bytes, modifiedAt: modified, safety: safety, reason: reason, rule: rule, fingerprint: "review-only", warnings: warnings.isEmpty ? nil : warnings))
         }
         for url in children(home.appendingPathComponent("Library/Developer/Xcode/Archives")) {
-            add(url, reason: String(localized: "Release archives from Xcode Organizer. Moves to the Trash."), flag: String(localized: "May hold the only signed build and debug symbols of a release."))
+            add(url, reason: String(localized: "Release archives from Xcode Organizer. Deleted permanently."), flag: String(localized: "May hold the only signed build and debug symbols of a release."))
         }
         for url in children(home.appendingPathComponent("Library/Developer/Xcode/iOS DeviceSupport")) {
             add(url, reason: String(localized: "Device support for one iOS version. Xcode rebuilds it the next time you connect a device with it."))
@@ -116,7 +116,7 @@ public enum XcodeStorageInventory {
         if path.lastPathComponent == "Products", parent.lastPathComponent == "Build" { return parent.deletingLastPathComponent().deletingLastPathComponent().path == xcode + "/DerivedData" }
         return false
     }
-    /// Rechecks a ticked folder right before moving it to the Trash, where the person can restore it.
+    /// Rechecks a ticked folder right before deleting it for good.
     static func trash(_ finding: Finding, configuration: Configuration, activity: ActivitySnapshot) throws {
         let url = URL(fileURLWithPath: finding.path)
         guard finding.rule == trashRule, trashable(url, home: configuration.home) else { throw StewardError.blocked(String(localized: "Not an Xcode folder Artifloam moves. Use Finder.")) }
@@ -125,7 +125,7 @@ public enum XcodeStorageInventory {
         guard !activity.isActive(url) else { throw StewardError.blocked(String(localized: "A running process uses this folder")) }
         var info = stat()
         guard lstat(url.path, &info) == 0, info.st_uid == getuid(), info.st_mode & S_IFMT == S_IFDIR else { throw StewardError.blocked(String(localized: "Folder changed or belongs to another user; scan again")) }
-        try FileManager.default.trashItem(at: url, resultingItemURL: nil)
+        try FileManager.default.removeItem(at: url)
     }
     /// Installed runtimes are read-only and never change, but measuring one takes seconds (about 6 s for watchOS),
     /// so each is measured once per path and modification date. v2: sizes from before the symlink fix in directoryBytes were too small.

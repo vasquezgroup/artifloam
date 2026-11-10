@@ -47,7 +47,7 @@ public final class Cleaner {
                 if finding.rule == XcodeStorageInventory.trashRule {
                     guard approvedIDs.contains(finding.id) else { throw StewardError.blocked(String(localized: "Only folders you ticked are moved")) }
                     try XcodeStorageInventory.trash(finding, configuration: configuration, activity: activity)
-                    items.append(CleanupItem(path: finding.path, outcome: "removed", detail: String(localized: "Moved to Trash. \(finding.reason)"), bytes: finding.bytes)); continue
+                    items.append(CleanupItem(path: finding.path, outcome: "removed", detail: finding.reason, bytes: finding.bytes)); continue
                 }
                 if finding.rule == XcodeStorageInventory.simulatorRule {
                     guard approvedIDs.contains(finding.id) else { throw StewardError.blocked(String(localized: "Only simulators you ticked are removed")) }

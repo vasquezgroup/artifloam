@@ -2,8 +2,8 @@ import Foundation
 import Darwin
 import AppKit
 
-/// A review captures identity and metadata; Trash revalidates them immediately
-/// before asking macOS to perform a recoverable move. Never escalates privileges.
+/// A review captures identity and metadata; deleting revalidates them immediately before removing
+/// the item for good. Nothing goes to the Trash. Never escalates privileges.
 public struct TrashCandidate: Identifiable, Sendable {
     public var id: String { url.path }
     public let url: URL
@@ -23,7 +23,7 @@ public enum ReviewedTrash {
         guard lstat(url.path, &value) == 0 else { throw StewardError.blocked(String(localized: "This item is no longer accessible. Refresh and review again.")) }
         guard value.st_mode & S_IFMT != S_IFLNK else { throw StewardError.blocked(String(localized: "Symbolic links cannot be removed here. Reveal the item in Finder.")) }
         let kind = value.st_mode & S_IFMT
-        guard kind == S_IFDIR || kind == S_IFREG else { throw StewardError.blocked(String(localized: "Only ordinary files and folders can be moved to Trash here.")) }
+        guard kind == S_IFDIR || kind == S_IFREG else { throw StewardError.blocked(String(localized: "Only ordinary files and folders can be deleted here.")) }
         return ("\(value.st_dev):\(value.st_ino):\(value.st_gen):\(value.st_size):\(value.st_mtimespec.tv_sec):\(value.st_mtimespec.tv_nsec):\(value.st_ctimespec.tv_sec):\(value.st_ctimespec.tv_nsec)", kind == S_IFDIR)
     }
     static let credentialFolders: Set<String> = [".ssh", ".gnupg", ".aws", ".azure", ".kube", ".docker", ".config", ".password-store", ".gcloud", ".trash"]
@@ -90,11 +90,10 @@ public enum ReviewedTrash {
     public static func move(_ candidates: [TrashCandidate], home: URL = FileManager.default.homeDirectoryForCurrentUser, allowApplications: Bool = false, allowLeftovers: Bool = false, duplicateGroups: [DuplicateGroup] = [],
                             progress: (@Sendable (Int, UInt64, String) -> Void)? = nil, shouldStop: @Sendable () -> Bool = { false }) -> [TrashOutcome] {
         let results = move(candidates, home: home, allowApplications: allowApplications, allowLeftovers: allowLeftovers, duplicateGroups: duplicateGroups, progress: progress, shouldStop: shouldStop) { url in
-            var result: NSURL?
             let running = NSWorkspace.shared.runningApplications.compactMap(\.bundleURL)
             guard !running.contains(where: { $0.path == url.path || $0.path.hasPrefix(url.path + "/") || url.path.hasPrefix($0.path + "/") }) else { throw StewardError.blocked(String(localized: "A selected item is used by a running app. Quit it yourself and review again.")) }
-            try FileManager.default.trashItem(at: url, resultingItemURL: &result)
-            return result?.path
+            try FileManager.default.removeItem(at: url)
+            return nil
         }
         let folder = home.appendingPathComponent("Library/Application Support/MacSteward/TrashReceipts")
         if (try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])) != nil {

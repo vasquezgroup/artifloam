@@ -218,7 +218,7 @@ struct LeftoversView: View {
     }
     private func heroSubtitle(leftovers: Int, apps: Int) -> String {
         let leftoversText = String(localized: "\(leftovers) leftovers"), appsText = String(localized: "\(apps) apps")
-        return String(localized: "\(leftoversText) from \(appsText). They go to the Trash first, so you can still put them back.")
+        return String(localized: "\(leftoversText) from \(appsText). They're deleted permanently after you confirm.")
     }
     var body: some View {
         let apps = AppLeftovers.grouped(items), safe = apps.filter { !$0.shared }, shared = apps.filter(\.shared)
@@ -243,7 +243,7 @@ struct LeftoversView: View {
                     SmartSelectButton(enabled: !safeItems.isEmpty && !state.busy, help: String(localized: "Ticks only leftovers of apps you no longer have, and unticks anything that may be shared with an app you still have.")) {
                         state.selection = Set(safeItems.map(\.id))
                     }
-                    Button("Review \(chosen.count) for Trash…", role: .destructive) { trashRequest = TrashRequest(urls: chosen.map(\.url)) }
+                    Button("Delete \(chosen.count)…", role: .destructive) { trashRequest = TrashRequest(urls: chosen.map(\.url)) }
                         .buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(chosen.isEmpty || state.busy)
                 }
                 if !safe.isEmpty {

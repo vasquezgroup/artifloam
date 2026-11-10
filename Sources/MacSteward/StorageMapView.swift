@@ -213,7 +213,7 @@ struct StorageMapView: View {
         .sheet(item: $trashRequest) { request in
             TrashReviewSheet(urls: request.urls) { results in
                 let moved = results.filter { $0.error == nil }.count
-                trashNote = String(localized: "\(moved) moved to Trash · \(results.count - moved) skipped. Restore items in Finder with Put Back.")
+                trashNote = String(localized: "Deleted: \(moved) · Skipped: \(results.count - moved).")
                 selection.removeAll(); map.refreshChanged(results.filter { $0.error == nil }.map { URL(fileURLWithPath: $0.path) })
             }
         }
@@ -286,7 +286,7 @@ struct StorageMapView: View {
         }.contextMenu {
             if !entry.isDirectory { Button("Preview") { preview = entry.url } }
             Button("Reveal in Finder") { model.reveal(entry.url.path) }
-            Button("Review Move to Trash…", role: .destructive) { trashRequest = TrashRequest(urls: [entry.url]) }.disabled(map.busy)
+            Button("Delete…", role: .destructive) { trashRequest = TrashRequest(urls: [entry.url]) }.disabled(map.busy)
         }
     }
     private func rowHelp(_ entry: StorageMapEntry) -> String {
@@ -391,8 +391,8 @@ struct StorageMapView: View {
                 layout {
                     VStack(alignment: .leading, spacing: 10) {
                         BulkBar(title: String(localized: "Select all", comment: "Checkbox: select every item in the list"), isOn: Binding(get: { !rows.isEmpty && selection.isSuperset(of: rows.map(\.id)) }, set: { if $0 { selection.formUnion(rows.map(\.id)) } else { selection.subtract(rows.map(\.id)) } }), enabled: !rows.isEmpty,
-                                help: String(localized: "Everything listed here. You review each item before it moves to the Trash."), summary: String(localized: "\(selection.count) selected")) {
-                            Button("Move \(selection.count) to Trash…", role: .destructive) { trashRequest = TrashRequest(urls: rows.filter { selection.contains($0.id) }.map(\.url)) }
+                                help: String(localized: "Everything listed here. You review each item before it's deleted."), summary: String(localized: "\(selection.count) selected")) {
+                            Button("Delete \(selection.count)…", role: .destructive) { trashRequest = TrashRequest(urls: rows.filter { selection.contains($0.id) }.map(\.url)) }
                                 .buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(selection.isEmpty)
                         }
                         Picker("Show", selection: $largestFiles) { Text("Contents").tag(false); Text("Largest files").tag(true) }.pickerStyle(.segmented)
@@ -418,7 +418,7 @@ struct StorageMapView: View {
                 Text(mapNote(snapshot))
                     .stewardFont(.caption).foregroundStyle(snapshot.limited || snapshot.unreadableCount > 0 ? Color.orange : .secondary)
                 Spacer()
-                Image(systemName: "info.circle").help("Stored on this Mac uses allocated file blocks; file size is logical length. The cloud total counts files represented in this map, not your full cloud account, and is not reclaimable local space. No cloud file contents are read or downloads requested. Hard links are counted once; APFS clones, shared storage and system-managed space can make free-space changes differ. Small bubbles keep a minimum clickable size. Mapping only reads metadata; moving an item to Trash requires a separate review.")
+                Image(systemName: "info.circle").help("Stored on this Mac uses allocated file blocks; file size is logical length. The cloud total counts files represented in this map, not your full cloud account, and is not reclaimable local space. No cloud file contents are read or downloads requested. Hard links are counted once; APFS clones, shared storage and system-managed space can make free-space changes differ. Small bubbles keep a minimum clickable size. Mapping only reads metadata; deleting an item requires a separate review.")
             }
         }
     }
@@ -526,7 +526,7 @@ private struct StorageBubbleMap: View {
                 }
                 ForEach(Array(packed(geometry.size).enumerated()), id: \.element.entry.id) { index, bubble in
                     StorageBubble(entry: bubble.entry, displayBytes: cloudSizing ? bubble.entry.cloudLogicalBytes : bubble.entry.bytes, cloudSizing: cloudSizing, diameter: bubble.radius * 2, index: index, eligibleBytes: eligible(bubble.entry.url)) { open(bubble.entry) }
-                        .contextMenu { Button("Reveal in Finder") { NSWorkspace.shared.activateFileViewerSelecting([bubble.entry.url]) }; Button("Review Move to Trash…", role: .destructive) { trash(bubble.entry) } }
+                        .contextMenu { Button("Reveal in Finder") { NSWorkspace.shared.activateFileViewerSelecting([bubble.entry.url]) }; Button("Delete…", role: .destructive) { trash(bubble.entry) } }
                         .position(bubble.center)
                         .transition(.opacity.combined(with: .scale(scale: reduceMotion ? 1 : 0.55)))
                 }
