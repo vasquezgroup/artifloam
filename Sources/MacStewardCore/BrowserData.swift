@@ -42,6 +42,7 @@ public struct BrowserReport: Identifiable, Sendable {
     public let items: [BrowserItem]
     /// false when macOS privacy settings hide the browser's folders (needs Full Disk Access).
     public let readable: Bool
+    public init(name: String, bundleID: String, items: [BrowserItem], readable: Bool) { self.name = name; self.bundleID = bundleID; self.items = items; self.readable = readable }
 }
 
 public enum BrowserData {
@@ -59,7 +60,9 @@ public enum BrowserData {
     static let profileCaches = [("Code Cache", "Code cache"), ("GPUCache", "GPU cache"), ("DawnGraphiteCache", "Graphics cache"), ("DawnWebGPUCache", "WebGPU cache")]
     static let rootCaches = [("GrShaderCache", "Shader cache", true), ("GraphiteDawnCache", "Graphite shader cache", true), ("component_crx_cache", "Component downloads", true), ("OptGuideOnDeviceModel", "On-device AI model", false)]
 
-    public static func scan(home: URL = FileManager.default.homeDirectoryForCurrentUser) -> [BrowserReport] {
+    public static func scan(home: URL = FileManager.default.homeDirectoryForCurrentUser, measure: Bool = true) -> [BrowserReport] {
+        // ponytail: `measure: false` only re-finds paths (clean checks they still exist); sizes then read .max and mean nothing.
+        let size: (URL) -> UInt64 = measure ? allocatedSize : { _ in .max }
         let support = home.appendingPathComponent("Library/Application Support"), caches = home.appendingPathComponent("Library/Caches")
         var reports = chromium.compactMap { browser -> BrowserReport? in
             let data = support.appendingPathComponent(browser.support)
@@ -69,7 +72,7 @@ public enum BrowserData {
             var items = [BrowserItem]()
             func add(_ url: URL, profile: String, kind: String, site: String? = nil, recommended: Bool) {
                 guard isRealDirectory(url) else { return }
-                let bytes = allocatedSize(url)
+                let bytes = size(url)
                 if bytes >= 100_000 { items.append(BrowserItem(url: url, browser: browser.name, profile: profile, kind: kind, site: site, bytes: bytes, recommended: recommended)) }
             }
             for (folder, kind, recommended) in rootCaches { add(data.appendingPathComponent(folder), profile: "All profiles", kind: kind, recommended: recommended) }
@@ -91,26 +94,26 @@ public enum BrowserData {
             }
             return BrowserReport(name: browser.name, bundleID: browser.bundleID, items: items.sorted { $0.bytes > $1.bytes }, readable: true)
         }
-        if let firefox = firefoxReport(support: support, caches: caches) { reports.append(firefox) }
+        if let firefox = firefoxReport(support: support, caches: caches, size: size) { reports.append(firefox) }
         let safari = caches.appendingPathComponent("com.apple.Safari")
         if FileManager.default.fileExists(atPath: safari.path) {
             let readable = (try? FileManager.default.contentsOfDirectory(atPath: safari.path)) != nil
-            let bytes = readable ? allocatedSize(safari) : 0
+            let bytes = readable ? size(safari) : 0
             reports.append(BrowserReport(name: "Safari", bundleID: "com.apple.Safari", items: bytes > 100_000 ? [BrowserItem(url: safari, browser: "Safari", profile: "All profiles", kind: "Web cache", site: nil, bytes: bytes, recommended: true)] : [], readable: readable))
         }
         return reports
     }
-    static func firefoxReport(support: URL, caches: URL) -> BrowserReport? {
+    static func firefoxReport(support: URL, caches: URL, size: (URL) -> UInt64) -> BrowserReport? {
         let profiles = support.appendingPathComponent("Firefox/Profiles")
         guard FileManager.default.fileExists(atPath: profiles.path) else { return nil }
         var items = [BrowserItem]()
         for profile in children(profiles) {
             let label = profile.lastPathComponent.split(separator: ".").dropFirst().joined(separator: ".")
             let cache = caches.appendingPathComponent("Firefox/Profiles").appendingPathComponent(profile.lastPathComponent).appendingPathComponent("cache2")
-            if isRealDirectory(cache) { items.append(BrowserItem(url: cache, browser: "Firefox", profile: label, kind: "Web cache", site: nil, bytes: allocatedSize(cache), recommended: true)) }
+            if isRealDirectory(cache) { items.append(BrowserItem(url: cache, browser: "Firefox", profile: label, kind: "Web cache", site: nil, bytes: size(cache), recommended: true)) }
             for entry in children(profile.appendingPathComponent("storage/default")) {
                 guard let site = site(fromFirefox: entry.lastPathComponent), isRealDirectory(entry) else { continue }
-                let bytes = allocatedSize(entry)
+                let bytes = size(entry)
                 if bytes >= 100_000 { items.append(BrowserItem(url: entry, browser: "Firefox", profile: label, kind: "Website database", site: site, bytes: bytes, recommended: false)) }
             }
         }
@@ -142,7 +145,7 @@ public enum BrowserData {
     /// Permanently removes the chosen items. Each must still be in a fresh scan, and its browser must be closed.
     public static func clean(_ paths: Set<String>, home: URL = FileManager.default.homeDirectoryForCurrentUser, activity: ActivitySnapshot = .capture(), ignoredPaths: [String] = []) -> (removed: [String], skipped: [String]) {
         var removed = [String](), skipped = [String]()
-        let current = scan(home: home)
+        let current = scan(home: home, measure: false)
         for report in current {
             let chosen = report.items.filter { paths.contains($0.id) }
             guard !chosen.isEmpty else { continue }

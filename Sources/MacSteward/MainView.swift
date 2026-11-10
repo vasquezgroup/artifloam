@@ -847,14 +847,16 @@ struct MainView: View {
                                         SimulatorOverview(findings: simulators, selectSafe: { m.smartSelect(simulators) }, openPerformance: { m.openPage("Performance") })
                                     }
                                 }
-                                if m.groupFindings.isEmpty {
+                                // Filtered and sorted once per render, not once for the check and again for the rows.
+                                let shown = m.groupFindings
+                                if shown.isEmpty {
                                     if m.search.isEmpty { empty(String(localized: "No removable findings in this group."), String(localized: "Protected categories are intentionally excluded from automatic cleanup.")) }
                                     else {
                                         empty(String(localized: "No paths match “\(m.search)”."), String(localized: "The filter is hiding items in this list. Nothing was removed."))
                                         Button("Clear filter") { m.search = "" }.buttonStyle(CleanupGlassButtonStyle(compact: true))
                                     }
                                 }
-                                ForEach(m.groupFindings) { finding in findingRow(finding) }
+                                ForEach(shown) { finding in findingRow(finding) }
                             }.frame(maxWidth: .infinity, alignment: .leading).padding(.bottom, 8)
                         }.id(m.reviewSelectionID).accessibilityLabel("Cleanup findings")
                     }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)

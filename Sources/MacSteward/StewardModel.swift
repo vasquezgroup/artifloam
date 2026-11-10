@@ -62,7 +62,9 @@ final class StewardModel: ObservableObject {
     var removalQueue: [() -> Void] = []
     static func inUse(_ finding: Finding) -> Bool { finding.lastUsedAt.map { Date().timeIntervalSince($0) < 86_400 } ?? false }
     @Published var trashLocations: [String] = []
-    @Published var report: ScanReport?
+    // The overview totals are read several times per render; worked out once per report change instead.
+    @Published var report: ScanReport? { didSet { overview = ScanOverview(findings: report?.findings ?? []) } }
+    private(set) var overview = ScanOverview(findings: [])
     @Published var selected = Set<String>()
     @Published var busy = false
     /// A read-only duplicates or system check is running (not a removal), so pages show the scan stage.
@@ -167,7 +169,6 @@ final class StewardModel: ObservableObject {
         }
     }
     var reviewSelectionID: String { showAllFindings ? "all" : group.id }
-    var overview: ScanOverview { ScanOverview(findings: report?.findings ?? []) }
     /// Asks the apps owning these cache folders to quit normally (they may ask to save) and waits up to 10 s.
     /// An app still running then simply keeps its cache: the cleaner skips it as in use.
     static func appsOwning(caches: [String]) -> [NSRunningApplication] {

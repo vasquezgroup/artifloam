@@ -39,7 +39,7 @@ public enum WorktreeReview {
     static let recentInterval: TimeInterval = 6 * 3600
     static let sessionInterval: TimeInterval = 24 * 3600
 
-    public static func assess(_ path: String, configuration: Configuration, activity: ActivitySnapshot, sessions: AgentSessionIndex = AgentSessionIndex(), now: Date = Date()) -> WorktreeAssessment {
+    public static func assess(_ path: String, configuration: Configuration, activity: ActivitySnapshot, sessions: AgentSessionIndex = AgentSessionIndex(), knownBase: String? = nil, now: Date = Date()) -> WorktreeAssessment {
         let url = URL(fileURLWithPath: path).standardizedFileURL.resolvingSymlinksInPath()
         let lastUsed = activity.isActive(url) ? now : sessions.lastUsed(url)
         func keep(_ reason: String, primary: URL? = nil, base: String = "", branch: String? = nil, head: String = "") -> WorktreeAssessment {
@@ -83,7 +83,7 @@ public enum WorktreeReview {
             if code.first == "R" || code.first == "C" { _ = entries.popFirst() }
             if code == "??" { untracked += 1 } else if code == " D" || code == "D " { deleted += 1 } else { modified += 1 }
         }
-        let base = baseRef(primary)
+        let base = knownBase ?? baseRef(primary)
         // Patch-equivalence also recognises squash and rebase merges.
         let unmerged = Set([base, "HEAD"]).map { ref -> (ref: String, count: Int) in
             let cherry = git(primary, ["cherry", ref, head])

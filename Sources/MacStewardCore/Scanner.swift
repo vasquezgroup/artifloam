@@ -292,18 +292,23 @@ public final class Scanner: @unchecked Sendable {
         // Every git call and folder size below is independent, so they run side by side.
         let repositories = parallelMap(Array(Set(candidates))) { git($0, ["rev-parse", "--git-common-dir"]).code == 0 ? $0 : nil }.compactMap { $0 }
         let lists = parallelMap(repositories) { git($0, ["worktree", "list", "--porcelain"]) }
-        var paths = [String](), seen = Set<String>()
+        var paths = [String](), seen = Set<String>(), primaryOf = [String: String]()
         for list in lists where list.code == 0 {
+            // The first block is the primary checkout; its worktrees share its default branch.
+            let primary = list.output.split(separator: "\n").first.map { String($0.dropFirst(9)) }
             for block in list.output.components(separatedBy: "\n\n").dropFirst() {
                 let pairs = block.split(separator: "\n").map { $0.split(separator: " ", maxSplits: 1).map(String.init) }
                 let info = Dictionary(pairs.compactMap { $0.count == 2 ? ($0[0], $0[1]) : nil }, uniquingKeysWith: { first, _ in first })
                 guard let path = info["worktree"], FileManager.default.fileExists(atPath: path), !configuration.ignoredPaths.contains(where: { path == $0 || path.hasPrefix($0 + "/") }), seen.insert(path).inserted else { continue }
-                paths.append(path)
+                paths.append(path); primaryOf[path] = primary
             }
         }
+        // The default branch is looked up once per repository, not once per worktree (up to five Git calls each).
+        let primaries = Array(Set(primaryOf.values))
+        let bases = Dictionary(uniqueKeysWithValues: zip(primaries, parallelMap(primaries) { WorktreeReview.baseRef(URL(fileURLWithPath: $0)) }))
         return parallelMap(paths) { path in
             let url = URL(fileURLWithPath: path, isDirectory: true)
-            let verdict = WorktreeReview.assess(path, configuration: configuration, activity: activity, sessions: sessions)
+            let verdict = WorktreeReview.assess(path, configuration: configuration, activity: activity, sessions: sessions, knownBase: primaryOf[path].flatMap { bases[$0] })
             let merged = verdict.unmerged > 0 ? [] : [verdict.base == "HEAD" ? String(localized: "Merged into the primary checkout.") : String(localized: "Merged into \(verdict.base).")]
             // Kept only for a running process: still say what Git found, since the person may delete it anyway.
             let reason = verdict.overridable ? ([verdict.blocker!] + merged).joined(separator: " ") : verdict.blocker ?? (merged + verdict.warnings).joined(separator: " ")

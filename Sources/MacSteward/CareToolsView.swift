@@ -303,7 +303,10 @@ final class BrowserDataState: ObservableObject {
         }, completed: { [weak self] outcome in
             let kept = outcome.failures.prefix(4).joined(separator: "; ") + (outcome.failures.count > 4 ? "…" : "")
             self?.note = outcome.failures.isEmpty ? String(localized: "\(outcome.completed) items removed.") : String(localized: "\(outcome.completed) items removed. Kept: \(kept)")
-            self?.scan(); refresh()
+            // Drop what is gone instead of measuring every browser again.
+            self?.reports = self?.reports?.map { r in BrowserReport(name: r.name, bundleID: r.bundleID, items: r.items.filter { FileManager.default.fileExists(atPath: $0.id) }, readable: r.readable) }
+            self?.selection.formIntersection(Set((self?.reports ?? []).flatMap(\.items).map(\.id)))
+            refresh()
         })
     }
 }

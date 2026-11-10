@@ -78,27 +78,45 @@ public enum DuplicateFinder {
         guard fstat(fd, &after) == 0, before.st_size == after.st_size, before.st_mtimespec.tv_sec == after.st_mtimespec.tv_sec, before.st_mtimespec.tv_nsec == after.st_mtimespec.tv_nsec else { return nil }
         return Hashed(hash: digest.finalize().map { String(format: "%02x", $0) }.joined(), size: UInt64(max(0, before.st_size)), device: before.st_dev, inode: before.st_ino)
     }
+    /// SHA-256 of the first 64 KB, to rule out most same-size files cheaply. The full hash still decides.
+    static func prefixHash(_ path: String) -> String? {
+        let fd = open(path, O_RDONLY | O_NOFOLLOW | O_NONBLOCK)
+        guard fd >= 0 else { return nil }
+        let handle = FileHandle(fileDescriptor: fd, closeOnDealloc: true)
+        guard let data = try? handle.read(upToCount: 65_536) else { return nil }
+        return SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
+    }
     public static func scan(folder: URL) throws -> [DuplicateGroup] {
         let folder = canonical(folder)
         // iCloud status is slow to read (most of the walk), so it is asked only for files that share a size.
-        let keys: Set<URLResourceKey> = [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey, .isDirectoryKey]
         _ = try FileManager.default.contentsOfDirectory(atPath: folder.path) // surface permission errors
         // Apps, libraries, environments and build output hold intentional copies; removing one breaks whatever needs it.
         let skipped: Set<String> = ["node_modules", ".git", "pods", "deriveddata", ".build", "library", "venv", "site-packages", "vendor", "target", "dist"]
-        guard let walker = FileManager.default.enumerator(at: folder, includingPropertiesForKeys: Array(keys), options: [.skipsHiddenFiles, .skipsPackageDescendants]) else { return [] }
         var bySize = [Int: [URL]](), repositories = enclosingRepository(folder).map { [$0.path] } ?? []
-        for case let url as URL in walker {
+        // One getattrlistbulk call per folder instead of a stat per file. Hidden items (dot names or the hidden flag),
+        // packages and symlinks are left out, as the FileManager walk with skipsHiddenFiles and skipsPackageDescendants did.
+        func walk(_ fd: Int32, _ path: String) throws {
+            defer { close(fd) }
             try Task.checkCancellation()
-            // An unreadable file is skipped: one locked file must not end the whole search.
-            guard let v = try? url.resourceValues(forKeys: keys) else { continue }
-            if v.isDirectory == true {
-                if skipped.contains(url.lastPathComponent.lowercased()) { walker.skipDescendants() }
-                else if FileManager.default.fileExists(atPath: url.appendingPathComponent(".git").path) { repositories.append(url.path) }
-                continue
+            let entries = bulkEntries(fd).entries
+            if entries.contains(where: { $0.name == ".git" }) { repositories.append(path) }
+            for entry in entries where !entry.name.hasPrefix(".") && entry.flags & UInt32(UF_HIDDEN) == 0 {
+                let child = path + "/" + entry.name
+                if entry.isDirectory {
+                    guard !skipped.contains(entry.name.lowercased()) else { continue }
+                    // Only a folder with an extension can be a package, so only those pay for the lookup.
+                    if entry.name.contains("."), (try? URL(fileURLWithPath: child).resourceValues(forKeys: [.isPackageKey]).isPackage) == true { continue }
+                    // An unreadable folder is skipped: one locked folder must not end the whole search.
+                    let sub = openat(fd, entry.name, O_RDONLY | O_DIRECTORY | O_NOFOLLOW)
+                    if sub >= 0 { try walk(sub, child) }
+                } else if entry.isRegular, entry.logical >= 1_000_000 {
+                    bySize[Int(entry.logical), default: []].append(URL(fileURLWithPath: child))
+                }
             }
-            guard v.isRegularFile == true, v.isSymbolicLink != true, let size = v.fileSize, size >= 1_000_000 else { continue }
-            bySize[size, default: []].append(url)
         }
+        let root = open(folder.path, O_RDONLY | O_DIRECTORY)
+        guard root >= 0 else { return [] }
+        try walk(root, folder.path)
         // Asked once per checkout, and only if one holds a candidate. Files Git tracks are never offered; if Git can't answer, the whole checkout stays out.
         var tracked = [String: Set<String>?]()
         func trackedFiles(in root: String) -> Set<String>? {
@@ -114,13 +132,18 @@ public enum DuplicateFinder {
         for (size, sameSize) in bySize where sameSize.count > 1 {
             let files = sameSize.filter { (try? $0.resourceValues(forKeys: [.isUbiquitousItemKey]).isUbiquitousItem) != true }
             guard files.count > 1 else { continue }
-            var hashes = [String: [String]](), seen = Set<String>(), inProject = Set<String>()
+            var hashes = [String: [String]](), seen = Set<String>(), inProject = Set<String>(), byPrefix = [String: [URL]]()
             for file in files {
                 try Task.checkCancellation()
                 if let root = repository(of: file.path) {
                     guard let known = trackedFiles(in: root), !known.contains(file.path.precomposedStringWithCanonicalMapping) else { continue }
                     inProject.insert(file.path)
                 }
+                // Same-size files rarely share their first 64 KB unless they are copies; only those are read in full.
+                if let prefix = prefixHash(file.path) { byPrefix[prefix, default: []].append(file) }
+            }
+            for file in byPrefix.values.filter({ $0.count > 1 }).joined() {
+                try Task.checkCancellation()
                 guard let found = try hashed(file.path) else { continue }
                 // Hard links are one file under two names: removing one frees nothing.
                 guard seen.insert("\(found.device):\(found.inode)").inserted else { continue }
