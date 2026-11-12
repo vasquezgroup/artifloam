@@ -364,9 +364,12 @@ enum StewardResources {
 /// A tactile glass action with a material base, specular rim and restrained motion.
 /// Small buttons under a list row (Finder, Keep…): quiet at rest, clearly lit on hover, so it's plain which one you're on.
 struct RowActionButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View { RowAction(configuration: configuration) }
+    /// Red, for the one row action that removes something.
+    var destructive = false
+    func makeBody(configuration: Configuration) -> some View { RowAction(configuration: configuration, tint: destructive ? .red : .white) }
     private struct RowAction: View {
         let configuration: ButtonStyleConfiguration
+        let tint: Color
         @State private var hovered = false
         @Environment(\.isEnabled) private var enabled
         @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -375,7 +378,7 @@ struct RowActionButtonStyle: ButtonStyle {
             configuration.label
                 .padding(.horizontal, 11).padding(.vertical, 4)
                 .foregroundStyle(lit ? Color.white : Color.white.opacity(enabled ? 0.82 : 0.4))
-                .background(.white.opacity(configuration.isPressed ? 0.34 : lit ? 0.24 : 0.10), in: RoundedRectangle(cornerRadius: 7))
+                .background(tint.opacity(configuration.isPressed ? 0.34 : lit ? 0.24 : tint == .white ? 0.10 : 0.55), in: RoundedRectangle(cornerRadius: 7))
                 .overlay(RoundedRectangle(cornerRadius: 7).strokeBorder(.white.opacity(lit ? 0.35 : 0.08)))
                 .contentShape(RoundedRectangle(cornerRadius: 7))
                 .trackingHover { inside in withAnimation(reduceMotion ? nil : .easeOut(duration: 0.12)) { hovered = inside } }

@@ -69,7 +69,7 @@ public enum XcodeStorageInventory {
     static func inspect(home: URL, ignoredPaths: [String] = []) -> (findings: [Finding], notices: [String]) {
         var rows: [Finding] = [], notices: [String] = []
         let excluded = ignoredPaths.map { URL(fileURLWithPath: $0).resolvingSymlinksInPath().standardizedFileURL.path }
-        func add(_ url: URL, safety: Safety = .review, reason: String, immutable: Bool = false, rule: String = trashRule, flag: String? = nil, fingerprint: String = "review-only") {
+        func add(_ url: URL, safety: Safety = .review, reason: String, immutable: Bool = false, rule: String = trashRule, flag: String? = nil, fingerprint: String = "review-only", label: String? = nil) {
             let path = url.resolvingSymlinksInPath().standardizedFileURL.path
             guard !Task.isCancelled,
                   !excluded.contains(where: { path == $0 || path.hasPrefix($0 + "/") }),
@@ -80,7 +80,7 @@ public enum XcodeStorageInventory {
             let modified = value.contentModificationDate ?? Date()
             // "in use" = modified in the last 30 days; Xcode records no last-used date for these folders.
             let warnings = ([flag] + [rule == trashRule && Date().timeIntervalSince(modified) < 30 * 86_400 ? String(localized: "Used in the last 30 days.") : nil]).compactMap { $0 }
-            rows.append(Finding(path: url.path, group: .xcode, bytes: bytes, modifiedAt: modified, safety: safety, reason: reason, rule: rule, fingerprint: fingerprint, warnings: warnings.isEmpty ? nil : warnings))
+            rows.append(Finding(path: url.path, group: .xcode, bytes: bytes, modifiedAt: modified, safety: safety, reason: reason, rule: rule, fingerprint: fingerprint, warnings: warnings.isEmpty ? nil : warnings, label: label))
         }
         for url in children(home.appendingPathComponent("Library/Developer/Xcode/Archives")) {
             add(url, reason: String(localized: "Release archives from Xcode Organizer. Deleted permanently."), flag: String(localized: "May hold the only signed build and debug symbols of a release."))
@@ -105,8 +105,10 @@ public enum XcodeStorageInventory {
                     guard let path = runtime["bundlePath"] as? String, path.hasPrefix("/"), path.hasSuffix(".simruntime"),
                           path.hasPrefix("/Library/Developer/CoreSimulator/") || path.hasPrefix("/private/var/run/com.apple.security.cryptexd/mnt/") else { continue }
                     guard let identifier = runtime["identifier"] as? String, !identifier.isEmpty else { continue }
+                    // Two images of one OS version share the folder name, so the build tells them apart.
+                    let name = (runtime["name"] as? String).map { name in (runtime["buildversion"] as? String).map { "\(name) (\($0))" } ?? name }
                     add(URL(fileURLWithPath: path), reason: String(localized: "Simulator system for one OS version. Xcode downloads it again when a project needs it."), immutable: true, rule: runtimeRule,
-                        flag: String(localized: "Simulators on this version stop working. Running ones are shut down first."), fingerprint: "runtime:" + identifier)
+                        flag: String(localized: "Simulators on this version stop working. Running ones are shut down first."), fingerprint: "runtime:" + identifier, label: name)
                 }
             }
             if result.code != 0 || !result.error.isEmpty {
