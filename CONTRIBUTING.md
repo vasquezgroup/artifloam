@@ -37,7 +37,7 @@ open dist/Artifloam.app --args -AppleLanguages '(de)'
 The Mac and iPhone apps have their own version numbers, because they ship separately. Tags tell them apart: `mac-v0.23.0`, `ios-v1.0.1`. Never change a version or build number by hand. One command does it, along with the commit, tag, push and GitHub Release:
 
 ```sh
-./scripts/release.sh 0.23.0      # Mac: next build number, notarized download, update feed, GitHub Release with the dmg and zip
+./scripts/release.sh 0.23.0      # Mac: next build number, notarized app and disk image, GitHub Release with the dmg and zip
 ./scripts/release-ios.sh 1.0.1   # iPhone: next build number for app and widget, GitHub Release with notes; then archive in Xcode
 ```
 

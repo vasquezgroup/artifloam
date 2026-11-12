@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mac:
+    name: Mac app tests
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use the newest Xcode on the runner
+        run: sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | sort -V | tail -1)" && swift --version
+      - name: Test
+        run: swift test
+      - name: Every source string is translated
+        run: ./scripts/check-strings.sh
+
+  iphone:
+    name: iPhone app build and strings
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use the newest Xcode on the runner
+        run: sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | sort -V | tail -1)" && xcodebuild -version
+      - name: Builds, and every iPhone string is in every language
+        run: ./scripts/check-iphone-strings.sh
