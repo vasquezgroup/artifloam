@@ -5,7 +5,11 @@ cd "${0:A:h:h}"
 steward_work=$(mktemp -d)
 trap 'rm -rf "$steward_work"' EXIT
 # A fresh build folder: an incremental build reports strings only for the files it recompiled.
-xcodebuild -project iOS/Artifloam.xcodeproj -scheme Artifloam -destination 'generic/platform=iOS Simulator' -derivedDataPath "$steward_work" CODE_SIGNING_ALLOWED=NO SWIFT_EMIT_LOC_STRINGS=YES build >/dev/null 2>&1
+xcodebuild -project iOS/Artifloam.xcodeproj -scheme Artifloam -destination 'generic/platform=iOS Simulator' -derivedDataPath "$steward_work" CODE_SIGNING_ALLOWED=NO SWIFT_EMIT_LOC_STRINGS=YES build > "$steward_work/build.log" 2>&1 || {
+  # Show why, instead of only the exit code.
+  grep -E "error:|BUILD FAILED" "$steward_work/build.log" | sort -u | head -40 >&2 || tail -40 "$steward_work/build.log" >&2
+  exit 65
+}
 python3 - "$steward_work" <<'PY'
 import glob, json, re, sys
 languages = set().union(*(entry.get('localizations', {}).keys() for entry in json.load(open('Localization/Localizable.xcstrings'))['strings'].values())) - {'en'}

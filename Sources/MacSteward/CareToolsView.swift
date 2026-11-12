@@ -391,10 +391,15 @@ struct BrowserDataView: View {
     private static let offlineSites = "Offline caches (all sites)"
     private var sites: some View {
         let siteItems = reports.flatMap(\.items).filter { $0.site != nil || $0.kind == "Offline site cache" }
-        return ForEach(Array(Dictionary(grouping: siteItems, by: { $0.site ?? Self.offlineSites }).sorted { $0.value.reduce(0) { $0 + $1.bytes } > $1.value.reduce(0) { $0 + $1.bytes } }), id: \.key) { site, items in
+        // Typed steps: as one expression, older Swift compilers give up type-checking it.
+        let groups: [(site: String, items: [BrowserItem], bytes: UInt64)] = Dictionary(grouping: siteItems, by: { $0.site ?? Self.offlineSites })
+            .map { (site: $0.key, items: $0.value, bytes: $0.value.reduce(UInt64(0)) { $0 + $1.bytes }) }
+            .sorted { $0.bytes > $1.bytes }
+        return ForEach(groups, id: \.site) { group in
+            let title: String = group.site == Self.offlineSites ? String(localized: "Offline caches (all sites)") : group.site
             VStack(alignment: .leading, spacing: 4) {
-                Text("\(site == Self.offlineSites ? String(localized: "Offline caches (all sites)") : site) · \(formattedBytes(items.reduce(0) { $0 + $1.bytes }))").stewardFont(.headline).padding(.top, 6)
-                ForEach(items) { row($0, title: "\($0.browser) · \($0.profileTitle)", detail: $0.kindTitle) }
+                Text("\(title) · \(formattedBytes(group.bytes))").stewardFont(.headline).padding(.top, 6)
+                ForEach(group.items) { row($0, title: "\($0.browser) · \($0.profileTitle)", detail: $0.kindTitle) }
             }
         }
     }
