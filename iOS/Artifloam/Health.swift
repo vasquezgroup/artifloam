@@ -173,10 +173,13 @@ struct HealthView: View {
             } else {
                 Text("What could go, largest first").font(.footnote).foregroundStyle(.white.opacity(0.75))
                 GeometryReader { geometry in
-                    let total = categories.reduce(Int64(0)) { $0 + library.saving($1) }
+                    let total = CGFloat(Swift.max(categories.reduce(Int64(0)) { $0 + library.saving($1) }, 1))
+                    // Typed steps: as one expression, older Swift compilers give up type-checking it.
+                    let room: CGFloat = geometry.size.width - CGFloat(categories.count - 1) * 2
                     HStack(spacing: 2) {
                         ForEach(Array(categories.enumerated()), id: \.element) { index, category in
-                            Self.colors[index % Self.colors.count].frame(width: Swift.max(3, (geometry.size.width - CGFloat(categories.count - 1) * 2) * CGFloat(library.saving(category)) / CGFloat(Swift.max(total, 1))))
+                            let share: CGFloat = CGFloat(library.saving(category)) / total
+                            Self.colors[index % Self.colors.count].frame(width: Swift.max(3, room * share))
                         }
                     }
                 }
