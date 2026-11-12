@@ -32,6 +32,17 @@ The translations are machine-made so far, so corrections from native speakers ar
 open dist/Artifloam.app --args -AppleLanguages '(de)'
 ```
 
+## Releases (maintainers)
+
+The Mac and iPhone apps have their own version numbers, because they ship separately. Tags tell them apart: `mac-v0.23.0`, `ios-v1.0.1`. Never change a version or build number by hand. One command does it, along with the commit, tag, push and GitHub Release:
+
+```sh
+./scripts/release.sh 0.23.0      # Mac: next build number, notarized download, update feed, GitHub Release with the dmg and zip
+./scripts/release-ios.sh 1.0.1   # iPhone: next build number for app and widget, GitHub Release with notes; then archive in Xcode
+```
+
+Release notes come from the commits since the previous tag of the same app. Both scripts can be run again after a failure without creating a second commit or tag. They need the GitHub CLI: `brew install gh && gh auth login`.
+
 ## License
 
 Artifloam is licensed under the [Apache License 2.0](LICENSE). Under section 5 of that license, anything you submit is licensed under the same terms, unless you clearly say otherwise. Please only submit work you have the right to share.
