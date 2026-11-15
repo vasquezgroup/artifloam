@@ -1472,7 +1472,7 @@ struct UnlockButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: open ? "lock.open.fill" : "lock.fill")
-                .font(.system(size: 17, weight: .semibold)).foregroundStyle(open ? Color.mint : danger ? .red : .orange)
+                .font(.system(size: 17, weight: .semibold)).foregroundStyle(danger ? Color.red : .orange)
                 .contentTransition(reduceMotion ? .identity : .symbolEffect(.replace.downUp.byLayer))
                 .symbolEffect(.bounce.up, options: .speed(1.4), value: reduceMotion ? false : open)
                 .frame(width: 22, height: 22).contentShape(Rectangle())
