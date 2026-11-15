@@ -47,6 +47,6 @@ cp -p "dist/distribution/Artifloam-$version-$build.dmg" "$assets/Artifloam-$vers
 if gh release view "$tag" >/dev/null 2>&1; then
   gh release upload "$tag" "$assets"/* --clobber
 else
-  gh release create "$tag" "$assets"/* --verify-tag --title "Artifloam $version for Mac" --generate-notes ${previous:+--notes-start-tag "$previous"}
+  gh release create "$tag" "$assets"/* --verify-tag --title "Artifloam $version for Mac" --generate-notes ${previous:+--notes-start-tag} ${previous:+"$previous"}
 fi
 print "\nReleased $version (build $build) from $(git rev-parse HEAD): https://github.com/vasquezgroup/artifloam/releases/tag/$tag"
