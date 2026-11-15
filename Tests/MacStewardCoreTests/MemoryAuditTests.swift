@@ -21,7 +21,7 @@ final class MemoryAuditTests: XCTestCase {
     func testOwnProcessCanBeMeasuredWithoutTaskAccess() throws {
         let app = MemoryAppDescriptor(pid: getpid(), name: "Fixture", bundlePath: "/fixture")
         let value = try MemoryReading.capture(apps: [app])
-        XCTAssertEqual(value.apps.first?.id, getpid())
+        XCTAssertEqual(value.apps.first { !$0.app.isVirtualMachine }?.id, getpid(), "a running VM gets its own row")
         XCTAssertGreaterThan(value.apps.first?.bytes ?? 0, 0)
     }
     func testLiveReadingIsBoundedAndDoesNotManageProcesses() throws {
@@ -29,11 +29,11 @@ final class MemoryAuditTests: XCTestCase {
         XCTAssertGreaterThan(value.total, 0)
         XCTAssertEqual(value.used + value.available, value.total)
         XCTAssertLessThanOrEqual(value.cached, value.total)
-        XCTAssertTrue(value.apps.isEmpty)
+        XCTAssertTrue(value.apps.allSatisfy(\.app.isVirtualMachine), "only VMs, listed without being asked for")
     }
     func testRepeatedAppIsMeasuredOnce() throws {
         let app = MemoryAppDescriptor(pid: getpid(), name: "Fixture", bundlePath: "/fixture")
-        XCTAssertEqual(try MemoryReading.capture(apps: [app, app]).apps.count, 1)
+        XCTAssertEqual(try MemoryReading.capture(apps: [app, app]).apps.filter { !$0.app.isVirtualMachine }.count, 1)
     }
     func testVerdictAndSuggestions() {
         let gb: UInt64 = 1 << 30
