@@ -201,7 +201,7 @@ final class StewardModel: ObservableObject {
     var waitingForCancelledScan: Bool { scanTask != nil && scanRunID == nil }
     var configuration: Configuration { Configuration(ignoredPaths: ignores + access.excludedProjects, includeApplicationCaches: includeAppCaches, includeDeveloperCaches: includeDeveloperCaches, includeAdditionalLogs: includeAdditionalLogs, projectRoots: access.scanProjectURLs, claudeHome: access.url(for: .claude), codexHome: access.url(for: .codex)) }
     /// Ticked items the cleaner may take: automatic ones, plus held ones the user chose (recent, or with an app to quit).
-    var selectedFindings: [Finding] { report?.findings.filter { selected.contains($0.id) && $0.userCleanable && (showAllFindings || $0.group == group) } ?? [] }
+    var selectedFindings: [Finding] { report?.findings.filter { selected.contains($0.id) && removable($0) && (showAllFindings || $0.group == group) } ?? [] }
     /// Apps that must quit before their ticked caches can be cleaned.
     /// The same list `quitOwners` acts on, so the confirmation names every app that will be asked to quit.
     func appsToQuit(_ items: [Finding]) -> [String] {
@@ -209,7 +209,20 @@ final class StewardModel: ObservableObject {
         return caches.isEmpty ? [] : Array(Set(Self.appsOwning(caches: caches).compactMap(\.localizedName))).sorted()
     }
     /// Everything ticked on every page: the one Remove selected button takes all of it, whichever category is open.
-    var chosenCaches: [Finding] { report?.findings.filter { selected.contains($0.id) && $0.userCleanable && $0.group != .worktrees } ?? [] }
+    var chosenCaches: [Finding] { report?.findings.filter { selected.contains($0.id) && removable($0) && $0.group != .worktrees } ?? [] }
+    /// Red-locked items the person opened one by one. Deleting them still needs the typed confirmation.
+    @Published var unlockedDangerous = Set<String>()
+    func unlockDangerous(_ finding: Finding) { guard finding.dangerous else { return }; unlockedDangerous.insert(finding.id); selected.insert(finding.id) }
+    /// Still locked: red ones, and worktrees kept only by a running process.
+    func locked(_ finding: Finding) -> Bool { finding.dangerous ? !unlockedDangerous.contains(finding.id) : finding.group == .worktrees && finding.hold == .inUse && !unlockedWorktrees.contains(finding.id) }
+    /// Opens every lock in `items` without ticking anything; the person still chooses, and red items still need the typed confirmation.
+    func unlockAll(_ items: [Finding]) {
+        let open = items.filter(locked)
+        unlockedDangerous.formUnion(open.filter(\.dangerous).map(\.id)); unlockedWorktrees.formUnion(open.filter { !$0.dangerous }.map(\.id))
+    }
+    /// Unlocked, so it shows a checkbox now; the row keeps a small lock in the color it had.
+    func wasLocked(_ finding: Finding) -> Bool { unlockedDangerous.contains(finding.id) && finding.dangerous || unlockedWorktrees.contains(finding.id) && finding.hold == .inUse }
+    func removable(_ finding: Finding) -> Bool { finding.userCleanable || (finding.dangerous && unlockedDangerous.contains(finding.id)) }
     var chosenWorktrees: [Finding] { reviewableWorktrees.filter { worktreeSelection.contains($0.id) } }
     enum FindingOrder: String, CaseIterable { case largest, newest, oldest, name }
     @Published var findingOrder = FindingOrder.largest
@@ -340,7 +353,12 @@ final class StewardModel: ObservableObject {
     func setCategory(_ group: CleanupGroup?, selected: Bool) { setSelected(choosable(group), selected) }
     func categorySelected(_ group: CleanupGroup?) -> Bool { allSelected(choosable(group)) }
     /// What a checkbox takes. A worktree in use is never bulk-selected; each chosen one is rechecked with Git before it goes.
-    func choosable(_ group: CleanupGroup?) -> [Finding] { (report?.findings ?? []).bulkChoosable(in: group).filter { $0.group != .worktrees || !Self.inUse($0) } }
+    func choosable(_ group: CleanupGroup?) -> [Finding] {
+        let all = report?.findings ?? []
+        // Red items the person unlocked count too, but only within their own category, never in "Select ready".
+        let unlocked = group == nil ? [] : all.filter { $0.group == group && $0.dangerous && unlockedDangerous.contains($0.id) }
+        return (all.bulkChoosable(in: group) + unlocked).filter { $0.group != .worktrees || !Self.inUse($0) }
+    }
     /// The review page's bar acts on what the filter shows, never on hidden rows.
     var bulkScope: [Finding] { choosable(showAllFindings ? nil : group).filter { search.isEmpty || $0.path.localizedCaseInsensitiveContains(search) } }
     func allSelected(_ items: [Finding]) -> Bool { !items.isEmpty && items.allSatisfy { ($0.group == .worktrees ? worktreeSelection : selected).contains($0.id) } }
@@ -349,9 +367,10 @@ final class StewardModel: ObservableObject {
         if on { worktreeSelection.formUnion(trees); selected.formUnion(rest) } else { worktreeSelection.subtract(trees); selected.subtract(rest) }
     }
     /// Ticks only what's certain in `items` and unticks the rest, so the selection is exactly the safe part.
+    /// Falls back to the orange ones (choosable without unlocking) when nothing is certain. Never ticks red items.
     func smartSelect(_ items: [Finding]) {
         setSelected(items, false)
-        setSelected(items.filter(\.certain), true)
+        setSelected(items.smartPick(reviewable: Set(reviewableWorktrees.map(\.id))), true)
     }
     var reviewableWorktrees: [Finding] { report?.findings.filter { $0.group == .worktrees && ($0.safety == .review || unlockedWorktrees.contains($0.id)) } ?? [] }
     /// Worktrees kept only because a process has them open, which the person unlocked to delete anyway. Git still rechecks them first.

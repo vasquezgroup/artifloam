@@ -60,6 +60,9 @@ public final class Cleaner {
                     try XcodeStorageInventory.removeSimulator(finding, configuration: configuration, activity: activity)
                     items.append(CleanupItem(path: finding.path, outcome: "removed", detail: String(localized: "\(finding.title). \(finding.reason)"), bytes: finding.bytes)); continue
                 }
+                // An unlocked red simulator cache: shut down the simulator it belongs to, so iOS isn't writing to it.
+                if finding.rule == "simulator-cache", finding.dangerous, approvedIDs.contains(finding.id),
+                   let udid = finding.path.components(separatedBy: "/CoreSimulator/Devices/").dropFirst().first?.split(separator: "/").first { _ = Simulators.shutdown(String(udid)) }
                 let tree = try policy.validate(finding, activity: activity, approved: approvedIDs.contains(finding.id))
                 try SecureRemoval.remove(URL(fileURLWithPath: finding.path), tree: tree)
                 items.append(CleanupItem(path: finding.path, outcome: "removed", detail: finding.reason, bytes: finding.bytes))

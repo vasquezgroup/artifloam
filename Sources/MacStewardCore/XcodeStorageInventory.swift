@@ -39,7 +39,9 @@ public enum XcodeStorageInventory {
         guard finding.rule == simulatorRule, finding.path == base else { throw StewardError.blocked(String(localized: "Not a simulator Artifloam can remove.")) }
         guard !configuration.ignoredPaths.contains(where: { base == $0 || base.hasPrefix($0 + "/") }) else { throw StewardError.blocked(String(localized: "Path is on the ignore list")) }
         guard let now = Simulators.list()?.first(where: { $0.id == udid }) else { throw StewardError.blocked(String(localized: "This simulator was used or changed; scan again")) }
-        guard !now.running else { throw StewardError.blocked(String(localized: "This simulator is running. Shut it down first.")) }
+        // A running one was listed with a red lock; the person unlocked it, so it's shut down first.
+        if now.running, finding.hold == .inUse { _ = Simulators.shutdown(udid) }
+        else { guard !now.running else { throw StewardError.blocked(String(localized: "This simulator is running. Shut it down first.")) } }
         guard (now.lastUsed ?? .distantPast) <= finding.modifiedAt.addingTimeInterval(60) else { throw StewardError.blocked(String(localized: "This simulator was used or changed; scan again")) }
         let result = run("/usr/bin/xcrun", ["simctl", "delete", udid], timeout: 120)
         guard result.code == 0 else { throw StewardError.blocked(String(localized: "simctl could not delete it: \(result.error.trimmingCharacters(in: .whitespacesAndNewlines))")) }
@@ -115,11 +117,19 @@ public enum XcodeStorageInventory {
                 notices.append(String(localized: "Xcode could not provide a complete simulator-runtime inventory. Review installed runtimes in Xcode Settings > Components."))
             }
             let devices = home.appendingPathComponent("Library/Developer/CoreSimulator/Devices")
-            for simulator in deletableSimulators(Simulators.list() ?? []) {
+            let simulators = Simulators.list() ?? []
+            for simulator in deletableSimulators(simulators) {
                 let path = devices.appendingPathComponent(simulator.id).path
                 guard !excluded.contains(where: { path == $0 || path.hasPrefix($0 + "/") }) else { continue }
                 rows.append(Finding(path: path, group: .xcode, bytes: simulator.bytes, modifiedAt: simulator.lastUsed ?? Date(), safety: .review, reason: simulatorReason(simulator), rule: simulatorRule, fingerprint: "review-only",
                                     warnings: [String(localized: "Deletes the test apps and their data inside it, never your projects. Xcode makes a new simulator in a minute.")], label: simulator.name, finished: simulator.safeToDelete()))
+            }
+            // Running ones get a red lock: the person may still delete them, and they're shut down first.
+            for simulator in simulators where simulator.running && simulator.bytes >= 100_000_000 {
+                let path = devices.appendingPathComponent(simulator.id).path
+                guard !excluded.contains(where: { path == $0 || path.hasPrefix($0 + "/") }) else { continue }
+                rows.append(Finding(path: path, group: .xcode, bytes: simulator.bytes, modifiedAt: simulator.lastUsed ?? Date(), safety: .protected, reason: String(localized: "Running now. Artifloam shuts it down first, then deletes it."), rule: simulatorRule, fingerprint: "review-only",
+                                    warnings: [String(localized: "Deletes the test apps and their data inside it, never your projects. Xcode makes a new simulator in a minute.")], hold: .inUse, label: simulator.name))
             }
         }
         return (rows, notices)

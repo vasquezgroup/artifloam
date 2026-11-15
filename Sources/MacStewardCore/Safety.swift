@@ -84,7 +84,8 @@ public struct SafetyPolicy {
     func inside(_ path: URL, _ root: URL) -> Bool { path.path.hasPrefix(root.path + "/") }
     func validatePath(_ url: URL, rule: String) throws {
         let p = url.standardizedFileURL
-        guard p.path == url.path, p.resolvingSymlinksInPath().path == p.path else { throw StewardError.blocked(String(localized: "Non-canonical or symlinked path")) }
+        // Foundation drops the /private of /private/tmp and /private/var; that's the same folder, not a different path.
+        guard p.path == url.path || "/private" + p.path == url.path, p.resolvingSymlinksInPath().path == p.path else { throw StewardError.blocked(String(localized: "Non-canonical or symlinked path")) }
         let home = configuration.home.standardizedFileURL
         guard !configuration.ignoredPaths.contains(where: { p.path == $0 || p.path.hasPrefix($0 + "/") }) else { throw StewardError.blocked(String(localized: "Path is on the ignore list")) }
         let relative = inside(p, home) ? String(p.path.dropFirst(home.path.count + 1)) : ""
@@ -114,6 +115,8 @@ public struct SafetyPolicy {
         case "app-cache": safe = p.deletingLastPathComponent().path == home.appendingPathComponent("Library/Caches").path && BroadCaches.allowedAppCache(p.lastPathComponent)
         case "xdg-cache": safe = p.deletingLastPathComponent().path == home.appendingPathComponent(".cache").path && BroadCaches.xdgCandidates(home: home).contains { $0.standardizedFileURL.path == p.path }
         case "simulator-cache": safe = BroadCaches.validSimulatorPath(p, home: home)
+        case "agent-session-scratch":
+            safe = p.deletingLastPathComponent().deletingLastPathComponent().path == configuration.agentTemp.standardizedFileURL.path && UUID(uuidString: p.lastPathComponent) != nil
         case "old-agent-version":
             safe = DeveloperJunk.agentVersionRoots(home: home).contains { DeveloperJunk.oldAgentVersions(in: $0).map(\.standardizedFileURL.path).contains(p.path) }
         case "inactive-dependencies":
@@ -148,22 +151,28 @@ public struct SafetyPolicy {
     }
     /// `approved`: the user chose this held item. It then skips only the age and unchanged-since-scan checks
     /// (a recent cache keeps changing); every path, activity and running-app check still applies.
+    /// An approved red (`dangerous`) item also skips the activity and running-app checks: the person unlocked it knowing
+    /// a process uses it. Path allowlist and file-structure checks (symlinks, other users, secrets inside) always apply.
     func validate(_ finding: Finding, activity: ActivitySnapshot, approved: Bool = false) throws -> TreeInventory {
-        let held = approved && finding.safety != .automatic && finding.userCleanable
+        let forced = approved && finding.dangerous
+        let held = approved && finding.safety != .automatic && (finding.userCleanable || forced)
         guard finding.safety == .automatic || held else { throw StewardError.blocked(String(localized: "Review-only item cannot be automatically cleaned")) }
-        guard activity.reliable else { throw StewardError.blocked(String(localized: "Cannot verify running processes and open files")) }
         let url = URL(fileURLWithPath: finding.path, isDirectory: FileManager.default.fileExists(atPath: finding.path))
         try validatePath(url, rule: finding.rule)
-        guard !activity.isActive(url), !DeveloperJunk.producerActive(rule: finding.rule, path: finding.path, activity: activity), !(finding.rule == "application-web-cache" && ApplicationWebCaches.producerActive(url, home: configuration.home, activity: activity)) else { throw StewardError.blocked(String(localized: "A running process uses this path")) }
-        if finding.rule == "inactive-dependencies", let reason = ProjectActivity.busyReason(url.deletingLastPathComponent(), activity: activity, sessions: .load(claudeHome: configuration.claudeHome, codexHome: configuration.codexHome)) { throw StewardError.blocked(String(localized: "Project is in use: \(reason)")) }
-        if finding.rule == "app-cache", BroadCaches.ownerRunning(url.lastPathComponent, running: BroadCaches.runningApps()) { throw StewardError.blocked(String(localized: "Its app is running")) }
-        if finding.rule == "simulator-cache", BroadCaches.simulatorRunning(activity) { throw StewardError.blocked(String(localized: "A simulator is running")) }
-        let tree = try TreeInventory.read(url, dependencies: TreeInventory.regenerableRules.contains(finding.rule))
+        if !forced { try checkActivity(finding, url: url, activity: activity) }
+        let tree = try TreeInventory.read(url, dependencies: TreeInventory.regenerableRules.contains(finding.rule) || (forced && finding.rule == "agent-session-scratch"))
         let days = DeveloperJunk.minimumAge(rule: finding.rule, configured: configuration.minimumAgeDays)
         let lastUse = ["gradle-generated-cache", "xcode-module-cache"].contains(finding.rule) ? max(tree.newest, tree.lastAccessed) : tree.newest
         guard held || lastUse < Date().addingTimeInterval(-Double(days)*86400) else { throw StewardError.blocked(String(localized: "Files were used too recently")) }
         guard held || tree.fingerprint == finding.fingerprint else { throw StewardError.blocked(String(localized: "Files changed after the scan; scan again")) }
         return tree
+    }
+    private func checkActivity(_ finding: Finding, url: URL, activity: ActivitySnapshot) throws {
+        guard activity.reliable else { throw StewardError.blocked(String(localized: "Cannot verify running processes and open files")) }
+        guard !activity.isActive(url), !DeveloperJunk.producerActive(rule: finding.rule, path: finding.path, activity: activity), !(finding.rule == "application-web-cache" && ApplicationWebCaches.producerActive(url, home: configuration.home, activity: activity)) else { throw StewardError.blocked(String(localized: "A running process uses this path")) }
+        if finding.rule == "inactive-dependencies", let reason = ProjectActivity.busyReason(url.deletingLastPathComponent(), activity: activity, sessions: .load(claudeHome: configuration.claudeHome, codexHome: configuration.codexHome)) { throw StewardError.blocked(String(localized: "Project is in use: \(reason)")) }
+        if finding.rule == "app-cache", BroadCaches.ownerRunning(url.lastPathComponent, running: BroadCaches.runningApps()) { throw StewardError.blocked(String(localized: "Its app is running")) }
+        if finding.rule == "simulator-cache", BroadCaches.simulatorRunning(activity) { throw StewardError.blocked(String(localized: "A simulator is running")) }
     }
 }
 

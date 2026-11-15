@@ -67,7 +67,7 @@ public final class Scanner: @unchecked Sendable {
         let runningApps = BroadCaches.runningApps()
         summaries?.prepare(watching: [configuration.home, configuration.agentTemp] + configuration.projectRoots)
         /// `busy` runs inside the check rather than during discovery: per-project git calls would serialize the walk.
-        func add(_ url: URL, group: CleanupGroup, rule: String, reason: String, busy: (() -> Bool)? = nil) {
+        func add(_ url: URL, group: CleanupGroup, rule: String, reason: String, busy: (() -> Bool)? = nil, live: (() -> Bool)? = nil) {
             let path = url.path.replacingOccurrences(of: configuration.home.path, with: "~")
             let label: String
             switch group {
@@ -90,19 +90,22 @@ public final class Scanner: @unchecked Sendable {
                 // its files. Gradle and module caches count reads (access times), which FSEvents does not report, and app,
                 // web and log caches are written by running apps that keep files open; those are always read.
                 let dependencies = TreeInventory.regenerableRules.contains(rule)
-                let tree = try self.summaries?.read(url, dependencies: dependencies, reusable: Scanner.reusableRules.contains(rule))
-                    ?? TreeSummary.read(url, dependencies: dependencies)
+                // A session folder holding a Git clone, a database or links may be the only copy: listed with a red lock instead of skipped.
+                var sensitive = false
+                let tree: TreeSummary
+                do { tree = try self.summaries?.read(url, dependencies: dependencies, reusable: Scanner.reusableRules.contains(rule)) ?? TreeSummary.read(url, dependencies: dependencies) }
+                catch where rule == "agent-session-scratch" && !(error is CancellationError) { tree = try TreeSummary.read(url, dependencies: true); sensitive = true }
                 guard tree.bytes >= (rule == "old-user-log" ? 65_536 : 1_000_000) else { return }
                 _ = capture.value
                 try policy.validatePath(url, rule: rule)
                 let days = DeveloperJunk.minimumAge(rule: rule, configured: self.configuration.minimumAgeDays)
                 let lastUse = ["gradle-generated-cache", "xcode-module-cache"].contains(rule) ? max(tree.newest, tree.lastAccessed) : tree.newest
                 let old = lastUse < Date().addingTimeInterval(-Double(days)*86400)
-                let active = activity.isActive(url) || DeveloperJunk.producerActive(rule: rule, path: url.path, activity: activity) || (rule == "application-web-cache" && ApplicationWebCaches.producerActive(url, home: self.configuration.home, activity: activity))
+                let active = activity.isActive(url) || live?() == true || DeveloperJunk.producerActive(rule: rule, path: url.path, activity: activity) || (rule == "application-web-cache" && ApplicationWebCaches.producerActive(url, home: self.configuration.home, activity: activity))
                     || (rule == "app-cache" && BroadCaches.ownerRunning(url.lastPathComponent, running: runningApps)) || (rule == "simulator-cache" && BroadCaches.simulatorRunning(activity))
-                let safe = old && !active && activity.reliable
-                let note = active ? String(localized: "In use: its app or a running process uses it.") : !old ? String(localized: "Used or modified within the last \(days) days.") : !activity.reliable ? String(localized: "Protected: process inspection is incomplete.") : reason
-                let hold: Hold? = safe ? nil : active ? .inUse : !old ? .recent : .unverified
+                let safe = old && !active && activity.reliable && !sensitive
+                let note = active ? String(localized: "In use: its app or a running process uses it.") : sensitive ? String(localized: "Holds a Git repository, a database or links that may be the only copy. Check it in Finder first.") : !old ? String(localized: "Used or modified within the last \(days) days.") : !activity.reliable ? String(localized: "Protected: process inspection is incomplete.") : reason
+                let hold: Hold? = safe ? nil : active ? .inUse : sensitive ? .unverified : !old ? .recent : .unverified
                 // Only an app-owned cache gets an owner: that's the one case Artifloam can resolve by quitting an app.
                 let owner = hold == .inUse && rule == "app-cache" ? BroadCaches.owner(of: url.lastPathComponent, running: runningApps) : nil
                 let finding = Finding(path: url.path, group: group, bytes: tree.bytes, modifiedAt: tree.newest, safety: safe ? .automatic : .protected, reason: note, rule: rule, fingerprint: tree.fingerprint, hold: hold, owner: owner)
@@ -129,7 +132,19 @@ public final class Scanner: @unchecked Sendable {
         }
         if wants(.agentBuilds) {
         progress(String(localized: "Inspecting Claude temporary builds…"))
-        walk(configuration.agentTemp, maximumDepth: 8) { url, names in
+        // A Claude Code session's scratch folder: <temp>/<project>/<session id>. One whose conversation was active in the
+        // last day counts as in use (red lock); the rest follow the usual age and open-file checks. Build caches inside go with the folder.
+        var sessions = [String]()
+        for project in children(configuration.agentTemp) {
+            for session in children(project) where UUID(uuidString: session.lastPathComponent) != nil {
+                sessions.append(session.path)
+                let transcript = configuration.claudeHome.appendingPathComponent("projects/\(project.lastPathComponent)/\(session.lastPathComponent).jsonl")
+                add(session, group: .agentBuilds, rule: "agent-session-scratch", reason: String(localized: "Temporary files of an earlier Claude Code session: scratch work, downloads and build output. The conversation itself stays."), live: {
+                    ((try? transcript.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate).map { Date().timeIntervalSince($0) < 86_400 } ?? false
+                })
+            }
+        }
+        walk(configuration.agentTemp, maximumDepth: 8, excluding: sessions) { url, names in
             if names.contains("Build") && (names.contains("info.plist") || names.contains("ModuleCache.noindex")) {
                 for relative in ["Build/Intermediates.noindex", "ModuleCache.noindex", "SDKStatCaches.noindex", "CompilationCache.noindex"] {
                     let p = url.appendingPathComponent(relative, isDirectory: true)

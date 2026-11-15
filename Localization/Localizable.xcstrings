@@ -55761,6 +55761,303 @@
         }
       }
     },
+    "Android emulator" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "محاكي Android"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulador d’Android"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android-Emulator"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emulator"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emulator"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emulator"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulador de Android"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulador de Android"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Émulateur Android"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android-Emulator"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android एम्युलेटर"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emulator"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulatore Android"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Androidエミュレータ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android 에뮬레이터"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emulators"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator Android"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulador Android"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator Android"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android емулатор"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emulator"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android-emulator"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emülatörü"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android 模拟器"
+          }
+        }
+      }
+    },
+    "Android emulator · %@" : {
+      "comment" : "Memory list row; the name of the virtual device",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "محاكي Android · %@"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulador d’Android · %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android-Emulator · %@"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emulator · %@"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emulator · %@"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emulator · %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulador de Android · %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulador de Android · %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Émulateur Android · %@"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android-Emulator · %@"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android एम्युलेटर · %@"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emulator · %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulatore Android · %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Androidエミュレータ · %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android 에뮬레이터 · %@"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emulators · %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator Android · %@"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulador Android · %@"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator Android · %@"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android емулатор · %@"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emulator · %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android-emulator · %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android emülatörü · %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android 模拟器 · %@"
+          }
+        }
+      }
+    },
     "Another cleanup is running" : {
       "localizations" : {
         "ar" : {
@@ -60649,6 +60946,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "App 必须来自已知开发者才能打开。"
+          }
+        }
+      }
+    },
+    "Apps receive a normal Quit request and may ask you to save. Emulators and virtual machines are asked to stop without shutting down the system inside them, so save your work there first. Memory recovered varies." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تتلقى التطبيقات طلب إنهاء عاديًا وقد تطلب منك الحفظ. يُطلب من المحاكيات والأجهزة الافتراضية التوقف دون إيقاف تشغيل النظام الذي بداخلها، لذا احفظ عملك فيها أولًا. تختلف الذاكرة المستردة."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les apps reben una sol·licitud normal de sortida i et poden demanar que desis. Als emuladors i les màquines virtuals se’ls demana que s’aturin sense apagar el sistema que tenen a dins, així que desa-hi la feina primer. La memòria recuperada varia."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps erhalten eine normale Anfrage zum Beenden und fragen eventuell, ob du sichern möchtest. Emulatoren und virtuelle Maschinen werden gestoppt, ohne das System darin herunterzufahren, also sichere dort zuerst deine Arbeit. Der freigegebene Speicher variiert."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps receive a normal Quit request and may ask you to save. Emulators and virtual machines are asked to stop without shutting down the system inside them, so save your work there first. Memory recovered varies."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps receive a normal Quit request and may ask you to save. Emulators and virtual machines are asked to stop without shutting down the system inside them, so save your work there first. Memory recovered varies."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps receive a normal Quit request and may ask you to save. Emulators and virtual machines are asked to stop without shutting down the system inside them, so save your work there first. Memory recovered varies."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las apps reciben una petición normal de Salir y pueden pedirte que guardes. A los emuladores y las máquinas virtuales se les pide que se detengan sin apagar el sistema que llevan dentro, así que guarda antes tu trabajo en ellos. La memoria recuperada varía."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las apps reciben una petición normal de Salir y pueden pedirte que guardes. A los emuladores y las máquinas virtuales se les pide que se detengan sin apagar el sistema que llevan dentro, así que guarda antes tu trabajo en ellos. La memoria recuperada varía."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les apps reçoivent une demande normale de quitter et peuvent vous demander d’enregistrer. Les émulateurs et machines virtuelles sont arrêtés sans éteindre le système qu’ils contiennent ; enregistrez donc d’abord votre travail à l’intérieur. La mémoire récupérée varie."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps überchömed e normali Beende-Aafrag und fraged di evtl., ob du speichere wotsch. Emulatore und virtuelli Maschine werded gstoppt, ohni s System drin abezschalte, drum speicher dini Arbeit dört zerscht. Wie vil Arbeitsspeicher zrugg chunnt, isch unterschiedlich."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ऐप को सामान्य बंद करने का अनुरोध मिलता है और वे आपसे सहेजने को कह सकते हैं। एम्युलेटर और वर्चुअल मशीन को उनके अंदर का सिस्टम बंद किए बिना रुकने को कहा जाता है, इसलिए पहले उनमें अपना काम सहेजें। वापस मिली मेमोरी अलग-अलग होती है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacije primaju uobičajeni zahtjev za zatvaranje i mogu tražiti spremanje. Emulatori i virtualni strojevi zaustavljaju se bez gašenja sustava u njima, pa prvo ondje spremi svoj rad. Oporavljeni RAM varira."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le app ricevono una normale richiesta di uscita e potrebbero chiederti di salvare. A emulatori e macchine virtuali viene chiesto di fermarsi senza spegnere il sistema al loro interno, quindi salva prima il lavoro lì dentro. La memoria recuperata varia."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリには通常の「終了」要求が送られ、保存を求められる場合があります。エミュレータと仮想マシンは、中のシステムをシャットダウンせずに停止されるため、先にその中で作業内容を保存してください。回復するメモリ量は状況により異なります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱은 일반 종료 요청을 받으며 저장하라는 메시지가 표시될 수 있습니다. 에뮬레이터와 가상 머신은 내부 시스템을 종료하지 않고 중지되므로 먼저 그 안의 작업 내용을 저장하세요. 확보되는 메모리는 달라집니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lietotnes saņem parastu aizvēršanas pieprasījumu un var palūgt saglabāt darbu. Emulatori un virtuālās mašīnas tiek apturētas, neizslēdzot to iekšējo sistēmu, tāpēc vispirms saglabā darbu tajās. Atgūtā atmiņa atšķiras."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacje otrzymują zwykłe polecenie Zakończ i mogą zapytać o zapisanie zmian. Emulatory i maszyny wirtualne są zatrzymywane bez wyłączania systemu w ich wnętrzu, więc najpierw zapisz w nich swoją pracę. Ilość odzyskanej pamięci jest różna."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As apps recebem um pedido normal para sair e podem pedir-lhe para guardar. Os emuladores e as máquinas virtuais são parados sem desligar o sistema que têm dentro, por isso guarde primeiro o seu trabalho neles. A memória recuperada varia."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacionet marrin një kërkesë normale Mbyll dhe mund të kërkojnë të ruash. Emulatorëve dhe makinave virtuale u kërkohet të ndalen pa fikur sistemin brenda tyre, prandaj ruaj më parë punën tënde aty. Memoria e rikuperuar ndryshon."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Апликације добијају уобичајен захтев за затварање и могу да затраже да сачувате. Емулатори и виртуелне машине се заустављају без гашења система у њима, па прво сачувајте рад у њима. Враћена меморија варира."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacije dobijaju uobičajen zahtev za zatvaranje i mogu da zatraže da sačuvate. Emulatori i virtuelne mašine se zaustavljaju bez gašenja sistema u njima, pa prvo sačuvajte rad u njima. Vraćena memorija varira."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appar får en vanlig begäran om att avsluta och kan be dig spara. Emulatorer och virtuella maskiner ombeds stanna utan att systemet i dem stängs av, så spara ditt arbete där först. Hur mycket minne som frigörs varierar."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulamalara normal bir Çık isteği gönderilir ve kaydetmenizi isteyebilirler. Emülatörlerden ve sanal makinelerden, içlerindeki sistem kapatılmadan durmaları istenir; bu yüzden önce oradaki çalışmanızı kaydedin. Geri kazanılan bellek değişir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App 会收到正常的“退出”请求，并可能要求你存储。模拟器和虚拟机会被要求停止，但不会关闭其中的系统，所以请先在其中存储你的工作。恢复的内存量各不相同。"
           }
         }
       }
@@ -108596,6 +109041,154 @@
         }
       }
     },
+    "Docker virtual machine" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جهاز Docker الافتراضي"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Màquina virtual de Docker"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuelle Maschine von Docker"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker virtual machine"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker virtual machine"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker virtual machine"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina virtual de Docker"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina virtual de Docker"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Machine virtuelle Docker"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuelli Maschine vo Docker"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker वर्चुअल मशीन"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker virtualni stroj"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macchina virtuale Docker"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker仮想マシン"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker 가상 머신"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker virtuālā mašīna"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maszyna wirtualna Docker"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina virtual do Docker"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Makinë virtuale Docker"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker виртуелна машина"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker virtuelna mašina"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuell maskin för Docker"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker sanal makinesi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker 虚拟机"
+          }
+        }
+      }
+    },
     "Document versions" : {
       "localizations" : {
         "ar" : {
@@ -113182,6 +113775,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在清倒废纸篓…"
+          }
+        }
+      }
+    },
+    "Emulator or virtual machine" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "محاكي أو جهاز افتراضي"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulador o màquina virtual"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator oder virtuelle Maschine"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator or virtual machine"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator or virtual machine"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator or virtual machine"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulador o máquina virtual"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulador o máquina virtual"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Émulateur ou machine virtuelle"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator oder virtuelli Maschine"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "एम्युलेटर या वर्चुअल मशीन"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator ili virtualni stroj"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulatore o macchina virtuale"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エミュレータまたは仮想マシン"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "에뮬레이터 또는 가상 머신"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulators vai virtuālā mašīna"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator lub maszyna wirtualna"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulador ou máquina virtual"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator ose makinë virtuale"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Емулатор или виртуелна машина"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator ili virtuelna mašina"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emulator eller virtuell maskin"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emülatör veya sanal makine"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模拟器或虚拟机"
           }
         }
       }
@@ -139957,150 +140698,150 @@
         }
       }
     },
-    "Health starts at 100. Memory pressure lowers it most, then a large swap, then many apps opening at login." : {
+    "Health starts at 100. Memory pressure lowers it most, then a processor that stays overloaded, then a large swap, then many apps opening at login." : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تبدأ الصحة من 100. يخفضها ضغط الذاكرة أكثر من غيره، ثم ذاكرة التبديل الكبيرة، ثم كثرة التطبيقات التي تُفتح عند الدخول."
+            "value" : "تبدأ الصحة من 100. أكثر ما يخفضها ضغط الذاكرة، ثم معالج يبقى مثقلًا، ثم ذاكرة تبديل كبيرة، ثم كثرة التطبيقات التي تُفتح عند الدخول."
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La salut comença a 100. La pressió de memòria és el que més la rebaixa, després un intercanvi gran, i després moltes apps que s’obren en iniciar la sessió."
+            "value" : "La salut comença a 100. El que més la fa baixar és la pressió de memòria; després, un processador que continua sobrecarregat; després, un intercanvi gran, i finalment, moltes apps que s’obren en iniciar la sessió."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Zustand beginnt bei 100. Am stärksten senkt ihn der Speicherdruck, dann ein großer Swap, dann viele Apps, die sich bei der Anmeldung öffnen."
+            "value" : "Der Zustand beginnt bei 100. Am stärksten senkt ihn der Speicherdruck, dann ein dauerhaft überlasteter Prozessor, dann ein großer Swap, dann viele Apps, die sich bei der Anmeldung öffnen."
           }
         },
         "en-AU" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Health starts at 100. Memory pressure lowers it most, then a large swap, then many apps opening at login."
+            "value" : "Health starts at 100. Memory pressure lowers it most, then a processor that stays overloaded, then a large swap, then many apps opening at login."
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Health starts at 100. Memory pressure lowers it most, then a large swap, then many apps opening at login."
+            "value" : "Health starts at 100. Memory pressure lowers it most, then a processor that stays overloaded, then a large swap, then many apps opening at login."
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Health starts at 100. Memory pressure lowers it most, then a large swap, then many apps opening at login."
+            "value" : "Health starts at 100. Memory pressure lowers it most, then a processor that stays overloaded, then a large swap, then many apps opening at login."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La salud empieza en 100. La presión de memoria es lo que más la baja, después un swap grande y luego muchas apps que se abren al iniciar sesión."
+            "value" : "La salud empieza en 100. Lo que más la reduce es la presión de memoria; después, un procesador que sigue sobrecargado; luego, un swap grande, y por último, muchas apps que se abren al iniciar sesión."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La salud empieza en 100. La presión de memoria es lo que más la baja, después un swap grande y luego muchas apps que se abren al iniciar sesión."
+            "value" : "La salud empieza en 100. Lo que más la reduce es la presión de memoria; después, un procesador que sigue sobrecargado; luego, un swap grande, y por último, muchas apps que se abren al iniciar sesión."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La santé démarre à 100. La pression mémoire l’abaisse le plus, puis un swap important, puis de nombreuses apps qui s’ouvrent avec la session."
+            "value" : "La santé commence à 100. La pression mémoire la fait baisser le plus, puis un processeur qui reste surchargé, puis un swap important, puis de nombreuses apps qui s’ouvrent avec la session."
           }
         },
         "gsw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "D Gsundheit fangt bi 100 aa. Am meiste senkt sie dr Arbeitsspeicher-Druck, dänn en grosse Swap, dänn vili Apps, wo bi de Aamäldig öffned."
+            "value" : "D Gsundheit fangt bi 100 aa. Am meischte senkt si de Arbeitsspeicher-Druck, denn en Prozessor, wo dauernd überlaschtet isch, denn en grosse Swap, denn vill Apps, wo bi de Aamäldig öffned."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "हेल्थ 100 से शुरू होती है। मेमोरी दबाव इसे सबसे ज़्यादा घटाता है, फिर बड़ा स्वैप, फिर लॉगइन पर खुलने वाले कई ऐप।"
+            "value" : "हेल्थ 100 से शुरू होती है। इसे सबसे ज़्यादा मेमोरी दबाव घटाता है, फिर लगातार ओवरलोड रहने वाला प्रोसेसर, फिर बड़ा स्वैप, फिर लॉगइन पर खुलने वाले कई ऐप।"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zdravlje počinje sa 100. Najviše ga snižava pritisak na RAM, zatim veliki swap, pa mnogo aplikacija koje se otvaraju kod prijave."
+            "value" : "Zdravlje počinje od 100. Najviše ga snižava pritisak na RAM, zatim procesor koji ostaje preopterećen, zatim velik swap, a zatim mnogo aplikacija koje se otvaraju kod prijave."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La salute parte da 100. La pressione della memoria la abbassa di più, poi un grande swap, poi molte app che si aprono al login."
+            "value" : "La salute parte da 100. La abbassa soprattutto la pressione della memoria, poi un processore che resta sovraccarico, poi uno swap grande, poi molte app che si aprono al login."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "健康度は100から始まります。最も下がるのはメモリプレッシャー、次に大きなスワップ、そしてログイン時に開くアプリが多い場合です。"
+            "value" : "健康度は100から始まります。最も大きく下げるのはメモリプレッシャーで、次に過負荷が続くプロセッサ、大きなスワップ、ログイン時に開く多数のアプリの順です。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "상태는 100에서 시작합니다. 메모리 압력이 가장 크게 낮추고, 그다음 큰 스왑, 그다음 로그인 시 열리는 많은 앱 순입니다."
+            "value" : "상태는 100에서 시작합니다. 메모리 압력이 가장 크게 낮추고, 그다음은 계속 과부하인 프로세서, 큰 스왑, 로그인 시 열리는 많은 앱 순입니다."
           }
         },
         "lv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Veselība sākas ar 100. Visvairāk to pazemina atmiņas spiediens, tad liels swap, tad daudzas lietotnes, kas atveras pieteikšanās brīdī."
+            "value" : "Veselība sākas no 100. Visvairāk to samazina atmiņas spiediens, tad procesors, kas paliek pārslogots, tad liels swap, tad daudzas lietotnes, kas atveras pieteikšanās brīdī."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kondycja zaczyna się od 100. Najbardziej obniża ją ciśnienie pamięci, potem duży swap, a następnie wiele aplikacji otwieranych podczas logowania."
+            "value" : "Kondycja zaczyna się od 100. Najbardziej obniża ją ciśnienie pamięci, potem stale przeciążony procesor, potem duży swap, a na końcu wiele aplikacji otwieranych podczas logowania."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A saúde começa em 100. A pressão da memória é o que mais a reduz, depois um swap grande e depois muitas apps a abrir ao iniciar sessão."
+            "value" : "A saúde começa em 100. O que mais a baixa é a pressão da memória, depois um processador que continua sobrecarregado, depois um swap grande e, por fim, muitas apps que abrem ao iniciar sessão."
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Shëndeti fillon në 100. Presioni i memories e ul më shumë, pastaj një swap i madh, pastaj shumë aplikacione që hapen gjatë hyrjes."
+            "value" : "Shëndeti nis nga 100. Më shumë e ul presioni i memories, pastaj një procesor që mbetet i mbingarkuar, pastaj një swap i madh, pastaj shumë aplikacione që hapen gjatë hyrjes."
           }
         },
         "sr-Cyrl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Здравље почиње од 100. Притисак меморије га највише смањује, затим велики swap, па много апликација које се отварају при пријављивању."
+            "value" : "Здравље почиње од 100. Највише га смањује притисак меморије, затим процесор који остаје преоптерећен, затим велики swap, па много апликација које се отварају при пријављивању."
           }
         },
         "sr-Latn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zdravlje počinje od 100. Pritisak memorije ga najviše smanjuje, zatim veliki swap, pa mnogo aplikacija koje se otvaraju pri prijavljivanju."
+            "value" : "Zdravlje počinje od 100. Najviše ga smanjuje pritisak memorije, zatim procesor koji ostaje preopterećen, zatim veliki swap, pa mnogo aplikacija koje se otvaraju pri prijavljivanju."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hälsan börjar på 100. Minnestrycket sänker den mest, därefter en stor swap och sedan många appar som öppnas vid inloggning."
+            "value" : "Hälsan börjar på 100. Minnestryck sänker den mest, sedan en processor som förblir överbelastad, sedan en stor swap, sedan många appar som öppnas vid inloggning."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sağlık 100’den başlar. En çok bellek baskısı, sonra büyük bir takas, sonra oturum açıldığında açılan çok sayıda uygulama düşürür."
+            "value" : "Sağlık 100’den başlar. Onu en çok bellek baskısı düşürür, ardından sürekli aşırı yüklü kalan bir işlemci, ardından büyük bir takas, ardından oturum açıldığında açılan çok sayıda uygulama."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "健康度从 100 开始。内存压力扣分最多，其次是较大的交换空间，再其次是登录时打开的 App 过多。"
+            "value" : "健康度从 100 开始。内存压力对它影响最大，其次是持续过载的处理器，然后是较大的交换空间，最后是登录时打开的大量 App。"
           }
         }
       }
@@ -140842,6 +141583,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "高"
+          }
+        }
+      }
+    },
+    "Holds a Git repository, a database or links that may be the only copy. Check it in Finder first." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يحتوي على مستودع Git أو قاعدة بيانات أو روابط قد تكون النسخة الوحيدة. تحقّق منه في Finder أولًا."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conté un repositori Git, una base de dades o enllaços que poden ser l’única còpia. Comprova-ho primer al Finder."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enthält ein Git-Repository, eine Datenbank oder Links, die möglicherweise die einzige Kopie sind. Prüfe es zuerst im Finder."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holds a Git repository, a database or links that may be the only copy. Check it in Finder first."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holds a Git repository, a database or links that may be the only copy. Check it in Finder first."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holds a Git repository, a database or links that may be the only copy. Check it in Finder first."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contiene un repositorio Git, una base de datos o enlaces que pueden ser la única copia. Revísalo antes en el Finder."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contiene un repositorio Git, una base de datos o enlaces que pueden ser la única copia. Revísalo antes en el Finder."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contient un dépôt Git, une base de données ou des liens qui pourraient être la seule copie. Vérifiez d’abord dans le Finder."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enthaltet es Git-Repository, e Datebank oder Links, wo vilicht di einzig Kopie sind. Prüef s zerscht im Finder."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "इसमें Git रिपॉज़िटरी, डेटाबेस या लिंक हैं जो शायद इकलौती प्रति हों। पहले इसे Finder में जाँचें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sadrži Git repozitorij, bazu podataka ili poveznice koje su možda jedina kopija. Prvo ga provjeri u Finderu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contiene un repository Git, un database o link che potrebbero essere l’unica copia. Controllalo prima nel Finder."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "唯一のコピーかもしれないGitリポジトリ、データベース、またはリンクが含まれています。先にFinderで確認してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "유일한 사본일 수 있는 Git 저장소, 데이터베이스 또는 링크가 들어 있습니다. 먼저 Finder에서 확인하세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satur Git repozitoriju, datubāzi vai saites, kas var būt vienīgā kopija. Vispirms pārbaudi to Finder."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zawiera repozytorium Git, bazę danych lub dowiązania, które mogą być jedyną kopią. Najpierw sprawdź to w Finderze."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contém um repositório Git, uma base de dados ou ligações que podem ser a única cópia. Verifique-o primeiro no Finder."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Përmban një depo Git, një bazë të dhënash ose lidhje që mund të jenë kopja e vetme. Kontrolloje më parë në Finder."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Садржи Git репозиторијум, базу података или везе које су можда једина копија. Прво га проверите у Finder-у."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sadrži Git repozitorijum, bazu podataka ili veze koje su možda jedina kopija. Prvo ga proverite u Finder-u."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Innehåller ett Git-förråd, en databas eller länkar som kan vara den enda kopian. Kontrollera det i Finder först."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tek kopya olabilecek bir Git deposu, veritabanı veya bağlantılar içeriyor. Önce Finder’da kontrol edin."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "包含可能是唯一副本的 Git 仓库、数据库或链接。请先在 Finder 中检查。"
           }
         }
       }
@@ -145135,6 +146024,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "包括 macOS 可自行释放的空间（可清除）。"
+          }
+        }
+      }
+    },
+    "Information only: removing it would break an app or macOS" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "للعلم فقط: إزالته ستعطّل تطبيقًا أو macOS"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Només informatiu: treure-ho faria fallar una app o macOS"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur zur Information: Das Entfernen würde eine App oder macOS beschädigen"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Information only: removing it would break an app or macOS"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Information only: removing it would break an app or macOS"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Information only: removing it would break an app or macOS"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo informativo: quitarlo estropearía una app o macOS"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo informativo: quitarlo estropearía una app o macOS"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Information seulement : le supprimer casserait une app ou macOS"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nume zur Information: S Entferne würd e App oder macOS kaputt mache"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "केवल जानकारी के लिए: इसे हटाने से कोई ऐप या macOS खराब हो जाएगा"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Samo informacija: uklanjanje bi pokvarilo aplikaciju ili macOS"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo informativo: rimuoverlo danneggerebbe un’app o macOS"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "情報のみ：削除するとアプリまたはmacOSが動かなくなります"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "정보용: 제거하면 앱이나 macOS가 손상됩니다"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tikai informācijai: tā noņemšana sabojātu lietotni vai macOS"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tylko informacja: usunięcie zepsułoby aplikację lub macOS"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apenas informativo: removê-lo danificaria uma app ou o macOS"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vetëm për informacion: heqja e tij do të prishte një aplikacion ose macOS"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Само информација: уклањање би покварило апликацију или macOS"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Samo informacija: uklanjanje bi pokvarilo aplikaciju ili macOS"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endast information: att ta bort den skulle förstöra en app eller macOS"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca bilgi: kaldırmak bir uygulamayı veya macOS’u bozar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅供参考：移除它会导致某个 App 或 macOS 出问题"
           }
         }
       }
@@ -158953,6 +159990,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "上次运行：%@ · 释放 %@"
+          }
+        }
+      }
+    },
+    "Last used %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "آخر استخدام %@"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Últim ús %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuletzt verwendet %@"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last used %@"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last used %@"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last used %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Último uso %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Último uso %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernière utilisation %@"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zletscht bruucht %@"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अंतिम उपयोग %@"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadnje korišteno %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ultimo uso %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最終使用: %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마지막 사용: %@"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pēdējoreiz izmantots %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostatnio używany %@"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Último uso %@"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Përdorur së fundi %@"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Последње коришћено %@"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poslednje korišćeno %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Senast använd %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son kullanım: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次使用：%@"
           }
         }
       }
@@ -184525,154 +185710,6 @@
         }
       }
     },
-    "Nothing here passed every check. Tick what you want yourself." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "لم يجتز أي شيء هنا كل الفحوصات. حدّد ما تريده بنفسك."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Res d’aquí no ha superat totes les comprovacions. Marca tu el que vulguis."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hier hat nichts jede Prüfung bestanden. Wähle selbst aus, was du möchtest."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nothing here passed every check. Tick what you want yourself."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nothing here passed every check. Tick what you want yourself."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nothing here passed every check. Tick what you want yourself."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nada de aquí superó todas las comprobaciones. Marca tú lo que quieras."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nada de aquí superó todas las comprobaciones. Marca tú lo que quieras."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rien ici n’a passé toutes les vérifications. Cochez vous-même ce que vous voulez."
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Da het nüt jedi Prüefig bestande. Wähl sälber us, was du wotsch."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "यहाँ किसी ने हर जाँच पास नहीं की। जो चाहें, खुद चुनें।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ovdje ništa nije prošlo sve provjere. Sam označi što želiš."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Qui niente ha superato tutti i controlli. Seleziona tu ciò che vuoi."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ここにはすべてのチェックを通過した項目がありません。必要なものを自分で選んでください。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "여기에는 모든 검사를 통과한 항목이 없습니다. 원하는 항목을 직접 선택하세요."
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Šeit nekas nav izturējis visas pārbaudes. Atzīmē pats, ko vēlies."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nic tutaj nie przeszło wszystkich kontroli. Zaznacz sam, co chcesz."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nada aqui passou em todas as verificações. Assinale o que quiser."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Asgjë këtu nuk i kaloi të gjitha kontrollet. Shëno vetë çfarë do."
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ништа овде није прошло све провере. Сами означите шта желите."
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ništa ovde nije prošlo sve provere. Sami označite šta želite."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inget här klarade alla kontroller. Markera själv det du vill."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buradaki hiçbir şey tüm denetimlerden geçmedi. İstediklerinizi kendiniz işaretleyin."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "这里没有任何项目通过所有检查。请自行勾选想要的项目。"
-          }
-        }
-      }
-    },
     "Nothing here." : {
       "localizations" : {
         "ar" : {
@@ -185705,6 +186742,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "列出的项目在过去 30 天内都没有更改。"
+          }
+        }
+      }
+    },
+    "Nothing passed every check, so this selects the orange items: used recently or with a warning. Red items stay unselected." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم يجتز أي عنصر كل الفحوصات، لذا يحدد هذا العناصر البرتقالية: المستخدمة مؤخرًا أو التي تحمل تحذيرًا. تبقى العناصر الحمراء غير محددة."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Res no ha superat totes les comprovacions, així que això selecciona els elements taronja: usats fa poc o amb un avís. Els elements vermells queden sense seleccionar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts hat alle Prüfungen bestanden, deshalb werden die orangen Elemente ausgewählt: kürzlich benutzt oder mit einer Warnung. Rote Elemente bleiben abgewählt."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing passed every check, so this selects the orange items: used recently or with a warning. Red items stay unselected."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing passed every check, so this selects the orange items: used recently or with a warning. Red items stay unselected."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing passed every check, so this selects the orange items: used recently or with a warning. Red items stay unselected."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada ha superado todas las comprobaciones, así que se seleccionan los elementos naranjas: usados hace poco o con un aviso. Los elementos rojos quedan sin seleccionar."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada pasó todas las comprobaciones, así que se seleccionan los elementos naranjas: usados hace poco o con una advertencia. Los elementos rojos quedan sin seleccionar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rien n’a passé toutes les vérifications ; les éléments orange sont donc sélectionnés : utilisés récemment ou avec un avertissement. Les éléments rouges restent désélectionnés."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nüt hät alli Prüefige bestande, drum werded di orange Elemänt uusgwählt: chürzlich bruucht oder mit ere Warnig. Roti Elemänt blibed abgwählt."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कोई भी आइटम हर जाँच में पास नहीं हुआ, इसलिए यह नारंगी आइटम चुनता है: हाल में उपयोग किए गए या चेतावनी वाले। लाल आइटम अचयनित रहते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ništa nije prošlo sve provjere, pa se odabiru narančaste stavke: nedavno korištene ili s upozorenjem. Crvene stavke ostaju neodabrane."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niente ha superato tutti i controlli, quindi vengono selezionati gli elementi arancioni: usati di recente o con un avviso. Gli elementi rossi restano non selezionati."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのチェックに合格した項目がないため、オレンジの項目(最近使用されたもの、または警告があるもの)を選択します。赤い項目は選択されません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 검사를 통과한 항목이 없어 주황색 항목을 선택합니다: 최근에 사용했거나 경고가 있는 항목입니다. 빨간색 항목은 선택되지 않습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nekas neizturēja visas pārbaudes, tāpēc tiek atlasīti oranžie vienumi: nesen lietoti vai ar brīdinājumu. Sarkanie vienumi paliek neatlasīti."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nic nie przeszło wszystkich kontroli, więc zaznaczane są pomarańczowe elementy: niedawno używane lub z ostrzeżeniem. Czerwone elementy pozostają niezaznaczone."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada passou em todas as verificações, por isso são selecionados os itens laranja: usados recentemente ou com um aviso. Os itens vermelhos ficam por selecionar."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asgjë nuk kaloi të gjitha kontrollet, prandaj zgjidhen elementet portokalli: të përdorura së fundmi ose me një paralajmërim. Elementet e kuqe mbeten të pazgjedhura."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ништа није прошло све провере, па се бирају наранџасте ставке: недавно коришћене или са упозорењем. Црвене ставке остају неизабране."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ništa nije prošlo sve provere, pa se biraju narandžaste stavke: nedavno korišćene ili sa upozorenjem. Crvene stavke ostaju neizabrane."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inget klarade alla kontroller, så de orange objekten markeras: nyligen använda eller med en varning. Röda objekt förblir omarkerade."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiçbir öğe tüm denetimleri geçemedi, bu yüzden turuncu öğeler seçilir: yakın zamanda kullanılmış veya uyarılı olanlar. Kırmızı öğeler seçilmeden kalır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有项目通过所有检查，因此会选择橙色项目：最近使用过或带有警告的项目。红色项目保持未选中。"
           }
         }
       }
@@ -193363,6 +194548,154 @@
         }
       }
     },
+    "Only red items are left. Unlock the ones you want, one by one." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم يبقَ سوى العناصر الحمراء. افتح قفل ما تريده منها واحدًا تلو الآخر."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Només queden elements vermells. Desbloqueja els que vulguis, un per un."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es sind nur noch rote Elemente übrig. Entsperre die gewünschten einzeln."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only red items are left. Unlock the ones you want, one by one."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only red items are left. Unlock the ones you want, one by one."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only red items are left. Unlock the ones you want, one by one."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo quedan elementos rojos. Desbloquea los que quieras, uno a uno."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo quedan elementos rojos. Desbloquea los que quieras, uno por uno."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il ne reste que des éléments rouges. Déverrouillez ceux que vous voulez, un par un."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es hät nume no roti Elemänt. Entsperr die, wo du wotsch, eis nach em andere."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "केवल लाल आइटम बचे हैं। जो चाहिए उन्हें एक-एक करके अनलॉक करें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostale su samo crvene stavke. Otključaj one koje želiš, jednu po jednu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restano solo elementi rossi. Sblocca quelli che vuoi, uno alla volta."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "残っているのは赤い項目だけです。必要なものを1つずつロック解除してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "빨간색 항목만 남았습니다. 원하는 항목을 하나씩 잠금 해제하세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palikuši tikai sarkanie vienumi. Atbloķē vajadzīgos pa vienam."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zostały tylko czerwone elementy. Odblokuj te, które chcesz, jeden po drugim."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Só restam itens vermelhos. Desbloqueie os que quiser, um a um."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kanë mbetur vetëm elemente të kuqe. Zhblloko ato që do, një nga një."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Остале су само црвене ставке. Откључајте оне које желите, једну по једну."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostale su samo crvene stavke. Otključajte one koje želite, jednu po jednu."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bara röda objekt finns kvar. Lås upp dem du vill, ett i taget."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca kırmızı öğeler kaldı. İstediklerinizin kilidini tek tek açın."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只剩下红色项目了。请逐个解锁你想要的项目。"
+          }
+        }
+      }
+    },
     "Only reviewable worktrees can be deleted." : {
       "localizations" : {
         "ar" : {
@@ -199727,6 +201060,154 @@
         }
       }
     },
+    "Opens every lock listed here. Nothing is selected yet, and red items still need you to type to delete them." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يفتح كل قفل مدرج هنا. لا يتم تحديد أي شيء بعد، وما زالت العناصر الحمراء تحتاج إلى الكتابة لحذفها."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obre tots els cadenats d'aquesta llista. Encara no se selecciona res, i els elements vermells encara cal escriure per eliminar-los."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnet jedes Schloss in dieser Liste. Noch ist nichts ausgewählt, und für rote Einträge musst du zum Löschen weiterhin tippen."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens every lock listed here. Nothing is selected yet, and red items still need you to type to delete them."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens every lock listed here. Nothing is selected yet, and red items still need you to type to delete them."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens every lock listed here. Nothing is selected yet, and red items still need you to type to delete them."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre todos los candados de esta lista. Todavía no se selecciona nada, y para eliminar los elementos rojos aún tienes que escribir."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre todos los candados de esta lista. Todavía no se selecciona nada, y para eliminar los elementos rojos aún tienes que escribir."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvre tous les cadenas de cette liste. Rien n'est encore sélectionné, et pour supprimer les éléments rouges, il faut toujours taper."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macht jedes Schloss i dere Lischte uf. No isch nüt usgwählt, und für roti Iiträg muesch zum Lösche immer no tippe."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "यहाँ सूचीबद्ध हर लॉक खोलता है। अभी कुछ चुना नहीं जाता, और लाल आइटम हटाने के लिए अब भी टाइप करना होगा।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvara svaki lokot na ovom popisu. Još ništa nije odabrano, a za brisanje crvenih stavki i dalje morate upisati potvrdu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apre ogni lucchetto in questo elenco. Non viene ancora selezionato nulla, e per eliminare gli elementi rossi devi comunque digitare."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ここに表示されているロックをすべて解除します。まだ何も選択されません。赤い項目を削除するには引き続き入力が必要です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "여기 표시된 모든 잠금을 엽니다. 아직 아무것도 선택되지 않으며, 빨간 항목을 삭제하려면 여전히 입력해야 합니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atver katru šeit uzskaitīto slēdzeni. Vēl nekas netiek atlasīts, un sarkano vienumu dzēšanai joprojām jāieraksta apstiprinājums."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwiera każdą kłódkę z tej listy. Nic nie jest jeszcze zaznaczone, a usunięcie czerwonych elementów nadal wymaga wpisania potwierdzenia."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre todos os cadeados desta lista. Nada é selecionado ainda, e os itens vermelhos continuam a exigir que escrevas para os eliminar."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hap çdo kyç të listuar këtu. Ende nuk zgjidhet asgjë, dhe artikujt e kuq ende kërkojnë të shkruash për t'i fshirë."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отвара сваки катанац са овог списка. Још ништа није изабрано, а за брисање црвених ставки и даље треба да укуцате потврду."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvara svaki katanac sa ovog spiska. Još ništa nije izabrano, a za brisanje crvenih stavki i dalje treba da ukucate potvrdu."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öppnar alla lås i listan. Inget markeras än, och röda objekt kräver fortfarande att du skriver för att radera dem."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Burada listelenen tüm kilitleri açar. Henüz hiçbir şey seçilmez; kırmızı öğeleri silmek için yine yazmanız gerekir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开此处列出的所有锁。暂不选择任何项目，删除红色项目仍需输入确认。"
+          }
+        }
+      }
+    },
     "Operation cancelled" : {
       "localizations" : {
         "ar" : {
@@ -202388,6 +203869,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "PID"
+          }
+        }
+      }
+    },
+    "Parallels virtual machine" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جهاز Parallels الافتراضي"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Màquina virtual de Parallels"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuelle Maschine von Parallels"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parallels virtual machine"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parallels virtual machine"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parallels virtual machine"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina virtual de Parallels"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina virtual de Parallels"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Machine virtuelle Parallels"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuelli Maschine vo Parallels"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parallels वर्चुअल मशीन"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parallels virtualni stroj"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macchina virtuale Parallels"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parallels仮想マシン"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parallels 가상 머신"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parallels virtuālā mašīna"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maszyna wirtualna Parallels"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina virtual do Parallels"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Makinë virtuale Parallels"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parallels виртуелна машина"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parallels virtuelna mašina"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuell maskin för Parallels"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parallels sanal makinesi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parallels 虚拟机"
           }
         }
       }
@@ -209791,154 +211420,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "受保护的储存位置"
-          }
-        }
-      }
-    },
-    "Protected: Artifloam never removes this" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "محمي: لا يزيله Artifloam أبدًا"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Protegit: l’Artifloam no ho elimina mai"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Geschützt: Artifloam entfernt das nie"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Protected: Artifloam never removes this"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Protected: Artifloam never removes this"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Protected: Artifloam never removes this"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Protegido: Artifloam nunca lo elimina"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Protegido: Artifloam nunca lo elimina"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Protégé : Artifloam ne le supprime jamais"
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gschützt: Artifloam entfernt das nie"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "सुरक्षित: Artifloam इसे कभी नहीं हटाता"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zaštićeno: Artifloam ovo nikad ne uklanja"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Protetto: Artifloam non lo rimuove mai"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "保護:Artifloamがこれを削除することはありません"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "보호됨: Artifloam은 이 항목을 절대 제거하지 않습니다"
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aizsargāts: Artifloam to nekad nenoņem"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chronione: Artifloam nigdy tego nie usuwa"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Protegido: o Artifloam nunca remove isto"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E mbrojtur: Artifloam nuk e heq kurrë"
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Заштићено: Artifloam ово никад не уклања"
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zaštićeno: Artifloam ovo nikad ne uklanja"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skyddat: Artifloam tar aldrig bort detta"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Korumalı: Artifloam bunu asla kaldırmaz"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "受保护:Artifloam 绝不会移除此项"
           }
         }
       }
@@ -217643,6 +219124,302 @@
         }
       }
     },
+    "Red items · %@. They're in use or may be the only copy. Running simulators are shut down first; apps using the others lose these files." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العناصر الحمراء · %@. إنها قيد الاستخدام أو قد تكون النسخة الوحيدة. تُوقَف المحاكيات العاملة أولًا؛ وتفقد التطبيقات التي تستخدم البقية هذه الملفات."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elements vermells · %@. Estan en ús o poden ser l’única còpia. Els simuladors en marxa s’aturen primer; les apps que fan servir els altres perden aquests fitxers."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rote Elemente · %@. Sie sind in Gebrauch oder möglicherweise die einzige Kopie. Laufende Simulatoren werden zuerst heruntergefahren; Apps, die die anderen nutzen, verlieren diese Dateien."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red items · %@. They're in use or may be the only copy. Running simulators are shut down first; apps using the others lose these files."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red items · %@. They're in use or may be the only copy. Running simulators are shut down first; apps using the others lose these files."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red items · %@. They're in use or may be the only copy. Running simulators are shut down first; apps using the others lose these files."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elementos rojos · %@. Están en uso o pueden ser la única copia. Los simuladores en ejecución se apagan primero; las apps que usan los demás pierden estos archivos."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elementos rojos · %@. Están en uso o pueden ser la única copia. Los simuladores en ejecución se apagan primero; las apps que usan los demás pierden estos archivos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éléments rouges · %@. Ils sont en cours d’utilisation ou pourraient être la seule copie. Les simulateurs en cours sont d’abord éteints ; les apps qui utilisent les autres perdent ces fichiers."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roti Elemänt · %@. Si werded bruucht oder sind vilicht di einzig Kopie. Laufendi Simulatore werded zerscht abgstellt; Apps, wo di andere bruuched, verlüüred die Dateie."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "लाल आइटम · %@. ये उपयोग में हैं या शायद इकलौती प्रति हैं। चल रहे सिम्युलेटर पहले बंद किए जाते हैं; बाकी का उपयोग करने वाले ऐप ये फ़ाइलें खो देते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crvene stavke · %@. U upotrebi su ili su možda jedina kopija. Pokrenuti simulatori najprije se gase; aplikacije koje koriste ostale gube ove datoteke."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elementi rossi · %@. Sono in uso o potrebbero essere l’unica copia. I simulatori in esecuzione vengono prima spenti; le app che usano gli altri perdono questi file."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "赤い項目 · %@。使用中か、唯一のコピーの可能性があります。実行中のシミュレータは先に終了されます。それ以外を使っているアプリは、これらのファイルを失います。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "빨간색 항목 · %@. 사용 중이거나 유일한 사본일 수 있습니다. 실행 중인 시뮬레이터는 먼저 종료되며, 나머지를 사용하는 앱은 이 파일을 잃습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sarkanie vienumi · %@. Tie tiek lietoti vai var būt vienīgā kopija. Palaistie simulatori vispirms tiek izslēgti; lietotnes, kas izmanto pārējos, zaudē šos failus."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czerwone elementy · %@. Są w użyciu lub mogą być jedyną kopią. Uruchomione symulatory zostaną najpierw wyłączone; aplikacje korzystające z pozostałych stracą te pliki."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Itens vermelhos · %@. Estão em uso ou podem ser a única cópia. Os simuladores em execução são desligados primeiro; as apps que usam os restantes perdem estes ficheiros."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elementet e kuqe · %@. Janë në përdorim ose mund të jenë kopja e vetme. Simulatorët që po punojnë fiken së pari; aplikacionet që përdorin të tjerët i humbin këta skedarë."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Црвене ставке · %@. У употреби су или су можда једина копија. Покренути симулатори се прво гасе; апликације које користе остале губе ове датотеке."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crvene stavke · %@. U upotrebi su ili su možda jedina kopija. Pokrenuti simulatori se prvo gase; aplikacije koje koriste ostale gube ove datoteke."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Röda objekt · %@. De används eller kan vara den enda kopian. Simulatorer som körs stängs av först; appar som använder de andra förlorar de här filerna."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kırmızı öğeler · %@. Kullanımdalar veya tek kopya olabilirler. Çalışan simülatörler önce kapatılır; diğerlerini kullanan uygulamalar bu dosyaları kaybeder."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "红色项目 · %@。它们正在使用或可能是唯一副本。正在运行的模拟器会先被关闭；使用其他项目的 App 会失去这些文件。"
+          }
+        }
+      }
+    },
+    "Red lock: in use or may be the only copy. Unlock to delete it anyway; you type to confirm." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قفل أحمر: قيد الاستخدام أو قد يكون النسخة الوحيدة. افتح القفل لحذفه على أي حال؛ ستكتب كلمة للتأكيد."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadenat vermell: en ús o pot ser l’única còpia. Desbloqueja-ho per esborrar-ho igualment; hauràs d’escriure una paraula per confirmar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rotes Schloss: in Gebrauch oder möglicherweise die einzige Kopie. Entsperre es, um es trotzdem zu löschen; zur Bestätigung tippst du ein Wort ein."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red lock: in use or may be the only copy. Unlock to delete it anyway; you type to confirm."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red lock: in use or may be the only copy. Unlock to delete it anyway; you type to confirm."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red lock: in use or may be the only copy. Unlock to delete it anyway; you type to confirm."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Candado rojo: en uso o puede ser la única copia. Desbloquéalo para borrarlo de todos modos; tendrás que escribir una palabra para confirmar."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Candado rojo: en uso o puede ser la única copia. Desbloquéalo para borrarlo de todos modos; tendrás que escribir una palabra para confirmar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadenas rouge : en cours d’utilisation ou peut-être la seule copie. Déverrouillez pour le supprimer quand même ; vous taperez un mot pour confirmer."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rots Schloss: im Bruuch oder vilicht di einzig Kopie. Entsperr s, zum s trotzdem z lösche; zur Bestätigung tippsch es Wort ii."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "लाल लॉक: उपयोग में है या शायद इकलौती प्रति है। फिर भी डिलीट करने के लिए अनलॉक करें; पुष्टि के लिए आपको एक शब्द टाइप करना होगा।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crveni lokot: u upotrebi ili je možda jedina kopija. Otključaj da ga ipak izbrišeš; za potvrdu ćeš upisati riječ."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lucchetto rosso: in uso o forse l’unica copia. Sbloccalo per eliminarlo comunque; per confermare dovrai digitare una parola."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "赤いロック：使用中か、唯一のコピーの可能性があります。それでも削除するにはロックを解除します。確認のために入力が必要です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "빨간 자물쇠: 사용 중이거나 유일한 사본일 수 있습니다. 그래도 삭제하려면 잠금을 해제하세요. 확인하려면 단어를 입력해야 합니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sarkana slēdzene: tiek lietots vai var būt vienīgā kopija. Atbloķē, lai tomēr to dzēstu; apstiprināšanai būs jāieraksta vārds."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czerwona kłódka: w użyciu lub może być jedyną kopią. Odblokuj, aby i tak usunąć; potwierdzisz, wpisując słowo."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadeado vermelho: em uso ou pode ser a única cópia. Desbloqueie para o eliminar mesmo assim; terá de escrever uma palavra para confirmar."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kyç i kuq: në përdorim ose mund të jetë kopja e vetme. Zhbllokoje për ta fshirë gjithsesi; do të shkruash një fjalë për ta konfirmuar."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Црвени катанац: у употреби или је можда једина копија. Откључајте да бисте га ипак обрисали; за потврду ћете откуцати реч."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crveni katanac: u upotrebi ili je možda jedina kopija. Otključajte da biste ga ipak obrisali; za potvrdu ćete otkucati reč."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rött lås: används eller kan vara den enda kopian. Lås upp för att radera den ändå; du skriver ett ord för att bekräfta."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kırmızı kilit: kullanımda veya tek kopya olabilir. Yine de silmek için kilidi açın; onaylamak için bir sözcük yazmanız gerekir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "红色锁：正在使用或可能是唯一副本。解锁后仍可删除；需要输入一个词来确认。"
+          }
+        }
+      }
+    },
     "Redis database server" : {
       "localizations" : {
         "ar" : {
@@ -223667,6 +225444,154 @@
         }
       }
     },
+    "Restart" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إعادة التشغيل"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reinicia"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neu starten"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redémarrer"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neu starte"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "रीस्टार्ट करें"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponovno pokreni"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Riavvia"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再起動"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재시동"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restartēt"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uruchom ponownie"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rinis"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поново покрени"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponovo pokreni"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starta om"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeniden Başlat"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新启动"
+          }
+        }
+      }
+    },
     "Restart Now" : {
       "localizations" : {
         "ar" : {
@@ -224459,6 +226384,154 @@
         }
       }
     },
+    "Restart your Mac?" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هل تريد إعادة تشغيل الـ Mac؟"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vols reiniciar el Mac?"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deinen Mac neu starten?"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart your Mac?"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart your Mac?"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart your Mac?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Reiniciar el Mac?"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Reiniciar la Mac?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redémarrer votre Mac ?"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Din Mac neu starte?"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अपना Mac रीस्टार्ट करें?"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponovno pokrenuti Mac?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Riavviare il Mac?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macを再起動しますか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac을 재시동하겠습니까?"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restartēt Mac?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uruchomić ponownie Maca?"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar o Mac?"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Të riniset Mac-u?"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поново покренути Mac?"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponovo pokrenuti Mac?"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starta om din Mac?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac’iniz yeniden başlatılsın mı?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要重新启动你的 Mac 吗？"
+          }
+        }
+      }
+    },
     "Restarted recently." : {
       "localizations" : {
         "ar" : {
@@ -224603,6 +226676,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最近重新启动过。"
+          }
+        }
+      }
+    },
+    "Restart…" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إعادة التشغيل…"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reinicia…"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neu starten…"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart…"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart…"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar…"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redémarrer…"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neu starte…"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "रीस्टार्ट करें…"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponovno pokreni…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Riavvia…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再起動…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재시동…"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restartēt…"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uruchom ponownie…"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar…"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rinis…"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поново покрени…"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponovo pokreni…"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starta om…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeniden Başlat…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新启动…"
           }
         }
       }
@@ -229491,6 +231712,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在运行"
+          }
+        }
+      }
+    },
+    "Running now. Artifloam shuts it down first, then deletes it." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قيد التشغيل الآن. يوقفه Artifloam أولًا ثم يحذفه."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ara està en marxa. Artifloam primer l’atura i després l’esborra."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Läuft gerade. Artifloam fährt es zuerst herunter und löscht es dann."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running now. Artifloam shuts it down first, then deletes it."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running now. Artifloam shuts it down first, then deletes it."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running now. Artifloam shuts it down first, then deletes it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Está en ejecución. Artifloam primero lo apaga y luego lo borra."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Está en ejecución. Artifloam primero lo apaga y luego lo borra."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En cours d’exécution. Artifloam l’éteint d’abord, puis le supprime."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lauft grad. Artifloam schaltet s zerscht ab und löscht s denn."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अभी चल रहा है। Artifloam पहले इसे बंद करता है, फिर डिलीट करता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trenutačno radi. Artifloam ga najprije gasi, a zatim briše."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In esecuzione. Artifloam prima lo spegne, poi lo elimina."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在実行中です。Artifloamが先に終了してから削除します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지금 실행 중입니다. Artifloam이 먼저 종료한 다음 삭제합니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pašlaik darbojas. Artifloam to vispirms izslēdz un tad dzēš."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teraz działa. Artifloam najpierw go wyłączy, a potem usunie."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em execução. O Artifloam desliga-o primeiro e depois elimina-o."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Po punon tani. Artifloam e fik më parë, pastaj e fshin."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тренутно ради. Artifloam га прво гаси, па брише."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trenutno radi. Artifloam ga prvo gasi, pa briše."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Körs nu. Artifloam stänger av den först och raderar den sedan."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu anda çalışıyor. Artifloam önce kapatır, sonra siler."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在运行。Artifloam 会先关闭它，然后删除。"
           }
         }
       }
@@ -245067,154 +247436,6 @@
         }
       }
     },
-    "Shut down all" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "إيقاف الكل"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atura-ho tot"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle herunterfahren"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shut down all"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shut down all"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shut down all"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apagar todos"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apagar todos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tout éteindre"
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alli abeschalte"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "सब बंद करें"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ugasi sve"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spegni tutti"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "すべて終了"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "모두 종료"
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Izslēgt visus"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wyłącz wszystkie"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desligar todos"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fik të gjithë"
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Угаси све"
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ugasi sve"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stäng av alla"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tümünü kapat"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "全部关闭"
-          }
-        }
-      }
-    },
     "Shut down all · %@" : {
       "localizations" : {
         "ar" : {
@@ -245359,6 +247580,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "全部关闭 · %@"
+          }
+        }
+      }
+    },
+    "Shut down unused · %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إيقاف غير المستخدمة · %@"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atura els que no s'usen · %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unbenutzte herunterfahren · %@"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down unused · %@"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down unused · %@"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shut down unused · %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagar los que no se usan · %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagar los que no se usan · %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éteindre les inutilisés · %@"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unbruuchti abeschalte · %@"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अप्रयुक्त बंद करें · %@"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ugasi nekorištene · %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spegni quelli non usati · %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未使用を終了 · %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "미사용 종료 · %@"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izslēgt neizmantotos · %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyłącz nieużywane · %@"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desligar os sem uso · %@"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fik të papërdorurit · %@"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Угаси некоришћене · %@"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ugasi nekorišćene · %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stäng av oanvända · %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanılmayanları kapat · %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭未使用的 · %@"
           }
         }
       }
@@ -256920,6 +259289,154 @@
         }
       }
     },
+    "Temporary files of an earlier Claude Code session: scratch work, downloads and build output. The conversation itself stays." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ملفات مؤقتة من جلسة Claude Code سابقة: أعمال تجريبية وتنزيلات ومخرجات البناء. تبقى المحادثة نفسها."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fitxers temporals d’una sessió anterior de Claude Code: feina provisional, baixades i sortida de compilació. La conversa en si es queda."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temporäre Dateien einer früheren Claude Code-Sitzung: Zwischenstände, Downloads und Build-Ausgaben. Das Gespräch selbst bleibt erhalten."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temporary files of an earlier Claude Code session: scratch work, downloads and build output. The conversation itself stays."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temporary files of an earlier Claude Code session: scratch work, downloads and build output. The conversation itself stays."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temporary files of an earlier Claude Code session: scratch work, downloads and build output. The conversation itself stays."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archivos temporales de una sesión anterior de Claude Code: trabajo provisional, descargas y salida de compilación. La conversación en sí se conserva."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archivos temporales de una sesión anterior de Claude Code: trabajo provisional, descargas y salida de compilación. La conversación en sí se conserva."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fichiers temporaires d’une ancienne session Claude Code : brouillons, téléchargements et résultats de compilation. La conversation elle-même reste."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temporäri Dateie vo ere früenere Claude Code-Session: Zwüschestände, Downloads und Build-Usgabe. S Gspräch sälber blibt."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "पिछले Claude Code सेशन की अस्थायी फ़ाइलें: कच्चा काम, डाउनलोड और बिल्ड आउटपुट। बातचीत खुद रखी जाती है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privremene datoteke ranije sesije Claude Codea: radne skice, preuzimanja i izlaz builda. Sam razgovor ostaje."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File temporanei di una sessione precedente di Claude Code: lavoro provvisorio, download e output di build. La conversazione resta."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以前のClaude Codeセッションの一時ファイル(作業用ファイル、ダウンロード、ビルド出力)。会話自体は残ります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이전 Claude Code 세션의 임시 파일: 작업용 파일, 다운로드, 빌드 결과물. 대화 자체는 유지됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iepriekšējas Claude Code sesijas pagaidu faili: melnraksta darbs, lejupielādes un būvējuma izvade. Pati saruna paliek."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pliki tymczasowe wcześniejszej sesji Claude Code: pliki robocze, pobrane pliki i wyniki kompilacji. Sama rozmowa zostaje."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ficheiros temporários de uma sessão anterior do Claude Code: trabalho provisório, transferências e resultados de compilação. A conversa em si fica."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skedarë të përkohshëm të një sesioni të mëparshëm të Claude Code: punë provizore, shkarkime dhe rezultate të ndërtimit. Vetë biseda mbetet."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Привремене датотеке раније сесије алата Claude Code: радне скице, преузимања и излаз изградње. Сам разговор остаје."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privremene datoteke ranije sesije alata Claude Code: radne skice, preuzimanja i izlaz izgradnje. Sam razgovor ostaje."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temporära filer från en tidigare Claude Code-session: arbetsfiler, hämtningar och byggutdata. Själva konversationen behålls."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Önceki bir Claude Code oturumunun geçici dosyaları: taslak çalışmalar, indirmeler ve derleme çıktısı. Konuşmanın kendisi kalır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "之前某个 Claude Code 会话的临时文件：草稿工作、下载内容和构建输出。对话本身会保留。"
+          }
+        }
+      }
+    },
     "Test build %@" : {
       "localizations" : {
         "ar" : {
@@ -259136,6 +261653,450 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "筛选条件隐藏了此列表中的项目。未移除任何内容。"
+          }
+        }
+      }
+    },
+    "The processor has had more work than it has cores for minutes. Apps may respond slowly." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يتلقى المعالج منذ دقائق عملًا أكثر مما تستوعبه أنويته. قد تستجيب التطبيقات ببطء."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fa minuts que el processador té més feina que nuclis. Les apps poden respondre lentament."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Prozessor hat seit Minuten mehr Arbeit, als er Kerne hat. Apps reagieren eventuell langsam."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The processor has had more work than it has cores for minutes. Apps may respond slowly."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The processor has had more work than it has cores for minutes. Apps may respond slowly."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The processor has had more work than it has cores for minutes. Apps may respond slowly."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El procesador lleva minutos con más trabajo del que pueden asumir sus núcleos. Las apps pueden responder despacio."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El procesador lleva minutos con más trabajo del que pueden asumir sus núcleos. Las apps pueden responder despacio."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Depuis plusieurs minutes, le processeur a plus de travail que de cœurs. Les apps peuvent répondre lentement."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De Prozessor hät sit Minute meh Arbeit, als er Chern hät. Apps chönnted langsam reagiere."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कई मिनट से प्रोसेसर के पास उसके कोर से ज़्यादा काम है। ऐप धीरे जवाब दे सकते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Procesor već minutama ima više posla nego jezgri. Aplikacije bi mogle sporo reagirati."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Da alcuni minuti il processore ha più lavoro di quanti core abbia. Le app potrebbero rispondere lentamente."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "数分前から、プロセッサにコア数を超える処理が続いています。アプリの反応が遅くなることがあります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "몇 분째 프로세서에 코어 수보다 많은 작업이 몰려 있습니다. 앱 반응이 느려질 수 있습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Procesoram jau vairākas minūtes ir vairāk darba, nekā tam ir kodolu. Lietotnes var reaģēt lēni."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Od kilku minut procesor ma więcej pracy, niż ma rdzeni. Aplikacje mogą reagować wolno."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Há minutos que o processador tem mais trabalho do que núcleos. As apps podem responder lentamente."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prej disa minutash procesori ka më shumë punë se sa bërthama. Aplikacionet mund të përgjigjen ngadalë."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Процесор већ минутима има више посла него језгара. Апликације могу споро да реагују."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Procesor već minutima ima više posla nego jezgara. Aplikacije mogu sporo da reaguju."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processorn har i flera minuter haft mer arbete än den har kärnor. Appar kan svara långsamt."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İşlemci dakikalardır çekirdek sayısından fazla iş yüküyle çalışıyor. Uygulamalar yavaş yanıt verebilir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "几分钟来，处理器的工作量一直超过其核心数。App 可能响应缓慢。"
+          }
+        }
+      }
+    },
+    "The processor has had more work than it has cores for minutes. Busiest: %@." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يتلقى المعالج منذ دقائق عملًا أكثر مما تستوعبه أنويته. الأكثر انشغالًا: %@."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fa minuts que el processador té més feina que nuclis. El més ocupat: %@."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Prozessor hat seit Minuten mehr Arbeit, als er Kerne hat. Am stärksten ausgelastet: %@."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The processor has had more work than it has cores for minutes. Busiest: %@."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The processor has had more work than it has cores for minutes. Busiest: %@."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The processor has had more work than it has cores for minutes. Busiest: %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El procesador lleva minutos con más trabajo del que pueden asumir sus núcleos. El más ocupado: %@."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El procesador lleva minutos con más trabajo del que pueden asumir sus núcleos. El más ocupado: %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Depuis plusieurs minutes, le processeur a plus de travail que de cœurs. Le plus actif : %@."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De Prozessor hät sit Minute meh Arbeit, als er Chern hät. Am meischte usglaschtet: %@."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कई मिनट से प्रोसेसर के पास उसके कोर से ज़्यादा काम है। सबसे व्यस्त: %@।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Procesor već minutama ima više posla nego jezgri. Najzaposleniji: %@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Da alcuni minuti il processore ha più lavoro di quanti core abbia. Il più impegnato: %@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "数分前から、プロセッサにコア数を超える処理が続いています。最も負荷が高いもの：%@。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "몇 분째 프로세서에 코어 수보다 많은 작업이 몰려 있습니다. 가장 바쁜 항목: %@."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Procesoram jau vairākas minūtes ir vairāk darba, nekā tam ir kodolu. Visnoslogotākais: %@."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Od kilku minut procesor ma więcej pracy, niż ma rdzeni. Najbardziej obciąża: %@."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Há minutos que o processador tem mais trabalho do que núcleos. O mais ocupado: %@."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prej disa minutash procesori ka më shumë punë se sa bërthama. Më i ngarkuari: %@."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Процесор већ минутима има више посла него језгара. Најзаузетији: %@."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Procesor već minutima ima više posla nego jezgara. Najzauzetiji: %@."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processorn har i flera minuter haft mer arbete än den har kärnor. Mest belastad: %@."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İşlemci dakikalardır çekirdek sayısından fazla iş yüküyle çalışıyor. En yoğun: %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "几分钟来，处理器的工作量一直超过其核心数。最繁忙：%@。"
+          }
+        }
+      }
+    },
+    "The restart didn't start. An app may have cancelled it, or Artifloam needs permission to control System Events in Privacy & Security › Automation." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم تبدأ إعادة التشغيل. ربما ألغاها تطبيق، أو يحتاج Artifloam إلى إذن للتحكم في System Events من الخصوصية والأمن › التحكم التلقائي."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El reinici no ha començat. Potser una app l’ha cancel·lat, o Artifloam necessita permís per controlar System Events a Privacitat i seguretat › Automatització."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Neustart hat nicht begonnen. Eine App hat ihn eventuell abgebrochen, oder Artifloam braucht unter Datenschutz & Sicherheit › Automation die Erlaubnis, System Events zu steuern."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The restart didn't start. An app may have cancelled it, or Artifloam needs permission to control System Events in Privacy & Security › Automation."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The restart didn't start. An app may have cancelled it, or Artifloam needs permission to control System Events in Privacy & Security › Automation."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The restart didn't start. An app may have cancelled it, or Artifloam needs permission to control System Events in Privacy & Security › Automation."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El reinicio no ha empezado. Puede que una app lo haya cancelado o que Artifloam necesite permiso para controlar System Events en Privacidad y seguridad › Automatización."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El reinicio no empezó. Puede que una app lo haya cancelado o que Artifloam necesite permiso para controlar System Events en Privacidad y seguridad › Automatización."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le redémarrage n’a pas commencé. Une app l’a peut-être annulé, ou Artifloam a besoin de l’autorisation de contrôler System Events dans Confidentialité et sécurité › Automatisation."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De Neustart hät nöd aagfange. Vilicht hät e App en abbroche, oder Artifloam bruucht under Datenschutz & Sicherheit › Automation d Erlaubnis, System Events z steuere."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "रीस्टार्ट शुरू नहीं हुआ। शायद किसी ऐप ने इसे रद्द कर दिया, या Artifloam को गोपनीयता और सुरक्षा › ऑटोमेशन में System Events नियंत्रित करने की अनुमति चाहिए।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponovno pokretanje nije započelo. Možda ga je otkazala neka aplikacija ili Artifloam treba dopuštenje za upravljanje System Eventsom u Privatnost i sigurnost › Automatizacija."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il riavvio non è partito. Forse un’app lo ha annullato, oppure Artifloam ha bisogno del permesso di controllare System Events in Privacy e sicurezza › Automazione."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再起動が始まりませんでした。アプリがキャンセルしたか、プライバシーとセキュリティ › オートメーションで、ArtifloamにSystem Eventsの操作を許可する必要があります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재시동이 시작되지 않았습니다. 앱이 취소했거나, 개인정보 보호 및 보안 › 자동화에서 Artifloam이 System Events를 제어하도록 허용해야 합니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restartēšana nesākās. Iespējams, kāda lietotne to atcēla, vai arī Artifloam vajag atļauju vadīt System Events sadaļā Privātums un drošība › Automatizācija."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponowne uruchomienie się nie rozpoczęło. Mogła je anulować aplikacja albo Artifloam potrzebuje pozwolenia na sterowanie System Events w Prywatność i ochrona › Automatyzacja."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O reinício não começou. Uma app pode tê-lo cancelado, ou o Artifloam precisa de permissão para controlar o System Events em Privacidade e segurança › Automatização."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rinisja nuk filloi. Mund ta ketë anuluar një aplikacion, ose Artifloam ka nevojë për leje për të kontrolluar System Events te Privatësia dhe siguria › Automatizimi."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поновно покретање није почело. Можда га је отказала нека апликација или Artifloam треба дозволу да контролише System Events у Приватност и безбедност › Аутоматизација."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponovno pokretanje nije počelo. Možda ga je otkazala neka aplikacija ili Artifloam treba dozvolu da kontroliše System Events u Privatnost i bezbednost › Automatizacija."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omstarten började inte. En app kan ha avbrutit den, eller så behöver Artifloam tillstånd att styra System Events i Integritet och säkerhet › Automatisering."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeniden başlatma başlamadı. Bir uygulama iptal etmiş olabilir ya da Artifloam’ın Gizlilik ve Güvenlik › Otomasyon bölümünde System Events’i denetleme iznine ihtiyacı var."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新启动没有开始。可能是某个 App 取消了它，或者 Artifloam 需要在“隐私与安全”›“自动化”中获得控制 System Events 的权限。"
           }
         }
       }
@@ -272668,6 +275629,302 @@
         }
       }
     },
+    "Type %@ to confirm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اكتب %@ للتأكيد"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escriu %@ per confirmar"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib %@ ein, um zu bestätigen"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type %@ to confirm"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type %@ to confirm"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type %@ to confirm"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escribe %@ para confirmar"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escribe %@ para confirmar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapez %@ pour confirmer"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib %@ ii, zum z bestätige"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "पुष्टि के लिए %@ टाइप करें"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upiši %@ za potvrdu"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Digita %@ per confermare"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確認のため%@と入力してください"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확인하려면 %@ 입력"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ieraksti %@, lai apstiprinātu"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wpisz %@, aby potwierdzić"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escreva %@ para confirmar"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shkruaj %@ për ta konfirmuar"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откуцајте %@ за потврду"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otkucajte %@ za potvrdu"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skriv %@ för att bekräfta"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Onaylamak için %@ yazın"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入 %@ 以确认"
+          }
+        }
+      }
+    },
+    "UTM virtual machine" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جهاز UTM الافتراضي"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Màquina virtual d’UTM"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuelle Maschine von UTM"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UTM virtual machine"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UTM virtual machine"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UTM virtual machine"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina virtual de UTM"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina virtual de UTM"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Machine virtuelle UTM"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuelli Maschine vo UTM"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UTM वर्चुअल मशीन"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UTM virtualni stroj"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macchina virtuale UTM"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UTM仮想マシン"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UTM 가상 머신"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UTM virtuālā mašīna"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maszyna wirtualna UTM"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina virtual do UTM"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Makinë virtuale UTM"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UTM виртуелна машина"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UTM virtuelna mašina"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuell maskin för UTM"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UTM sanal makinesi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UTM 虚拟机"
+          }
+        }
+      }
+    },
     "Unavailable" : {
       "comment" : "Memory pressure level\nStatus: thermal state or memory pressure could not be read\nThermal state",
       "localizations" : {
@@ -275039,6 +278296,154 @@
         }
       }
     },
+    "Unlock all · %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فتح الكل · %@"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloqueja-ho tot · %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle entsperren · %@"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock all · %@"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock all · %@"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock all · %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquear todo · %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquear todo · %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout déverrouiller · %@"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alli entsperre · %@"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सब अनलॉक करें · %@"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otključaj sve · %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sblocca tutto · %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてロック解除 · %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모두 잠금 해제 · %@"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atbloķēt visu · %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odblokuj wszystko · %@"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquear tudo · %@"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zhblloko të gjitha · %@"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откључај све · %@"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otključaj sve · %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lås upp alla · %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tümünün kilidini aç · %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部解锁 · %@"
+          }
+        }
+      }
+    },
     "Unlock the full scan" : {
       "localizations" : {
         "ar" : {
@@ -275775,6 +279180,302 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "解锁你的 %@ 并轻点“信任”。照片会显示在这里。"
+          }
+        }
+      }
+    },
+    "Unlocked orange: only a running process keeps it" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مفتوح برتقالي: تحتفظ به عملية قيد التشغيل فقط"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquejat taronja: només el manté un procés en execució"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange entsperrt: nur ein laufender Prozess hält es"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked orange: only a running process keeps it"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked orange: only a running process keeps it"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked orange: only a running process keeps it"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naranja desbloqueado: solo lo mantiene un proceso en ejecución"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naranja desbloqueado: solo lo mantiene un proceso en ejecución"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange déverrouillé : seul un processus en cours le garde"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange entsperrt: nur en laufende Prozess hebts"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अनलॉक किया गया नारंगी: केवल एक चल रही प्रक्रिया इसे रखती है"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otključano narančasto: drži ga samo pokrenuti proces"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arancione sbloccato: lo tiene solo un processo in esecuzione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ロック解除（オレンジ）：実行中のプロセスだけが保持"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "잠금 해제됨(주황): 실행 중인 프로세스만 유지함"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atbloķēts oranžs: to tur tikai darbojošs process"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odblokowane pomarańczowe: trzyma je tylko działający proces"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laranja desbloqueado: apenas um processo em execução o mantém"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E portokalltë e zhbllokuar: e mban vetëm një proces në punë"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откључано наранџасто: држи га само покренут процес"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otključano narandžasto: drži ga samo pokrenut proces"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upplåst orange: bara en process som körs håller den"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kilidi açılmış turuncu: yalnızca çalışan bir işlem tutuyor"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已解锁（橙色）：仅由正在运行的进程保留"
+          }
+        }
+      }
+    },
+    "Unlocked red: in use or may be the only copy" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مفتوح أحمر: قيد الاستخدام أو قد يكون النسخة الوحيدة"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquejat vermell: en ús o potser l'única còpia"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rot entsperrt: in Gebrauch oder vielleicht die einzige Kopie"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked red: in use or may be the only copy"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked red: in use or may be the only copy"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked red: in use or may be the only copy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rojo desbloqueado: en uso o quizá la única copia"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rojo desbloqueado: en uso o quizá la única copia"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rouge déverrouillé : utilisé ou peut-être la seule copie"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rot entsperrt: in Bruuch oder villicht di einzig Kopie"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अनलॉक किया गया लाल: उपयोग में या शायद एकमात्र प्रति"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otključano crveno: u upotrebi ili možda jedina kopija"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rosso sbloccato: in uso o forse l'unica copia"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ロック解除（赤）：使用中、または唯一のコピーの可能性"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "잠금 해제됨(빨강): 사용 중이거나 유일한 사본일 수 있음"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atbloķēts sarkans: tiek lietots vai varbūt vienīgā kopija"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odblokowane czerwone: w użyciu lub może jedyna kopia"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vermelho desbloqueado: em uso ou talvez a única cópia"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E kuqe e zhbllokuar: në përdorim ose ndoshta kopja e vetme"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откључано црвено: у употреби или можда једина копија"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otključano crveno: u upotrebi ili možda jedina kopija"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upplåst röd: används eller kanske den enda kopian"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kilidi açılmış kırmızı: kullanımda veya tek kopya olabilir"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已解锁（红色）：正在使用或可能是唯一副本"
           }
         }
       }
@@ -276663,6 +280364,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未使用的开发者缓存"
+          }
+        }
+      }
+    },
+    "Unused for" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غير مستخدم منذ"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sense usar durant"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unbenutzt seit"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unused for"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unused for"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unused for"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin usar durante"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin usar durante"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inutilisé depuis"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unbruucht sit"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "इतने समय से अप्रयुक्त"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bez korištenja"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non usato da"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未使用の期間"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "미사용 기간"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neizmantots"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieużywane od"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem uso há"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I papërdorur për"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Некоришћено"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nekorišćeno"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oanvänd i"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanılmama süresi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未使用时长"
           }
         }
       }
@@ -282047,6 +285896,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "来自 Xcode 的虚拟 iPhone 和 iPad。关闭后会释放内存，App 和数据会保留；需要时 Xcode 会再次启动它。正在运行的测试会停止。"
+          }
+        }
+      }
+    },
+    "Virtual machine" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جهاز افتراضي"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Màquina virtual"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuelle Maschine"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtual machine"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtual machine"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtual machine"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina virtual"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina virtual"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Machine virtuelle"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuelli Maschine"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "वर्चुअल मशीन"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtualni stroj"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macchina virtuale"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仮想マシン"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "가상 머신"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuālā mašīna"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maszyna wirtualna"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máquina virtual"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Makinë virtuale"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Виртуелна машина"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuelna mašina"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virtuell maskin"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sanal makine"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "虚拟机"
           }
         }
       }
@@ -290193,6 +294190,160 @@
         }
       }
     },
+    "Your Mac has been on for %@. Restarting clears %@ of swap that quitting apps won't shrink." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الـ Mac قيد التشغيل منذ %@. تؤدي إعادة التشغيل إلى مسح %@ من ذاكرة التبديل التي لن يقلّصها إنهاء التطبيقات."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fa %@ que el Mac està encès. Reiniciar-lo buida %@ d’intercanvi que tancar apps no reduirà."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Mac läuft seit %@. Ein Neustart leert %@ Swap, die das Beenden von Apps nicht verkleinert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Your Mac has been on for %1$@. Restarting clears %2$@ of swap that quitting apps won't shrink."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Mac has been on for %@. Restarting clears %@ of swap that quitting apps won't shrink."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Mac has been on for %@. Restarting clears %@ of swap that quitting apps won't shrink."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Mac has been on for %@. Restarting clears %@ of swap that quitting apps won't shrink."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Mac lleva encendido %@. Reiniciar libera %@ de swap que salir de las apps no reducirá."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Mac lleva encendida %@. Reiniciar libera %@ de swap que salir de las apps no reducirá."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre Mac est allumé depuis %@. Redémarrer libère %@ de swap que quitter des apps ne réduira pas."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Din Mac lauft sit %@. En Neustart leert %@ Swap, wo s Beände vo Apps nöd chliiner macht."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आपका Mac %@ से चालू है। रीस्टार्ट करने से %@ स्वैप साफ़ होता है, जो ऐप बंद करने से कम नहीं होगा।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac je uključen već %@. Ponovno pokretanje čisti %@ swapa koji zatvaranje aplikacija neće smanjiti."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il Mac è acceso da %@. Riavviarlo libera %@ di swap che chiudere le app non ridurrà."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macは%@起動し続けています。再起動すると、アプリを終了しても減らない%@のスワップが解放されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac이 %@ 동안 켜져 있었습니다. 재시동하면 앱을 종료해도 줄지 않는 스왑 %@가 비워집니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tavs Mac ir ieslēgts jau %@. Restartēšana notīra %@ swap, ko lietotņu aizvēršana nesamazinās."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Twój Mac jest włączony od %@. Ponowne uruchomienie czyści %@ swapu, którego zamykanie aplikacji nie zmniejszy."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Mac está ligado há %@. Reiniciar limpa %@ de swap que sair das apps não vai reduzir."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac-u yt është ndezur prej %@. Rinisja pastron %@ swap që mbyllja e aplikacioneve nuk do ta zvogëlojë."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac је укључен већ %@. Поновно покретање брише %@ swap меморије коју затварање апликација неће смањити."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac je uključen već %@. Ponovno pokretanje briše %@ swap memorije koju zatvaranje aplikacija neće smanjiti."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Din Mac har varit på i %@. En omstart rensar %@ swap som det inte hjälper att avsluta appar för."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac’iniz %@ süredir açık. Yeniden başlatmak, uygulamalardan çıkmanın küçültemeyeceği %@ takası temizler."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的 Mac 已连续开机 %@。重新启动会清除 %@ 交换空间，退出 App 无法缩小这部分。"
+          }
+        }
+      }
+    },
     "Your Mac has room to spare" : {
       "localizations" : {
         "ar" : {
@@ -290337,6 +294488,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你的 Mac 空间充裕"
+          }
+        }
+      }
+    },
+    "Your Mac is overloaded" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الـ Mac مثقل بالعمل"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Mac està sobrecarregat"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Mac ist überlastet"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Mac is overloaded"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Mac is overloaded"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Mac is overloaded"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Mac está sobrecargado"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Mac está sobrecargada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre Mac est surchargé"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Din Mac isch überlaschtet"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आपका Mac ओवरलोड है"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac je preopterećen"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il Mac è sovraccarico"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macが過負荷になっています"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac에 과부하가 걸렸습니다"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tavs Mac ir pārslogots"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Twój Mac jest przeciążony"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Mac está sobrecarregado"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac-u yt është i mbingarkuar"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac је преоптерећен"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac je preopterećen"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Din Mac är överbelastad"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac’iniz aşırı yüklü"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的 Mac 负载过高"
           }
         }
       }
@@ -296023,6 +300322,155 @@
         }
       }
     },
+    "delete" : {
+      "comment" : "Word the person types to confirm deleting red-locked items",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "esborra"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "löschen"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "delete"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "delete"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "delete"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "borrar"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "borrar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "supprimer"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "lösche"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "डिलीट"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "izbriši"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "elimina"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "dzēst"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "usuń"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "eliminar"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "fshi"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "обриши"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "obriši"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "radera"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sil"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
+          }
+        }
+      }
+    },
     "downloaded assets" : {
       "localizations" : {
         "ar" : {
@@ -298694,6 +303142,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "launchd 拒绝了：%@"
+          }
+        }
+      }
+    },
+    "macOS asks every app to quit, as with Restart in the Apple menu. Apps can ask you to save, or cancel the restart." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يطلب macOS من كل تطبيق الإنهاء، كما يحدث مع إعادة التشغيل من قائمة Apple. يمكن للتطبيقات أن تطلب منك الحفظ أو أن تلغي إعادة التشغيل."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS demana a cada app que es tanqui, com amb Reinicia al menú Apple. Les apps et poden demanar que desis o cancel·lar el reinici."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS fordert jede App zum Beenden auf, wie bei „Neustart“ im Apple-Menü. Apps können dich zum Sichern auffordern oder den Neustart abbrechen."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS asks every app to quit, as with Restart in the Apple menu. Apps can ask you to save, or cancel the restart."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS asks every app to quit, as with Restart in the Apple menu. Apps can ask you to save, or cancel the restart."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS asks every app to quit, as with Restart in the Apple menu. Apps can ask you to save, or cancel the restart."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS pide a cada app que salga, como con Reiniciar en el menú Apple. Las apps pueden pedirte que guardes o cancelar el reinicio."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS pide a cada app que salga, como con Reiniciar en el menú Apple. Las apps pueden pedirte que guardes o cancelar el reinicio."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS demande à chaque app de quitter, comme avec Redémarrer dans le menu Apple. Les apps peuvent vous demander d’enregistrer ou annuler le redémarrage."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS fordert jedi App zum Beände uf, wie bi „Neustart“ im Apple-Menü. Apps chönd di bitte z speichere oder de Neustart abbräche."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS हर ऐप से बंद होने को कहता है, जैसे Apple मेनू में रीस्टार्ट करने पर। ऐप आपसे सहेजने को कह सकते हैं या रीस्टार्ट रद्द कर सकते हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS traži od svake aplikacije da se zatvori, kao kod opcije Ponovno pokreni u Apple izborniku. Aplikacije mogu tražiti spremanje ili otkazati ponovno pokretanje."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS chiede a ogni app di uscire, come con Riavvia nel menu Apple. Le app possono chiederti di salvare o annullare il riavvio."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アップルメニューの「再起動」と同じように、macOSがすべてのアプリに終了を求めます。アプリが保存を求めたり、再起動をキャンセルしたりすることがあります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple 메뉴의 재시동처럼 macOS가 모든 앱에 종료를 요청합니다. 앱이 저장을 요청하거나 재시동을 취소할 수 있습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS lūdz katrai lietotnei aizvērties, tāpat kā izvēloties Restartēt Apple izvēlnē. Lietotnes var palūgt saglabāt darbu vai atcelt restartēšanu."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS prosi każdą aplikację o zakończenie, tak jak przy poleceniu Uruchom ponownie w menu Apple. Aplikacje mogą poprosić o zapisanie zmian lub anulować ponowne uruchomienie."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O macOS pede a cada app para sair, tal como com Reiniciar no menu Apple. As apps podem pedir-lhe para guardar ou cancelar o reinício."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS i kërkon çdo aplikacioni të mbyllet, si me Rinis te menyja Apple. Aplikacionet mund të të kërkojnë të ruash ose ta anulojnë rinisjen."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS тражи од сваке апликације да се затвори, као код опције Поново покрени у Apple менију. Апликације могу да затраже да сачувате или да откажу поновно покретање."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS traži od svake aplikacije da se zatvori, kao kod opcije Ponovo pokreni u Apple meniju. Aplikacije mogu da zatraže da sačuvate ili da otkažu ponovno pokretanje."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS ber varje app att avsluta, som med Starta om i Apple-menyn. Appar kan be dig spara eller avbryta omstarten."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS, Apple menüsündeki Yeniden Başlat’ta olduğu gibi her uygulamadan çıkmasını ister. Uygulamalar kaydetmenizi isteyebilir veya yeniden başlatmayı iptal edebilir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS 会要求每个 App 退出，就像使用苹果菜单中的“重新启动”一样。App 可能会要求你存储，或取消重新启动。"
           }
         }
       }
@@ -301512,6 +306108,7 @@
       }
     },
     "not deleted" : {
+      "comment" : "Label under a count of items that could not be deleted",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -301657,8 +306254,7 @@
             "value" : "未删除"
           }
         }
-      },
-      "comment" : "Label under a count of items that could not be deleted"
+      }
     },
     "npm's download cache, unused for at least 30 days. npm downloads packages again when needed; projects keep what they installed." : {
       "localizations" : {

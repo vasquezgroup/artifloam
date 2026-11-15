@@ -45,13 +45,13 @@ final class MemoryMonitor: ObservableObject {
             })
             previousCPU = Dictionary(uniqueKeysWithValues: rows.map { ($0.id, $0.cpuNanoseconds) }); previousAt = now
             selected.formIntersection(Set(reading?.apps.map(\.id) ?? []))
-            quitAskedAt = quitAskedAt.filter { NSRunningApplication(processIdentifier: $0.key) != nil }
+            quitAskedAt = quitAskedAt.filter { Self.running($0.key) }
             settleQuits()
         } catch { self.error = error.localizedDescription }
     }
     /// Counts an app's footprint as released once it has actually quit.
     private func settleQuits() {
-        let gone = quitting.filter { NSRunningApplication(processIdentifier: $0.key) == nil }
+        let gone = quitting.filter { !Self.running($0.key) }
         guard !gone.isEmpty else { return }
         let bytes = gone.values.reduce(0, +)
         gone.keys.forEach { quitting[$0] = nil }
@@ -66,14 +66,21 @@ final class MemoryMonitor: ObservableObject {
         return pids
     }
     var selectedBytes: UInt64 { reading?.apps.filter { selected.contains($0.id) }.reduce(0) { $0 + $1.bytes } ?? 0 }
+    /// Works for emulators and VMs too, which NSRunningApplication doesn't know.
+    private static func running(_ pid: Int32) -> Bool { kill(pid, 0) == 0 || errno == EPERM }
     func canQuit(_ row: MemoryAppUsage) -> Bool {
+        if row.app.isVirtualMachine { return MemoryReading.executablePath(row.id) == row.app.bundlePath }
         guard let app = NSRunningApplication(processIdentifier: row.id) else { return false }
         return app.bundleURL?.path == row.app.bundlePath && app.activationPolicy == .regular && app.bundleIdentifier != "com.apple.finder" && row.id != getpid()
     }
     /// Apps ordered by CPU use, busiest first. Empty until two readings exist.
     var topCPU: [MemoryAppUsage] { (reading?.apps ?? []).filter { (cpu[$0.id] ?? 0) >= 0.1 }.sorted { cpu[$0.id]! > cpu[$1.id]! } }
+    /// The normal Quit; an emulator or VM gets SIGTERM, the polite request to stop.
+    private func requestQuit(_ row: MemoryAppUsage) -> Bool {
+        canQuit(row) && (row.app.isVirtualMachine ? kill(row.id, SIGTERM) == 0 : NSRunningApplication(processIdentifier: row.id)?.terminate() == true)
+    }
     @discardableResult func quit(_ row: MemoryAppUsage) -> Bool {
-        guard canQuit(row), NSRunningApplication(processIdentifier: row.id)?.terminate() == true else { return false }
+        guard requestQuit(row) else { return false }
         quitting[row.id] = row.bytes; quitAskedAt[row.id] = quitAskedAt[row.id] ?? Date()
         message = String(localized: "Asked \(row.app.name) to quit. Save any changes if it asks.")
         Task { await refresh() }
@@ -81,24 +88,24 @@ final class MemoryMonitor: ObservableObject {
     }
     /// Waits up to 8 s for an app to go, then reads memory again. An app showing a save prompt simply outlasts this.
     func waitForQuit(_ pid: Int32) async {
-        for _ in 0..<32 where NSRunningApplication(processIdentifier: pid) != nil { try? await Task.sleep(for: .milliseconds(250)) }
+        for _ in 0..<32 where Self.running(pid) { try? await Task.sleep(for: .milliseconds(250)) }
         await refresh()
     }
     /// True once an app has ignored a normal Quit for 10 seconds; only then is Force quit offered.
     /// a frozen app that also uses no CPU drops out of the CPU lists; it still shows in the Memory list.
     func ignoredQuit(_ pid: Int32) -> Bool {
         guard let asked = quitAskedAt[pid], Date().timeIntervalSince(asked) >= 10 else { return false }
-        return NSRunningApplication(processIdentifier: pid) != nil
+        return Self.running(pid)
     }
     /// Ends an app that ignored Quit. Asks first, because its unsaved changes are lost.
     @discardableResult func forceQuit(_ row: MemoryAppUsage) -> Bool {
-        guard canQuit(row), let app = NSRunningApplication(processIdentifier: row.id) else { return false }
+        guard canQuit(row) else { return false }
         let alert = NSAlert()
         alert.messageText = String(localized: "Force quit \(row.app.name.displaySafe)?")
         alert.informativeText = String(localized: "\(row.app.name.displaySafe) didn't respond to Quit. Unsaved changes in it will be lost.")
         alert.addButton(withTitle: String(localized: "Force Quit")); alert.addButton(withTitle: String(localized: "Cancel"))
         alert.buttons.first?.hasDestructiveAction = true
-        guard alert.runModal() == .alertFirstButtonReturn, app.forceTerminate() else { return false }
+        guard alert.runModal() == .alertFirstButtonReturn, row.app.isVirtualMachine ? kill(row.id, SIGKILL) == 0 : NSRunningApplication(processIdentifier: row.id)?.forceTerminate() == true else { return false }
         quitting[row.id] = row.bytes
         message = String(localized: "Force quit \(row.app.name).")
         Task { await refresh() }
@@ -107,12 +114,17 @@ final class MemoryMonitor: ObservableObject {
     func quitSelected() {
         let rows = reading?.apps.filter { selected.contains($0.id) } ?? []
         var requested = 0
-        for row in rows where canQuit(row) {
-            if NSRunningApplication(processIdentifier: row.id)?.terminate() == true { requested += 1; quitting[row.id] = row.bytes; quitAskedAt[row.id] = quitAskedAt[row.id] ?? Date() }
+        for row in rows {
+            if requestQuit(row) { requested += 1; quitting[row.id] = row.bytes; quitAskedAt[row.id] = quitAskedAt[row.id] ?? Date() }
         }
         selected.removeAll()
         message = String(localized: "Requested normal quit for \(requested) apps. Save any changes when prompted. Memory updates as apps finish quitting.")
         Task { await refresh() }
+    }
+    func restart() async {
+        guard await Task.detached(priority: .userInitiated, operation: { MemoryVerdict.requestRestart() }).value else {
+            return error = String(localized: "The restart didn't start. An app may have cancelled it, or Artifloam needs permission to control System Events in Privacy & Security › Automation.")
+        }
     }
 }
 
@@ -126,6 +138,7 @@ struct MemoryView: View {
     @State private var confirmingQuit = false
     @State private var showAllApps = false
     @State private var showDetails = false
+    @State private var confirmingRestart = false
     private var accent: Color { monitor.reading?.pressure == .critical ? .red : monitor.reading?.pressure == .warning ? .orange : .mint }
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -138,10 +151,11 @@ struct MemoryView: View {
                 Button { Task { await monitor.refresh() } } label: { Image(systemName: "arrow.clockwise") }.help("Refresh memory readings").accessibilityLabel("Refresh memory readings")
             }
             if let reading = monitor.reading {
-                let verdict = MemoryVerdict.evaluate(pressure: reading.pressure, swap: reading.swap, total: reading.total, loginItems: loginItems)
+                let verdict = MemoryVerdict.evaluate(pressure: reading.pressure, swap: reading.swap, total: reading.total, loginItems: loginItems, load: reading.load)
                 let suggested = MemoryVerdict.suggestions(reading.apps, recentlyUsed: monitor.recentlyUsed, canQuit: monitor.canQuit)
                 hero(reading, verdict, suggested)
                 progressRow(verdict)
+                if let swap = reading.swap, MemoryVerdict.suggestsRestart(swap: swap, total: reading.total, uptime: ProcessInfo.processInfo.systemUptime) { restartHint(swap) }
                 appList(reading)
                 if !compact { RunningSimulatorsCard() }
                 DisclosureGroup(isExpanded: $showDetails) {
@@ -163,7 +177,11 @@ struct MemoryView: View {
         .confirmationDialog(monitor.selected.count == 1 ? String(localized: "Quit this app to release memory?") : String(localized: "Quit these apps to release memory?"), isPresented: $confirmingQuit, titleVisibility: .visible) {
             Button("Quit \(quitNames)") { monitor.quitSelected() }
             Button("Cancel", role: .cancel) { }
-        } message: { Text("Apps receive a normal Quit request and may ask you to save. Nothing is force-quit. Memory recovered varies and swap may not shrink immediately.") }
+        } message: {
+            if monitor.reading?.apps.contains(where: { $0.app.isVirtualMachine && monitor.selected.contains($0.id) }) == true {
+                Text("Apps receive a normal Quit request and may ask you to save. Emulators and virtual machines are asked to stop without shutting down the system inside them, so save your work there first. Memory recovered varies.")
+            } else { Text("Apps receive a normal Quit request and may ask you to save. Nothing is force-quit. Memory recovered varies and swap may not shrink immediately.") }
+        }
         .task {
             while !Task.isCancelled { await monitor.refresh(); do { try await Task.sleep(for: .seconds(3)) } catch { break } }
         }
@@ -177,10 +195,15 @@ struct MemoryView: View {
     private func hero(_ reading: MemoryReading, _ verdict: MemoryVerdict, _ suggested: [MemoryAppUsage]) -> some View {
         let color: Color = verdict.state == .tight ? accent : verdict.state == .busy ? .yellow : .mint
         let swap = reading.swap.map(formattedMemory) ?? ""
-        let (headline, detail): (String, String) = switch verdict.state {
+        var (headline, detail): (String, String) = switch verdict.state {
         case .fine: (String(localized: "Your Mac has room to spare"), String(localized: "\(formattedMemory(reading.available)) free for new apps. Nothing to do."))
         case .busy: (String(localized: "Running fine, leaning on the disk"), String(localized: "\(swap) has spilled to disk earlier. Quitting idle apps helps it shrink over time."))
         case .tight: (String(localized: "Memory is tight"), String(localized: "Apps may slow down. Quit an app you are not using; save your work first."))
+        }
+        if verdict.cpuOverloaded {
+            headline = String(localized: "Your Mac is overloaded")
+            detail = verdict.busiest.isEmpty ? String(localized: "The processor has had more work than it has cores for minutes. Apps may respond slowly.")
+                : String(localized: "The processor has had more work than it has cores for minutes. Busiest: \(ListFormatter.localizedString(byJoining: verdict.busiest)).")
         }
         let freeing = suggested.reduce(0) { $0 + $1.bytes }
         return HStack(alignment: .center, spacing: 22) {
@@ -192,7 +215,7 @@ struct MemoryView: View {
                     Text("health").stewardFont(.caption).foregroundStyle(.secondary)
                 }
             }.frame(width: 84, height: 84).animation(.smooth, value: verdict.score)
-            .help("Health starts at 100. Memory pressure lowers it most, then a large swap, then many apps opening at login.")
+            .help("Health starts at 100. Memory pressure lowers it most, then a processor that stays overloaded, then a large swap, then many apps opening at login.")
             VStack(alignment: .leading, spacing: 8) {
                 Text(headline).stewardFont(.title3, weight: .semibold)
                 Text(detail).stewardFont(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
@@ -229,6 +252,20 @@ struct MemoryView: View {
             }
         }
     }
+    /// Swap only empties on a restart, so after days of uptime that is the fix quitting apps can't give.
+    private func restartHint(_ swap: UInt64) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "restart.circle").font(.title2).foregroundStyle(.yellow)
+            Text("Your Mac has been on for \(Duration.seconds(Int(ProcessInfo.processInfo.systemUptime / 86_400) * 86_400).formatted(.units(allowed: [.days], width: .wide))). Restarting clears \(formattedMemory(swap)) of swap that quitting apps won't shrink.")
+                .stewardFont(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+            Button("Restart…") { confirmingRestart = true }.buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
+        }.padding(14).background(.yellow.opacity(0.06), in: RoundedRectangle(cornerRadius: 14))
+        .confirmationDialog("Restart your Mac?", isPresented: $confirmingRestart, titleVisibility: .visible) {
+            Button("Restart") { Task { await monitor.restart() } }
+            Button("Cancel", role: .cancel) { }
+        } message: { Text("macOS asks every app to quit, as with Restart in the Apple menu. Apps can ask you to save, or cancel the restart.") }
+    }
     private func chip(_ icon: String, _ text: String, _ tint: Color) -> some View {
         Label(text, systemImage: icon).stewardFont(.caption, weight: .medium).foregroundStyle(tint)
             .padding(.horizontal, 11).padding(.vertical, 7).background(.white.opacity(0.06), in: Capsule())
@@ -249,10 +286,11 @@ struct MemoryView: View {
                 HStack(spacing: 12) {
                     Toggle("Select \(row.app.name)", isOn: Binding(get: { monitor.selected.contains(row.id) }, set: { if $0 { monitor.selected.insert(row.id) } else { monitor.selected.remove(row.id) } }))
                         .toggleStyle(.stewardCheckboxOnly).disabled(!monitor.canQuit(row))
-                    Image(nsImage: NSWorkspace.shared.icon(forFile: row.app.bundlePath)).resizable().frame(width: 26, height: 26)
+                    if row.app.isVirtualMachine { Image(systemName: "desktopcomputer").font(.title3).foregroundStyle(.secondary).frame(width: 26, height: 26) }
+                    else { Image(nsImage: NSWorkspace.shared.icon(forFile: row.app.bundlePath)).resizable().frame(width: 26, height: 26) }
                     VStack(alignment: .leading, spacing: 3) {
                         Text(row.app.name).stewardFont(.body, weight: .medium)
-                        Text(lastUsed(row.id)).stewardFont(.caption).foregroundStyle(.secondary)
+                        Text(row.app.isVirtualMachine ? String(localized: "Emulator or virtual machine") : lastUsed(row.id)).stewardFont(.caption).foregroundStyle(.secondary)
                     }
                     Spacer()
                     Text(formattedMemory(row.bytes)).stewardFont(.body).monospacedDigit()

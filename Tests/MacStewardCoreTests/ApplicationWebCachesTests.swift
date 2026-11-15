@@ -43,8 +43,10 @@ final class ApplicationWebCachesTests: XCTestCase {
         XCTAssertThrowsError(try SafetyPolicy(configuration: config).validate(recent, activity: ActivitySnapshot(commands: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"), approved: true))
         XCTAssertThrowsError(try SafetyPolicy(configuration: config).validate(recent, activity: ActivitySnapshot(reliable: false), approved: true))
         let unknownOwner = Finding(path: old.path, group: .userCaches, bytes: old.bytes, modifiedAt: Date(), safety: .protected, reason: "in use", rule: old.rule, fingerprint: old.fingerprint, hold: .inUse)
-        XCTAssertFalse(unknownOwner.userCleanable, "an in-use cache without a known app to quit stays locked")
-        XCTAssertThrowsError(try SafetyPolicy(configuration: config).validate(unknownOwner, activity: ActivitySnapshot(), approved: true))
+        XCTAssertFalse(unknownOwner.userCleanable, "an in-use cache without a known app to quit is not choosable without unlocking")
+        XCTAssertTrue(unknownOwner.dangerous, "it gets a red lock the person can open")
+        XCTAssertThrowsError(try SafetyPolicy(configuration: config).validate(unknownOwner, activity: ActivitySnapshot(), approved: false))
+        XCTAssertNoThrow(try SafetyPolicy(configuration: config).validate(unknownOwner, activity: ActivitySnapshot(), approved: true), "unlocked by the person")
         XCTAssertTrue(BroadCaches.owns(cache: "com.spark.mail", bundleID: "com.spark.mail", appName: "Spark"))
         XCTAssertFalse(BroadCaches.owns(cache: "com.other.app", bundleID: "com.spark.mail", appName: "Spark"))
     }

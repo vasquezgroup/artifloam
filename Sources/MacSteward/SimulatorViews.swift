@@ -7,7 +7,8 @@ import MacStewardCore
     @Published private(set) var all: [SimulatorDevice]?
     @Published private(set) var memory = [String: UInt64]()
     @Published private(set) var stopping = Set<String>()
-    var running: [SimulatorDevice] { (all ?? []).filter(\.running).sorted { (memory[$0.id] ?? 0) > (memory[$1.id] ?? 0) } }
+    /// Longest unused first, so the ones to shut down sit together at the top.
+    var running: [SimulatorDevice] { (all ?? []).filter(\.running).sorted { ($0.lastUsed ?? .distantFuture) < ($1.lastUsed ?? .distantFuture) } }
     func refresh() async {
         let (list, used) = await Task.detached(priority: .utility) { () -> ([SimulatorDevice]?, [String: UInt64]) in
             let list = Simulators.list()
@@ -73,27 +74,43 @@ struct SimulatorOverview: View {
 /// On the Memory page: running simulators and the memory each holds, with Shut down.
 struct RunningSimulatorsCard: View {
     @StateObject private var state = SimulatorState()
-    @State private var confirmingAll = false
+    @State private var confirming = [SimulatorDevice]()
+    @AppStorage("simulatorUnusedHours") private var unusedHours = 24
 
     var body: some View {
         let running = state.running
         Group {
             if !running.isEmpty {
-                let total = running.reduce(UInt64(0)) { $0 + (state.memory[$1.id] ?? 0) }
+                let size = { (devices: [SimulatorDevice]) in formattedMemory(devices.reduce(UInt64(0)) { $0 + (state.memory[$1.id] ?? 0) }) }
+                let unused = running.filter { $0.unused(for: Double(unusedHours) * 3600) }
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
                         Text("Running simulators").stewardFont(.headline)
                         Spacer()
-                        Button("Shut down all · \(formattedMemory(total))") { confirmingAll = true }
-                            .buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(!state.stopping.isEmpty)
+                        Button("Shut down all · \(size(running))") { confirming = running }
+                            .buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).disabled(!state.stopping.isEmpty)
                     }
                     Text("Virtual iPhones and iPads from Xcode. Shutting one down frees its memory and keeps its apps and data; Xcode starts it again when needed. A test running on it stops.")
                         .stewardFont(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                    HStack {
+                        Picker("Unused for", selection: $unusedHours) {
+                            ForEach([1, 24, 72, 168], id: \.self) { Text(Duration.seconds($0 * 3600).formatted(.units(allowed: [.weeks, .days, .hours], width: .wide))).tag($0) }
+                        }.fixedSize()
+                        Button("Shut down unused · \(size(unused))") { confirming = unused }
+                            .buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(unused.isEmpty || !state.stopping.isEmpty)
+                    }
                     VStack(spacing: 6) {
                         ForEach(running) { device in
                             HStack(spacing: 12) {
                                 Image(systemName: SimulatorState.icon(device.name)).frame(width: 26).foregroundStyle(.secondary)
-                                Text(device.name).stewardFont(.body, weight: .medium).lineLimit(1)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(device.name).stewardFont(.body, weight: .medium).lineLimit(1)
+                                    // simctl's lastUsedAt: when Xcode last booted it or ran an app on it.
+                                    if let used = device.lastUsed {
+                                        Text("Last used \(used.formatted(.relative(presentation: .named)))").stewardFont(.caption)
+                                            .foregroundStyle(unused.contains(device) ? .orange : .secondary)
+                                    }
+                                }
                                 Spacer()
                                 Text(state.memory[device.id].map(formattedMemory) ?? "–").stewardFont(.body).monospacedDigit()
                                 if state.stopping.contains(device.id) { ProgressView().controlSize(.small).frame(width: 90) }
@@ -102,8 +119,8 @@ struct RunningSimulatorsCard: View {
                         }
                     }
                 }
-                .confirmationDialog("Shut down \(running.count) simulators?", isPresented: $confirmingAll, titleVisibility: .visible) {
-                    Button("Shut down all") { Task { await state.shutDown(running.map(\.id)) } }
+                .confirmationDialog("Shut down \(confirming.count) simulators?", isPresented: Binding(get: { !confirming.isEmpty }, set: { if !$0 { confirming = [] } }), titleVisibility: .visible) {
+                    Button("Shut down") { let ids = confirming.map(\.id); Task { await state.shutDown(ids) } }
                     Button("Cancel", role: .cancel) {}
                 } message: { Text("Their apps and data stay. Tests running on them stop.") }
             }

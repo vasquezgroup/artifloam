@@ -17,6 +17,10 @@ public struct SimulatorDevice: Identifiable, Equatable, Sendable {
     public func safeToDelete(now: Date = Date()) -> Bool {
         !running && (!available || (lastUsed.map { now.timeIntervalSince($0) >= Double(Self.idleDays) * 86_400 } ?? false))
     }
+    /// Running, but Xcode hasn't booted it or run an app on it for `seconds`. No recorded use counts as in use.
+    public func unused(for seconds: TimeInterval, now: Date = Date()) -> Bool {
+        running && (lastUsed.map { now.timeIntervalSince($0) >= seconds } ?? false)
+    }
 }
 
 public enum Simulators {

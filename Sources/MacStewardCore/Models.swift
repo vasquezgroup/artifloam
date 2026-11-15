@@ -83,6 +83,10 @@ public struct Finding: Codable, Identifiable, Sendable {
     /// Worktrees: merged, loses nothing Git can't restore, not open and no agent session in 24 hours. A recent commit alone doesn't count against it.
     /// Simulators: Xcode can't start it anymore, or nothing used it for 30 days.
     public var finished: Bool? = nil
+    /// Red lock: kept for a reason (in use, unverified), but the person may still delete it after a typed confirmation.
+    /// Only checked items with a hold (rows the cleaner can delete); never for files whose removal breaks apps or macOS,
+    /// and not for worktrees, which Git rechecks in their own flow.
+    public var dangerous: Bool { safety == .protected && hold != nil && !userCleanable && group != .worktrees && ![.systemCaches, .systemLogs, .universalApps, .languages, .documentVersions, .deviceBackups].contains(group) }
     public var tickable: Bool { safety == .automatic || (userCleanable && hold == nil && (warnings ?? []).isEmpty) }
     /// A readable name when the folder has none, such as a simulator's UUID.
     public var label: String? = nil
@@ -169,6 +173,12 @@ public extension Configuration {
 extension Array where Element == Finding {
     /// What a bulk checkbox takes. In a category: everything a person may delete there, the same as its summary tile; worktrees are
     /// the finished ones, rechecked with Git before they go. "All" stays with ready items: it spans every category, including apps that would quit.
+    /// Smart select: what's certain, else the orange items (choosable without unlocking). Never a red one.
+    /// `reviewable`: worktrees Git cleared for review; one kept only by a running process needs unlocking first.
+    public func smartPick(reviewable: Set<String>) -> [Finding] {
+        let certain = filter(\.certain)
+        return !certain.isEmpty ? certain : filter { $0.group == .worktrees ? reviewable.contains($0.id) && $0.hold == nil : $0.userCleanable }
+    }
     public func bulkChoosable(in group: CleanupGroup?) -> [Finding] {
         guard let group else { return filter(\.tickable) }
         return filter { $0.group == group && (group == .worktrees ? $0.safety == .review : $0.userCleanable) }

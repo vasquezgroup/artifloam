@@ -43,6 +43,11 @@ struct CleanConfirmSheet: View {
     var extras: [CleanExtra] = []
     let confirm: () -> Void
     @Environment(\.dismiss) private var dismiss
+    /// Red items were unlocked one by one; deleting them also needs the word typed here.
+    @State private var typed = ""
+    private var risky: [Finding] { findings.filter(\.dangerous) }
+    private static let word = String(localized: "delete", comment: "Word the person types to confirm deleting red-locked items")
+    private var confirmed: Bool { risky.isEmpty || typed.trimmingCharacters(in: .whitespaces).localizedCaseInsensitiveCompare(Self.word) == .orderedSame }
     private var groups: [(CleanupGroup, UInt64, Int)] {
         Dictionary(grouping: findings, by: \.group).map { ($0.key, $0.value.reduce(0) { $0 + $1.bytes }, $0.value.count) }.sorted { $0.1 > $1.1 }
     }
@@ -104,12 +109,19 @@ struct CleanConfirmSheet: View {
             Label("Deleted permanently after you confirm", systemImage: "exclamationmark.triangle")
                 .stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
             DeletionNote()
+            if !risky.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label("Red items · \(formattedBytes(risky.reduce(0) { $0 + $1.bytes })). They're in use or may be the only copy. Running simulators are shut down first; apps using the others lose these files.", systemImage: "lock.open.fill")
+                        .stewardFont(.callout).foregroundStyle(.red).fixedSize(horizontal: false, vertical: true)
+                    TextField(String(localized: "Type \(Self.word) to confirm"), text: $typed).textFieldStyle(.roundedBorder)
+                }
+            }
             HStack(spacing: 12) {
                 Button("Cancel") { dismiss() }.keyboardShortcut(.cancelAction)
                     .buttonStyle(CleanupGlassButtonStyle(secondary: true))
                 Spacer()
                 Button { dismiss(); confirm() } label: { Label(extras.isEmpty ? String(localized: "Delete \(findings.count) items · \(formattedBytes(total))") : total > 0 ? String(localized: "Delete · \(formattedBytes(total))") : String(localized: "Delete", comment: "Button: confirm deleting the selected items"), systemImage: "trash.fill").stewardFont(.body, weight: .semibold) }
-                    .buttonStyle(DestructiveCapsuleStyle())
+                    .buttonStyle(DestructiveCapsuleStyle()).disabled(!confirmed)
             }
         }.padding(26).frame(width: 520).preferredColorScheme(.dark)
     }

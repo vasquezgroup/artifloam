@@ -59,6 +59,14 @@ final class SpaceKeeperTests: XCTestCase {
         """
         XCTAssertEqual(Simulators.memory(ps: ps, ids: [id, "OTHER"]), [id: 350 * 1024])
     }
+    func testRunningSimulatorIsUnusedOnlyPastItsLastRecordedUse() {
+        let now = Date()
+        let device = { (running: Bool, used: Date?) in SimulatorDevice(id: "A", name: "Phone", bytes: 0, available: true, lastUsed: used, running: running) }
+        XCTAssertTrue(device(true, now.addingTimeInterval(-7200)).unused(for: 3600, now: now))
+        XCTAssertFalse(device(true, now.addingTimeInterval(-1800)).unused(for: 3600, now: now))
+        XCTAssertFalse(device(true, nil).unused(for: 3600, now: now), "no recorded use counts as in use")
+        XCTAssertFalse(device(false, .distantPast).unused(for: 3600, now: now), "already shut down")
+    }
     func testSimulatorFindingNeedsItsOwnTickAndAnExactPath() throws {
         let home = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let path = home.appendingPathComponent("Library/Developer/CoreSimulator/Devices/00000000-0000-0000-0000-000000000001").path

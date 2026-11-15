@@ -14,6 +14,8 @@ struct MainView: View {
     @StateObject private var storageMap = StorageMapModel()
     /// Everything the confirmation shows and runs. One value, so the sheet can't open with older contents.
     @State private var pendingRemoval: PendingRemoval?
+    /// The row under the pointer: its lock plays the unlock animation, so the whole card reads as unlockable.
+    @State private var hoveredRow: String?
     /// What the open confirmation covers when it isn't simply the current selection.
     /// Browser caches are recommended, so they start ticked. Emptying the Trash is permanent, so it never does.
     @State private var browsersTicked = true
@@ -361,7 +363,7 @@ struct MainView: View {
         }
     }
     // What each card would remove. Each follows the ticks in its tool, so what Review unticks stays out of Run.
-    private var chosenFindings: [Finding] { (m.report?.findings ?? []).filter { m.selected.contains($0.id) && $0.userCleanable && $0.group != .worktrees } }
+    private var chosenFindings: [Finding] { (m.report?.findings ?? []).filter { m.selected.contains($0.id) && m.removable($0) && $0.group != .worktrees } }
     private var chosenWorktrees: [Finding] { m.reviewableWorktrees.filter { m.worktreeSelection.contains($0.id) } }
     private var chosenDuplicates: [String] { DuplicateGroup.trashable(m.duplicateChoice, in: m.duplicates) }
     private var chosenDuplicateBytes: UInt64 {
@@ -886,11 +888,12 @@ struct MainView: View {
         let bytes = reports.flatMap(\.items).reduce(UInt64(0)) { $0 + $1.bytes }
         return String(localized: "Browsers · \(formattedBytes(bytes))")
     }
-    /// Ticks only what passed every check and loses nothing, and unticks the rest.
+    /// Ticks what passed every check, else the orange items, and unticks the rest. Always clickable while there's a list.
     private func smartSelectButton(_ scope: [Finding]) -> some View {
-        let any = scope.contains(where: \.certain)
-        return SmartSelectButton(enabled: !m.busy && any, help: any ? String(localized: "Selects only what passed every check and loses nothing: caches ready to clean, and worktrees that are merged, clean and not used lately.")
-                                 : String(localized: "Nothing here passed every check. Tick what you want yourself.")) { m.smartSelect(scope) }
+        let any = scope.contains(where: \.certain), fallback = !any && !scope.smartPick(reviewable: Set(m.reviewableWorktrees.map(\.id))).isEmpty
+        return SmartSelectButton(enabled: !m.busy && !scope.isEmpty, help: any ? String(localized: "Selects only what passed every check and loses nothing: caches ready to clean, and worktrees that are merged, clean and not used lately.")
+                                 : fallback ? String(localized: "Nothing passed every check, so this selects the orange items: used recently or with a warning. Red items stay unselected.")
+                                 : String(localized: "Only red items are left. Unlock the ones you want, one by one.")) { m.smartSelect(scope) }
     }
     private var reviewBulkBar: some View {
         let scope = m.bulkScope, isWorktrees = !m.showAllFindings && m.group == .worktrees
@@ -899,7 +902,14 @@ struct MainView: View {
         return BulkBar(title: m.showAllFindings ? String(localized: "Select ready") : m.search.isEmpty ? String(localized: "Select all") : String(localized: "Select shown"), isOn: Binding(get: { m.allSelected(scope) }, set: { m.setSelected(scope, $0) }), enabled: !scope.isEmpty && !m.busy,
                        help: m.showAllFindings ? String(localized: "Every category's ready items. Recent caches and running apps are chosen per category.") : String(localized: "Everything listed here that can be removed, including recently used caches. You confirm before anything goes."),
                        summary: String(localized: "\(count) selected · \(formattedBytes(bytes))")) {
-            smartSelectButton((m.report?.findings ?? []).filter { (m.showAllFindings || $0.group == m.group) && (m.search.isEmpty || $0.path.localizedCaseInsensitiveContains(m.search)) })
+            let listed = (m.report?.findings ?? []).filter { (m.showAllFindings || $0.group == m.group) && (m.search.isEmpty || $0.path.localizedCaseInsensitiveContains(m.search)) }
+            smartSelectButton(listed)
+            let locked = listed.filter(m.locked)
+            if !locked.isEmpty {
+                Button { m.unlockAll(locked) } label: { Label("Unlock all · \(formattedBytes(locked.reduce(0) { $0 + $1.bytes }))", systemImage: "lock.open") }
+                    .buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true)).disabled(m.busy)
+                    .help("Opens every lock listed here. Nothing is selected yet, and red items still need you to type to delete them.")
+            }
             Menu {
                 Picker("Sort", selection: $m.findingOrder) {
                     Text("Largest first").tag(StewardModel.FindingOrder.largest)
@@ -983,12 +993,14 @@ struct MainView: View {
         HStack(alignment: .top, spacing: 12) {
             if finding.group == .worktrees && (finding.safety == .review || m.unlockedWorktrees.contains(finding.id)) {
                 Toggle(String(localized: "Select \(finding.title)"), isOn: Binding(get: { m.worktreeSelection.contains(finding.id) }, set: { if $0 { m.worktreeSelection.insert(finding.id) } else { m.worktreeSelection.remove(finding.id) } })).toggleStyle(.stewardCheckboxOnly)
-            } else if finding.userCleanable {
+            } else if m.removable(finding) {
                 Toggle(String(localized: "Select \(finding.title)"), isOn: Binding(get: { m.selected.contains(finding.id) }, set: { if $0 { m.selected.insert(finding.id) } else { m.selected.remove(finding.id) } })).toggleStyle(.stewardCheckboxOnly)
-            } else if finding.group == .worktrees && finding.hold == .inUse { unlockButton(finding) }
-            else { Image(systemName: finding.safety == .protected ? "lock.fill" : "eye").stewardFont(.body).foregroundStyle(muted).frame(width: 15).help(finding.safety == .protected ? "Protected: Artifloam never removes this" : "") }
+            } else if finding.group == .worktrees && finding.hold == .inUse { unlockButton(finding, highlighted: hoveredRow == finding.id) }
+            else if finding.dangerous { UnlockButton(disabled: m.busy, danger: true, highlighted: hoveredRow == finding.id) { m.unlockDangerous(finding) } }
+            // Not a lock: deleting this would break an app or macOS, so there's nothing to unlock.
+            else { Image(systemName: finding.safety == .protected ? "info.circle" : "eye").stewardFont(.body).foregroundStyle(muted).frame(width: 15).help(finding.safety == .protected ? "Information only: removing it would break an app or macOS" : "") }
             VStack(alignment: .leading, spacing: 6) {
-                HStack { Text(finding.title).stewardFont(.body, weight: .semibold); Spacer(); Text(formattedBytes(finding.bytes)).stewardFont(.callout, weight: .medium).foregroundStyle(mint) }
+                HStack { if m.wasLocked(finding) { Image(systemName: "lock.open.fill").font(.caption).foregroundStyle(finding.dangerous ? Color.red : .orange).help(finding.dangerous ? "Unlocked red: in use or may be the only copy" : "Unlocked orange: only a running process keeps it") }; Text(finding.title).stewardFont(.body, weight: .semibold); Spacer(); Text(formattedBytes(finding.bytes)).stewardFont(.callout, weight: .medium).foregroundStyle(mint) }
                 Text(finding.path.replacingOccurrences(of: NSHomeDirectory(), with: "~")).stewardFont(.caption, design: .monospaced).foregroundStyle(muted).fixedSize(horizontal: false, vertical: true).textSelection(.enabled)
                 Text(finding.reason).stewardFont(.callout).foregroundStyle(finding.safety == .automatic ? .white.opacity(0.8) : muted).fixedSize(horizontal: false, vertical: true)
                 if finding.hold == .recent { Label("Used recently. You can still clean it; its app will likely rebuild it.", systemImage: "clock.arrow.circlepath").stewardFont(.caption).foregroundStyle(.orange) }
@@ -1004,11 +1016,12 @@ struct MainView: View {
                         .buttonStyle(RowActionButtonStyle()).stewardFont(.body)
                 }
             }
-        }.padding(14).background(panel, in: RoundedRectangle(cornerRadius: 12))
+        }.padding(14).background(panel, in: RoundedRectangle(cornerRadius: 12)).modifier(rowHover(finding))
     }
+    private func rowHover(_ finding: Finding) -> RowHover { RowHover(id: finding.id, hovered: $hoveredRow) }
     /// Kept only because a process has it open: Git found nothing that would be lost, so a click unlocks and ticks it.
-    private func unlockButton(_ finding: Finding) -> some View {
-        UnlockButton(disabled: m.busy) { m.unlock(finding) }
+    private func unlockButton(_ finding: Finding, highlighted: Bool = false) -> some View {
+        UnlockButton(disabled: m.busy, highlighted: highlighted) { m.unlock(finding) }
     }
     private func usage(_ finding: Finding) -> String {
         guard let used = finding.lastUsedAt else { return String(localized: "No agent session in 90 days") }
@@ -1070,10 +1083,10 @@ struct MainView: View {
         HStack(spacing: 12) {
             if finding.safety == .review || m.unlockedWorktrees.contains(finding.id) {
                 Toggle(String(localized: "Select \(finding.title)"), isOn: Binding(get: { m.worktreeSelection.contains(finding.id) }, set: { if $0 { m.worktreeSelection.insert(finding.id) } else { m.worktreeSelection.remove(finding.id) } })).toggleStyle(.stewardCheckboxOnly)
-            } else if finding.hold == .inUse { unlockButton(finding) }
-            else { Image(systemName: "lock.fill").foregroundStyle(muted).frame(width: 15) }
+            } else if finding.hold == .inUse { unlockButton(finding, highlighted: hoveredRow == finding.id) }
+            else { Image(systemName: "info.circle").foregroundStyle(muted).frame(width: 15) }
             VStack(alignment: .leading, spacing: 3) {
-                Text(finding.title).stewardFont(.body, weight: .semibold).lineLimit(1)
+                HStack(spacing: 6) { if m.wasLocked(finding) { Image(systemName: "lock.open.fill").font(.caption).foregroundStyle(finding.dangerous ? Color.red : .orange).help(finding.dangerous ? "Unlocked red: in use or may be the only copy" : "Unlocked orange: only a running process keeps it") }; Text(finding.title).stewardFont(.body, weight: .semibold).lineLimit(1) }
                 Text((finding.warnings ?? []).reduce(finding.reason) { $0.replacingOccurrences(of: " " + $1, with: "") }).stewardFont(.caption).foregroundStyle(muted).lineLimit(1)
                 ForEach(finding.warnings ?? [], id: \.self) { Label($0, systemImage: "exclamationmark.triangle.fill").stewardFont(.caption).foregroundStyle(.orange).lineLimit(1) }
             }
@@ -1082,7 +1095,7 @@ struct MainView: View {
             Text(formattedBytes(finding.bytes)).stewardFont(.callout, weight: .medium).foregroundStyle(mint).frame(width: 80, alignment: .trailing)
         }
         .padding(.horizontal, 14).padding(.vertical, 10)
-        .background(panel.opacity(0.6), in: RoundedRectangle(cornerRadius: 10))
+        .background(panel.opacity(0.6), in: RoundedRectangle(cornerRadius: 10)).modifier(rowHover(finding))
         .help(finding.path)
         .contextMenu {
             Button("Reveal in Finder") { m.reveal(finding.path) }
@@ -1203,7 +1216,7 @@ struct MainView: View {
                 Text(Self.readyLine(findings)).stewardFont(.body).foregroundStyle(muted)
             }
             // Exactly what the tile checkboxes (and the Review list) have ticked; recommended items start ticked.
-            let chosenItems = findings.filter { m.selected.contains($0.id) && $0.userCleanable && $0.group != .worktrees }
+            let chosenItems = findings.filter { m.selected.contains($0.id) && m.removable($0) && $0.group != .worktrees }
             let chosenWorktrees = m.reviewableWorktrees.filter { m.worktreeSelection.contains($0.id) }
             let chosenBrowsers = browsersTicked ? closedBrowserCaches : []
             let chosenTrash = trashTicked && m.trashBins.report?.items != 0
@@ -1343,7 +1356,7 @@ struct MainView: View {
     private var performanceSummary: [String] {
         // Health and pressure, not a GB figure: this card refreshes throttled, so a live number would disagree with the ring below.
         [m.memory.reading.map { reading in
-            let score = MemoryVerdict.evaluate(pressure: reading.pressure, swap: reading.swap, total: reading.total, loginItems: m.startup.loginItems?.count).score
+            let score = MemoryVerdict.evaluate(pressure: reading.pressure, swap: reading.swap, total: reading.total, loginItems: m.startup.loginItems?.count, load: reading.load).score
             switch reading.pressure {
             case .normal: return String(localized: "Health \(score) · Normal pressure")
             case .warning: return String(localized: "Health \(score) · Elevated pressure")
@@ -1448,20 +1461,37 @@ private func firstSentence(_ text: String) -> String {
 /// A lock that can be opened: on hover it morphs into an open lock with a small bounce, so it reads as a button.
 struct UnlockButton: View {
     var disabled = false
+    /// Red: in use or possibly the only copy. Orange: only a running process keeps it.
+    var danger = false
+    /// The pointer is over the row it belongs to, not the lock itself.
+    var highlighted = false
     let action: () -> Void
     @State private var hovered = false
+    private var open: Bool { (hovered || highlighted) && !disabled }
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
         Button(action: action) {
-            Image(systemName: hovered && !disabled ? "lock.open.fill" : "lock.fill")
-                .font(.system(size: 17, weight: .semibold)).foregroundStyle(hovered && !disabled ? Color.mint : .orange)
+            Image(systemName: open ? "lock.open.fill" : "lock.fill")
+                .font(.system(size: 17, weight: .semibold)).foregroundStyle(open ? Color.mint : danger ? .red : .orange)
                 .contentTransition(reduceMotion ? .identity : .symbolEffect(.replace.downUp.byLayer))
-                .symbolEffect(.bounce.up, options: .speed(1.4), value: reduceMotion ? false : hovered)
+                .symbolEffect(.bounce.up, options: .speed(1.4), value: reduceMotion ? false : open)
                 .frame(width: 22, height: 22).contentShape(Rectangle())
         }
         .buttonStyle(.plain).disabled(disabled)
         .trackingHover { inside in withAnimation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.6)) { hovered = inside } }
-        .help("Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder.")
-        .accessibilityLabel("Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder.")
+        .help(danger ? "Red lock: in use or may be the only copy. Unlock to delete it anyway; you type to confirm." : "Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder.")
+        .accessibilityLabel(danger ? "Red lock: in use or may be the only copy. Unlock to delete it anyway; you type to confirm." : "Unlock to delete it anyway. Git rechecks it first. The processes keep running, but lose this folder.")
+    }
+}
+
+/// Tracks which row the pointer is over, with the same spring as the lock itself.
+struct RowHover: ViewModifier {
+    let id: String
+    @Binding var hovered: String?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    func body(content: Content) -> some View {
+        content.trackingHover { inside in
+            withAnimation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.6)) { if inside { hovered = id } else if hovered == id { hovered = nil } }
+        }
     }
 }
