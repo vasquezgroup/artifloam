@@ -1166,7 +1166,8 @@ struct MainView: View {
     /// Everything found that you can choose to delete here: ready items, held caches you can tick,
     /// and finished worktrees. Not counted: what only Xcode manages, unfinished work, or anything kept on purpose.
     private static func found(_ findings: [Finding]) -> UInt64 {
-        findings.filter { $0.userCleanable || ($0.group == .worktrees && $0.safety == .review) }.reduce(0) { $0 + $1.bytes }
+        // Red items count too: the person can unlock and delete them, so the tile shows their size instead of nothing.
+        findings.filter { $0.userCleanable || $0.dangerous || ($0.group == .worktrees && ($0.safety == .review || $0.hold == .inUse)) }.reduce(0) { $0 + $1.bytes }
     }
     /// What a Clean or Run takes without asking.
     private static func ready(_ findings: [Finding]) -> UInt64 { findings.filter { $0.safety == .automatic && !reviewOnlyGroups.contains($0.group) }.reduce(0) { $0 + $1.bytes } }
@@ -1250,7 +1251,9 @@ struct MainView: View {
         let report = m.trashBins.report
         let empty = report == nil || report?.items == 0
         let ticked = trashTicked && !empty
-        let status = empty ? (report == nil ? String(localized: "Checking…") : String(localized: "Empty", comment: "The Trash holds nothing")) : !ticked ? String(localized: "Not selected") : report?.bytes.map { String(localized: "\(formattedBytes($0)) selected") } ?? String(localized: "Selected")
+        // Without Full Disk Access macOS hides what's in the Trash, so say why there's no size.
+        let hidden = report.map { $0.bytes == nil && $0.contents.isEmpty } ?? false
+        let status = hidden ? String(localized: "Needs Full Disk Access") : empty ? (report == nil ? String(localized: "Checking…") : String(localized: "Empty", comment: "The Trash holds nothing")) : !ticked ? String(localized: "Not selected") : report?.bytes.map { String(localized: "\(formattedBytes($0)) selected") } ?? String(localized: "Selected")
         return CategoryTile(amount: report?.bytes.map(formattedBytes), name: String(localized: "Trash"), tagline: String(localized: "Deleted files still using space"), art: "trash", status: status,
                             chosen: Binding(get: { ticked }, set: { trashTicked = $0 }), canChoose: !empty, review: { m.openPage("Trash bins") },
                             clean: ticked ? { confirmRemoval([], trash: true) } : nil)
