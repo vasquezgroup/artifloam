@@ -64,7 +64,7 @@ public final class Scanner: @unchecked Sendable {
             catch { notices.append(String(localized: "Cannot read \(root.path): \(error.localizedDescription). Grant folder access in macOS Privacy & Security if needed.")) }
         }
         let policy = SafetyPolicy(configuration: configuration)
-        let runningApps = BroadCaches.runningApps()
+        let runningApps = BroadCaches.runningApps(), quittableApps = BroadCaches.quittableApps()
         summaries?.prepare(watching: [configuration.home, configuration.agentTemp] + configuration.projectRoots)
         /// `busy` runs inside the check rather than during discovery: per-project git calls would serialize the walk.
         func add(_ url: URL, group: CleanupGroup, rule: String, reason: String, busy: (() -> Bool)? = nil, live: (() -> Bool)? = nil) {
@@ -107,7 +107,7 @@ public final class Scanner: @unchecked Sendable {
                 let note = active ? String(localized: "In use: its app or a running process uses it.") : sensitive ? String(localized: "Holds a Git repository, a database or links that may be the only copy. Check it in Finder first.") : !old ? String(localized: "Used or modified within the last \(days) days.") : !activity.reliable ? String(localized: "Protected: process inspection is incomplete.") : reason
                 let hold: Hold? = safe ? nil : active ? .inUse : sensitive ? .unverified : !old ? .recent : .unverified
                 // Only an app-owned cache gets an owner: that's the one case Artifloam can resolve by quitting an app.
-                let owner = hold == .inUse && rule == "app-cache" ? BroadCaches.owner(of: url.lastPathComponent, running: runningApps) : nil
+                let owner = hold == .inUse && rule == "app-cache" ? BroadCaches.owner(of: url.lastPathComponent, running: quittableApps) : nil
                 let finding = Finding(path: url.path, group: group, bytes: tree.bytes, modifiedAt: tree.newest, safety: safe ? .automatic : .protected, reason: note, rule: rule, fingerprint: tree.fingerprint, hold: hold, owner: owner)
                 collect { findings.append(finding) }
             } catch is CancellationError { throw CancellationError() } catch { /* Unknown structures and protected contents never become deletion candidates. */ }

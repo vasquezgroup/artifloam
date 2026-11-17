@@ -72,6 +72,10 @@ public enum BroadCaches {
         guard !key.isEmpty, !id.isEmpty || !title.isEmpty else { return false }
         return (!id.isEmpty && (id == key || id.hasPrefix(key + ".") || key.hasPrefix(id + "."))) || title == key || (key.count >= 4 && title.hasPrefix(key))
     }
+    /// Apps with a Dock icon: the ones Artifloam can ask to quit. A Finder extension or background agent can't be.
+    static func quittableApps() -> [(id: String, name: String)] {
+        NSWorkspace.shared.runningApplications.filter { $0.activationPolicy == .regular }.map { ($0.bundleIdentifier ?? "", $0.localizedName ?? "") }
+    }
     static func runningApps() -> [(id: String, name: String)] {
         NSWorkspace.shared.runningApplications.map { ($0.bundleIdentifier ?? "", $0.localizedName ?? "") }
     }
