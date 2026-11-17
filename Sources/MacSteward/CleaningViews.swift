@@ -42,7 +42,7 @@ struct CleanConfirmSheet: View {
     let findings: [Finding]
     /// Apps that will be asked to quit first, so their caches can go.
     /// Apps that quit first, each with the caches it frees. The person can untick one: it stays open and its caches stay.
-    var appsToQuit: [(name: String, icon: NSImage?, ids: Set<String>)] = []
+    var appsToQuit: [(name: String, icon: NSImage?, ids: Set<String>, helpers: String?)] = []
     @State private var keptOpen = Set<String>()
     /// Caches left out because their app stays open.
     private var keptIDs: Set<String> { Set(appsToQuit.filter { keptOpen.contains($0.name) }.flatMap(\.ids)) }
@@ -129,7 +129,10 @@ struct CleanConfirmSheet: View {
                         Toggle(isOn: Binding(get: { !keptOpen.contains(app.name) }, set: { if $0 { keptOpen.remove(app.name) } else { keptOpen.insert(app.name) } })) {
                             HStack(spacing: 8) {
                                 if let icon = app.icon { Image(nsImage: icon).resizable().frame(width: 22, height: 22) }
-                                Text(app.name).stewardFont(.callout, weight: .medium)
+                                VStack(alignment: .leading, spacing: 1) {
+                                    Text(app.name).stewardFont(.callout, weight: .medium)
+                                    if let helpers = app.helpers { Text(helpers).stewardFont(.caption).foregroundStyle(.secondary).lineLimit(2).help(helpers) }
+                                }
                             }
                         }.toggleStyle(.stewardCheckbox).padding(.leading, 26)
                     }

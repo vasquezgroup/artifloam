@@ -219,12 +219,30 @@ final class StewardModel: ObservableObject {
     /// Apps that must quit before their ticked caches can be cleaned.
     /// The same list `quit` acts on, so the confirmation names every app that will be asked to quit.
     /// Each app that quits before cleaning, with the caches it frees.
-    func appsToQuit(_ items: [Finding]) -> [(name: String, icon: NSImage?, ids: Set<String>)] {
-        var apps = [String: (icon: NSImage?, ids: Set<String>)]()
+    /// One row per program, not per process: caches that share an app or helper are merged, so Adobe's nine helpers
+    /// are one row. `helpers` names the rest, small, under the row.
+    func appsToQuit(_ items: [Finding]) -> [(name: String, icon: NSImage?, ids: Set<String>, helpers: String?)] {
+        var groups = [(ids: Set<String>, apps: [NSRunningApplication], title: String)]()
         for item in items {
-            for app in Self.quitters(for: item) { if let name = app.localizedName { apps[name, default: (app.icon, [])].ids.insert(item.id) } }
+            let apps = Self.quitters(for: item)
+            guard !apps.isEmpty else { continue }
+            let pids = Set(apps.map(\.processIdentifier))
+            let joined = groups.indices.filter { !pids.isDisjoint(with: groups[$0].apps.map(\.processIdentifier)) }
+            var merged = (ids: Set([item.id]), apps: apps, title: item.title)
+            for index in joined.reversed() {
+                let other = groups.remove(at: index)
+                merged.ids.formUnion(other.ids); merged.apps += other.apps.filter { app in !merged.apps.contains { $0.processIdentifier == app.processIdentifier } }
+            }
+            groups.append(merged)
         }
-        return apps.map { ($0.key, $0.value.icon, $0.value.ids) }.sorted { $0.name < $1.name }
+        return groups.map { group in
+            // The app with a Dock icon leads its row's icon; with one process the row is just that app.
+            // Otherwise the shortest name is usually the main program ("Creative Cloud" among its helpers).
+            let lead = group.apps.first { $0.activationPolicy == .regular } ?? group.apps.min { ($0.localizedName ?? "").count < ($1.localizedName ?? "").count }!
+            let name = group.apps.count == 1 ? lead.localizedName ?? group.title : group.title
+            let rest = group.apps.count == 1 ? nil : group.apps.compactMap(\.localizedName).sorted().joined(separator: ", ")
+            return (name, lead.icon, group.ids, rest)
+        }.sorted { $0.name < $1.name }
     }
     /// Caches whose app the person chose to keep open in the confirmation: the next clean leaves them alone.
     var keptOpen = Set<String>()
