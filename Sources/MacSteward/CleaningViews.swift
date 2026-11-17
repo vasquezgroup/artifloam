@@ -148,11 +148,8 @@ struct CleanConfirmSheet: View {
                 Label("\(recent.count) recently used caches · \(formattedBytes(recent.reduce(0) { $0 + $1.bytes })). Apps will likely rebuild them soon.", systemImage: "clock.arrow.circlepath")
                     .stewardFont(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
-            Label("Each item is checked again right before removal. Anything in use is skipped. Removed caches are rebuilt by their apps when needed.", systemImage: "checkmark.shield")
-                .stewardFont(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             Label("Deleted permanently after you confirm", systemImage: "exclamationmark.triangle")
                 .stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
-            DeletionNote()
             if !risky.isEmpty || !redWorktrees.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     if !redWorktrees.isEmpty {
@@ -176,7 +173,7 @@ struct CleanConfirmSheet: View {
             guard let configuration else { return }
             let items = findings
             // Only apps that really get quit count as freeing their cache; a background helper keeps running.
-            let quitting = Set(items.filter { $0.hold == .inUse && $0.owner != nil && !StewardModel.appsOwning(caches: [URL(fileURLWithPath: $0.path).lastPathComponent]).isEmpty }.map(\.id))
+            let quitting = Set(appsToQuit.flatMap(\.ids))
             busy = await Task.detached(priority: .userInitiated) {
                 let activity = ActivitySnapshot.capture(), policy = SafetyPolicy(configuration: configuration)
                 return Dictionary(uniqueKeysWithValues: items.compactMap { item in policy.busyReason(item, activity: activity, quitting: quitting.contains(item.id)).map { (item.id, $0) } })

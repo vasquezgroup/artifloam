@@ -175,10 +175,28 @@ final class StewardModel: ObservableObject {
                 && caches.contains { BroadCaches.quitsFor(cache: $0, bundleID: app.bundleIdentifier ?? "", appName: app.localizedName ?? "") }
         }
     }
-    static func quitOwners(ofCaches caches: [String]) async {
-        let apps = appsOwning(caches: caches)
+    /// What quits before `item` is cleaned: its app, or for an unlocked red app cache, every app and background helper
+    /// of that family still running (Adobe's sync and crash helpers keep "Adobe" in use with no window open).
+    static func quitters(for item: Finding) -> [NSRunningApplication] {
+        let name = URL(fileURLWithPath: item.path).lastPathComponent
+        if item.hold == .inUse && item.owner != nil { return appsOwning(caches: [name]) }
+        guard item.dangerous, item.rule == "app-cache" else { return [] }
+        let key = name.lowercased()
+        return NSWorkspace.shared.runningApplications.filter { app in
+            let id = app.bundleIdentifier ?? ""
+            return app.processIdentifier != getpid() && !id.hasPrefix("com.apple.")
+                && (BroadCaches.owns(cache: name, bundleID: id, appName: app.localizedName ?? "") || (key.count >= 4 && !key.contains(".") && id.lowercased().split(separator: ".").contains(Substring(key))))
+        }
+    }
+    /// Asks each to quit normally (an app may ask to save) and waits up to 10 s. A background helper that ignores it
+    /// gets a normal termination signal. Whatever still runs keeps its cache: the cleaner skips it.
+    static func quit(_ apps: [NSRunningApplication]) async {
         apps.forEach { _ = $0.terminate() }
         for _ in 0..<20 where apps.contains(where: { !$0.isTerminated }) { try? await Task.sleep(for: .milliseconds(500)) }
+        let stubborn = apps.filter { !$0.isTerminated && $0.activationPolicy != .regular }
+        guard !stubborn.isEmpty else { return }
+        stubborn.forEach { kill($0.processIdentifier, SIGTERM) }
+        for _ in 0..<6 where stubborn.contains(where: { !$0.isTerminated }) { try? await Task.sleep(for: .milliseconds(500)) }
     }
     func review(_ group: CleanupGroup? = nil) {
         if let group { self.group = group; showAllFindings = false }
@@ -199,12 +217,12 @@ final class StewardModel: ObservableObject {
     /// Ticked items the cleaner may take: automatic ones, plus held ones the user chose (recent, or with an app to quit).
     var selectedFindings: [Finding] { report?.findings.filter { selected.contains($0.id) && removable($0) && (showAllFindings || $0.group == group) } ?? [] }
     /// Apps that must quit before their ticked caches can be cleaned.
-    /// The same list `quitOwners` acts on, so the confirmation names every app that will be asked to quit.
+    /// The same list `quit` acts on, so the confirmation names every app that will be asked to quit.
     /// Each app that quits before cleaning, with the caches it frees.
     func appsToQuit(_ items: [Finding]) -> [(name: String, icon: NSImage?, ids: Set<String>)] {
         var apps = [String: (icon: NSImage?, ids: Set<String>)]()
-        for item in items where item.hold == .inUse && item.owner != nil {
-            for app in Self.appsOwning(caches: [URL(fileURLWithPath: item.path).lastPathComponent]) { if let name = app.localizedName { apps[name, default: (app.icon, [])].ids.insert(item.id) } }
+        for item in items {
+            for app in Self.quitters(for: item) { if let name = app.localizedName { apps[name, default: (app.icon, [])].ids.insert(item.id) } }
         }
         return apps.map { ($0.key, $0.value.icon, $0.value.ids) }.sorted { $0.name < $1.name }
     }
@@ -427,13 +445,14 @@ final class StewardModel: ObservableObject {
         let config = configuration; let ids = Set(chosen.map(\.id))
         // Held items are cleaned only because the user ticked them; the cleaner still rechecks each one.
         let approved = Set(chosen.filter { $0.safety != .automatic }.map(\.id))
-        let quitting = chosen.filter { $0.hold == .inUse && $0.owner != nil }.map { URL(fileURLWithPath: $0.path).lastPathComponent }
+        var seen = Set<pid_t>()
+        let quitting = chosen.flatMap(Self.quitters).filter { seen.insert($0.processIdentifier).inserted }
         cleaning = CleanProgress(completed: 0, total: ids.count, current: quitting.isEmpty ? String(localized: "Preparing…") : String(localized: "Quitting \(appsToQuit(chosen).map(\.name).joined(separator: ", "))…"), group: nil, freedBytes: 0, removed: 0, skipped: 0)
         StewardSound.start.play()
         let receiver = self
         Task {
             do {
-                if !quitting.isEmpty { await Self.quitOwners(ofCaches: quitting) }
+                if !quitting.isEmpty { await Self.quit(quitting) }
                 let work = Task.detached(priority: .utility) {
                     try Cleaner(configuration: config).clean(report, selectedIDs: ids, approvedIDs: approved) { update in Task { @MainActor in if !receiver.stoppingClean || update.finished { receiver.cleaning = update } } }
                 }

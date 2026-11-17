@@ -111557,154 +111557,6 @@
         }
       }
     },
-    "Each item is checked again right before removal. Anything in use is skipped. Removed caches are rebuilt by their apps when needed." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يُفحص كل عنصر مرة أخرى قبل الإزالة مباشرة. يتم تخطي أي شيء قيد الاستخدام. تعيد التطبيقات بناء الذاكرات المؤقتة المُزالة عند الحاجة."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cada element es torna a comprovar just abans d’eliminar-lo. Tot el que està en ús s’omet. Les apps tornen a crear les memòries cau eliminades quan cal."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jedes Objekt wird direkt vor dem Entfernen noch einmal geprüft. Was in Gebrauch ist, wird übersprungen. Entfernte Caches werden von ihren Apps bei Bedarf neu aufgebaut."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Each item is checked again right before removal. Anything in use is skipped. Removed caches are rebuilt by their apps when needed."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Each item is checked again right before removal. Anything in use is skipped. Removed caches are rebuilt by their apps when needed."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Each item is checked again right before removal. Anything in use is skipped. Removed caches are rebuilt by their apps when needed."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cada elemento se vuelve a comprobar justo antes de eliminarlo. Se omite todo lo que esté en uso. Las cachés eliminadas las reconstruyen sus apps cuando hace falta."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cada elemento se vuelve a comprobar justo antes de eliminarlo. Se omite todo lo que esté en uso. Las cachés eliminadas las reconstruyen sus apps cuando hace falta."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chaque élément est revérifié juste avant son retrait. Tout ce qui est en cours d’utilisation est ignoré. Les caches retirés sont recréés par leurs apps en cas de besoin."
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jedes Element wird churz vor em Entferne nomal gcheckt. Was im Bruuch isch, wird übersprunge. Entfernti Caches baued d Apps bi Bedarf neu uf."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "हर आइटम हटाने से ठीक पहले फिर जाँचा जाता है। उपयोग में कोई भी चीज़ छोड़ दी जाती है। हटाए गए कैश ज़रूरत पड़ने पर उनके ऐप दोबारा बना लेते हैं।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Svaka se stavka ponovno provjerava neposredno prije uklanjanja. Sve što se koristi preskače se. Uklonjene predmemorije aplikacije ponovno grade kad zatreba."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ogni elemento viene ricontrollato subito prima della rimozione. Tutto ciò che è in uso viene saltato. Le cache rimosse vengono ricostruite dalle loro app quando serve."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "各項目は、削除の直前にもう一度チェックされます。使用中のものはスキップされます。削除されたキャッシュは、必要なときにアプリが再作成します。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "각 항목은 제거 직전에 다시 확인합니다. 사용 중인 항목은 건너뜁니다. 제거된 캐시는 필요할 때 해당 앱이 다시 만듭니다."
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Katrs vienums tiek pārbaudīts vēlreiz tieši pirms noņemšanas. Viss, kas tiek lietots, tiek izlaists. Noņemtās kešatmiņas lietotnes izveido no jauna, kad vajag."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Każdy element jest sprawdzany ponownie tuż przed usunięciem. Wszystko, co jest w użyciu, jest pomijane. Usunięte pamięci podręczne są odbudowywane przez ich aplikacje w razie potrzeby."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cada item é verificado novamente mesmo antes de ser removido. Tudo o que estiver em uso é ignorado. As caches removidas são recriadas pelas suas apps quando necessário."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Çdo element kontrollohet përsëri pak para heqjes. Çdo gjë në përdorim anashkalohet. Cache-t e hequra rindërtohen nga aplikacionet e tyre kur nevojitet."
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Свака ставка се проверава поново непосредно пре уклањања. Све што је у употреби се прескаче. Уклоњене кешеве њихове апликације поново праве када затреба."
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Svaka stavka se proverava ponovo neposredno pre uklanjanja. Sve što je u upotrebi se preskače. Uklonjene keševe njihove aplikacije ponovo prave kada zatreba."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Varje objekt kontrolleras igen precis innan det tas bort. Allt som används hoppas över. Borttagna cachar byggs upp igen av sina appar vid behov."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Her öğe, kaldırılmadan hemen önce yeniden denetlenir. Kullanımda olan her şey atlanır. Kaldırılan önbellekleri, gerektiğinde uygulamaları yeniden oluşturur."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "每个项目在移除前都会再次检查。任何正在使用的项目都会跳过。已移除的缓存会在需要时由其 App 重新生成。"
-          }
-        }
-      }
-    },
     "Each tool below scans only its own area. The button above runs the cleanup, worktree, duplicate and system checks together. Scanning never deletes files or quits apps." : {
       "localizations" : {
         "ar" : {
@@ -279500,7 +279352,31 @@
             "value" : "Entsperrt und in Gebrauch · %@. Wird trotzdem gelöscht, wie du es gewählt hast. Schreibt währenddessen etwas hinein, legt Artifloam die Dateien zurück und behält es."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked and in use · %@. Deleted anyway, as you chose. If something writes to it meanwhile, Artifloam puts the files back and keeps it."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked and in use · %@. Deleted anyway, as you chose. If something writes to it meanwhile, Artifloam puts the files back and keeps it."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked and in use · %@. Deleted anyway, as you chose. If something writes to it meanwhile, Artifloam puts the files back and keeps it."
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloqueado y en uso · %@. Se elimina igualmente, como elegiste. Si algo escribe en él mientras tanto, Artifloam devuelve los archivos y lo conserva."
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desbloqueado y en uso · %@. Se elimina igualmente, como elegiste. Si algo escribe en él mientras tanto, Artifloam devuelve los archivos y lo conserva."
@@ -279600,30 +279476,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已解锁且正在使用 · %@。按你的选择仍会删除。如果期间有程序写入，Artifloam 会放回文件并保留它。"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desbloqueado y en uso · %@. Se elimina igualmente, como elegiste. Si algo escribe en él mientras tanto, Artifloam devuelve los archivos y lo conserva."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unlocked and in use · %@. Deleted anyway, as you chose. If something writes to it meanwhile, Artifloam puts the files back and keeps it."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unlocked and in use · %@. Deleted anyway, as you chose. If something writes to it meanwhile, Artifloam puts the files back and keeps it."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unlocked and in use · %@. Deleted anyway, as you chose. If something writes to it meanwhile, Artifloam puts the files back and keeps it."
           }
         }
       }
