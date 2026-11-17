@@ -44,7 +44,12 @@ struct CleanConfirmSheet: View {
     var appsToQuit: [String] = []
     var extras: [CleanExtra] = []
     var redWorktrees: [Finding] = []
+    /// For the in-use check below; nil skips it.
+    var configuration: Configuration? = nil
     let confirm: () -> Void
+    /// What a process uses right now (id → why), checked when the sheet opens, so the size shown is what can really go.
+    @State private var busy: [String: String]? = nil
+    private var busyItems: [Finding] { findings.filter { busy?[$0.id] != nil } }
     @Environment(\.dismiss) private var dismiss
     /// Red items were unlocked one by one; deleting them also needs the word typed here.
     @State private var typed = ""
@@ -54,7 +59,7 @@ struct CleanConfirmSheet: View {
     private var groups: [(CleanupGroup, UInt64, Int)] {
         Dictionary(grouping: findings, by: \.group).map { ($0.key, $0.value.reduce(0) { $0 + $1.bytes }, $0.value.count) }.sorted { $0.1 > $1.1 }
     }
-    private var total: UInt64 { findings.reduce(0) { $0 + $1.bytes } + extras.reduce(0) { $0 + ($1.bytes ?? 0) } }
+    private var total: UInt64 { findings.reduce(0) { $0 + $1.bytes } - busyItems.reduce(0) { $0 + $1.bytes } + extras.reduce(0) { $0 + ($1.bytes ?? 0) } }
     private var categories: Int { groups.count + extras.count }
     private var summaryLine: String {
         if !extras.isEmpty { return String(localized: "\(categories) categories") }
@@ -90,6 +95,15 @@ struct CleanConfirmSheet: View {
                     }.padding(.horizontal, 14).padding(.vertical, 9)
                 }
             }.background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+            if busy == nil && configuration != nil {
+                HStack(spacing: 8) { ProgressView().controlSize(.small); Text("Checking…").stewardFont(.callout).foregroundStyle(.secondary) }
+            } else if !busyItems.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Label("In use right now · \(formattedBytes(busyItems.reduce(0) { $0 + $1.bytes })). Artifloam skips these; close what uses them and clean again.", systemImage: "hand.raised")
+                        .stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+                    ForEach(busyItems.prefix(4)) { item in Text("\(item.title) · \(busy?[item.id] ?? "")").stewardFont(.caption).foregroundStyle(.secondary).lineLimit(1) }
+                }
+            }
             if !appsToQuit.isEmpty {
                 Label(appsToQuit.count == 1 ? String(localized: "\(appsToQuit.joined(separator: ", ")) will quit first. It may ask you to save. If an app doesn't quit, its cache is kept.") : String(localized: "\(appsToQuit.joined(separator: ", ")) will quit first. They may ask you to save. If an app doesn't quit, its cache is kept."), systemImage: "xmark.app")
                     .stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
@@ -127,10 +141,18 @@ struct CleanConfirmSheet: View {
                 Button("Cancel") { dismiss() }.keyboardShortcut(.cancelAction)
                     .buttonStyle(CleanupGlassButtonStyle(secondary: true))
                 Spacer()
-                Button { dismiss(); confirm() } label: { Label(extras.isEmpty ? String(localized: "Delete \(findings.count) items · \(formattedBytes(total))") : total > 0 ? String(localized: "Delete · \(formattedBytes(total))") : String(localized: "Delete", comment: "Button: confirm deleting the selected items"), systemImage: "trash.fill").stewardFont(.body, weight: .semibold) }
-                    .buttonStyle(DestructiveCapsuleStyle()).disabled(!confirmed)
+                Button { dismiss(); confirm() } label: { Label(extras.isEmpty ? String(localized: "Delete \(findings.count - busyItems.count) items · \(formattedBytes(total))") : total > 0 ? String(localized: "Delete · \(formattedBytes(total))") : String(localized: "Delete", comment: "Button: confirm deleting the selected items"), systemImage: "trash.fill").stewardFont(.body, weight: .semibold) }
+                    .buttonStyle(DestructiveCapsuleStyle()).disabled(!confirmed || extras.isEmpty && !findings.isEmpty && busyItems.count == findings.count)
             }
         }.padding(26).frame(width: 520).preferredColorScheme(.dark)
+        .task {
+            guard let configuration else { return }
+            let items = findings
+            busy = await Task.detached(priority: .userInitiated) {
+                let activity = ActivitySnapshot.capture(), policy = SafetyPolicy(configuration: configuration)
+                return Dictionary(uniqueKeysWithValues: items.compactMap { item in policy.busyReason(item, activity: activity, approved: item.dangerous).map { (item.id, $0) } })
+            }.value
+        }
     }
 }
 /// High-contrast destructive action: white text on solid red.

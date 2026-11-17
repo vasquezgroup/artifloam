@@ -209,7 +209,7 @@ struct MainView: View {
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.28), value: isIntro)
         .animation(reduceMotion ? nil : .spring(response: 0.48, dampingFraction: 0.88), value: m.scanning)
         .animation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.9), value: hideSidebar)
-        .sheet(item: $pendingRemoval) { pending in CleanConfirmSheet(findings: pending.findings ?? m.selectedFindings, appsToQuit: m.appsToQuit(pending.findings ?? m.selectedFindings), extras: pending.extras, redWorktrees: pending.redWorktrees) {
+        .sheet(item: $pendingRemoval) { pending in CleanConfirmSheet(findings: pending.findings ?? m.selectedFindings, appsToQuit: m.appsToQuit(pending.findings ?? m.selectedFindings), extras: pending.extras, redWorktrees: pending.redWorktrees, configuration: m.configuration) {
             if pending.steps.isEmpty { m.clean(pending.findings) } else { m.removalQueue = pending.steps; m.runNextRemoval() }
         } }
         .environment(\.stewardTheme, theme)
@@ -899,7 +899,12 @@ struct MainView: View {
                 Image(systemName: "square.grid.2x2.fill").frame(width: 18).foregroundStyle(mint)
                 VStack(alignment: .leading, spacing: 5) {
                     Text("All", comment: "List row: every cleanup category").stewardFont(.body, weight: .semibold)
-                    Text("\(formattedBytes(m.overview.eligibleBytes)) eligible").stewardFont(.caption).foregroundStyle(mint)
+                    // Same lines as every category: how many, how big, and how much of it is ticked.
+                    let items = m.report?.findings.filter { m.reviewGroups.contains($0.group) } ?? []
+                    Text("\(items.count) findings").stewardFont(.caption).foregroundStyle(muted)
+                    let total = items.reduce(UInt64(0)) { $0 + $1.bytes }
+                    let ticked = items.filter { ($0.group == .worktrees ? m.worktreeSelection : m.selected).contains($0.id) }.reduce(UInt64(0)) { $0 + $1.bytes }
+                    Text(ticked > 0 ? String(localized: "\(formattedBytes(total)) · \(formattedBytes(ticked)) selected") : formattedBytes(total)).stewardFont(.caption, weight: .medium).foregroundStyle(mint)
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }.padding(10).frame(maxWidth: .infinity, alignment: .leading)
                 .background(m.showAllFindings ? mint.opacity(0.12) : .clear, in: RoundedRectangle(cornerRadius: 9))

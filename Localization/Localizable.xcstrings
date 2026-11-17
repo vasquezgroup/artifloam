@@ -1336,154 +1336,6 @@
         }
       }
     },
-    "%@ eligible" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ مؤهل"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ aptes"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ geeignet"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ eligible"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ eligible"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ eligible"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ elegibles"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ elegibles"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ éligible"
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ zum Ufruume"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ पात्र"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prikladno: %@"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ idonei"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@が対象"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ 정리 가능"
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ piemērots"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kwalifikuje się: %@"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ elegível"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ të përshtatshme"
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ подобно"
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ podobno"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ kan rensas"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ uygun"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ 可清理"
-          }
-        }
-      }
-    },
     "%@ eligible caches" : {
       "localizations" : {
         "ar" : {
@@ -94043,7 +93895,31 @@
             "value" : "Committet"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Committed"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Committed"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Committed"
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmado"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Confirmado"
@@ -94143,30 +94019,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已提交"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Confirmado"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Committed"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Committed"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Committed"
           }
         }
       }
@@ -136573,7 +136425,31 @@
             "value" : "Git prüft jeden Worktree direkt vor dem Löschen noch einmal. Einer, der sich seit dem Scan geändert hat, bleibt erhalten."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git checks each worktree again right before it's deleted. One that changed since the scan is kept."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git checks each worktree again right before it's deleted. One that changed since the scan is kept."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git checks each worktree again right before it's deleted. One that changed since the scan is kept."
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git vuelve a comprobar cada worktree justo antes de eliminarlo. Si alguno cambió desde el análisis, se conserva."
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Git vuelve a comprobar cada worktree justo antes de eliminarlo. Si alguno cambió desde el análisis, se conserva."
@@ -136673,30 +136549,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Git 会在删除每个 worktree 前再检查一次。扫描后有变化的会被保留。"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git vuelve a comprobar cada worktree justo antes de eliminarlo. Si alguno cambió desde el análisis, se conserva."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git checks each worktree again right before it's deleted. One that changed since the scan is kept."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git checks each worktree again right before it's deleted. One that changed since the scan is kept."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git checks each worktree again right before it's deleted. One that changed since the scan is kept."
           }
         }
       }
@@ -144840,6 +144692,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在使用"
+          }
+        }
+      }
+    },
+    "In use right now · %@. Artifloam skips these; close what uses them and clean again." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قيد الاستخدام الآن · %@. يتخطّاها Artifloam؛ أغلق ما يستخدمها ثم نظّف مرة أخرى."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En ús ara mateix · %@. Artifloam se’ls salta; tanca el que els fa servir i torna a netejar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gerade in Gebrauch · %@. Artifloam überspringt sie; schliesse, was sie benutzt, und bereinige noch einmal."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En uso ahora mismo · %@. Artifloam los omite; cierra lo que los usa y vuelve a limpiar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisés en ce moment · %@. Artifloam les ignore ; fermez ce qui les utilise et nettoyez à nouveau."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grad im Gebruuch · %@. Artifloam lönd die uus; mach zue, was si bruucht, und butz nomal."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अभी उपयोग में · %@. Artifloam इन्हें छोड़ देता है; जो इन्हें उपयोग कर रहा है उसे बंद करें और फिर से साफ़ करें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trenutačno u upotrebi · %@. Artifloam ih preskače; zatvori ono što ih koristi i očisti ponovno."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In uso in questo momento · %@. Artifloam li salta; chiudi ciò che li usa e pulisci di nuovo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在使用中 · %@。Artifloam はこれらをスキップします。使っているものを閉じてから、もう一度クリーンアップしてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지금 사용 중 · %@. Artifloam은 이 항목을 건너뜁니다. 사용 중인 것을 닫고 다시 정리하세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pašlaik tiek lietots · %@. Artifloam tos izlaiž; aizver to, kas tos izmanto, un notīri vēlreiz."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teraz w użyciu · %@. Artifloam je pominie; zamknij to, co ich używa, i wyczyść ponownie."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em uso neste momento · %@. O Artifloam ignora-os; fecha o que os usa e limpa novamente."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Në përdorim tani · %@. Artifloam i kapërcen; mbyll atë që i përdor dhe pastro përsëri."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тренутно у употреби · %@. Artifloam их прескаче; затвори оно што их користи и очисти поново."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trenutno u upotrebi · %@. Artifloam ih preskače; zatvori ono što ih koristi i očisti ponovo."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Används just nu · %@. Artifloam hoppar över dem; stäng det som använder dem och rensa igen."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu an kullanımda · %@. Artifloam bunları atlar; bunları kullananı kapatıp yeniden temizle."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在使用 · %@。Artifloam 会跳过这些；关闭正在使用它们的程序后再清理一次。"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En uso ahora mismo · %@. Artifloam los omite; cierra lo que los usa y vuelve a limpiar."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In use right now · %@. Artifloam skips these; close what uses them and clean again."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In use right now · %@. Artifloam skips these; close what uses them and clean again."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In use right now · %@. Artifloam skips these; close what uses them and clean again."
           }
         }
       }
@@ -169892,7 +169892,31 @@
             "value" : "Zusammengeführt"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merged"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merged"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merged"
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fusionado"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fusionado"
@@ -169992,30 +170016,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已合并"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fusionado"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Merged"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Merged"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Merged"
           }
         }
       }
@@ -182178,7 +182178,31 @@
             "value" : "Nicht committet · %lld"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not committed · %lld"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not committed · %lld"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not committed · %lld"
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin confirmar · %lld"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sin confirmar · %lld"
@@ -182278,30 +182302,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未提交 · %lld"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sin confirmar · %lld"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not committed · %lld"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not committed · %lld"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not committed · %lld"
           }
         }
       }
@@ -183214,7 +183214,31 @@
             "value" : "Nicht zusammengeführt · %lld"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not merged · %lld"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not merged · %lld"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not merged · %lld"
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin fusionar · %lld"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sin fusionar · %lld"
@@ -183314,30 +183338,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未合并 · %lld"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sin fusionar · %lld"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not merged · %lld"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not merged · %lld"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not merged · %lld"
           }
         }
       }
@@ -183510,7 +183510,31 @@
             "value" : "Nicht gepusht · %lld"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not pushed · %lld"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not pushed · %lld"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not pushed · %lld"
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin subir · %lld"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sin subir · %lld"
@@ -183610,30 +183634,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未推送 · %lld"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sin subir · %lld"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not pushed · %lld"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not pushed · %lld"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not pushed · %lld"
           }
         }
       }
@@ -193976,7 +193976,31 @@
             "value" : "Einzige Kopie · %lld"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only copy · %lld"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only copy · %lld"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only copy · %lld"
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Única copia · %lld"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Única copia · %lld"
@@ -194076,30 +194100,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "唯一副本 · %lld"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Única copia · %lld"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only copy · %lld"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only copy · %lld"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only copy · %lld"
           }
         }
       }
@@ -200340,7 +200340,31 @@
             "value" : "Gerade offen"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open now"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open now"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open now"
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abierto ahora"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abierto ahora"
@@ -200440,30 +200464,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在打开"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abierto ahora"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open now"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open now"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open now"
           }
         }
       }
@@ -212333,7 +212333,31 @@
             "value" : "Gepusht"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pushed"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pushed"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pushed"
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subido"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Subido"
@@ -212433,30 +212457,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已推送"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Subido"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pushed"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pushed"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pushed"
           }
         }
       }
@@ -219736,7 +219736,31 @@
             "value" : "Rote Worktrees · %@. Nie committete Dateien und Dateien, die Git nicht wiederherstellen kann, werden endgültig gelöscht."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red worktrees · %@. Files that were never committed and files Git can't restore are deleted for good."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red worktrees · %@. Files that were never committed and files Git can't restore are deleted for good."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red worktrees · %@. Files that were never committed and files Git can't restore are deleted for good."
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worktrees rojos · %@. Los archivos que nunca se confirmaron y los que Git no puede restaurar se eliminan para siempre."
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Worktrees rojos · %@. Los archivos que nunca se confirmaron y los que Git no puede restaurar se eliminan para siempre."
@@ -219836,30 +219860,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "红色 worktree · %@。从未提交的文件和 Git 无法恢复的文件会被永久删除。"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Worktrees rojos · %@. Los archivos que nunca se confirmaron y los que Git no puede restaurar se eliminan para siempre."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Red worktrees · %@. Files that were never committed and files Git can't restore are deleted for good."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Red worktrees · %@. Files that were never committed and files Git can't restore are deleted for good."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Red worktrees · %@. Files that were never committed and files Git can't restore are deleted for good."
           }
         }
       }
@@ -284736,7 +284736,31 @@
             "value" : "Heute benutzt"
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used today"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used today"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used today"
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usado hoy"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Usado hoy"
@@ -284836,30 +284860,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "今天用过"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usado hoy"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Used today"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Used today"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Used today"
           }
         }
       }

@@ -167,6 +167,12 @@ public struct SafetyPolicy {
         guard held || tree.fingerprint == finding.fingerprint else { throw StewardError.blocked(String(localized: "Files changed after the scan; scan again")) }
         return tree
     }
+    /// Why `finding` would be skipped if it were deleted right now, or nil. Cheap: no folder walk.
+    /// Not for caches whose app Artifloam quits first, nor for red items the person unlocked: those skip this check.
+    public func busyReason(_ finding: Finding, activity: ActivitySnapshot, approved: Bool) -> String? {
+        if finding.hold == .inUse && finding.owner != nil || approved && finding.dangerous { return nil }
+        do { try checkActivity(finding, url: URL(fileURLWithPath: finding.path), activity: activity); return nil } catch { return error.localizedDescription }
+    }
     private func checkActivity(_ finding: Finding, url: URL, activity: ActivitySnapshot) throws {
         guard activity.reliable else { throw StewardError.blocked(String(localized: "Cannot verify running processes and open files")) }
         guard !activity.isActive(url), !DeveloperJunk.producerActive(rule: finding.rule, path: finding.path, activity: activity), !(finding.rule == "application-web-cache" && ApplicationWebCaches.producerActive(url, home: configuration.home, activity: activity)) else { throw StewardError.blocked(String(localized: "A running process uses this path")) }

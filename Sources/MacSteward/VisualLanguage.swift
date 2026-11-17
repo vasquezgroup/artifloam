@@ -490,12 +490,17 @@ struct BulkBar<Actions: View>: View {
     let summary: String
     @ViewBuilder var actions: () -> Actions
     var body: some View {
-        HStack(spacing: 12) {
-            Toggle(isOn: $isOn) { Text(title).stewardFont(.callout, weight: .semibold) }.toggleStyle(.stewardCheckbox).disabled(!enabled).help(help)
-            Text(summary).stewardFont(.caption).foregroundStyle(.secondary).monospacedDigit().lineLimit(1)
+        HStack(spacing: 14) {
+            // Nothing to tick: no greyed-out checkbox, just what's selected.
+            if enabled || isOn { Toggle(isOn: $isOn) { Text(title).stewardFont(.callout, weight: .semibold).lineLimit(1) }.toggleStyle(.stewardCheckbox).disabled(!enabled).help(help).fixedSize() }
+            Text(summary).stewardFont(.callout, weight: .medium).foregroundStyle(.white.opacity(0.85)).monospacedDigit().lineLimit(1).layoutPriority(1)
             Spacer(minLength: 8)
-            actions()
-        }.padding(.horizontal, 14).padding(.vertical, 8).background(.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 12))
+            // Buttons never wrap onto two lines: when there's no room, they show only their icons (names stay in the tooltip).
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) { actions() }.fixedSize()
+                HStack(spacing: 8) { actions() }.labelStyle(.iconOnly).fixedSize()
+            }
+        }.padding(.horizontal, 14).frame(minHeight: 46).background(.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 12))
     }
 }
 
