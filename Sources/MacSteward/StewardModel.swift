@@ -201,12 +201,12 @@ final class StewardModel: ObservableObject {
     /// Apps that must quit before their ticked caches can be cleaned.
     /// The same list `quitOwners` acts on, so the confirmation names every app that will be asked to quit.
     /// Each app that quits before cleaning, with the caches it frees.
-    func appsToQuit(_ items: [Finding]) -> [(name: String, ids: Set<String>)] {
-        var apps = [String: Set<String>]()
+    func appsToQuit(_ items: [Finding]) -> [(name: String, icon: NSImage?, ids: Set<String>)] {
+        var apps = [String: (icon: NSImage?, ids: Set<String>)]()
         for item in items where item.hold == .inUse && item.owner != nil {
-            for app in Self.appsOwning(caches: [URL(fileURLWithPath: item.path).lastPathComponent]) { if let name = app.localizedName { apps[name, default: []].insert(item.id) } }
+            for app in Self.appsOwning(caches: [URL(fileURLWithPath: item.path).lastPathComponent]) { if let name = app.localizedName { apps[name, default: (app.icon, [])].ids.insert(item.id) } }
         }
-        return apps.map { ($0.key, $0.value) }.sorted { $0.name < $1.name }
+        return apps.map { ($0.key, $0.value.icon, $0.value.ids) }.sorted { $0.name < $1.name }
     }
     /// Caches whose app the person chose to keep open in the confirmation: the next clean leaves them alone.
     var keptOpen = Set<String>()
