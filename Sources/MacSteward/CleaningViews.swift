@@ -54,9 +54,11 @@ struct CleanConfirmSheet: View {
     let confirm: (Set<String>) -> Void
     /// What a process uses right now (id → why), checked when the sheet opens, so the size shown is what can really go.
     @State private var busy: [String: String]? = nil
-    private var busyItems: [Finding] { findings.filter { busy?[$0.id] != nil } }
+    private var busyItems: [Finding] { findings.filter { busy?[$0.id] != nil && !$0.dangerous } }
+    /// In use, but the person unlocked them: they go anyway, so they stay in the size.
+    private var unlockedBusy: [Finding] { findings.filter { busy?[$0.id] != nil && $0.dangerous } }
     /// Not deleted this time: in use, or its app stays open.
-    private var leftOut: [Finding] { findings.filter { busy?[$0.id] != nil || keptIDs.contains($0.id) } }
+    private var leftOut: [Finding] { findings.filter { busy?[$0.id] != nil && !$0.dangerous || keptIDs.contains($0.id) } }
     @Environment(\.dismiss) private var dismiss
     /// Red items were unlocked one by one; deleting them also needs the word typed here.
     @State private var typed = ""
@@ -110,6 +112,13 @@ struct CleanConfirmSheet: View {
                     Label("In use right now · \(formattedBytes(busyItems.reduce(0) { $0 + $1.bytes })). Artifloam skips these; close what uses them and clean again.", systemImage: "hand.raised")
                         .stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
                     ForEach(busyItems.prefix(4)) { item in Text("\(item.title) · \(busy?[item.id] ?? "")").stewardFont(.caption).foregroundStyle(.secondary).lineLimit(1) }
+                }
+            }
+            if !unlockedBusy.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Label("Unlocked and in use · \(formattedBytes(unlockedBusy.reduce(0) { $0 + $1.bytes })). Deleted anyway, as you chose. If something writes to it meanwhile, Artifloam puts the files back and keeps it.", systemImage: "lock.open.fill")
+                        .stewardFont(.callout).foregroundStyle(.red).fixedSize(horizontal: false, vertical: true)
+                    ForEach(unlockedBusy.prefix(4)) { item in Text("\(item.title) · \(busy?[item.id] ?? "")").stewardFont(.caption).foregroundStyle(.secondary).lineLimit(1) }
                 }
             }
             if !appsToQuit.isEmpty {

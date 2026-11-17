@@ -265873,7 +265873,31 @@
             "value" : "Diese Apps werden zuerst beendet, damit ihre Caches gelöscht werden können. Sie fragen eventuell, ob du sichern möchtest. Entferne das Häkchen, um eine offen zu lassen; ihr Cache bleibt dann."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "These apps quit first, so their caches can go. They may ask you to save. Untick one to keep it open; its cache then stays."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "These apps quit first, so their caches can go. They may ask you to save. Untick one to keep it open; its cache then stays."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "These apps quit first, so their caches can go. They may ask you to save. Untick one to keep it open; its cache then stays."
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estas apps se cierran primero para poder borrar sus cachés. Puede que te pidan guardar. Desmarca una para dejarla abierta; su caché se conservará."
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estas apps se cierran primero para poder borrar sus cachés. Puede que te pidan guardar. Desmarca una para dejarla abierta; su caché se conservará."
@@ -265973,30 +265997,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "这些 App 会先退出，以便删除它们的缓存。它们可能会提示你存储。取消勾选某个 App 可让它保持打开，它的缓存也会保留。"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estas apps se cierran primero para poder borrar sus cachés. Puede que te pidan guardar. Desmarca una para dejarla abierta; su caché se conservará."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "These apps quit first, so their caches can go. They may ask you to save. Untick one to keep it open; its cache then stays."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "These apps quit first, so their caches can go. They may ask you to save. Untick one to keep it open; its cache then stays."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "These apps quit first, so their caches can go. They may ask you to save. Untick one to keep it open; its cache then stays."
           }
         }
       }
@@ -279476,6 +279476,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "解锁你的 %@ 并轻点“信任”。照片会显示在这里。"
+          }
+        }
+      }
+    },
+    "Unlocked and in use · %@. Deleted anyway, as you chose. If something writes to it meanwhile, Artifloam puts the files back and keeps it." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مفتوح القفل وقيد الاستخدام · %@. يُحذف رغم ذلك كما اخترت. إذا كتب شيء فيه أثناء ذلك، يعيد Artifloam الملفات ويُبقيه."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquejat i en ús · %@. S’esborra igualment, com has triat. Si alguna cosa hi escriu mentrestant, Artifloam torna a posar els fitxers i el conserva."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entsperrt und in Gebrauch · %@. Wird trotzdem gelöscht, wie du es gewählt hast. Schreibt währenddessen etwas hinein, legt Artifloam die Dateien zurück und behält es."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloqueado y en uso · %@. Se elimina igualmente, como elegiste. Si algo escribe en él mientras tanto, Artifloam devuelve los archivos y lo conserva."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déverrouillé et en cours d’utilisation · %@. Supprimé quand même, comme vous l’avez choisi. Si quelque chose y écrit pendant ce temps, Artifloam remet les fichiers en place et le conserve."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entsperrt und im Gebruuch · %@. Wird glich glöscht, wie du s gwählt häsch. Schriibt öppis drii derwiil, leit Artifloam d Dateie zrugg und bhaltet s."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अनलॉक और उपयोग में · %@. आपकी पसंद के अनुसार फिर भी मिटाया जाएगा। अगर इस बीच कुछ इसमें लिखता है, तो Artifloam फ़ाइलें वापस रख देता है और इसे रखता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otključano i u upotrebi · %@. Svejedno se briše, kako si odabrao. Ako nešto u međuvremenu piše u to, Artifloam vraća datoteke i zadržava ga."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sbloccato e in uso · %@. Viene eliminato comunque, come hai scelto. Se nel frattempo qualcosa ci scrive, Artifloam rimette a posto i file e lo conserva."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ロック解除済み・使用中 · %@。選んだとおり、そのまま削除します。削除中に何かが書き込んだ場合、Artifloam はファイルを元に戻して残します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "잠금 해제됨·사용 중 · %@. 선택한 대로 그래도 삭제합니다. 그동안 무언가가 기록하면 Artifloam이 파일을 되돌리고 유지합니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atbloķēts un tiek lietots · %@. Tiek dzēsts tik un tā, kā izvēlējies. Ja tikmēr kaut kas tajā raksta, Artifloam atliek failus atpakaļ un to saglabā."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odblokowane i w użyciu · %@. Zostanie usunięte mimo to, tak jak wybrałeś. Jeśli coś w tym czasie do tego zapisze, Artifloam przywróci pliki i to zachowa."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloqueado e em uso · %@. É eliminado na mesma, como escolheste. Se algo escrever nele entretanto, o Artifloam repõe os ficheiros e mantém-no."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I zhbllokuar dhe në përdorim · %@. Fshihet gjithsesi, siç zgjodhe. Nëse diçka shkruan në të ndërkohë, Artifloam i rikthen skedarët dhe e mban."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откључано и у употреби · %@. Ипак се брише, како си изабрао. Ако нешто у међувремену пише у то, Artifloam враћа датотеке и задржава га."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otključano i u upotrebi · %@. Ipak se briše, kako si izabrao. Ako nešto u međuvremenu piše u to, Artifloam vraća datoteke i zadržava ga."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upplåst och används · %@. Raderas ändå, som du valde. Om något skriver till den under tiden lägger Artifloam tillbaka filerna och behåller den."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kilidi açık ve kullanımda · %@. Seçtiğin gibi yine de silinir. Bu sırada bir şey içine yazarsa Artifloam dosyaları geri koyar ve onu korur."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已解锁且正在使用 · %@。按你的选择仍会删除。如果期间有程序写入，Artifloam 会放回文件并保留它。"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloqueado y en uso · %@. Se elimina igualmente, como elegiste. Si algo escribe en él mientras tanto, Artifloam devuelve los archivos y lo conserva."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked and in use · %@. Deleted anyway, as you chose. If something writes to it meanwhile, Artifloam puts the files back and keeps it."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked and in use · %@. Deleted anyway, as you chose. If something writes to it meanwhile, Artifloam puts the files back and keeps it."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocked and in use · %@. Deleted anyway, as you chose. If something writes to it meanwhile, Artifloam puts the files back and keeps it."
           }
         }
       }
