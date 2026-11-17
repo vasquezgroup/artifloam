@@ -333,7 +333,9 @@ public final class Scanner: @unchecked Sendable {
             let reason = verdict.overridable ? ([verdict.blocker!] + merged).joined(separator: " ") : verdict.blocker ?? (merged + verdict.warnings).joined(separator: " ")
             let values = try? url.resourceValues(forKeys: [.contentModificationDateKey])
             return Finding(path: path, group: .worktrees, bytes: directoryBytes(url), modifiedAt: values?.contentModificationDate ?? Date(), safety: verdict.blocker == nil ? .review : .protected, reason: reason, rule: "worktree-review-only", fingerprint: verdict.fingerprint, lastUsedAt: verdict.lastUsed, warnings: verdict.warnings, hold: verdict.overridable ? .inUse : nil,
-                           finished: verdict.blocker == nil && verdict.unmerged == 0 && !verdict.losesWork && !verdict.inUse && (verdict.lastUsed.map { Date().timeIntervalSince($0) >= WorktreeReview.sessionInterval } ?? true))
+                           worktree: verdict.blocker == nil || verdict.overridable ? verdict.status : nil,
+                           // Not merged but pushed: the commits are on the server and the branch is kept, so nothing is lost.
+                           finished: verdict.blocker == nil && verdict.status.notPushed == 0 && !verdict.losesWork && !verdict.inUse && (verdict.lastUsed.map { Date().timeIntervalSince($0) >= WorktreeReview.sessionInterval } ?? true))
         }
     }
 }

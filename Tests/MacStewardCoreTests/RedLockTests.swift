@@ -22,6 +22,18 @@ final class RedLockTests: XCTestCase {
         XCTAssertEqual([red, orange].smartPick(reviewable: []).map(\.path), ["/orange"])
         XCTAssertTrue([red].smartPick(reviewable: []).isEmpty)
     }
+    func testWorktreeLightsAndSmartPickNeverTickRedWorktrees() {
+        func tree(_ path: String, _ status: WorktreeStatus, finished: Bool, hold: Hold? = nil) -> Finding {
+            Finding(path: path, group: .worktrees, bytes: 1, modifiedAt: Date(), safety: hold == nil ? .review : .protected, reason: "", rule: "worktree-review-only", fingerprint: "f", hold: hold, worktree: status, finished: finished)
+        }
+        let green = tree("/green", WorktreeStatus(unmerged: 2, notPushed: 0), finished: true)
+        let orange = tree("/orange", WorktreeStatus(unmerged: 2, notPushed: 2), finished: false)
+        let red = tree("/red", WorktreeStatus(uncommitted: 3), finished: false), open = tree("/open", WorktreeStatus(), finished: false, hold: .inUse)
+        XCTAssertEqual([green, orange, red, open].map(\.worktreeLight), [.green, .orange, .red, .red])
+        XCTAssertEqual([orange, red, open].smartPick(reviewable: ["/orange", "/red", "/open"]).map(\.path), ["/orange"])
+        XCTAssertEqual([green, orange, red].bulkChoosable(in: .worktrees).map(\.path), ["/green", "/orange"])
+        XCTAssertEqual([red, orange, green].byLight.map(\.path), ["/green", "/orange", "/red"])
+    }
     func testSessionScratchFolderWithARepositoryIsDeletedOnlyAfterUnlocking() throws {
         // Real /private/tmp spelling: Foundation shortens it to /tmp, which must not count as a different path.
         let temp = URL(fileURLWithPath: "/private/tmp/artifloam-test-\(UUID().uuidString)")

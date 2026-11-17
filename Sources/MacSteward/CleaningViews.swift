@@ -33,6 +33,8 @@ struct PendingRemoval: Identifiable {
     var findings: [Finding]? = nil
     var extras = [CleanExtra]()
     var steps = [() -> Void]()
+    /// Worktrees that lose work or are open: they need the typed word too.
+    var redWorktrees = [Finding]()
 }
 
 struct CleanConfirmSheet: View {
@@ -41,13 +43,14 @@ struct CleanConfirmSheet: View {
     /// Apps that will be asked to quit first, so their caches can go.
     var appsToQuit: [String] = []
     var extras: [CleanExtra] = []
+    var redWorktrees: [Finding] = []
     let confirm: () -> Void
     @Environment(\.dismiss) private var dismiss
     /// Red items were unlocked one by one; deleting them also needs the word typed here.
     @State private var typed = ""
     private var risky: [Finding] { findings.filter(\.dangerous) }
     private static let word = String(localized: "delete", comment: "Word the person types to confirm deleting red-locked items")
-    private var confirmed: Bool { risky.isEmpty || typed.trimmingCharacters(in: .whitespaces).localizedCaseInsensitiveCompare(Self.word) == .orderedSame }
+    private var confirmed: Bool { risky.isEmpty && redWorktrees.isEmpty || typed.trimmingCharacters(in: .whitespaces).localizedCaseInsensitiveCompare(Self.word) == .orderedSame }
     private var groups: [(CleanupGroup, UInt64, Int)] {
         Dictionary(grouping: findings, by: \.group).map { ($0.key, $0.value.reduce(0) { $0 + $1.bytes }, $0.value.count) }.sorted { $0.1 > $1.1 }
     }
@@ -109,10 +112,14 @@ struct CleanConfirmSheet: View {
             Label("Deleted permanently after you confirm", systemImage: "exclamationmark.triangle")
                 .stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
             DeletionNote()
-            if !risky.isEmpty {
+            if !risky.isEmpty || !redWorktrees.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
-                    Label("Red items · \(formattedBytes(risky.reduce(0) { $0 + $1.bytes })). They're in use or may be the only copy. Running simulators are shut down first; apps using the others lose these files.", systemImage: "lock.open.fill")
-                        .stewardFont(.callout).foregroundStyle(.red).fixedSize(horizontal: false, vertical: true)
+                    if !redWorktrees.isEmpty {
+                        Label("Red worktrees · \(formattedBytes(redWorktrees.reduce(0) { $0 + $1.bytes })). Files that were never committed and files Git can't restore are deleted for good.", systemImage: "lock.open.fill")
+                            .stewardFont(.callout).foregroundStyle(.red).fixedSize(horizontal: false, vertical: true)
+                    }
+                    if !risky.isEmpty { Label("Red items · \(formattedBytes(risky.reduce(0) { $0 + $1.bytes })). They're in use or may be the only copy. Running simulators are shut down first; apps using the others lose these files.", systemImage: "lock.open.fill")
+                        .stewardFont(.callout).foregroundStyle(.red).fixedSize(horizontal: false, vertical: true) }
                     TextField(String(localized: "Type \(Self.word) to confirm"), text: $typed).textFieldStyle(.roundedBorder)
                 }
             }

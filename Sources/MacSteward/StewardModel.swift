@@ -53,10 +53,6 @@ final class StewardModel: ObservableObject {
     @Published var welcoming = WelcomeStage.shouldShow
     /// How far the window has filled during the first-launch welcome.
     @Published var welcomeReveal: CGFloat = WelcomeStage.shouldShow ? 0 : 1
-    struct WorktreeCandidate: Identifiable { let finding: Finding; let assessment: WorktreeAssessment; var id: String { finding.id } }
-    struct WorktreeBatch: Identifiable { let id = UUID(); let candidates: [WorktreeCandidate]; let blocked: [String] }
-    @Published var worktreeBatch: WorktreeBatch?
-    @Published var worktreeChoice = Set<String>()
     /// Finished worktrees ticked in the list; the review sheet rechecks them.
     @Published var worktreeSelection = Set<String>()
     var removalQueue: [() -> Void] = []
@@ -213,15 +209,15 @@ final class StewardModel: ObservableObject {
     /// Red-locked items the person opened one by one. Deleting them still needs the typed confirmation.
     @Published var unlockedDangerous = Set<String>()
     func unlockDangerous(_ finding: Finding) { guard finding.dangerous else { return }; unlockedDangerous.insert(finding.id); selected.insert(finding.id) }
-    /// Still locked: red ones, and worktrees kept only by a running process.
-    func locked(_ finding: Finding) -> Bool { finding.dangerous ? !unlockedDangerous.contains(finding.id) : finding.group == .worktrees && finding.hold == .inUse && !unlockedWorktrees.contains(finding.id) }
+    /// Still locked: red ones, including worktrees that are open or would lose work Git can't restore.
+    func locked(_ finding: Finding) -> Bool { finding.dangerous ? !unlockedDangerous.contains(finding.id) : finding.worktreeLight == .red && !unlockedWorktrees.contains(finding.id) }
     /// Opens every lock in `items` without ticking anything; the person still chooses, and red items still need the typed confirmation.
     func unlockAll(_ items: [Finding]) {
         let open = items.filter(locked)
         unlockedDangerous.formUnion(open.filter(\.dangerous).map(\.id)); unlockedWorktrees.formUnion(open.filter { !$0.dangerous }.map(\.id))
     }
     /// Unlocked, so it shows a checkbox now; the row keeps a small lock in the color it had.
-    func wasLocked(_ finding: Finding) -> Bool { unlockedDangerous.contains(finding.id) && finding.dangerous || unlockedWorktrees.contains(finding.id) && finding.hold == .inUse }
+    func wasLocked(_ finding: Finding) -> Bool { unlockedDangerous.contains(finding.id) && finding.dangerous || unlockedWorktrees.contains(finding.id) && finding.worktreeLight == .red }
     func removable(_ finding: Finding) -> Bool { finding.userCleanable || (finding.dangerous && unlockedDangerous.contains(finding.id)) }
     var chosenWorktrees: [Finding] { reviewableWorktrees.filter { worktreeSelection.contains($0.id) } }
     enum FindingOrder: String, CaseIterable { case largest, newest, oldest, name }
@@ -376,33 +372,14 @@ final class StewardModel: ObservableObject {
     /// Worktrees kept only because a process has them open, which the person unlocked to delete anyway. Git still rechecks them first.
     @Published var unlockedWorktrees = Set<String>()
     func unlock(_ finding: Finding) {
-        guard finding.group == .worktrees, finding.hold == .inUse else { return }
+        guard finding.worktreeLight == .red else { return }
         unlockedWorktrees.insert(finding.id); worktreeSelection.insert(finding.id)
     }
-    /// Rechecks each worktree, then opens one sheet. Clean ones start ticked; ones with warnings start unticked.
-    func requestWorktreeRemoval(_ findings: [Finding]) {
-        guard !busy, !findings.isEmpty else { return }; busy = true; progress = String(localized: "Rechecking worktrees with Git…")
-        let config = configuration
-        Task {
-            let results = await Task.detached(priority: .utility) { WorktreeReview.validate(findings, configuration: config) }.value
-            let checked: [(WorktreeCandidate?, String?)] = zip(findings, results).map { finding, result in
-                switch result {
-                case .success(let assessment): return (WorktreeCandidate(finding: finding, assessment: assessment), nil)
-                case .failure(let error): return (nil, String(localized: "\(finding.title): \(error.localizedDescription)"))
-                }
-            }
-            let candidates = checked.compactMap(\.0), blocked = checked.compactMap(\.1)
-            if candidates.isEmpty { error = blocked.joined(separator: "\n") }
-            // The person already chose these, so they stay ticked. Only a worktree that would lose work Git can't restore starts unticked.
-            else { worktreeChoice = Set(candidates.filter { !$0.assessment.losesWork }.map(\.id)); worktreeBatch = WorktreeBatch(candidates: candidates, blocked: blocked) }
-            progress = String(localized: "Nothing was removed."); busy = false
-            if candidates.isEmpty { runNextRemoval() }
-        }
-    }
-    func trashChosenWorktrees() {
-        guard !busy, let batch = worktreeBatch else { return }
-        let chosen = batch.candidates.filter { worktreeChoice.contains($0.id) }.map(\.finding)
-        busy = true; worktreeBatch = nil
+    /// Deletes right away, after the person's one confirmation: the stage starts at once, and Git rechecks each worktree
+    /// right before it goes. One that changed since the scan (new files, new commits, a process opened it) is kept and reported.
+    func requestWorktreeRemoval(_ chosen: [Finding]) {
+        guard !busy, !chosen.isEmpty else { return }
+        busy = true
         let config = configuration
         let box = WorktreeResults()
         // On the stage, one worktree at a time: each is rechecked with Git right before it goes, and Stop leaves the rest.

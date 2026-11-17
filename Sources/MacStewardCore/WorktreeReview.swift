@@ -25,6 +25,7 @@ public struct WorktreeAssessment: Sendable {
     public var inUse = false
     /// Deleting would lose something Git can't bring back: uncommitted edits, untracked files or ignored secrets.
     public var losesWork = false
+    public var status = WorktreeStatus()
     /// Every Git check passed and only a running process keeps it.
     public var overridable: Bool { inUse && blocker != nil }
 }
@@ -103,6 +104,8 @@ public enum WorktreeReview {
         if let time = TimeInterval(git(url, ["log", "-1", "--format=%ct"]).output.trimmingCharacters(in: .whitespacesAndNewlines)), now.timeIntervalSince1970 - time < recentInterval {
             warnings.append(String(localized: "Committed in the last 6 hours; an agent session may still be open on it."))
         }
+        // Commits on a remote branch are safe on the server too, even when not merged yet. Local refs only: no fetch.
+        let notPushed = unmerged.count == 0 ? 0 : Int(git(primary, ["rev-list", "--count", head, "--not", "--remotes", unmerged.ref]).output.trimmingCharacters(in: .whitespacesAndNewlines)) ?? unmerged.count
         let names = holders.joined(separator: ", ")
         if inUse {
             warnings.append(holders.isEmpty ? String(localized: "A running process uses it. It keeps running, but loses this folder.") : String(localized: "Open in \(names). They keep running, but lose this folder."))
@@ -112,7 +115,8 @@ public enum WorktreeReview {
         let digest = SHA256.hash(data: Data((status.output + "\0\0" + sensitive.joined(separator: "\0")).utf8)).map { String(format: "%02x", $0) }.joined()
         let blocker = !inUse ? nil : holders.isEmpty ? String(localized: "Keep: used by a running process.") : String(localized: "Keep: open in \(names).")
         return WorktreeAssessment(primary: primary, base: base, branch: branch, head: head, blocker: blocker, warnings: warnings, lastUsed: lastUsed, fingerprint: "\(head):\(digest)", unmerged: unmerged.count, clean: status.output.isEmpty,
-                                  holders: holders, inUse: inUse, losesWork: modified > 0 || untracked > 0 || !sensitive.isEmpty)
+                                  holders: holders, inUse: inUse, losesWork: modified > 0 || untracked > 0 || !sensitive.isEmpty,
+                                  status: WorktreeStatus(unmerged: unmerged.count, notPushed: notPushed, uncommitted: modified + untracked, onlyCopies: sensitive.count))
     }
 
     /// The repository's default branch, falling back to the primary checkout.

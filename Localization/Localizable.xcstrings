@@ -94023,6 +94023,154 @@
         }
       }
     },
+    "Committed" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم الإيداع"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmat"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Committet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commité"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Committet"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कमिट हो चुका"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commitano"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Committato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コミット済み"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "커밋됨"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iesūtīts"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zatwierdzony"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Com commit"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I regjistruar"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Комитовано"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komitovano"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Committad"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commit edildi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已提交"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmado"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Committed"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Committed"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Committed"
+          }
+        }
+      }
+    },
     "Committed in the last 6 hours; an agent session may still be open on it." : {
       "localizations" : {
         "ar" : {
@@ -102174,154 +102322,6 @@
         }
       }
     },
-    "Delete %lld · %@" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "حذف %lld · %@"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esborra %lld · %@"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld löschen · %@"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete %lld · %@"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete %lld · %@"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete %lld · %@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Borrar %lld · %@"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Borrar %lld · %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Supprimer %lld · %@"
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld lösche · %@"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld डिलीट करें · %@"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Izbriši %lld · %@"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elimina %lld · %@"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld件を削除 · %@"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld개 삭제 · %2$@"
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dzēst %lld · %@"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usuń %lld · %@"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eliminar %lld · %@"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fshi %lld · %@"
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Обриши %lld · %@"
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Obriši %lld · %@"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Radera %lld · %@"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sil: %lld · %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "删除 %lld 项 · %@"
-          }
-        }
-      }
-    },
     "Delete %lld…" : {
       "localizations" : {
         "ar" : {
@@ -103506,154 +103506,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "从 %@ 删除"
-          }
-        }
-      }
-    },
-    "Delete merged worktrees" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "حذف worktrees المدموجة"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esborra els worktrees fusionats"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zusammengeführte Worktrees löschen"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete merged worktrees"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete merged worktrees"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete merged worktrees"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Borrar worktrees fusionados"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Borrar worktrees fusionados"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Supprimer les worktrees fusionnés"
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gmergti Worktrees lösche"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "मर्ज हो चुके worktree डिलीट करें"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Izbriši spojene worktreeove"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elimina i worktree uniti"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "マージ済みのworktreeを削除"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "병합된 워크트리 삭제"
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dzēst sapludinātos worktree"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usuń scalone worktree"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eliminar worktrees integrados"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fshi worktree-t e bashkuara"
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Обриши спојене worktrees"
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Obriši spojene worktrees"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Radera sammanfogade worktrees"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Birleştirilmiş worktree’leri sil"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "删除已合并的 worktree"
           }
         }
       }
@@ -136701,6 +136553,154 @@
         }
       }
     },
+    "Git checks each worktree again right before it's deleted. One that changed since the scan is kept." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يفحص Git كل Worktree مرة أخرى قبل حذفه مباشرة. يُحتفظ بأي Worktree تغيّر منذ الفحص."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git torna a comprovar cada worktree just abans d’esborrar-lo. Si un ha canviat des de l’anàlisi, es conserva."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git prüft jeden Worktree direkt vor dem Löschen noch einmal. Einer, der sich seit dem Scan geändert hat, bleibt erhalten."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git vuelve a comprobar cada worktree justo antes de eliminarlo. Si alguno cambió desde el análisis, se conserva."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git revérifie chaque worktree juste avant de le supprimer. Celui qui a changé depuis l’analyse est conservé."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git prüeft jede Worktree grad vor em Lösche nomal. Eine, wo sich sit em Scan veränderet hät, bliibt."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "हर worktree को मिटाने से ठीक पहले Git उसे फिर से जाँचता है। स्कैन के बाद जो बदल गया, वह रखा जाता है।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git ponovno provjerava svaki worktree neposredno prije brisanja. Onaj koji se promijenio od skeniranja ostaje."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git ricontrolla ogni worktree subito prima di eliminarlo. Quello cambiato dopo l’analisi viene mantenuto."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git は各 worktree を削除する直前にもう一度確認します。スキャン後に変更されたものは残されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git은 각 워크트리를 삭제하기 직전에 다시 확인합니다. 스캔 이후 바뀐 워크트리는 유지됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git vēlreiz pārbauda katru worktree tieši pirms dzēšanas. Tas, kas mainījies kopš skenēšanas, tiek saglabāts."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git sprawdza każdy worktree ponownie tuż przed usunięciem. Ten, który zmienił się od skanowania, zostaje."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Git volta a verificar cada worktree mesmo antes de o eliminar. Um que tenha mudado desde a análise é mantido."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git e kontrollon sërish çdo worktree pikërisht para fshirjes. Ai që ka ndryshuar pas skanimit mbahet."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git поново проверава сваки worktree непосредно пре брисања. Онај који се променио од скенирања остаје."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git ponovo proverava svaki worktree neposredno pre brisanja. Onaj koji se promenio od skeniranja ostaje."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git kontrollerar varje worktree igen precis innan den raderas. En som ändrats sedan skanningen behålls."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git, her worktree’yi silmeden hemen önce yeniden kontrol eder. Taramadan sonra değişen korunur."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git 会在删除每个 worktree 前再检查一次。扫描后有变化的会被保留。"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git vuelve a comprobar cada worktree justo antes de eliminarlo. Si alguno cambió desde el análisis, se conserva."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git checks each worktree again right before it's deleted. One that changed since the scan is kept."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git checks each worktree again right before it's deleted. One that changed since the scan is kept."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Git checks each worktree again right before it's deleted. One that changed since the scan is kept."
+          }
+        }
+      }
+    },
     "Git could not delete the worktree: %@" : {
       "localizations" : {
         "ar" : {
@@ -137141,302 +137141,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Git 不可用。请安装 Git 或 Apple 的命令行工具，以验证 project/worktree。"
-          }
-        }
-      }
-    },
-    "Git rechecked each checkout just now. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. A merged branch is deleted too; its commit is shown afterwards so you can recreate it. Read the warnings before you choose." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "أعاد Git للتو فحص كل نسخة. تُحذف نهائيًا، بما في ذلك الملفات المتجاهَلة مثل node_modules ومخرجات البناء وملفات ‎.env المحلية. يُحذف الفرع المدمج أيضًا؛ ويظهر الـ commit الخاص به بعد ذلك لتتمكن من إعادة إنشائه. اقرأ التحذيرات قبل أن تختار."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "El Git acaba de tornar a comprovar cada còpia. S’eliminen per sempre, inclosos els fitxers ignorats com node_modules, la sortida de compilació i els fitxers .env locals. La branca fusionada també s’elimina; després se’n mostra el commit perquè la puguis tornar a crear. Llegeix els avisos abans de triar."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git hat jeden Checkout gerade erneut geprüft. Sie werden endgültig gelöscht, auch ignorierte Dateien wie node_modules, Build-Ausgaben und lokale .env-Dateien. Ein zusammengeführter Branch wird ebenfalls gelöscht; sein Commit wird danach angezeigt, damit du ihn neu erstellen kannst. Lies die Warnungen, bevor du wählst."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git rechecked each checkout just now. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. A merged branch is deleted too; its commit is shown afterwards so you can recreate it. Read the warnings before you choose."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git rechecked each checkout just now. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. A merged branch is deleted too; its commit is shown afterwards so you can recreate it. Read the warnings before you choose."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git rechecked each checkout just now. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. A merged branch is deleted too; its commit is shown afterwards so you can recreate it. Read the warnings before you choose."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git acaba de volver a comprobar cada copia. Se eliminan para siempre, incluidos los archivos ignorados como node_modules, la salida de compilación y los archivos .env locales. La rama fusionada también se elimina; después se muestra su commit para que puedas recrearla. Lee los avisos antes de elegir."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git acaba de volver a revisar cada copia. Se eliminan para siempre, incluidos los archivos ignorados como node_modules, la salida de compilación y los archivos .env locales. La rama fusionada también se elimina; después se muestra su commit para que puedas volver a crearla. Lee las advertencias antes de elegir."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git vient de revérifier chaque copie. Elles sont supprimées définitivement, y compris les fichiers ignorés comme node_modules, les résultats de compilation et les fichiers .env locaux. La branche fusionnée est aussi supprimée ; son commit s’affiche ensuite pour que vous puissiez la recréer. Lisez les avertissements avant de choisir."
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git hät jede Checkout grad nomal prüeft. Si wärded endgültig glöscht, au ignorierti Dateie wie node_modules, Build-Usgabe und lokali .env-Dateie. En zämegfüehrte Branch wird au glöscht; sin Commit wird nachher aazeigt, demit du en neu chasch mache. Lies d Warnige, bevor du wählsch."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git ने अभी हर चेकआउट को फिर से जाँचा। ये स्थायी रूप से हटाए जाते हैं, जिनमें node_modules, बिल्ड आउटपुट और स्थानीय .env फ़ाइलें जैसी अनदेखी फ़ाइलें भी शामिल हैं। मर्ज की गई शाखा भी हटा दी जाती है; उसका commit बाद में दिखाया जाता है ताकि आप उसे फिर से बना सकें। चुनने से पहले चेतावनियाँ पढ़ें।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git je upravo ponovno provjerio svaki checkout. Brišu se trajno, uključujući zanemarene datoteke kao što su node_modules, izlaz builda i lokalne .env datoteke. Spojena grana također se briše; njezin commit prikazuje se poslije kako bi je mogao ponovno stvoriti. Pročitaj upozorenja prije nego što odabereš."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git ha appena ricontrollato ogni copia. Vengono eliminate per sempre, compresi i file ignorati come node_modules, l’output di build e i file .env locali. Anche il branch unito viene eliminato; il suo commit viene mostrato dopo, così puoi ricrearlo. Leggi gli avvisi prima di scegliere."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gitが各チェックアウトを今再確認しました。node_modules、ビルド出力、ローカルの.envファイルなど無視されたファイルも含め、完全に削除されます。マージ済みのブランチも削除され、あとで作り直せるようにそのコミットが表示されます。選ぶ前に警告を読んでください。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git이 방금 각 체크아웃을 다시 확인했습니다. node_modules, 빌드 결과물, 로컬 .env 파일 같은 무시된 파일을 포함해 영구적으로 삭제됩니다. 병합된 브랜치도 삭제되며, 다시 만들 수 있도록 커밋이 나중에 표시됩니다. 선택하기 전에 경고를 읽으세요."
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git tikko vēlreiz pārbaudīja katru checkout. Tie tiek dzēsti neatgriezeniski, ieskaitot ignorētos failus, piemēram, node_modules, būvējuma izvadi un lokālos .env failus. Arī apvienotais zars tiek dzēsts; tā commit tiek parādīts pēc tam, lai tu to varētu izveidot no jauna. Izlasi brīdinājumus, pirms izvēlies."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git właśnie ponownie sprawdził każdą kopię. Zostaną usunięte na zawsze, łącznie z ignorowanymi plikami, takimi jak node_modules, wyniki kompilacji i lokalne pliki .env. Scalona gałąź też zostanie usunięta; jej commit pojawi się potem, aby można ją było odtworzyć. Przeczytaj ostrzeżenia, zanim wybierzesz."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Git acabou de voltar a verificar cada cópia. São apagadas para sempre, incluindo ficheiros ignorados como node_modules, resultados de compilação e ficheiros .env locais. O ramo integrado também é apagado; o seu commit é mostrado depois para que o possa recriar. Leia os avisos antes de escolher."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git sapo i rikontrolloi të gjitha kopjet. Ato fshihen përgjithmonë, përfshirë skedarët e shpërfillur si node_modules, rezultatet e ndërtimit dhe skedarët lokalë .env. Edhe dega e bashkuar fshihet; commit-i i saj shfaqet më pas që ta krijosh sërish. Lexo paralajmërimet para se të zgjedhësh."
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git је управо поново проверио сваки checkout. Бришу се трајно, укључујући занемарене датотеке као што су node_modules, излаз изградње и локалне .env датотеке. Спојена грана се такође брише; њен commit се приказује после како бисте могли да је поново направите. Прочитајте упозорења пре него што изаберете."
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git je upravo ponovo proverio svaki checkout. Brišu se trajno, uključujući zanemarene datoteke kao što su node_modules, izlaz izgradnje i lokalne .env datoteke. Spojena grana se takođe briše; njen commit se prikazuje posle kako biste mogli da je ponovo napravite. Pročitajte upozorenja pre nego što izaberete."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git kontrollerade nyss varje utcheckning igen. De raderas permanent, även ignorerade filer som node_modules, byggutdata och lokala .env-filer. En sammanslagen gren raderas också; dess commit visas efteråt så att du kan återskapa den. Läs varningarna innan du väljer."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git her çalışma kopyasını az önce yeniden denetledi. node_modules, derleme çıktısı ve yerel .env dosyaları gibi yok sayılan dosyalar dahil kalıcı olarak silinirler. Birleştirilmiş dal da silinir; yeniden oluşturabilmeniz için commit’i sonra gösterilir. Seçmeden önce uyarıları okuyun."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git 刚刚重新检查了每个检出。它们会被永久删除，包括被忽略的文件，例如 node_modules、构建输出和本地 .env 文件。已合并的分支也会被删除；之后会显示其提交，以便你重新创建。选择之前请阅读警告。"
-          }
-        }
-      }
-    },
-    "Git rechecks each worktree next, and you confirm them one more time." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يعيد Git فحص كل worktree بعد ذلك، وتؤكدها مرة أخيرة."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Després Git torna a comprovar cada worktree, i tu els confirmes una vegada més."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Als Nächstes prüft Git jeden Worktree erneut, und du bestätigst sie noch ein weiteres Mal."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git rechecks each worktree next, and you confirm them one more time."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git rechecks each worktree next, and you confirm them one more time."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git rechecks each worktree next, and you confirm them one more time."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A continuación Git vuelve a comprobar cada worktree y tú los confirmas una vez más."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A continuación Git vuelve a comprobar cada worktree y tú los confirmas una vez más."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git revérifie ensuite chaque worktree, et vous les confirmez une dernière fois."
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Als Nächschts checkt Git jede Worktree nomal, und du bestätigsch si na einisch."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git अब हर worktree की दोबारा जाँच करता है, और आप उनकी एक बार और पुष्टि करते हैं।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git zatim ponovno provjerava svaki worktree, a ti ih potvrđuješ još jednom."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Poi Git ricontrolla ogni worktree e tu li confermi un'ultima volta."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "次にGitが各worktreeを再チェックし、もう一度あなたが確認します。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "다음으로 Git이 각 워크트리를 다시 확인하고, 마지막으로 한 번 더 확인을 받습니다."
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git pēc tam pārbauda katru worktree vēlreiz, un tu apstiprini tos vēl vienu reizi."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git następnie ponownie sprawdza każdy worktree, a Ty potwierdzasz je jeszcze raz."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Git volta a verificar cada worktree a seguir, e o utilizador confirma-os mais uma vez."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git i kontrollon përsëri çdo worktree më pas, dhe ti i konfirmon edhe një herë."
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git затим поново проверава сваки worktree, а ви их потврђујете још једном."
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git zatim ponovo proverava svaki worktree, a vi ih potvrđujete još jednom."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git kontrollerar varje worktree igen härnäst, och du bekräftar dem en gång till."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git sırada her worktree’yi yeniden denetler ve siz bir kez daha onaylarsınız."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "接下来 Git 会重新检查每个 worktree，你还需再确认一次。"
           }
         }
       }
@@ -155798,154 +155502,6 @@
         }
       }
     },
-    "Kept after recheck:\n%@" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تم إبقاؤها بعد إعادة التحقق:\n%@"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conservats després de tornar a comprovar:\n%@"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach erneuter Prüfung behalten:\n%@"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kept after recheck:\n%@"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kept after recheck:\n%@"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kept after recheck:\n%@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conservados tras la nueva comprobación:\n%@"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conservados tras la nueva comprobación:\n%@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conservés après revérification :\n%@"
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach em nomalige Check behalte:\n%@"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "दोबारा जाँच के बाद रखा गया:\n%@"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zadržano nakon ponovne provjere:\n%@"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conservati dopo il ricontrollo:\\n%@"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再チェック後に保持:\n%@"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "다시 확인한 후 유지됨:\n%@"
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paturēts pēc atkārtotas pārbaudes:\n%@"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zachowane po ponownym sprawdzeniu:\n%@"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mantidos após nova verificação:\n%@"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "U mbajtën pas kontrollit të ri:\n%@"
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Задржано након поновне провере:\n%@"
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zadržano nakon ponovne provere:\n%@"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Behölls efter ny kontroll:\n%@"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yeniden denetimden sonra korundu:\n%@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "重新检查后已保留：\n%@"
-          }
-        }
-      }
-    },
     "Kept because they changed or could not be verified:\n%@" : {
       "localizations" : {
         "ar" : {
@@ -170316,6 +169872,154 @@
         }
       }
     },
+    "Merged" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مدموج"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fusionat"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zusammengeführt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fusionado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fusionné"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gmergt"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "मर्ज हो चुका"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spojeno"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unito"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "マージ済み"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "병합됨"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sapludināts"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scalony"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Integrado"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I bashkuar"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спојено"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spojeno"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mergad"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birleştirildi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已合并"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fusionado"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merged"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merged"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merged"
+          }
+        }
+      }
+    },
     "Merged and not in use. Safe to delete." : {
       "localizations" : {
         "ar" : {
@@ -182454,6 +182158,154 @@
         }
       }
     },
+    "Not committed · %lld" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غير مُودَع · %lld"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sense confirmar · %lld"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht committet · %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin confirmar · %lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non commité · %lld"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nöd committet · %lld"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कमिट नहीं · %lld"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije commitano · %lld"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non committato · %lld"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未コミット · %lld"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "커밋 안 됨 · %lld"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nav iesūtīts · %lld"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niezatwierdzone · %lld"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem commit · %lld"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pa regjistruar · %lld"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Није комитовано · %lld"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije komitovano · %lld"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ej committad · %lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commit edilmedi · %lld"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未提交 · %lld"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin confirmar · %lld"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not committed · %lld"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not committed · %lld"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not committed · %lld"
+          }
+        }
+      }
+    },
     "Not copied: %@." : {
       "localizations" : {
         "ar" : {
@@ -183342,6 +183194,154 @@
         }
       }
     },
+    "Not merged · %lld" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غير مدموج · %lld"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sense fusionar · %lld"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht zusammengeführt · %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin fusionar · %lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non fusionné · %lld"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nöd gmergt · %lld"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "मर्ज नहीं · %lld"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije spojeno · %lld"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non unito · %lld"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未マージ · %lld"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "병합 안 됨 · %lld"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nav sapludināts · %lld"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niescalone · %lld"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não integrado · %lld"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pa bashkuar · %lld"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Није спојено · %lld"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije spojeno · %lld"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ej mergad · %lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birleştirilmedi · %lld"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未合并 · %lld"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin fusionar · %lld"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not merged · %lld"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not merged · %lld"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not merged · %lld"
+          }
+        }
+      }
+    },
     "Not notarized by Apple" : {
       "localizations" : {
         "ar" : {
@@ -183486,6 +183486,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未经 Apple 公证"
+          }
+        }
+      }
+    },
+    "Not pushed · %lld" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غير مرفوع · %lld"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sense pujar · %lld"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht gepusht · %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin subir · %lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non poussé · %lld"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nöd gpusht · %lld"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "पुश नहीं · %lld"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije poslano · %lld"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non inviato · %lld"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未プッシュ · %lld"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "푸시 안 됨 · %lld"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nav augšupielādēts · %lld"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niewypchnięte · %lld"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não enviado · %lld"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pa dërguar · %lld"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Није послато · %lld"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije poslato · %lld"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ej pushad · %lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gönderilmedi · %lld"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未推送 · %lld"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin subir · %lld"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not pushed · %lld"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not pushed · %lld"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not pushed · %lld"
           }
         }
       }
@@ -187482,154 +187630,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "没有需要审阅的内容"
-          }
-        }
-      }
-    },
-    "Nothing was removed." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "لم تتم إزالة أي شيء."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No s’ha eliminat res."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Es wurde nichts entfernt."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nothing was removed."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nothing was removed."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nothing was removed."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se ha eliminado nada."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se ha eliminado nada."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rien n’a été retiré."
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Es isch nüt entfernt worde."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "कुछ भी हटाया नहीं गया।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ništa nije uklonjeno."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Non è stato rimosso nulla."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "何も削除されませんでした。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "제거된 항목이 없습니다."
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nekas netika noņemts."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nic nie zostało usunięte."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nada foi removido."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Asgjë nuk u hoq."
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ништа није уклоњено."
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ništa nije uklonjeno."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inget togs bort."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hiçbir şey kaldırılmadı."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未移除任何内容。"
           }
         }
       }
@@ -193956,6 +193956,154 @@
         }
       }
     },
+    "Only copy · %lld" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "النسخة الوحيدة · %lld"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Única còpia · %lld"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einzige Kopie · %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Única copia · %lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seule copie · %lld"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einzigi Kopie · %lld"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "इकलौती प्रति · %lld"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jedina kopija · %lld"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unica copia · %lld"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "唯一のコピー · %lld"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "유일한 사본 · %lld"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vienīgā kopija · %lld"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jedyna kopia · %lld"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Única cópia · %lld"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopja e vetme · %lld"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Једина копија · %lld"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jedina kopija · %lld"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enda kopian · %lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tek kopya · %lld"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "唯一副本 · %lld"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Única copia · %lld"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only copy · %lld"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only copy · %lld"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only copy · %lld"
+          }
+        }
+      }
+    },
     "Only folders you ticked are deleted" : {
       "localizations" : {
         "ar" : {
@@ -200168,6 +200316,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "打开内存"
+          }
+        }
+      }
+    },
+    "Open now" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مفتوح الآن"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obert ara"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gerade offen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abierto ahora"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvert"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grad offe"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अभी खुला है"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sada otvoreno"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperto ora"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지금 열려 있음"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pašlaik atvērts"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwarty teraz"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aberto agora"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I hapur tani"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сада отворено"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sada otvoreno"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öppen nu"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu an açık"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在打开"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abierto ahora"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open now"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open now"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open now"
           }
         }
       }
@@ -212017,6 +212313,154 @@
         }
       }
     },
+    "Pushed" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مرفوع"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pujat"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gepusht"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subido"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poussé"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gpusht"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "पुश हो चुका"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poslano"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inviato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プッシュ済み"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "푸시됨"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Augšupielādēts"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wypchnięty"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviado"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I dërguar"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Послато"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poslato"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pushad"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gönderildi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已推送"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subido"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pushed"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pushed"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pushed"
+          }
+        }
+      }
+    },
     "Quiet for over 6 months" : {
       "localizations" : {
         "ar" : {
@@ -218236,154 +218680,6 @@
         }
       }
     },
-    "Rechecking worktrees with Git…" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "جارٍ إعادة فحص worktrees عبر Git…"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tornant a comprovar els worktrees amb Git…"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Worktrees werden mit Git erneut geprüft …"
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechecking worktrees with Git…"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechecking worktrees with Git…"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechecking worktrees with Git…"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Volviendo a comprobar los worktrees con Git…"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Volviendo a comprobar los worktrees con Git…"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revérification des worktrees avec Git…"
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Worktrees werded mit Git nomal gcheckt …"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git से worktree दोबारा जाँचे जा रहे हैं…"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ponovna provjera worktreeova pomoću Gita…"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ricontrollo dei worktree con Git…"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gitでworktreeを再チェックしています…"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Git으로 워크트리를 다시 확인하는 중…"
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ar Git vēlreiz pārbauda worktree…"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ponowne sprawdzanie worktree przez Git…"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A verificar novamente os worktrees com o Git…"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Po kontrollohen përsëri worktree-t me Git…"
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Поновна провера worktrees помоћу Git-а…"
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ponovna provera worktrees pomoću Git-a…"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kontrollerar worktrees med Git igen…"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Worktree’ler Git ile yeniden denetleniyor…"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在用 Git 重新检查 worktree…"
-          }
-        }
-      }
-    },
     "Recognised CoreSimulator, Adobe NGL and Office diagnostic .log files older than 30 days. Settings, credentials, other logs and conversation histories stay protected." : {
       "localizations" : {
         "ar" : {
@@ -219416,6 +219712,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "红色锁：正在使用或可能是唯一副本。解锁后仍可删除；需要输入一个词来确认。"
+          }
+        }
+      }
+    },
+    "Red worktrees · %@. Files that were never committed and files Git can't restore are deleted for good." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worktrees الحمراء · %@. تُحذف نهائيًا الملفات التي لم تُودَع قط والملفات التي لا يستطيع Git استعادتها."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worktrees vermells · %@. Els fitxers que no s’han confirmat mai i els que Git no pot restaurar s’esborren per sempre."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rote Worktrees · %@. Nie committete Dateien und Dateien, die Git nicht wiederherstellen kann, werden endgültig gelöscht."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worktrees rojos · %@. Los archivos que nunca se confirmaron y los que Git no puede restaurar se eliminan para siempre."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worktrees rouges · %@. Les fichiers jamais commités et ceux que Git ne peut pas restaurer sont supprimés définitivement."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roti Worktrees · %@. Dateie, wo nie committet worde sind, und Dateie, wo Git nöd zrugghole cha, werded für immer glöscht."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "लाल worktrees · %@. कभी कमिट न हुई फ़ाइलें और वे फ़ाइलें जिन्हें Git वापस नहीं ला सकता, हमेशा के लिए मिट जाती हैं।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crveni worktreeovi · %@. Datoteke koje nikad nisu commitane i datoteke koje Git ne može vratiti brišu se zauvijek."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worktree rossi · %@. I file mai committati e quelli che Git non può ripristinare vengono eliminati per sempre."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "赤い worktree · %@。一度もコミットされていないファイルと、Git で復元できないファイルは完全に削除されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "빨간색 워크트리 · %@. 커밋된 적 없는 파일과 Git이 복원할 수 없는 파일은 영구히 삭제됩니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sarkanie worktree · %@. Nekad neiesūtītie faili un faili, ko Git nevar atjaunot, tiek dzēsti neatgriezeniski."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czerwone worktree · %@. Pliki, których nigdy nie zatwierdzono, i pliki, których Git nie przywróci, zostaną usunięte na zawsze."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worktrees vermelhos · %@. Os ficheiros que nunca tiveram commit e os que o Git não consegue restaurar são eliminados para sempre."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worktree të kuqe · %@. Skedarët që nuk janë regjistruar kurrë dhe ata që Git nuk mund t’i rikthejë fshihen përgjithmonë."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Црвени worktrees · %@. Датотеке које никад нису комитоване и датотеке које Git не може да врати бришу се заувек."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crveni worktrees · %@. Datoteke koje nikad nisu komitovane i datoteke koje Git ne može da vrati brišu se zauvek."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Röda worktrees · %@. Filer som aldrig committats och filer som Git inte kan återställa raderas för gott."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kırmızı worktree’ler · %@. Hiç commit edilmemiş dosyalar ve Git’in geri getiremediği dosyalar kalıcı olarak silinir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "红色 worktree · %@。从未提交的文件和 Git 无法恢复的文件会被永久删除。"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worktrees rojos · %@. Los archivos que nunca se confirmaron y los que Git no puede restaurar se eliminan para siempre."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red worktrees · %@. Files that were never committed and files Git can't restore are deleted for good."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red worktrees · %@. Files that were never committed and files Git can't restore are deleted for good."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red worktrees · %@. Files that were never committed and files Git can't restore are deleted for good."
           }
         }
       }
@@ -284268,6 +284712,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最近使用过。你仍可清理它；其 App 很可能会重新生成它。"
+          }
+        }
+      }
+    },
+    "Used today" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استُخدم اليوم"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usat avui"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heute benutzt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usado hoy"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisé aujourd’hui"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hüt bruucht"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आज उपयोग हुआ"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korišteno danas"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usato oggi"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日使用"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘 사용됨"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lietots šodien"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Użyty dziś"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usado hoje"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Përdorur sot"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Коришћено данас"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korišćeno danas"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Använd i dag"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün kullanıldı"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今天用过"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usado hoy"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used today"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used today"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used today"
           }
         }
       }

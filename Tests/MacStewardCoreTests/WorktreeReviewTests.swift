@@ -26,6 +26,22 @@ final class WorktreeReviewTests: XCTestCase {
         XCTAssertEqual(git(tree, identity + ["commit", "-m", name]).code, 0)
     }
 
+    func testPushedCommitsCountAsSafeAndUncommittedWorkTurnsRed() throws {
+        let (root, tree, config) = try fixture(); defer { try? FileManager.default.removeItem(at: root) }
+        try commit(tree, "feature")
+        XCTAssertEqual(WorktreeReview.assess(tree.path, configuration: config, activity: ActivitySnapshot()).status, WorktreeStatus(unmerged: 1, notPushed: 1))
+        // What a push leaves behind locally: a remote-tracking branch at this commit.
+        XCTAssertEqual(git(tree, ["update-ref", "refs/remotes/origin/test-tree", "HEAD"]).code, 0)
+        XCTAssertEqual(WorktreeReview.assess(tree.path, configuration: config, activity: ActivitySnapshot()).status, WorktreeStatus(unmerged: 1, notPushed: 0), "on the server, so nothing is lost")
+        try Data("draft".utf8).write(to: tree.appendingPathComponent("draft.txt"))
+        let verdict = WorktreeReview.assess(tree.path, configuration: config, activity: ActivitySnapshot())
+        XCTAssertEqual(verdict.status.uncommitted, 1)
+        let item = Finding(path: tree.path, group: .worktrees, bytes: 0, modifiedAt: Date(), safety: .review, reason: "", rule: "worktree-review-only", fingerprint: verdict.fingerprint, worktree: verdict.status, finished: false)
+        XCTAssertEqual(item.worktreeLight, .red)
+        XCTAssertTrue(item.redLock)
+        XCTAssertFalse(item.dangerous, "worktrees keep their own Git recheck, not the cache cleaner's")
+    }
+
     func testIgnoredSecretsWarnAndAppearingOneForcesNewReview() throws {
         let (root, tree, config) = try fixture(); defer { try? FileManager.default.removeItem(at: root) }
         try Data(".env\nnode_modules\n".utf8).write(to: tree.appendingPathComponent(".gitignore"))

@@ -209,46 +209,15 @@ struct MainView: View {
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.28), value: isIntro)
         .animation(reduceMotion ? nil : .spring(response: 0.48, dampingFraction: 0.88), value: m.scanning)
         .animation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.9), value: hideSidebar)
-        .sheet(item: $pendingRemoval) { pending in CleanConfirmSheet(findings: pending.findings ?? m.selectedFindings, appsToQuit: m.appsToQuit(pending.findings ?? m.selectedFindings), extras: pending.extras) {
+        .sheet(item: $pendingRemoval) { pending in CleanConfirmSheet(findings: pending.findings ?? m.selectedFindings, appsToQuit: m.appsToQuit(pending.findings ?? m.selectedFindings), extras: pending.extras, redWorktrees: pending.redWorktrees) {
             if pending.steps.isEmpty { m.clean(pending.findings) } else { m.removalQueue = pending.steps; m.runNextRemoval() }
         } }
-        .sheet(item: $m.worktreeBatch) { worktreeSheet($0) }
         .environment(\.stewardTheme, theme)
         .modifier(FullDiskGateHost(theme: theme))
         .modifier(OnceStages(theme: theme))
         .alert("Artifloam", isPresented: errorShown) { Button("OK") { m.error = nil } } message: { Text(m.error ?? "") }
     }
     private var errorShown: Binding<Bool> { Binding(get: { m.error != nil }, set: { if !$0 { m.error = nil } }) }
-    private func worktreeSheet(_ batch: StewardModel.WorktreeBatch) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Label("Delete merged worktrees", systemImage: "trash").stewardFont(.title2, weight: .semibold)
-            Text("Git rechecked each checkout just now. They are deleted permanently, including ignored files such as node_modules, build output and local .env files. A merged branch is deleted too; its commit is shown afterwards so you can recreate it. Read the warnings before you choose.").stewardFont(.body).fixedSize(horizontal: false, vertical: true)
-            let ids = Set(batch.candidates.map(\.id))
-            Toggle(isOn: Binding(get: { ids.isSubset(of: m.worktreeChoice) }, set: { if $0 { m.worktreeChoice.formUnion(ids) } else { m.worktreeChoice.subtract(ids) } })) {
-                Text("Select all", comment: "Checkbox: select every item in the list").stewardFont(.callout, weight: .semibold)
-            }.toggleStyle(.stewardCheckbox)
-            ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    ForEach(batch.candidates) { candidate in
-                        Toggle(isOn: Binding(get: { m.worktreeChoice.contains(candidate.id) }, set: { if $0 { m.worktreeChoice.insert(candidate.id) } else { m.worktreeChoice.remove(candidate.id) } })) {
-                            VStack(alignment: .leading, spacing: 3) {
-                                HStack { Text(candidate.finding.title).stewardFont(.body, weight: .semibold); Spacer(); Text(formattedBytes(candidate.finding.bytes)).stewardFont(.callout).foregroundStyle(.secondary) }
-                                Text(candidate.finding.path.replacingOccurrences(of: NSHomeDirectory(), with: "~")).stewardFont(.caption, design: .monospaced).foregroundStyle(.secondary)
-                                ForEach(candidate.assessment.warnings, id: \.self) { Label($0, systemImage: "exclamationmark.triangle").stewardFont(.caption).foregroundStyle(.orange) }
-                            }
-                        }.toggleStyle(.stewardCheckbox)
-                    }
-                    if !batch.blocked.isEmpty { Text("Kept after recheck:\n\(batch.blocked.joined(separator: "\n"))").stewardFont(.caption).foregroundStyle(.secondary) }
-                }
-            }.frame(maxHeight: 380)
-            HStack {
-                Button("Cancel") { m.worktreeBatch = nil; m.runNextRemoval() }.keyboardShortcut(.cancelAction); Spacer()
-                let chosen = batch.candidates.filter { m.worktreeChoice.contains($0.id) }
-                Button("Delete \(chosen.count) · \(formattedBytes(chosen.reduce(0) { $0 + $1.finding.bytes }))", role: .destructive) { m.trashChosenWorktrees() }
-                    .buttonStyle(.borderedProminent).tint(.red).disabled(chosen.isEmpty)
-            }
-        }.padding(28).frame(width: 560)
-    }
     private var stageProgress: Double? {
         if m.scanning { return m.scanProgress?.fraction }
         if isMapStage, storageMap.busy, let snapshot = storageMap.snapshot, !snapshot.entries.isEmpty {
@@ -991,28 +960,29 @@ struct MainView: View {
     }
     func findingRow(_ finding: Finding) -> some View {
         HStack(alignment: .top, spacing: 12) {
-            if finding.group == .worktrees && (finding.safety == .review || m.unlockedWorktrees.contains(finding.id)) {
+            if finding.group == .worktrees && m.locked(finding) { UnlockButton(disabled: m.busy, danger: true, highlighted: hoveredRow == finding.id) { m.unlock(finding) } }
+            else if finding.group == .worktrees && (finding.safety == .review || m.unlockedWorktrees.contains(finding.id)) {
                 Toggle(String(localized: "Select \(finding.title)"), isOn: Binding(get: { m.worktreeSelection.contains(finding.id) }, set: { if $0 { m.worktreeSelection.insert(finding.id) } else { m.worktreeSelection.remove(finding.id) } })).toggleStyle(.stewardCheckboxOnly)
             } else if m.removable(finding) {
                 Toggle(String(localized: "Select \(finding.title)"), isOn: Binding(get: { m.selected.contains(finding.id) }, set: { if $0 { m.selected.insert(finding.id) } else { m.selected.remove(finding.id) } })).toggleStyle(.stewardCheckboxOnly)
-            } else if finding.group == .worktrees && finding.hold == .inUse { unlockButton(finding, highlighted: hoveredRow == finding.id) }
-            else if finding.dangerous { UnlockButton(disabled: m.busy, danger: true, highlighted: hoveredRow == finding.id) { m.unlockDangerous(finding) } }
+            } else if finding.dangerous { UnlockButton(disabled: m.busy, danger: true, highlighted: hoveredRow == finding.id) { m.unlockDangerous(finding) } }
             // Not a lock: deleting this would break an app or macOS, so there's nothing to unlock.
             else { Image(systemName: finding.safety == .protected ? "info.circle" : "eye").stewardFont(.body).foregroundStyle(muted).frame(width: 15).help(finding.safety == .protected ? "Information only: removing it would break an app or macOS" : "") }
             VStack(alignment: .leading, spacing: 6) {
-                HStack { if m.wasLocked(finding) { Image(systemName: "lock.open.fill").font(.caption).foregroundStyle(finding.dangerous ? Color.red : .orange).help(finding.dangerous ? "Unlocked red: in use or may be the only copy" : "Unlocked orange: only a running process keeps it") }; Text(finding.title).stewardFont(.body, weight: .semibold); Spacer(); Text(formattedBytes(finding.bytes)).stewardFont(.callout, weight: .medium).foregroundStyle(mint) }
+                HStack { if m.wasLocked(finding) { Image(systemName: "lock.open.fill").font(.caption).foregroundStyle(finding.redLock ? Color.red : .orange).help(finding.redLock ? "Unlocked red: in use or may be the only copy" : "Unlocked orange: only a running process keeps it") }; Text(finding.title).stewardFont(.body, weight: .semibold); Spacer(); Text(formattedBytes(finding.bytes)).stewardFont(.callout, weight: .medium).foregroundStyle(mint) }
                 Text(finding.path.replacingOccurrences(of: NSHomeDirectory(), with: "~")).stewardFont(.caption, design: .monospaced).foregroundStyle(muted).fixedSize(horizontal: false, vertical: true).textSelection(.enabled)
                 Text(finding.reason).stewardFont(.callout).foregroundStyle(finding.safety == .automatic ? .white.opacity(0.8) : muted).fixedSize(horizontal: false, vertical: true)
                 if finding.hold == .recent { Label("Used recently. You can still clean it; its app will likely rebuild it.", systemImage: "clock.arrow.circlepath").stewardFont(.caption).foregroundStyle(.orange) }
                 if finding.hold == .inUse, let owner = finding.owner { Label("\(owner) is running. Artifloam quits it first if you clean this.", systemImage: "xmark.app").stewardFont(.caption).foregroundStyle(.orange) }
                 if finding.group == .worktrees {
-                    if finding.hold == .inUse { ForEach(finding.warnings ?? [], id: \.self) { Label($0, systemImage: "exclamationmark.triangle").stewardFont(.caption).foregroundStyle(.orange) } }
+                    WorktreeChips(finding: finding)
+                    if finding.worktreeLight == .red { ForEach(finding.warnings ?? [], id: \.self) { Label($0, systemImage: "exclamationmark.triangle").stewardFont(.caption).foregroundStyle(.red) } }
                     Label(usage(finding), systemImage: "clock").stewardFont(.caption).foregroundStyle(muted)
                 }
                 else { ForEach(finding.warnings ?? [], id: \.self) { Label($0, systemImage: "exclamationmark.triangle").stewardFont(.caption).foregroundStyle(.orange) } }
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Modified \(finding.modifiedAt.formatted(date: .abbreviated, time: .shortened))").stewardFont(.caption).foregroundStyle(muted)
-                    HStack { Button("Finder") { m.reveal(finding.path) }; if finding.rule == XcodeStorageInventory.runtimeRule { Button("Open Xcode") { m.openXcode() }; Button { pendingRemoval = PendingRemoval(findings: [finding]) } label: { Text("Remove Now", comment: "Button: delete this simulator runtime right away, after one confirmation") }.buttonStyle(RowActionButtonStyle(destructive: true)).disabled(m.busy).help("Shuts down its simulators, ejects it and deletes it") }; if finding.rule == BroadCaches.brewOldVersionsRule { Button("Run brew cleanup in Terminal") { m.runBrewCleanup(cellar: finding.path) }.help("Opens Terminal and runs Homebrew's own cleanup there") }; if finding.group == .worktrees && (finding.safety == .review || m.unlockedWorktrees.contains(finding.id)) { Button("Delete…") { m.requestWorktreeRemoval([finding]) }.buttonStyle(RowActionButtonStyle(destructive: true)).disabled(m.busy) }; Button { m.ignore(finding) } label: { Text("Keep", comment: "Button: keep this item and never suggest it again") } }
+                    HStack { Button("Finder") { m.reveal(finding.path) }; if finding.rule == XcodeStorageInventory.runtimeRule { Button("Open Xcode") { m.openXcode() }; Button { pendingRemoval = PendingRemoval(findings: [finding]) } label: { Text("Remove Now", comment: "Button: delete this simulator runtime right away, after one confirmation") }.buttonStyle(RowActionButtonStyle(destructive: true)).disabled(m.busy).help("Shuts down its simulators, ejects it and deletes it") }; if finding.rule == BroadCaches.brewOldVersionsRule { Button("Run brew cleanup in Terminal") { m.runBrewCleanup(cellar: finding.path) }.help("Opens Terminal and runs Homebrew's own cleanup there") }; if finding.group == .worktrees && !m.locked(finding) && (finding.safety == .review || m.unlockedWorktrees.contains(finding.id)) { Button("Delete…") { confirmRemoval([], worktrees: [finding]) }.buttonStyle(RowActionButtonStyle(destructive: true)).disabled(m.busy) }; Button { m.ignore(finding) } label: { Text("Keep", comment: "Button: keep this item and never suggest it again") } }
                         .buttonStyle(RowActionButtonStyle()).stewardFont(.body)
                 }
             }
@@ -1020,9 +990,6 @@ struct MainView: View {
     }
     private func rowHover(_ finding: Finding) -> RowHover { RowHover(id: finding.id, hovered: $hoveredRow) }
     /// Kept only because a process has it open: Git found nothing that would be lost, so a click unlocks and ticks it.
-    private func unlockButton(_ finding: Finding, highlighted: Bool = false) -> some View {
-        UnlockButton(disabled: m.busy, highlighted: highlighted) { m.unlock(finding) }
-    }
     private func usage(_ finding: Finding) -> String {
         guard let used = finding.lastUsedAt else { return String(localized: "No agent session in 90 days") }
         if Date().timeIntervalSince(used) < 60 { return String(localized: "In use now") }
@@ -1067,12 +1034,12 @@ struct MainView: View {
                         if !finished.isEmpty {
                             BulkBar(title: String(localized: "Select all"), isOn: Binding(get: { m.allSelected(finished) }, set: { m.setSelected(finished, $0) }), enabled: !m.busy, summary: String(localized: "\(chosen.count) selected · \(formattedBytes(chosen.reduce(0) { $0 + $1.bytes }))")) {
                                 smartSelectButton(finished)
-                                Button("Delete \(chosen.count)…") { m.requestWorktreeRemoval(chosen) }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(chosen.isEmpty || m.busy)
+                                Button("Delete \(chosen.count)…") { confirmRemoval([], worktrees: chosen) }.buttonStyle(CleanupGlassButtonStyle(compact: true)).disabled(chosen.isEmpty || m.busy)
                             }
                         }
                         if current.items.isEmpty { empty(m.report == nil ? String(localized: "Scan to inspect your worktrees.") : String(localized: "Nothing here."), String(localized: "Claude Code and Codex checkouts appear here with Git evidence.")) }
                         ScrollView {
-                            LazyVStack(spacing: 2) { ForEach(current.items) { worktreeRow($0) } }
+                            LazyVStack(spacing: 2) { ForEach(current.items.byLight) { worktreeRow($0) } }
                         }
                     }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
@@ -1081,14 +1048,15 @@ struct MainView: View {
     }
     private func worktreeRow(_ finding: Finding) -> some View {
         HStack(spacing: 12) {
-            if finding.safety == .review || m.unlockedWorktrees.contains(finding.id) {
+            if m.locked(finding) { UnlockButton(disabled: m.busy, danger: true, highlighted: hoveredRow == finding.id) { m.unlock(finding) } }
+            else if finding.safety == .review || m.unlockedWorktrees.contains(finding.id) {
                 Toggle(String(localized: "Select \(finding.title)"), isOn: Binding(get: { m.worktreeSelection.contains(finding.id) }, set: { if $0 { m.worktreeSelection.insert(finding.id) } else { m.worktreeSelection.remove(finding.id) } })).toggleStyle(.stewardCheckboxOnly)
-            } else if finding.hold == .inUse { unlockButton(finding, highlighted: hoveredRow == finding.id) }
-            else { Image(systemName: "info.circle").foregroundStyle(muted).frame(width: 15) }
+            } else { Image(systemName: "info.circle").foregroundStyle(muted).frame(width: 15) }
             VStack(alignment: .leading, spacing: 3) {
-                HStack(spacing: 6) { if m.wasLocked(finding) { Image(systemName: "lock.open.fill").font(.caption).foregroundStyle(finding.dangerous ? Color.red : .orange).help(finding.dangerous ? "Unlocked red: in use or may be the only copy" : "Unlocked orange: only a running process keeps it") }; Text(finding.title).stewardFont(.body, weight: .semibold).lineLimit(1) }
+                HStack(spacing: 6) { if m.wasLocked(finding) { Image(systemName: "lock.open.fill").font(.caption).foregroundStyle(finding.redLock ? Color.red : .orange).help(finding.redLock ? "Unlocked red: in use or may be the only copy" : "Unlocked orange: only a running process keeps it") }; Text(finding.title).stewardFont(.body, weight: .semibold).lineLimit(1) }
                 Text((finding.warnings ?? []).reduce(finding.reason) { $0.replacingOccurrences(of: " " + $1, with: "") }).stewardFont(.caption).foregroundStyle(muted).lineLimit(1)
-                ForEach(finding.warnings ?? [], id: \.self) { Label($0, systemImage: "exclamationmark.triangle.fill").stewardFont(.caption).foregroundStyle(.orange).lineLimit(1) }
+                WorktreeChips(finding: finding)
+                if finding.worktreeLight == .red { ForEach(finding.warnings ?? [], id: \.self) { Label($0, systemImage: "exclamationmark.triangle.fill").stewardFont(.caption).foregroundStyle(.red).lineLimit(2) } }
             }
             Spacer(minLength: 12)
             Text(usage(finding)).stewardFont(.caption).foregroundStyle(muted).frame(width: 150, alignment: .trailing)
@@ -1244,7 +1212,7 @@ struct MainView: View {
         // Inside the step, so Cancel leaves the page and the ticks as they were.
         if !items.isEmpty { steps.append { m.clean(items) } }
         if !worktrees.isEmpty {
-            extras.append(CleanExtra(icon: CleanupGroup.worktrees.icon, title: CleanupGroup.worktrees.title, bytes: worktrees.reduce(0) { $0 + $1.bytes }, warning: String(localized: "Git rechecks each worktree next, and you confirm them one more time.")))
+            extras.append(CleanExtra(icon: CleanupGroup.worktrees.icon, title: CleanupGroup.worktrees.title, bytes: worktrees.reduce(0) { $0 + $1.bytes }, warning: String(localized: "Git checks each worktree again right before it's deleted. One that changed since the scan is kept.")))
             steps.append { m.requestWorktreeRemoval(worktrees) }
         }
         if !duplicates.isEmpty {
@@ -1272,9 +1240,7 @@ struct MainView: View {
             extras.append(CleanExtra(icon: "memorychip", title: sectionTitle("Performance"), bytes: nil, warning: String(localized: "\(names) will be asked to quit. Save your work if they ask.")))
             steps.append { quitting.forEach { m.memory.quit($0) }; runQuitApps = false; m.runNextRemoval() }
         }
-        // Only worktrees: their own sheet confirms each one with Git's findings, so a first sheet would only ask twice.
-        if items.isEmpty, steps.count == 1, !worktrees.isEmpty { m.requestWorktreeRemoval(worktrees); return }
-        pendingRemoval = PendingRemoval(findings: items, extras: extras, steps: steps)
+        pendingRemoval = PendingRemoval(findings: items, extras: extras, steps: steps, redWorktrees: worktrees.filter { $0.worktreeLight == .red })
     }
     /// Recommended caches of closed browsers: the only ones that can go right now.
     private var closedBrowserCaches: [BrowserItem] {
@@ -1324,7 +1290,7 @@ struct MainView: View {
             if isWorktrees { if on { m.worktreeSelection.formUnion(ids) } else { m.worktreeSelection.subtract(ids) } }
             else if on { m.selected.formUnion(ids) } else { m.selected.subtract(items.map(\.id)) }
         })
-        let clean: (() -> Void)? = ticked.isEmpty ? nil : isWorktrees ? { m.requestWorktreeRemoval(ticked) } : { pendingRemoval = PendingRemoval(findings: ticked) }
+        let clean: (() -> Void)? = ticked.isEmpty ? nil : isWorktrees ? { confirmRemoval([], worktrees: ticked) } : { pendingRemoval = PendingRemoval(findings: ticked) }
         return CategoryTile(amount: foundBytes > 0 ? formattedBytes(foundBytes) : nil, name: group.title, tagline: CategoryArt.tagline(for: group),
                             art: CategoryArt.name(for: group), appIcons: icons, status: status, chosen: chosen, canChoose: !choosable.isEmpty,
                             review: { m.review(group); cleanupReviewing = true }, clean: clean)
@@ -1388,7 +1354,7 @@ struct MainView: View {
                 .help("Removes everything ticked in every category, after one confirmation")
         } else if m.section == "Worktrees" {
             let chosen = m.reviewableWorktrees.filter { m.worktreeSelection.contains($0.id) }
-            Button { m.requestWorktreeRemoval(chosen) } label: {
+            Button { confirmRemoval([], worktrees: chosen) } label: {
                 Label(chosen.isEmpty ? "Select finished worktrees" : "Delete \(chosen.count) worktrees · \(formattedBytes(chosen.reduce(0) { $0 + $1.bytes }))", systemImage: "trash")
             }.buttonStyle(CleanupGlassButtonStyle()).stewardFont(.body, weight: .semibold).disabled(m.busy || chosen.isEmpty)
         } else { Text("Review comes before removal").stewardFont(.caption).foregroundStyle(muted) }
@@ -1493,5 +1459,27 @@ struct RowHover: ViewModifier {
         content.trackingHover { inside in
             withAnimation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.6)) { if inside { hovered = id } else if hovered == id { hovered = nil } }
         }
+    }
+}
+
+/// Git's verdict at a glance: green is safe, orange is worth a look, red is lost for good. Hover for the full sentences.
+struct WorktreeChips: View {
+    let finding: Finding
+    var body: some View {
+        if let status = finding.worktree {
+            HStack(spacing: 6) {
+                if finding.hold == .inUse { chip("Open now", "bolt.fill", .red) }
+                else if StewardModel.inUse(finding) { chip("Used today", "clock", .orange) }
+                if status.unmerged == 0 { chip("Merged", "checkmark", .mint) }
+                else { chip("Not merged · \(status.unmerged)", "arrow.triangle.branch", status.notPushed == 0 ? .secondary : .orange)
+                    if status.notPushed == 0 { chip("Pushed", "checkmark", .mint) } else { chip("Not pushed · \(status.notPushed)", "icloud.slash", .orange) } }
+                if status.uncommitted == 0 { chip("Committed", "checkmark", .mint) } else { chip("Not committed · \(status.uncommitted)", "pencil", .red) }
+                if status.onlyCopies > 0 { chip("Only copy · \(status.onlyCopies)", "doc.badge.ellipsis", .red) }
+            }.help((finding.warnings ?? []).joined(separator: "\n"))
+        }
+    }
+    private func chip(_ text: LocalizedStringKey, _ icon: String, _ color: Color) -> some View {
+        Label(text, systemImage: icon).stewardFont(.caption, weight: .medium).foregroundStyle(color)
+            .padding(.horizontal, 7).padding(.vertical, 2).background(color.opacity(0.14), in: Capsule())
     }
 }

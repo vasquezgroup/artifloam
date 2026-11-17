@@ -87,15 +87,34 @@ public struct Finding: Codable, Identifiable, Sendable {
     /// Only checked items with a hold (rows the cleaner can delete); never for files whose removal breaks apps or macOS,
     /// and not for worktrees, which Git rechecks in their own flow.
     public var dangerous: Bool { safety == .protected && hold != nil && !userCleanable && group != .worktrees && ![.systemCaches, .systemLogs, .universalApps, .languages, .documentVersions, .deviceBackups].contains(group) }
+    /// Worktrees only: what Git found, shown as chips on the row.
+    public var worktree: WorktreeStatus? = nil
+    /// Worktrees only. Green: deleting loses nothing. Orange: nothing is lost, but check it. Red: something is lost for good, or it's open now; unlock and type to confirm.
+    public var worktreeLight: WorktreeLight? {
+        guard group == .worktrees, safety == .review || hold == .inUse else { return nil }
+        return hold == .inUse || worktree?.losesWork == true ? .red : finished == true ? .green : .orange
+    }
+    /// Opens with the red lock: a red item, or a red worktree.
+    public var redLock: Bool { dangerous || worktreeLight == .red }
     public var tickable: Bool { safety == .automatic || (userCleanable && hold == nil && (warnings ?? []).isEmpty) }
     /// A readable name when the folder has none, such as a simulator's UUID.
     public var label: String? = nil
     public var title: String { (label ?? URL(fileURLWithPath: path).lastPathComponent).displaySafe }
-    public init(path: String, group: CleanupGroup, bytes: UInt64, modifiedAt: Date, safety: Safety, reason: String, rule: String, fingerprint: String, lastUsedAt: Date? = nil, warnings: [String]? = nil, hold: Hold? = nil, owner: String? = nil, label: String? = nil, finished: Bool? = nil) {
-        self.label = label; self.finished = finished
+    public init(path: String, group: CleanupGroup, bytes: UInt64, modifiedAt: Date, safety: Safety, reason: String, rule: String, fingerprint: String, lastUsedAt: Date? = nil, warnings: [String]? = nil, hold: Hold? = nil, owner: String? = nil, label: String? = nil, worktree: WorktreeStatus? = nil, finished: Bool? = nil) {
+        self.label = label; self.finished = finished; self.worktree = worktree
         self.path = path; self.id = path; self.group = group; self.bytes = bytes; self.modifiedAt = modifiedAt; self.safety = safety; self.reason = reason; self.rule = rule; self.fingerprint = fingerprint; self.lastUsedAt = lastUsedAt; self.warnings = warnings
         self.hold = hold; self.owner = owner
     }
+}
+public enum WorktreeLight: Sendable { case green, orange, red }
+/// Git's verdict on a worktree in numbers.
+public struct WorktreeStatus: Codable, Sendable, Equatable {
+    /// Commits not in the default branch, and of those, commits on no remote branch.
+    public var unmerged = 0, notPushed = 0
+    /// Edited or never-committed files, and ignored files Git can't restore (.env, databases).
+    public var uncommitted = 0, onlyCopies = 0
+    public var losesWork: Bool { uncommitted > 0 || onlyCopies > 0 }
+    public init(unmerged: Int = 0, notPushed: Int = 0, uncommitted: Int = 0, onlyCopies: Int = 0) { self.unmerged = unmerged; self.notPushed = notPushed; self.uncommitted = uncommitted; self.onlyCopies = onlyCopies }
 }
 public struct DiskSpace: Codable, Sendable {
     public let free: UInt64
@@ -177,10 +196,15 @@ extension Array where Element == Finding {
     /// `reviewable`: worktrees Git cleared for review; one kept only by a running process needs unlocking first.
     public func smartPick(reviewable: Set<String>) -> [Finding] {
         let certain = filter(\.certain)
-        return !certain.isEmpty ? certain : filter { $0.group == .worktrees ? reviewable.contains($0.id) && $0.hold == nil : $0.userCleanable }
+        return !certain.isEmpty ? certain : filter { $0.group == .worktrees ? reviewable.contains($0.id) && $0.worktreeLight == .orange : $0.userCleanable }
+    }
+    /// Worktrees: green first, then orange, then red; otherwise the order stays.
+    public var byLight: [Finding] {
+        func rank(_ f: Finding) -> Int { switch f.worktreeLight { case .green: 0; case .orange: 1; case .red: 2; case nil: 3 } }
+        return enumerated().sorted { (rank($0.element), $0.offset) < (rank($1.element), $1.offset) }.map(\.element)
     }
     public func bulkChoosable(in group: CleanupGroup?) -> [Finding] {
         guard let group else { return filter(\.tickable) }
-        return filter { $0.group == group && (group == .worktrees ? $0.safety == .review : $0.userCleanable) }
+        return filter { $0.group == group && (group == .worktrees ? $0.safety == .review && $0.worktreeLight != .red : $0.userCleanable) }
     }
 }
