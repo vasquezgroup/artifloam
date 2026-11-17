@@ -37,11 +37,12 @@ final class RedLockTests: XCTestCase {
     func testBusyReasonMatchesWhatTheCleanerWouldSkip() {
         let policy = SafetyPolicy(configuration: Configuration(home: URL(fileURLWithPath: "/tmp"), projectRoots: []))
         let cache = finding(hold: .recent, path: "/x/cache")
-        XCTAssertNotNil(policy.busyReason(cache, activity: ActivitySnapshot(openPaths: ["/x/cache/file"]), approved: false))
-        XCTAssertNil(policy.busyReason(cache, activity: ActivitySnapshot(), approved: false))
+        XCTAssertNotNil(policy.busyReason(cache, activity: ActivitySnapshot(openPaths: ["/x/cache/file"]), quitting: false))
+        XCTAssertNil(policy.busyReason(cache, activity: ActivitySnapshot(), quitting: false))
         let quitFirst = Finding(path: "/x/cache", group: .userCaches, bytes: 1, modifiedAt: Date(), safety: .protected, reason: "", rule: "app-cache", fingerprint: "f", hold: .inUse, owner: "Arc")
-        XCTAssertNil(policy.busyReason(quitFirst, activity: ActivitySnapshot(openPaths: ["/x/cache/file"]), approved: false), "its app is quit first")
-        XCTAssertNil(policy.busyReason(finding(path: "/x/cache"), activity: ActivitySnapshot(openPaths: ["/x/cache/file"]), approved: true), "unlocked red skips the check")
+        XCTAssertNil(policy.busyReason(quitFirst, activity: ActivitySnapshot(openPaths: ["/x/cache/file"]), quitting: true), "its app is quit first")
+        XCTAssertNotNil(policy.busyReason(quitFirst, activity: ActivitySnapshot(openPaths: ["/x/cache/file"]), quitting: false), "no app to quit: a helper keeps it")
+        XCTAssertNotNil(policy.busyReason(finding(path: "/x/cache"), activity: ActivitySnapshot(openPaths: ["/x/cache/file"]), quitting: false), "unlocked red is still reported: something writes to it")
     }
     func testSessionScratchFolderWithARepositoryIsDeletedOnlyAfterUnlocking() throws {
         // Real /private/tmp spelling: Foundation shortens it to /tmp, which must not count as a different path.

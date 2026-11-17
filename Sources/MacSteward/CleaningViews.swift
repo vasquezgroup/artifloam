@@ -149,9 +149,11 @@ struct CleanConfirmSheet: View {
         .task {
             guard let configuration else { return }
             let items = findings
+            // Only apps that really get quit count as freeing their cache; a background helper keeps running.
+            let quitting = Set(items.filter { $0.hold == .inUse && $0.owner != nil && !StewardModel.appsOwning(caches: [URL(fileURLWithPath: $0.path).lastPathComponent]).isEmpty }.map(\.id))
             busy = await Task.detached(priority: .userInitiated) {
                 let activity = ActivitySnapshot.capture(), policy = SafetyPolicy(configuration: configuration)
-                return Dictionary(uniqueKeysWithValues: items.compactMap { item in policy.busyReason(item, activity: activity, approved: item.dangerous).map { (item.id, $0) } })
+                return Dictionary(uniqueKeysWithValues: items.compactMap { item in policy.busyReason(item, activity: activity, quitting: quitting.contains(item.id)).map { (item.id, $0) } })
             }.value
         }
     }
