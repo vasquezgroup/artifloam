@@ -209,7 +209,8 @@ struct MainView: View {
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.28), value: isIntro)
         .animation(reduceMotion ? nil : .spring(response: 0.48, dampingFraction: 0.88), value: m.scanning)
         .animation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.9), value: hideSidebar)
-        .sheet(item: $pendingRemoval) { pending in CleanConfirmSheet(findings: pending.findings ?? m.selectedFindings, appsToQuit: m.appsToQuit(pending.findings ?? m.selectedFindings), extras: pending.extras, redWorktrees: pending.redWorktrees, configuration: m.configuration) {
+        .sheet(item: $pendingRemoval) { pending in CleanConfirmSheet(findings: pending.findings ?? m.selectedFindings, appsToQuit: m.appsToQuit(pending.findings ?? m.selectedFindings), extras: pending.extras, redWorktrees: pending.redWorktrees, configuration: m.configuration) { kept in
+            m.keptOpen = kept
             if pending.steps.isEmpty { m.clean(pending.findings) } else { m.removalQueue = pending.steps; m.runNextRemoval() }
         } }
         .environment(\.stewardTheme, theme)

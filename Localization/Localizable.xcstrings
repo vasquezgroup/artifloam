@@ -7262,302 +7262,6 @@
         }
       }
     },
-    "%@ will quit first. It may ask you to save. If an app doesn't quit, its cache is kept." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "سيتم إنهاء %@ أولًا. قد يطلب منك الحفظ. إذا لم ينتهِ التطبيق، تبقى ذاكرته المؤقتة كما هي."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ es tancarà primer. Pot demanar-te que desis. Si una app no es tanca, se’n conserva la memòria cau."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ wird zuerst beendet. Es kann nachfragen, ob du sichern möchtest. Wenn sich eine App nicht beenden lässt, bleibt ihr Cache erhalten."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ will quit first. It may ask you to save. If an app doesn't quit, its cache is kept."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ will quit first. It may ask you to save. If an app doesn't quit, its cache is kept."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ will quit first. It may ask you to save. If an app doesn't quit, its cache is kept."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ se cerrará antes. Puede pedirte que guardes. Si una app no se cierra, se conserva su caché."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ se cerrará antes. Puede pedirte que guardes. Si una app no se cierra, se conserva su caché."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ quittera d’abord. L’app peut vous demander d’enregistrer. Si une app ne quitte pas, son cache est conservé."
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ wird zerscht beändet. Es fraagt di evtl., ob du speichere wotsch. Wenn e App nöd beändet, blibt ihre Cache erhalte."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ पहले बंद होगा। यह आपसे सहेजने को कह सकता है। अगर कोई ऐप बंद नहीं होता, तो उसका कैश रखा जाता है।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ će se prvo zatvoriti. Možda će tražiti spremanje. Ako se aplikacija ne zatvori, njezina predmemorija ostaje."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ verrà chiusa prima. Potrebbe chiederti di salvare. Se un'app non si chiude, la sua cache viene conservata."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@が先に終了します。保存を求められる場合があります。アプリが終了しない場合、そのキャッシュは保持されます。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@이(가) 먼저 종료됩니다. 저장하라는 메시지가 표시될 수 있습니다. 앱이 종료되지 않으면 해당 캐시는 유지됩니다."
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ vispirms tiks aizvērta. Tā var palūgt saglabāt darbu. Ja lietotne neaizveras, tās kešatmiņa tiek paturēta."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aplikacja %@ zostanie najpierw zakończona. Może zapytać o zapisanie zmian. Jeśli aplikacja się nie zakończy, jej pamięć podręczna zostanie zachowana."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ será encerrado primeiro. Pode pedir-lhe para guardar. Se uma app não encerrar, a sua cache é mantida."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ do të mbyllet së pari. Mund të të kërkojë të ruash. Nëse një aplikacion nuk mbyllet, cache-ja e tij mbahet."
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ ће се прво затворити. Може тражити да сачувате. Ако се апликација не затвори, њен кеш се задржава."
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ će se prvo zatvoriti. Može tražiti da sačuvate. Ako se aplikacija ne zatvori, njen keš se zadržava."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ avslutas först. Den kan be dig spara. Om en app inte avslutas behålls dess cache."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Önce çıkılacak uygulama: %@. Kaydetmenizi isteyebilir. Bir uygulamadan çıkılamazsa önbelleği korunur."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ 将先退出。它可能会要求你存储。如果某个 App 未能退出，其缓存会保留。"
-          }
-        }
-      }
-    },
-    "%@ will quit first. They may ask you to save. If an app doesn't quit, its cache is kept." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "سيتم إنهاء %@ أولًا. قد تطلب منك حفظ عملك. إذا لم ينتهِ أحد التطبيقات، تبقى ذاكرته المؤقتة كما هي."
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ es tancaran primer. Poden demanar-te que desis. Si una app no es tanca, se’n conserva la memòria cau."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ werden zuerst beendet. Sie können nachfragen, ob du sichern möchtest. Wenn sich eine App nicht beenden lässt, bleibt ihr Cache erhalten."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ will quit first. They may ask you to save. If an app doesn't quit, its cache is kept."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ will quit first. They may ask you to save. If an app doesn't quit, its cache is kept."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ will quit first. They may ask you to save. If an app doesn't quit, its cache is kept."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ se cerrarán antes. Pueden pedirte que guardes. Si una app no se cierra, se conserva su caché."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ se cerrarán antes. Pueden pedirte que guardes. Si una app no se cierra, se conserva su caché."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ quitteront d’abord. Elles peuvent vous demander d’enregistrer. Si une app ne quitte pas, son cache est conservé."
-          }
-        },
-        "gsw" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ wered zerscht beändet. Si fraged di evtl., ob du speichere wotsch. Wenn e App nöd beändet, blibt ihre Cache erhalte."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ पहले बंद होंगे। ये आपसे सहेजने को कह सकते हैं। अगर कोई ऐप बंद नहीं होता, तो उसका कैश रखा जाता है।"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ će se prvo zatvoriti. Mogu tražiti spremanje. Ako se neka aplikacija ne zatvori, njezina predmemorija ostaje."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ verranno chiuse prima. Potrebbero chiederti di salvare. Se un'app non si chiude, la sua cache viene conservata."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@が先に終了します。保存を求められる場合があります。アプリが終了しない場合、そのキャッシュは保持されます。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@이(가) 먼저 종료됩니다. 저장하라는 메시지가 표시될 수 있습니다. 앱이 종료되지 않으면 해당 캐시는 유지됩니다."
-          }
-        },
-        "lv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ vispirms tiks aizvērtas. Tās var palūgt saglabāt darbu. Ja lietotne neaizveras, tās kešatmiņa tiek paturēta."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aplikacje %@ zostaną najpierw zakończone. Mogą zapytać o zapisanie zmian. Jeśli aplikacja się nie zakończy, jej pamięć podręczna zostanie zachowana."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ serão encerrados primeiro. Podem pedir-lhe para guardar. Se uma app não encerrar, a sua cache é mantida."
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ do të mbyllen së pari. Mund të të kërkojnë të ruash. Nëse një aplikacion nuk mbyllet, cache-ja e tij mbahet."
-          }
-        },
-        "sr-Cyrl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ ће се прво затворити. Могу тражити да сачувате. Ако се нека апликација не затвори, њен кеш се задржава."
-          }
-        },
-        "sr-Latn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ će se prvo zatvoriti. Mogu tražiti da sačuvate. Ako se neka aplikacija ne zatvori, njen keš se zadržava."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ avslutas först. De kan be dig spara. Om en app inte avslutas behålls dess cache."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Önce çıkılacak uygulamalar: %@. Kaydetmenizi isteyebilirler. Bir uygulamadan çıkılamazsa önbelleği korunur."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ 将先退出。它们可能会要求你存储。如果某个 App 未能退出，其缓存会保留。"
-          }
-        }
-      }
-    },
     "%@ · %@" : {},
     "%@ · %@ selected" : {
       "localizations" : {
@@ -144716,7 +144420,31 @@
             "value" : "Gerade in Gebrauch · %@. Artifloam überspringt sie; schliesse, was sie benutzt, und bereinige noch einmal."
           }
         },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In use right now · %@. Artifloam skips these; close what uses them and clean again."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In use right now · %@. Artifloam skips these; close what uses them and clean again."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In use right now · %@. Artifloam skips these; close what uses them and clean again."
+          }
+        },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En uso ahora mismo · %@. Artifloam los omite; cierra lo que los usa y vuelve a limpiar."
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "En uso ahora mismo · %@. Artifloam los omite; cierra lo que los usa y vuelve a limpiar."
@@ -144816,30 +144544,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在使用 · %@。Artifloam 会跳过这些；关闭正在使用它们的程序后再清理一次。"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "En uso ahora mismo · %@. Artifloam los omite; cierra lo que los usa y vuelve a limpiar."
-          }
-        },
-        "en-AU" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In use right now · %@. Artifloam skips these; close what uses them and clean again."
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In use right now · %@. Artifloam skips these; close what uses them and clean again."
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In use right now · %@. Artifloam skips these; close what uses them and clean again."
           }
         }
       }
@@ -266145,6 +265849,154 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "热状态：正在读取…"
+          }
+        }
+      }
+    },
+    "These apps quit first, so their caches can go. They may ask you to save. Untick one to keep it open; its cache then stays." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تُغلق هذه التطبيقات أولًا حتى يمكن حذف ذاكرات التخزين المؤقت الخاصة بها. قد تطلب منك الحفظ. ألغِ تحديد أحدها لإبقائه مفتوحًا؛ عندها تبقى ذاكرته المؤقتة."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aquestes apps es tanquen primer perquè se’n puguin esborrar les memòries cau. Potser et demanaran desar. Desmarca’n una per mantenir-la oberta; llavors la seva memòria cau es conserva."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Apps werden zuerst beendet, damit ihre Caches gelöscht werden können. Sie fragen eventuell, ob du sichern möchtest. Entferne das Häkchen, um eine offen zu lassen; ihr Cache bleibt dann."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estas apps se cierran primero para poder borrar sus cachés. Puede que te pidan guardar. Desmarca una para dejarla abierta; su caché se conservará."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ces apps sont quittées d’abord pour que leurs caches puissent être supprimés. Elles peuvent vous demander d’enregistrer. Décochez-en une pour la laisser ouverte ; son cache est alors conservé."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Apps werded zerscht beendet, damit iri Caches chönd glöscht werde. Si fröged vilicht, öb du speichere wotsch. Nimm s Häkli weg, zum eini offe la; ihre Cache bliibt dänn."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ये ऐप पहले बंद होते हैं, ताकि इनके कैश हट सकें। ये सहेजने के लिए पूछ सकते हैं। किसी ऐप को खुला रखने के लिए उसका निशान हटाएँ; तब उसका कैश बना रहेगा।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ove se aplikacije najprije zatvaraju kako bi se njihove predmemorije mogle obrisati. Mogu te pitati za spremanje. Odznači jednu da ostane otvorena; njezina predmemorija tada ostaje."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queste app vengono chiuse prima, così le loro cache possono essere eliminate. Potrebbero chiederti di salvare. Togli la spunta a una per lasciarla aperta; la sua cache resta."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "これらのアプリを先に終了して、キャッシュを削除できるようにします。保存を求められることがあります。開いたままにするアプリはチェックを外してください。そのキャッシュは残ります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 앱들을 먼저 종료해야 캐시를 지울 수 있습니다. 저장할지 물어볼 수 있습니다. 열어 두려면 체크를 해제하세요. 그러면 그 앱의 캐시는 남습니다."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šīs lietotnes vispirms tiek aizvērtas, lai varētu dzēst to kešatmiņu. Tās var lūgt saglabāt. Noņem atzīmi, lai kādu atstātu atvērtu; tad tās kešatmiņa paliek."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Te aplikacje zostaną najpierw zamknięte, by można było usunąć ich pamięć podręczną. Mogą poprosić o zapisanie. Odznacz jedną, aby została otwarta; jej pamięć podręczna wtedy zostaje."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estas apps são fechadas primeiro para que as caches possam ser eliminadas. Podem pedir-te para guardar. Desmarca uma para a manter aberta; a cache dela fica."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Këto aplikacione mbyllen së pari që memoria e tyre e përkohshme të fshihet. Mund të të kërkojnë të ruash. Hiqi shenjën njërit për ta mbajtur hapur; atëherë memoria e tij mbetet."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ове апликације се прво затварају да би се њихов кеш могао обрисати. Могу да те питају да сачуваш. Уклони ознаку са неке да остане отворена; њен кеш тада остаје."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ove aplikacije se prvo zatvaraju da bi se njihov keš mogao obrisati. Mogu da te pitaju da sačuvaš. Ukloni oznaku sa neke da ostane otvorena; njen keš tada ostaje."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De här apparna avslutas först så att deras cacheminnen kan raderas. De kan be dig spara. Avmarkera en för att låta den vara öppen; då blir dess cache kvar."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Önbellekleri silinebilsin diye bu uygulamalar önce kapatılır. Kaydetmeni isteyebilirler. Birini açık tutmak için işaretini kaldır; o zaman önbelleği kalır."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这些 App 会先退出，以便删除它们的缓存。它们可能会提示你存储。取消勾选某个 App 可让它保持打开，它的缓存也会保留。"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estas apps se cierran primero para poder borrar sus cachés. Puede que te pidan guardar. Desmarca una para dejarla abierta; su caché se conservará."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "These apps quit first, so their caches can go. They may ask you to save. Untick one to keep it open; its cache then stays."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "These apps quit first, so their caches can go. They may ask you to save. Untick one to keep it open; its cache then stays."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "These apps quit first, so their caches can go. They may ask you to save. Untick one to keep it open; its cache then stays."
           }
         }
       }

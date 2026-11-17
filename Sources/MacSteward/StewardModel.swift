@@ -200,10 +200,16 @@ final class StewardModel: ObservableObject {
     var selectedFindings: [Finding] { report?.findings.filter { selected.contains($0.id) && removable($0) && (showAllFindings || $0.group == group) } ?? [] }
     /// Apps that must quit before their ticked caches can be cleaned.
     /// The same list `quitOwners` acts on, so the confirmation names every app that will be asked to quit.
-    func appsToQuit(_ items: [Finding]) -> [String] {
-        let caches = items.filter { $0.hold == .inUse && $0.owner != nil }.map { URL(fileURLWithPath: $0.path).lastPathComponent }
-        return caches.isEmpty ? [] : Array(Set(Self.appsOwning(caches: caches).compactMap(\.localizedName))).sorted()
+    /// Each app that quits before cleaning, with the caches it frees.
+    func appsToQuit(_ items: [Finding]) -> [(name: String, ids: Set<String>)] {
+        var apps = [String: Set<String>]()
+        for item in items where item.hold == .inUse && item.owner != nil {
+            for app in Self.appsOwning(caches: [URL(fileURLWithPath: item.path).lastPathComponent]) { if let name = app.localizedName { apps[name, default: []].insert(item.id) } }
+        }
+        return apps.map { ($0.key, $0.value) }.sorted { $0.name < $1.name }
     }
+    /// Caches whose app the person chose to keep open in the confirmation: the next clean leaves them alone.
+    var keptOpen = Set<String>()
     /// Everything ticked on every page: the one Remove selected button takes all of it, whichever category is open.
     var chosenCaches: [Finding] { report?.findings.filter { selected.contains($0.id) && removable($0) && $0.group != .worktrees } ?? [] }
     /// Red-locked items the person opened one by one. Deleting them still needs the typed confirmation.
@@ -415,14 +421,14 @@ final class StewardModel: ObservableObject {
 
     /// Cleans `items`, or what's ticked in the open category. Other ticks stay, so the person can carry on afterwards.
     func clean(_ items: [Finding]? = nil) {
-        let chosen = items ?? selectedFindings
+        let chosen = (items ?? selectedFindings).filter { !keptOpen.contains($0.id) }; keptOpen = []
         guard !busy, let report, !chosen.isEmpty else { return }
         busy = true; progress = String(localized: "Rechecking each selected item before removal…"); error = nil
         let config = configuration; let ids = Set(chosen.map(\.id))
         // Held items are cleaned only because the user ticked them; the cleaner still rechecks each one.
         let approved = Set(chosen.filter { $0.safety != .automatic }.map(\.id))
         let quitting = chosen.filter { $0.hold == .inUse && $0.owner != nil }.map { URL(fileURLWithPath: $0.path).lastPathComponent }
-        cleaning = CleanProgress(completed: 0, total: ids.count, current: quitting.isEmpty ? String(localized: "Preparing…") : String(localized: "Quitting \(appsToQuit(chosen).joined(separator: ", "))…"), group: nil, freedBytes: 0, removed: 0, skipped: 0)
+        cleaning = CleanProgress(completed: 0, total: ids.count, current: quitting.isEmpty ? String(localized: "Preparing…") : String(localized: "Quitting \(appsToQuit(chosen).map(\.name).joined(separator: ", "))…"), group: nil, freedBytes: 0, removed: 0, skipped: 0)
         StewardSound.start.play()
         let receiver = self
         Task {

@@ -41,15 +41,22 @@ struct CleanConfirmSheet: View {
     @Environment(\.stewardTheme) private var theme
     let findings: [Finding]
     /// Apps that will be asked to quit first, so their caches can go.
-    var appsToQuit: [String] = []
+    /// Apps that quit first, each with the caches it frees. The person can untick one: it stays open and its caches stay.
+    var appsToQuit: [(name: String, ids: Set<String>)] = []
+    @State private var keptOpen = Set<String>()
+    /// Caches left out because their app stays open.
+    private var keptIDs: Set<String> { Set(appsToQuit.filter { keptOpen.contains($0.name) }.flatMap(\.ids)) }
     var extras: [CleanExtra] = []
     var redWorktrees: [Finding] = []
     /// For the in-use check below; nil skips it.
     var configuration: Configuration? = nil
-    let confirm: () -> Void
+    /// Gets the ids to leave out: caches whose app the person keeps open.
+    let confirm: (Set<String>) -> Void
     /// What a process uses right now (id → why), checked when the sheet opens, so the size shown is what can really go.
     @State private var busy: [String: String]? = nil
     private var busyItems: [Finding] { findings.filter { busy?[$0.id] != nil } }
+    /// Not deleted this time: in use, or its app stays open.
+    private var leftOut: [Finding] { findings.filter { busy?[$0.id] != nil || keptIDs.contains($0.id) } }
     @Environment(\.dismiss) private var dismiss
     /// Red items were unlocked one by one; deleting them also needs the word typed here.
     @State private var typed = ""
@@ -58,13 +65,13 @@ struct CleanConfirmSheet: View {
     private var confirmed: Bool { risky.isEmpty && redWorktrees.isEmpty || typed.trimmingCharacters(in: .whitespaces).localizedCaseInsensitiveCompare(Self.word) == .orderedSame }
     private var groups: [(CleanupGroup, UInt64, Int)] {
         // What's in use stays out of the list and the counts: it's shown on its own below.
-        Dictionary(grouping: findings.filter { busy?[$0.id] == nil }, by: \.group).map { ($0.key, $0.value.reduce(0) { $0 + $1.bytes }, $0.value.count) }.sorted { $0.1 > $1.1 }
+        Dictionary(grouping: findings.filter { busy?[$0.id] == nil && !keptIDs.contains($0.id) }, by: \.group).map { ($0.key, $0.value.reduce(0) { $0 + $1.bytes }, $0.value.count) }.sorted { $0.1 > $1.1 }
     }
-    private var total: UInt64 { findings.reduce(0) { $0 + $1.bytes } - busyItems.reduce(0) { $0 + $1.bytes } + extras.reduce(0) { $0 + ($1.bytes ?? 0) } }
+    private var total: UInt64 { findings.reduce(0) { $0 + $1.bytes } - leftOut.reduce(0) { $0 + $1.bytes } + extras.reduce(0) { $0 + ($1.bytes ?? 0) } }
     private var categories: Int { groups.count + extras.count }
     private var summaryLine: String {
         if !extras.isEmpty { return String(localized: "\(categories) categories") }
-        let itemsText = String(localized: "\(findings.count - busyItems.count) items"), categoriesText = String(localized: "\(groups.count) categories")
+        let itemsText = String(localized: "\(findings.count - leftOut.count) items"), categoriesText = String(localized: "\(groups.count) categories")
         return String(localized: "\(itemsText) in \(categoriesText)")
     }
     var body: some View {
@@ -106,8 +113,15 @@ struct CleanConfirmSheet: View {
                 }
             }
             if !appsToQuit.isEmpty {
-                Label(appsToQuit.count == 1 ? String(localized: "\(appsToQuit.joined(separator: ", ")) will quit first. It may ask you to save. If an app doesn't quit, its cache is kept.") : String(localized: "\(appsToQuit.joined(separator: ", ")) will quit first. They may ask you to save. If an app doesn't quit, its cache is kept."), systemImage: "xmark.app")
-                    .stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+                VStack(alignment: .leading, spacing: 6) {
+                    Label("These apps quit first, so their caches can go. They may ask you to save. Untick one to keep it open; its cache then stays.", systemImage: "xmark.app")
+                        .stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+                    ForEach(appsToQuit, id: \.name) { app in
+                        Toggle(isOn: Binding(get: { !keptOpen.contains(app.name) }, set: { if $0 { keptOpen.remove(app.name) } else { keptOpen.insert(app.name) } })) {
+                            Text(app.name).stewardFont(.callout, weight: .medium)
+                        }.toggleStyle(.stewardCheckbox).padding(.leading, 26)
+                    }
+                }
             }
             ForEach(extras.filter { $0.warning != nil }) { extra in
                 Label(extra.warning ?? "", systemImage: "exclamationmark.triangle").stewardFont(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
@@ -142,8 +156,8 @@ struct CleanConfirmSheet: View {
                 Button("Cancel") { dismiss() }.keyboardShortcut(.cancelAction)
                     .buttonStyle(CleanupGlassButtonStyle(secondary: true))
                 Spacer()
-                Button { dismiss(); confirm() } label: { Label(extras.isEmpty ? String(localized: "Delete \(findings.count - busyItems.count) items · \(formattedBytes(total))") : total > 0 ? String(localized: "Delete · \(formattedBytes(total))") : String(localized: "Delete", comment: "Button: confirm deleting the selected items"), systemImage: "trash.fill").stewardFont(.body, weight: .semibold) }
-                    .buttonStyle(DestructiveCapsuleStyle()).disabled(!confirmed || extras.isEmpty && !findings.isEmpty && busyItems.count == findings.count)
+                Button { dismiss(); confirm(keptIDs) } label: { Label(extras.isEmpty ? String(localized: "Delete \(findings.count - leftOut.count) items · \(formattedBytes(total))") : total > 0 ? String(localized: "Delete · \(formattedBytes(total))") : String(localized: "Delete", comment: "Button: confirm deleting the selected items"), systemImage: "trash.fill").stewardFont(.body, weight: .semibold) }
+                    .buttonStyle(DestructiveCapsuleStyle()).disabled(!confirmed || extras.isEmpty && !findings.isEmpty && leftOut.count == findings.count)
             }
         }.padding(26).frame(width: 520).preferredColorScheme(.dark)
         .task {
