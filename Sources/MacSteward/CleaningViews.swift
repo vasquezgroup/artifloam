@@ -57,13 +57,14 @@ struct CleanConfirmSheet: View {
     private static let word = String(localized: "delete", comment: "Word the person types to confirm deleting red-locked items")
     private var confirmed: Bool { risky.isEmpty && redWorktrees.isEmpty || typed.trimmingCharacters(in: .whitespaces).localizedCaseInsensitiveCompare(Self.word) == .orderedSame }
     private var groups: [(CleanupGroup, UInt64, Int)] {
-        Dictionary(grouping: findings, by: \.group).map { ($0.key, $0.value.reduce(0) { $0 + $1.bytes }, $0.value.count) }.sorted { $0.1 > $1.1 }
+        // What's in use stays out of the list and the counts: it's shown on its own below.
+        Dictionary(grouping: findings.filter { busy?[$0.id] == nil }, by: \.group).map { ($0.key, $0.value.reduce(0) { $0 + $1.bytes }, $0.value.count) }.sorted { $0.1 > $1.1 }
     }
     private var total: UInt64 { findings.reduce(0) { $0 + $1.bytes } - busyItems.reduce(0) { $0 + $1.bytes } + extras.reduce(0) { $0 + ($1.bytes ?? 0) } }
     private var categories: Int { groups.count + extras.count }
     private var summaryLine: String {
         if !extras.isEmpty { return String(localized: "\(categories) categories") }
-        let itemsText = String(localized: "\(findings.count) items"), categoriesText = String(localized: "\(groups.count) categories")
+        let itemsText = String(localized: "\(findings.count - busyItems.count) items"), categoriesText = String(localized: "\(groups.count) categories")
         return String(localized: "\(itemsText) in \(categoriesText)")
     }
     var body: some View {
