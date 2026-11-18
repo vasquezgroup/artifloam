@@ -293,6 +293,9 @@ struct MemoryView: View {
                         Text(row.app.isVirtualMachine ? String(localized: "Emulator or virtual machine") : lastUsed(row.id)).stewardFont(.caption).foregroundStyle(.secondary)
                     }
                     Spacer()
+                    if let share = formattedPercent(row.bytes, of: monitor.reading?.total ?? 0) {
+                        Text(share).stewardFont(.caption).monospacedDigit().foregroundStyle(.secondary).help("Share of this Mac's physical memory")
+                    }
                     Text(formattedMemory(row.bytes)).stewardFont(.body).monospacedDigit()
                 }.padding(.horizontal, 11).padding(.vertical, 8)
                 .background(alignment: .leading) {
@@ -342,6 +345,12 @@ struct MemoryView: View {
 
 /// Memory uses binary units, like Activity Monitor; every memory figure in the app goes through this.
 func formattedMemory(_ bytes: UInt64) -> String { ByteCountFormatter.string(fromByteCount: Int64(clamping: bytes), countStyle: .memory) }
+
+/// A part of a whole as a whole percentage in the person's locale, for example "16 %"; nil when the whole is unknown.
+func formattedPercent(_ part: UInt64, of total: UInt64) -> String? {
+    guard total > 0 else { return nil }
+    return min(1, Double(part) / Double(total)).formatted(.percent.precision(.fractionLength(0)))
+}
 
 /// Fixed-size menu dashboard: overview, four apps and the action are always visible.
 struct CompactMemoryView: View {
@@ -396,6 +405,9 @@ struct CompactMemoryView: View {
                             Image(nsImage: NSWorkspace.shared.icon(forFile: row.app.bundlePath)).resizable().frame(width: 22, height: 22)
                             Text(row.app.name).font(.system(size: 15, weight: .medium)).lineLimit(1).truncationMode(.tail)
                             Spacer(minLength: 4)
+                            if let share = formattedPercent(row.bytes, of: reading.total) {
+                                Text(share).font(.system(size: 12)).monospacedDigit().foregroundStyle(.white.opacity(0.6)).help("Share of this Mac's physical memory")
+                            }
                             Text(formattedMemory(row.bytes)).font(.system(size: 14, weight: .medium)).monospacedDigit()
                         }.padding(.horizontal, 10).frame(height: 30).background(.white.opacity(0.055), in: RoundedRectangle(cornerRadius: 9))
                     }

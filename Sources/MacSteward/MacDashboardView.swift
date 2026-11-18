@@ -63,9 +63,9 @@ struct MacDashboardView: View {
             HStack(spacing: 12) {
                 let disk = monitor.sample?.disk
                 let lowDisk = disk.map { $0.total > 0 && Double($0.free) / Double($0.total) < 0.1 } ?? false
-                card(.storage, metricCard("Storage", icon: "internaldrive.fill", value: disk.map { formattedBytes($0.free) } ?? String(localized: "Reading…"), detail: String(localized: "Free on this Mac"), action: "Details", tint: lowDisk ? .orange : .mint, flag: issue(.storage)))
+                card(.storage, metricCard("Storage", icon: "internaldrive.fill", value: disk.map { formattedBytes($0.free) } ?? String(localized: "Reading…"), percent: disk.flatMap { formattedPercent($0.free, of: $0.total) }, detail: String(localized: "Free on this Mac"), action: "Details", tint: lowDisk ? .orange : .mint, flag: issue(.storage)))
                     .help("Filesystem free space. macOS may also include purgeable storage in its available-space estimate.")
-                card(.memory, metricCard("Memory", icon: "memorychip.fill", value: memory.reading.map { ByteCountFormatter.string(fromByteCount: Int64(clamping: $0.available), countStyle: .memory) } ?? String(localized: "Reading…"), detail: memory.reading.map { String(localized: "Available · Pressure: \($0.pressure.displayTitle)") } ?? String(localized: "Available · Pressure: Measuring"), action: "Details", tint: pressureColor, flag: issue(.memory)))
+                card(.memory, metricCard("Memory", icon: "memorychip.fill", value: memory.reading.map { ByteCountFormatter.string(fromByteCount: Int64(clamping: $0.available), countStyle: .memory) } ?? String(localized: "Reading…"), percent: memory.reading.flatMap { formattedPercent($0.available, of: $0.total) }, detail: memory.reading.map { String(localized: "Available · Pressure: \($0.pressure.displayTitle)") } ?? String(localized: "Available · Pressure: Measuring"), action: "Details", tint: pressureColor, flag: issue(.memory)))
             }
             HStack(spacing: 12) {
                 card(.battery, batteryCard)
@@ -109,10 +109,13 @@ struct MacDashboardView: View {
             }
             .onAppear { health.readInstallers() }
     }
-    private func metricCard(_ title: LocalizedStringKey, icon: String, value: String, detail: String, action: LocalizedStringKey? = nil, tint: Color = .mint, flag: MacIssue? = nil) -> some View {
+    private func metricCard(_ title: LocalizedStringKey, icon: String, value: String, percent: String? = nil, detail: String, action: LocalizedStringKey? = nil, tint: Color = .mint, flag: MacIssue? = nil) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Label(title, systemImage: icon).font(.system(size: 14, weight: .semibold)).foregroundStyle(.white.opacity(0.90))
-            Text(value).font(.system(size: 19, weight: .semibold)).monospacedDigit().foregroundStyle(flag == nil ? tint : .orange).lineLimit(1).minimumScaleFactor(0.8)
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text(value).font(.system(size: 19, weight: .semibold)).monospacedDigit().foregroundStyle(flag == nil ? tint : .orange)
+                if let percent { Text(percent).font(.system(size: 14, weight: .medium)).monospacedDigit().foregroundStyle(.white.opacity(0.6)) }
+            }.lineLimit(1).minimumScaleFactor(0.8)
             HStack(spacing: 4) {
                 if let flag {
                     // The fix button sits over the trailing end of this line (see `card`).
