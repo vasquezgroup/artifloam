@@ -203,6 +203,9 @@ struct ScanStage: View {
     let step: ScanStep
     /// The page that started the scan keeps its colour and artwork while it runs.
     let theme: StewardTheme
+    /// A folder macOS is holding back, with the way to leave it out.
+    var stalled: String?
+    var onSkip: () -> Void = {}
     @Environment(\.stewardTextScale) private var textScale
     private var phase: Int { step.rawValue }
     private var stepNames: [String] {
@@ -228,6 +231,9 @@ struct ScanStage: View {
                     Text(progress).stewardFont(.body).foregroundStyle(.white.opacity(0.60))
                         .lineLimit(2).truncationMode(.middle).multilineTextAlignment(.center).frame(maxWidth: 620)
                         .contentTransition(.opacity)
+                    if stalled != nil {
+                        Button("Skip folder", action: onSkip).buttonStyle(CleanupGlassButtonStyle(compact: true, secondary: true))
+                    }
                     ViewThatFits(in: .horizontal) {
                         HStack(spacing: 13) { steps }
                         VStack(alignment: .leading, spacing: 6) { steps }

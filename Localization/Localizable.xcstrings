@@ -309717,6 +309717,450 @@
           }
         }
       }
+    },
+    "Waiting for macOS to allow access to %@…" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بانتظار أن يسمح macOS بالوصول إلى %@…"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esperant que macOS permeti l’accés a %@…"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warten, bis macOS den Zugriff auf %@ erlaubt …"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for macOS to allow access to %@…"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for macOS to allow access to %@…"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for macOS to allow access to %@…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esperando a que macOS permita el acceso a %@…"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esperando a que macOS permita el acceso a %@…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En attente de l’autorisation de macOS pour accéder à %@…"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warte, bis macOS de Zuegriff uf %@ erlaubt …"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS के %@ तक पहुँच की अनुमति देने की प्रतीक्षा है…"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čekanje da macOS dopusti pristup mapi %@…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In attesa che macOS consenta l’accesso a %@…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOSが%@へのアクセスを許可するのを待っています…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS가 %@에 대한 접근을 허용하기를 기다리는 중…"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gaida, kamēr macOS atļaus piekļuvi %@…"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oczekiwanie, aż macOS zezwoli na dostęp do %@…"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A aguardar que o macOS permita o acesso a %@…"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Po pritet që macOS të lejojë qasjen te %@…"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Чека се да macOS дозволи приступ за %@…"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čeka se da macOS dozvoli pristup za %@…"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Väntar på att macOS ska tillåta åtkomst till %@…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS’in %@ erişimine izin vermesi bekleniyor…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在等待 macOS 允许访问 %@…"
+          }
+        }
+      }
+    },
+    "Skip folder" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تخطَّ المجلد"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omet la carpeta"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordner überspringen"
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip folder"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip folder"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip folder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitir carpeta"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitir carpeta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ignorer le dossier"
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordner überspringe"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "फ़ोल्डर छोड़ें"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preskoči mapu"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salta cartella"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フォルダをスキップ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "폴더 건너뛰기"
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izlaist mapi"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomiń folder"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ignorar pasta"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapërce dosjen"
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прескочи фасциклу"
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preskoči fasciklu"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoppa över mappen"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klasörü atla"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "跳过文件夹"
+          }
+        }
+      }
+    },
+    "Skipped %@: macOS did not allow access in time. Allow it in System Settings > Privacy & Security, then scan again." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم تخطي %@: لم يسمح macOS بالوصول في الوقت المناسب. اسمح به في إعدادات النظام > الخصوصية والأمن، ثم أعد الفحص."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S’ha omès %@: macOS no ha permès l’accés a temps. Permet-ho a Configuració del Sistema > Privacitat i seguretat i torna a analitzar."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ übersprungen: macOS hat den Zugriff nicht rechtzeitig erlaubt. Erlaube ihn unter Systemeinstellungen > Datenschutz & Sicherheit und starte den Scan erneut."
+          }
+        },
+        "en-AU" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skipped %@: macOS did not allow access in time. Allow it in System Settings > Privacy & Security, then scan again."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skipped %@: macOS did not allow access in time. Allow it in System Settings > Privacy & Security, then scan again."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skipped %@: macOS did not allow access in time. Allow it in System Settings > Privacy & Security, then scan again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha omitido %@: macOS no permitió el acceso a tiempo. Permítelo en Ajustes del Sistema > Privacidad y seguridad y vuelve a analizar."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se omitió %@: macOS no permitió el acceso a tiempo. Permítelo en Ajustes del Sistema > Privacidad y seguridad y vuelve a analizar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ignoré : macOS n’a pas autorisé l’accès à temps. Autorisez-le dans Réglages Système > Confidentialité et sécurité, puis relancez l’analyse."
+          }
+        },
+        "gsw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ übersprunge: macOS het de Zuegriff nöd rechtziitig erlaubt. Erlaub en i de Systemeinstellige unter «Datenschutz & Sicherheit» und start de Scan nomal."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ छोड़ दिया गया: macOS ने समय पर पहुँच की अनुमति नहीं दी। सिस्टम सेटिंग्स > गोपनीयता और सुरक्षा में अनुमति दें, फिर दोबारा स्कैन करें।"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preskočeno: %@. macOS nije na vrijeme dopustio pristup. Dopusti ga u Postavke sustava > Privatnost i sigurnost, zatim ponovno skeniraj."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ saltata: macOS non ha consentito l’accesso in tempo. Consentilo in Impostazioni di Sistema > Privacy e sicurezza, poi ripeti la scansione."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@をスキップしました。macOSが時間内にアクセスを許可しませんでした。「システム設定」>「プライバシーとセキュリティ」で許可してから、もう一度スキャンしてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@을(를) 건너뛰었습니다. macOS가 제때 접근을 허용하지 않았습니다. 시스템 설정 > 개인정보 보호 및 보안에서 허용한 다음 다시 검사하세요."
+          }
+        },
+        "lv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izlaists: %@. macOS laikā nepiešķīra piekļuvi. Atļauj to sadaļā Sistēmas iestatījumi > Privātums un drošība, pēc tam skenē vēlreiz."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pominięto %@: macOS nie zezwolił na dostęp w porę. Zezwól w Ustawienia systemowe > Prywatność i ochrona, a następnie skanuj ponownie."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ignorada: o macOS não permitiu o acesso a tempo. Permita em Definições do Sistema > Privacidade e segurança e volte a analisar."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "U kapërcye %@: macOS nuk e lejoi qasjen në kohë. Lejoje te Cilësimet e sistemit > Privatësia dhe siguria, pastaj skano përsëri."
+          }
+        },
+        "sr-Cyrl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прескочено: %@. macOS није дозволио приступ на време. Дозволите га у Системска подешавања > Приватност и безбедност, па поново скенирајте."
+          }
+        },
+        "sr-Latn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preskočeno: %@. macOS nije dozvolio pristup na vreme. Dozvolite ga u Sistemska podešavanja > Privatnost i bezbednost, pa ponovo skenirajte."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ hoppades över: macOS tillät inte åtkomst i tid. Tillåt det i Systeminställningar > Integritet och säkerhet och skanna sedan igen."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ atlandı: macOS erişime zamanında izin vermedi. Sistem Ayarları > Gizlilik ve Güvenlik’ten izin verin, ardından yeniden tarayın."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已跳过 %@:macOS 未及时允许访问。请在“系统设置”>“隐私与安全”中允许,然后重新扫描。"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

@@ -10,15 +10,18 @@ public struct ScanProgress: Sendable, Equatable {
     public let completed: Int
     public let total: Int?
     public let step: ScanStep
-    public init(message: String, completed: Int = 0, total: Int? = nil, step: ScanStep = .access) {
+    /// A folder macOS is holding back: the scan shows a Skip button for it.
+    public let stalled: String?
+    public init(message: String, completed: Int = 0, total: Int? = nil, step: ScanStep = .access, stalled: String? = nil) {
         self.message = message
         self.step = step
+        self.stalled = stalled
         self.total = total.map { max(0, $0) }
         self.completed = max(0, min(completed, self.total ?? max(0, completed)))
     }
     public var fraction: Double? { total.map { $0 == 0 ? 1 : Double(completed) / Double($0) } }
     public var remaining: Int? { total.map { max(0, $0 - completed) } }
     public func addingPendingChecks(_ count: Int) -> ScanProgress {
-        ScanProgress(message: message, completed: completed, total: total.map { $0 + max(0, count) }, step: step)
+        ScanProgress(message: message, completed: completed, total: total.map { $0 + max(0, count) }, step: step, stalled: stalled)
     }
 }

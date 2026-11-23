@@ -295,6 +295,7 @@ final class StewardModel: ObservableObject {
         let runID = UUID(); scanRunID = runID
         let receiver = self
         let relay = ScanProgressRelay(pending: allTools ? 2 : 0)
+        let skip = ScanSkip(); scanSkip = skip
         // Read alongside the scan: read after it, they kept the app busy another 0.1–0.5 s.
         let inventory = allTools ? Task.detached(priority: .utility) { (ApplicationInventory.scan(), BackgroundInventory.scan().filter { $0.scope == "Your account" }.count) } : nil
         let task = Task.detached(priority: .userInitiated) {
@@ -311,7 +312,7 @@ final class StewardModel: ObservableObject {
             await MainActor.run { if receiver.scanRunID == runID { receiver.access.acceptKnownProjects(known) } }
             var scanConfig = config
             scanConfig.projectRoots = Configuration.canonicalProjectRoots(config.projectRoots + known.map(\.url))
-            let report = try Scanner(configuration: scanConfig, groups: groups, summaries: StewardModel.treeSummaries, priority: .userInitiated).scanWithProgress { update in
+            let report = try Scanner(configuration: scanConfig, groups: groups, summaries: StewardModel.treeSummaries, priority: .userInitiated, skip: skip).scanWithProgress { update in
                 relay.receive(update) { event in
                     Task { @MainActor in receiver.receiveScanProgress(event, runID: runID) }
                 }
@@ -381,6 +382,9 @@ final class StewardModel: ObservableObject {
         }
         scanProgress = update; progress = update.message
     }
+    /// The Skip button: leaves out the folder macOS is holding back and carries on with the rest.
+    func skipStalledFolder() { scanSkip?.request() }
+    private var scanSkip: ScanSkip?
     func cancelScan() {
         scanTask?.cancel()
         // File-system calls may remain in macOS until a permission/provider request returns.

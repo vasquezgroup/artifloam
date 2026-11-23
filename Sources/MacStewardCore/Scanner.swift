@@ -10,7 +10,13 @@ public final class Scanner: @unchecked Sendable {
     /// `.userInitiated` while someone waits in the app: on a busy Mac it scanned ~3× faster for the same CPU.
     /// The CLI and scheduled cleanup keep `.utility` so they yield to the user's work.
     public let priority: DispatchQoS.QoSClass
-    public init(configuration: Configuration = Configuration(), groups: Set<CleanupGroup>? = nil, summaries: TreeSummaryCache? = nil, priority: DispatchQoS.QoSClass = .utility) { self.configuration = configuration; self.groups = groups; self.summaries = summaries; self.priority = priority }
+    /// The Skip button of the scan screen.
+    public let skip: ScanSkip
+    /// How long a folder may stay silent before the scan offers to skip it, and before it skips it by itself.
+    var stallAfter: TimeInterval = 10, skipAfter: TimeInterval = 30
+    /// Runs first on each project root's thread; tests hold a walk here the way macOS holds a protected folder.
+    var beforeWalk: (@Sendable (URL) -> Void)?
+    public init(configuration: Configuration = Configuration(), groups: Set<CleanupGroup>? = nil, summaries: TreeSummaryCache? = nil, priority: DispatchQoS.QoSClass = .utility, skip: ScanSkip = ScanSkip()) { self.configuration = configuration; self.groups = groups; self.summaries = summaries; self.priority = priority; self.skip = skip }
     private func wants(_ group: CleanupGroup) -> Bool { groups?.contains(group) ?? true }
     static let reusableRules: Set<String> = ["simulator-cache", "nx-task-cache", "framework-cache", "xcode-intermediates", "agent-xcode-intermediates",
                                              "python-bytecode", "project-test-cache", "old-agent-version", "inactive-dependencies"]
@@ -60,8 +66,11 @@ public final class Scanner: @unchecked Sendable {
         progress(String(localized: "Checking access to project folders…"))
         for root in configuration.projectRoots + [configuration.agentTemp] where FileManager.default.fileExists(atPath: root.path) {
             try Task.checkCancellation()
-            do { _ = try FileManager.default.contentsOfDirectory(atPath: root.path) }
-            catch { notices.append(String(localized: "Cannot read \(root.path): \(error.localizedDescription). Grant folder access in macOS Privacy & Security if needed.")) }
+            switch try probe(root, status: status) {
+            case nil: notices.append(skippedNotice(root.path))
+            case .failure(let error)?: notices.append(String(localized: "Cannot read \(root.path): \(error.localizedDescription). Grant folder access in macOS Privacy & Security if needed."))
+            case .success?: break
+            }
         }
         let policy = SafetyPolicy(configuration: configuration)
         let runningApps = BroadCaches.runningApps(), quittableApps = BroadCaches.quittableApps()
@@ -200,16 +209,19 @@ public final class Scanner: @unchecked Sendable {
         progress(String(localized: "Inspecting project caches…"))
         // Each project is walked on its own thread; the scan thread reports where they are and passes on a cancel.
         let walkers = DispatchGroup()
-        var walking: String?
+        var walking: String?, watches = [StallWatch]()
         for projectRoot in configuration.projectRoots where wants(.projectCaches) || wants(.inactiveDependencies) {
+        let watch = StallWatch(root: projectRoot.path) { walkers.leave() }
+        watches.append(watch)
         walkers.enter()
         DispatchQueue.global(qos: self.priority).async {
-        defer { walkers.leave() }
+        defer { watch.finish() }
+        self.beforeWalk?(projectRoot)
         // One thread per root: splitting a root's folders across more threads saved ~0.2 s but doubled kernel CPU (lock contention).
         walk(projectRoot, maximumDepth: 12, excluding: self.configuration.ignoredPaths) { url, names in
             resultLock.lock(); let stop = stopped; resultLock.unlock()
-            if stop { return false }
-            if url.deletingLastPathComponent().path == projectRoot.path { collect { walking = url.lastPathComponent } }
+            if stop || watch.isAbandoned { return false }
+            if url.deletingLastPathComponent().path == projectRoot.path { collect { walking = url.lastPathComponent }; watch.touch(top: url.lastPathComponent) } else { watch.touch() }
             let name = url.lastPathComponent
             // Any Python environment (pyvenv.cfg), whatever its name, is installed packages: never walk it.
             if names.contains("pyvenv.cfg") { return false }
@@ -273,11 +285,21 @@ public final class Scanner: @unchecked Sendable {
         }
         }
         // App caches, web caches and logs were discovered while the project walk ran; wait for it only now.
-        var shown: String?
+        var shown: String?, waitingOn: String?
         while walkers.wait(timeout: .now() + 0.05) == .timedOut {
             if Task.isCancelled { collect { stopped = true }; continue }
+            // A walk macOS holds back is offered for skipping, and skipped by itself if it stays held.
+            let held = watches.filter { $0.silence >= stallAfter }
+            let skipNow = held.isEmpty ? false : skip.take()
+            for stuck in held where skipNow || stuck.silence >= skipAfter { stuck.abandon(); notices.append(skippedNotice(stuck.path)) }
+            let stillHeld = held.first { !$0.isAbandoned }?.path
+            if stillHeld != waitingOn {
+                waitingOn = stillHeld; shown = nil
+                if let stillHeld { status(ScanProgress(message: waitingMessage(stillHeld), stalled: tilde(stillHeld))) }
+                else { progress(String(localized: "Inspecting project caches…")) }
+            }
             resultLock.lock(); let now = walking; resultLock.unlock()
-            if let now, now != shown { progress(String(localized: "Inspecting project caches: \(now)…")); shown = now }
+            if waitingOn == nil, let now, now != shown { progress(String(localized: "Inspecting project caches: \(now)…")); shown = now }
         }
         try Task.checkCancellation()
         resultLock.lock(); let total = planned, done = completed, limited = checklistLimited; resultLock.unlock()
@@ -352,6 +374,28 @@ func children(_ url: URL) -> [URL] {
     return entries.map { $0.deletingLastPathComponent().path == url.path ? $0 : url.appendingPathComponent($0.lastPathComponent) }
 }
 /// `parallelDepth` walks the first levels' folders side by side; `visit` must then be safe to call from several threads.
+extension Scanner {
+    func tilde(_ path: String) -> String { path.replacingOccurrences(of: configuration.home.path, with: "~") }
+    func waitingMessage(_ path: String) -> String { String(localized: "Waiting for macOS to allow access to \(tilde(path))…") }
+    func skippedNotice(_ path: String) -> String { String(localized: "Skipped \(tilde(path)): macOS did not allow access in time. Allow it in System Settings > Privacy & Security, then scan again.") }
+    /// Reads a folder's list of names off the scan thread, so a folder macOS holds back cannot hold the scan.
+    /// Nil when it was skipped, by the person or after `skipAfter` seconds.
+    func probe(_ root: URL, status: @Sendable (ScanProgress) -> Void) throws -> Result<Void, Error>? {
+        final class Box: @unchecked Sendable { var value: Result<Void, Error>? }
+        let box = Box(), done = DispatchSemaphore(value: 0)
+        DispatchQueue.global(qos: priority).async { box.value = Result { _ = try FileManager.default.contentsOfDirectory(atPath: root.path) }; done.signal() }
+        let start = Date()
+        while done.wait(timeout: .now() + 0.05) == .timedOut {
+            try Task.checkCancellation()
+            let waited = Date().timeIntervalSince(start)
+            guard waited >= stallAfter else { continue }
+            if skip.take() || waited >= skipAfter { return nil }
+            status(ScanProgress(message: waitingMessage(root.path), stalled: tilde(root.path)))
+        }
+        return box.value
+    }
+}
+
 func walk(_ root: URL, maximumDepth: Int, includeFiles: Bool = false, excluding: [String] = [], parallelDepth: Int = 0, visit: (URL, Set<String>) -> Bool) {
     let blocked: Set<String> = [".git", "node_modules", "vendor", ".venv", "venv", "Pods", "SourcePackages", ".build", "Archives", "wp-includes", "wp-content", "output", "storage", "build", "dist", "target", ".tools", ".yarn", ".gradle", ".kotlin", "DerivedData", "site-packages"]
     let excludedPaths = excluding.map { URL(fileURLWithPath: $0).standardizedFileURL.resolvingSymlinksInPath().path }

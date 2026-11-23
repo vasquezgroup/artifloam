@@ -700,7 +700,7 @@ struct MainView: View {
         } else if isSummaryPage(section) {
             summaryStage
         } else if m.scanning {
-            ScanStage(progress: m.progress, step: m.scanProgress?.step ?? .access, theme: theme).transition(.opacity.combined(with: .scale(scale: reduceMotion ? 1 : 0.97)))
+            ScanStage(progress: m.progress, step: m.scanProgress?.step ?? .access, theme: theme, stalled: m.scanProgress?.stalled, onSkip: { m.skipStalledFolder() }).transition(.opacity.combined(with: .scale(scale: reduceMotion ? 1 : 0.97)))
         } else if isIntroPage(section) {
             intro(section)
         } else if section == "Space Map" {
