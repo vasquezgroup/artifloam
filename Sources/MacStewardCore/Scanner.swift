@@ -16,6 +16,8 @@ public final class Scanner: @unchecked Sendable {
     var stallAfter: TimeInterval = 10, skipAfter: TimeInterval = 30
     /// Runs first on each project root's thread; tests hold a walk here the way macOS holds a protected folder.
     var beforeWalk: (@Sendable (URL) -> Void)?
+    /// Runs first in each check that measures a folder; tests hold a check here the same way.
+    var beforeCheck: (@Sendable (String) -> Void)?
     public init(configuration: Configuration = Configuration(), groups: Set<CleanupGroup>? = nil, summaries: TreeSummaryCache? = nil, priority: DispatchQoS.QoSClass = .utility, skip: ScanSkip = ScanSkip()) { self.configuration = configuration; self.groups = groups; self.summaries = summaries; self.priority = priority; self.skip = skip }
     private func wants(_ group: CleanupGroup) -> Bool { groups?.contains(group) ?? true }
     static let reusableRules: Set<String> = ["simulator-cache", "nx-task-cache", "framework-cache", "xcode-intermediates", "agent-xcode-intermediates",
@@ -45,19 +47,37 @@ public final class Scanner: @unchecked Sendable {
         let capture = Pending(priority) { activityOverride ?? ActivitySnapshot.capture() }
         var activity: ActivitySnapshot { capture.value }
         /// `independent` checks start without the activity snapshot: nothing they run looks like a candidate's user.
-        func plan(_ label: String, step: ScanStep = .caches, independent: Bool = false, _ check: @escaping () throws -> Void) {
+        /// Checks that measure a folder can be skipped while macOS holds that folder back.
+        var checkWatches = [StallWatch]()
+        func plan(_ label: String, step: ScanStep = .caches, independent: Bool = false, path: String? = nil, _ check: @escaping () throws -> Void) {
             resultLock.lock(); defer { resultLock.unlock() }
             guard planned < checkLimit else { checklistLimited = true; return }
             planned += 1; running.enter()
+            let watch = StallWatch(root: path ?? label, started: false) { running.leave() }
+            if path != nil { checkWatches.append(watch) }
             queue.addOperation {
-                defer { running.leave() }
+                defer { watch.finish() }
                 // Workers only note what they start; the scan thread reports it.
-                resultLock.lock(); let skip = stopped || failure != nil; if !skip { latest = label; latestStep = step }; resultLock.unlock()
+                resultLock.lock(); let skip = stopped || failure != nil || watch.isAbandoned; if !skip { latest = label; latestStep = step }; resultLock.unlock()
                 guard !skip else { return }
                 if !independent { _ = capture.value }
-                do { try check() } catch { collect { failure = failure ?? error } }
-                collect { completed += 1 }
+                watch.touch()
+                if let path { self.beforeCheck?(path) }
+                do { try check() } catch { if !watch.isAbandoned { collect { failure = failure ?? error } } }
+                // A skipped check was already counted when it was skipped.
+                if watch.finish() { collect { completed += 1 } }
             }
+        }
+        /// Drops what macOS has held back for too long, or what the person chose to skip. Returns what is still held.
+        func sweep(_ watches: [StallWatch], autoSkip: Bool, counted: Bool = false) -> String? {
+            // Read every pass: a click while nothing was held must not skip the next folder that stalls.
+            let skipNow = skip.take()
+            let held = watches.filter { $0.silence >= stallAfter }
+            for stuck in held where skipNow || autoSkip && stuck.silence >= skipAfter {
+                guard stuck.abandon() else { continue }
+                collect { notices.append(autoSkip ? skippedNotice(stuck.path) : skippedByPersonNotice(stuck.path)); if counted { completed += 1 } }
+            }
+            return held.first { !$0.isAbandoned }?.path
         }
         // However the scan ends, no check is still running once it returns.
         defer { collect { stopped = true }; running.wait() }
@@ -67,7 +87,7 @@ public final class Scanner: @unchecked Sendable {
         for root in configuration.projectRoots + [configuration.agentTemp] where FileManager.default.fileExists(atPath: root.path) {
             try Task.checkCancellation()
             switch try probe(root, status: status) {
-            case nil: notices.append(skippedNotice(root.path))
+            case nil: notices.append(skippedNotice(root.path)); progress(String(localized: "Checking access to project folders…"))
             case .failure(let error)?: notices.append(String(localized: "Cannot read \(root.path): \(error.localizedDescription). Grant folder access in macOS Privacy & Security if needed."))
             case .success?: break
             }
@@ -91,7 +111,7 @@ public final class Scanner: @unchecked Sendable {
             // A check with a `busy` test starts after the open-files snapshot, like before. The others measure their
             // folder while lsof runs (the snapshot leaves out this process's own files) and wait for it only before
             // the first Git call: Git processes must not appear in the snapshot as other apps' activity.
-            plan(label, step: group == .userLogs || group == .systemLogs ? .logs : .caches, independent: busy == nil) {
+            plan(label, step: group == .userLogs || group == .systemLogs ? .logs : .caches, independent: busy == nil, path: url.path) {
             do {
                 if let busy, busy() { return }
                 // Totals only; the full per-file inventory runs right before removal.
@@ -261,10 +281,14 @@ public final class Scanner: @unchecked Sendable {
             }
             progress(String(localized: "Inspecting application web caches…"))
             for location in ApplicationWebCaches.locations {
-                let relative = location.path
-                for file in children(configuration.home.appendingPathComponent(relative)) where file.lastPathComponent != "index" {
-                    add(file, group: .userCaches, rule: "application-web-cache", reason: String(localized: "Old web cache entry; accounts, cookies and application data are preserved."))
+                // Other apps' folders: macOS may ask before listing them, so the scan doesn't wait on it here.
+                let folder = configuration.home.appendingPathComponent(location.path)
+                let listed = try offThread(folder.path, status: status) {
+                    for file in children(folder) where file.lastPathComponent != "index" {
+                        add(file, group: .userCaches, rule: "application-web-cache", reason: String(localized: "Old web cache entry; accounts, cookies and application data are preserved."))
+                    }
                 }
+                if !listed { collect { notices.append(skippedNotice(folder.path)) } }
             }
         }
         if wants(.userLogs) {
@@ -278,10 +302,17 @@ public final class Scanner: @unchecked Sendable {
         if configuration.includeAdditionalLogs && wants(.userLogs) {
         for (bundle, app) in [("com.microsoft.Word", "WORD"), ("com.microsoft.Excel", "EXCEL"), ("com.microsoft.Powerpoint", "POWERPNT")] {
             let diagnostics = configuration.home.appendingPathComponent("Library/Containers/\(bundle)/Data/Library/Logs/Diagnostics/\(app)")
-            walk(diagnostics, maximumDepth: 2, includeFiles: true) { url, _ in
-                if url.pathExtension == "log" { add(url, group: .userLogs, rule: "old-user-log", reason: String(localized: "Old Office diagnostic log. Documents, recovery files and settings are kept.")) }
-                return true
+            // Another app's container: macOS asks before Artifloam may read it.
+            guard FileManager.default.fileExists(atPath: diagnostics.path) else { continue }
+            let walked = try offThread(diagnostics.path, status: status) {
+                walk(diagnostics, maximumDepth: 2, includeFiles: true) { url, _ in
+                    resultLock.lock(); let stop = stopped; resultLock.unlock()
+                    if stop { return false }
+                    if url.pathExtension == "log" { add(url, group: .userLogs, rule: "old-user-log", reason: String(localized: "Old Office diagnostic log. Documents, recovery files and settings are kept.")) }
+                    return true
+                }
             }
+            if !walked { collect { notices.append(skippedNotice(diagnostics.path)) } }
         }
         }
         // App caches, web caches and logs were discovered while the project walk ran; wait for it only now.
@@ -289,10 +320,7 @@ public final class Scanner: @unchecked Sendable {
         while walkers.wait(timeout: .now() + 0.05) == .timedOut {
             if Task.isCancelled { collect { stopped = true }; continue }
             // A walk macOS holds back is offered for skipping, and skipped by itself if it stays held.
-            let held = watches.filter { $0.silence >= stallAfter }
-            let skipNow = held.isEmpty ? false : skip.take()
-            for stuck in held where skipNow || stuck.silence >= skipAfter { stuck.abandon(); notices.append(skippedNotice(stuck.path)) }
-            let stillHeld = held.first { !$0.isAbandoned }?.path
+            let stillHeld = sweep(watches, autoSkip: true)
             if stillHeld != waitingOn {
                 waitingOn = stillHeld; shown = nil
                 if let stillHeld { status(ScanProgress(message: waitingMessage(stillHeld), stalled: tilde(stillHeld))) }
@@ -306,11 +334,16 @@ public final class Scanner: @unchecked Sendable {
         if limited { collect { notices.append(String(localized: "The scan checklist reached \(checkLimit) checks. Some candidates were not inspected; narrow the selected locations and scan again.")) } }
         // Checks already finished during discovery count straight away.
         status(ScanProgress(message: String(localized: "Checking discovered items…"), completed: done, total: total))
-        var reported = (done, String?.none)
+        var reported = (done, String?.none), heldCheck: String?
         while running.wait(timeout: .now() + 0.05) == .timedOut {
             if Task.isCancelled { collect { stopped = true }; continue }
+            // A big cache can take a while, so a slow check is only offered for skipping, never skipped by itself.
+            resultLock.lock(); let measuring = checkWatches; resultLock.unlock()
+            let held = sweep(measuring, autoSkip: false, counted: true)
             resultLock.lock(); let now = (completed, latest), step = latestStep; resultLock.unlock()
-            if now != reported, let label = now.1 { status(ScanProgress(message: label, completed: now.0, total: total, step: step)); reported = now }
+            if held != heldCheck { heldCheck = held; reported = (now.0, nil) }
+            if let held, now.0 != reported.0 || reported.1 == nil { status(ScanProgress(message: stillReadingMessage(held), completed: now.0, total: total, step: step, stalled: tilde(held))); reported = (now.0, held) }
+            else if held == nil, now != reported, let label = now.1 { status(ScanProgress(message: label, completed: now.0, total: total, step: step)); reported = now }
         }
         try Task.checkCancellation()
         if let failure { throw failure }
@@ -378,20 +411,30 @@ extension Scanner {
     func tilde(_ path: String) -> String { path.replacingOccurrences(of: configuration.home.path, with: "~") }
     func waitingMessage(_ path: String) -> String { String(localized: "Waiting for macOS to allow access to \(tilde(path))…") }
     func skippedNotice(_ path: String) -> String { String(localized: "Skipped \(tilde(path)): macOS did not allow access in time. Allow it in System Settings > Privacy & Security, then scan again.") }
-    /// Reads a folder's list of names off the scan thread, so a folder macOS holds back cannot hold the scan.
-    /// Nil when it was skipped, by the person or after `skipAfter` seconds.
-    func probe(_ root: URL, status: @Sendable (ScanProgress) -> Void) throws -> Result<Void, Error>? {
-        final class Box: @unchecked Sendable { var value: Result<Void, Error>? }
-        let box = Box(), done = DispatchSemaphore(value: 0)
-        DispatchQueue.global(qos: priority).async { box.value = Result { _ = try FileManager.default.contentsOfDirectory(atPath: root.path) }; done.signal() }
+    func skippedByPersonNotice(_ path: String) -> String { String(localized: "Skipped \(tilde(path)) as you asked. It was not checked.") }
+    func stillReadingMessage(_ path: String) -> String { String(localized: "Still reading \(tilde(path)). macOS may be asking for access.") }
+    /// Runs `work` off the scan thread, so a folder macOS holds back cannot hold the scan.
+    /// False when it was skipped, by the person or after `skipAfter` seconds; the work then carries on unwatched.
+    func offThread(_ path: String, status: @Sendable (ScanProgress) -> Void, _ work: @escaping () -> Void) throws -> Bool {
+        nonisolated(unsafe) let work = work
+        let done = DispatchSemaphore(value: 0)
+        DispatchQueue.global(qos: priority).async { work(); done.signal() }
         let start = Date()
+        _ = skip.take() // A click from before this wait doesn't count.
         while done.wait(timeout: .now() + 0.05) == .timedOut {
             try Task.checkCancellation()
-            let waited = Date().timeIntervalSince(start)
+            let asked = skip.take(), waited = Date().timeIntervalSince(start)
             guard waited >= stallAfter else { continue }
-            if skip.take() || waited >= skipAfter { return nil }
-            status(ScanProgress(message: waitingMessage(root.path), stalled: tilde(root.path)))
+            if asked || waited >= skipAfter { return false }
+            status(ScanProgress(message: waitingMessage(path), stalled: tilde(path)))
         }
+        return true
+    }
+    /// Reads a folder's list of names off the scan thread. Nil when it was skipped.
+    func probe(_ root: URL, status: @Sendable (ScanProgress) -> Void) throws -> Result<Void, Error>? {
+        final class Box: @unchecked Sendable { var value: Result<Void, Error>? }
+        let box = Box()
+        guard try offThread(root.path, status: status, { box.value = Result { _ = try FileManager.default.contentsOfDirectory(atPath: root.path) } }) else { return nil }
         return box.value
     }
 }

@@ -38,4 +38,29 @@ final class ScanStallTests: XCTestCase {
         XCTAssertLessThan(Date().timeIntervalSince(started), 30)
         XCTAssertTrue(report.notices.contains { $0.contains("Skipped") })
     }
+    func testClickBeforeAStallDoesNotSkipTheNextOne() throws {
+        let (scanner, _) = try held(skipAfter: 1.0)
+        scanner.skip.request() // Left over from a moment when nothing was held.
+        let started = Date()
+        _ = try scanner.scanWithProgress({ _ in }, activityOverride: ActivitySnapshot())
+        XCTAssertGreaterThanOrEqual(Date().timeIntervalSince(started), 0.9)
+    }
+    func testHeldCheckCanBeSkippedAndIsNamed() throws {
+        let home = FileManager.default.temporaryDirectory.resolvingSymlinksInPath().appendingPathComponent(UUID().uuidString)
+        let cache = home.appendingPathComponent("projects/app/__pycache__")
+        try FileManager.default.createDirectory(at: cache, withIntermediateDirectories: true)
+        try Data(repeating: 1, count: 1_100_000).write(to: cache.appendingPathComponent("a.pyc"))
+        addTeardownBlock { try? FileManager.default.removeItem(at: home) }
+        var config = Configuration(home: home, projectRoots: [home.appendingPathComponent("projects")])
+        config.agentTemp = home.appendingPathComponent("empty-sessions")
+        let scanner = MacStewardCore.Scanner(configuration: config), release = DispatchSemaphore(value: 0), events = Events()
+        addTeardownBlock { release.signal() }
+        scanner.stallAfter = 0.1; scanner.skipAfter = 600
+        scanner.beforeCheck = { path in if path.hasSuffix("__pycache__") { release.wait() } }
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.6) { scanner.skip.request() }
+        let report = try scanner.scanWithProgress({ events.append($0) }, activityOverride: ActivitySnapshot())
+        XCTAssertTrue(events.all.contains { $0.stalled?.hasSuffix("__pycache__") == true && $0.total != nil })
+        XCTAssertTrue(report.notices.contains { $0.contains("__pycache__") && $0.contains("as you asked") })
+        XCTAssertFalse(report.findings.contains { $0.path.hasSuffix("__pycache__") })
+    }
 }
